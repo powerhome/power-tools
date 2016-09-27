@@ -56,7 +56,7 @@ describe Nitro::Consent do
 
       permissions = Nitro::Consent.permissions(permissions_hash)
 
-      expect(permissions.map(&:subject_key)).to_not include(:feature)
+      expect(permissions.map(&:subject_key)).to_not include(:features)
     end
 
     it '0 view means no permission' do
@@ -64,7 +64,7 @@ describe Nitro::Consent do
 
       permissions = Nitro::Consent.permissions(permissions_hash)
 
-      expect(permissions.map(&:subject_key)).to_not include(:feature)
+      expect(permissions.map(&:subject_key)).to_not include(:features)
     end
 
     it '"0" view means no permission' do
@@ -72,7 +72,15 @@ describe Nitro::Consent do
 
       permissions = Nitro::Consent.permissions(permissions_hash)
 
-      expect(permissions.map(&:subject_key)).to_not include(:feature)
+      expect(permissions.map(&:subject_key)).to_not include(:features)
+    end
+
+    it 'unexisting view means no permission' do
+      permissions_hash = { features: { beta: :something_funky } }
+
+      permissions = Nitro::Consent.permissions(permissions_hash)
+
+      expect(permissions.map(&:subject_key)).to_not include(:features)
     end
 
     it 'does not include permissions not given that do not default' do
@@ -80,7 +88,7 @@ describe Nitro::Consent do
 
       permissions = Nitro::Consent.permissions(permissions_hash)
 
-      expect(permissions.map(&:subject_key)).to_not include(:feature)
+      expect(permissions.map(&:subject_key)).to_not include(:features)
     end
 
     it 'is the default view when no permission' do

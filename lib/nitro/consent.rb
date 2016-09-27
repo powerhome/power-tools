@@ -35,14 +35,14 @@ module Nitro
             actions = permissions[subject.permission_key] || {}
             view_key = sanitize_view_key(actions[action.key])
             view = subject.view_for(action, view_key)
-            next if view.nil? && view_key == false
+            next if view.nil? && view_key != true
             Permission.new(subject, action, view)
           end
         end.flatten.compact
       end
 
       def self.sanitize_view_key(view)
-        return false if ['0', 'false', ''].include?(view.to_s.strip)
+        return true if ['1', 'true'].include?(view.to_s.strip)
         view
       end
     end
