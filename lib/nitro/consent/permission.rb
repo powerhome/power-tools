@@ -1,7 +1,7 @@
 module Nitro
   module Consent
     class Permission
-      def initialize(subject, action, view)
+      def initialize(subject, action, view = nil)
         @subject = subject
         @action = action
         @view = view

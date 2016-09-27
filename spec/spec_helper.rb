@@ -7,6 +7,8 @@ require 'date'
 
 SomeModel = Struct.new(:name, :created_at)
 
+Nitro::Consent.default_views[:no_access] = Nitro::Consent::View.new('', 'No Access')
+
 Nitro::Consent.define SomeModel, 'My Label' do
   view :future, 'Future only',
     -> (_, model) { model.created_at > Date.new },

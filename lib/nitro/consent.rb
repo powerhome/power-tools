@@ -4,11 +4,14 @@ require 'nitro/consent/view'
 require 'nitro/consent/action'
 require 'nitro/consent/dsl'
 require 'nitro/consent/permission'
+require 'nitro/consent/permissions'
 require 'nitro/consent/ability' if defined?(CanCan)
 require 'nitro/consent/railtie' if defined?(Rails)
 
 module Nitro
   module Consent
+    FULL_ACCESS = %w(1 true).freeze
+
     def self.default_views
       @default_views ||= {}
     end
@@ -25,26 +28,7 @@ module Nitro
     end
 
     def self.permissions(permissions)
-      Permissions.load(permissions)
-    end
-
-    module Permissions
-      def self.load(permissions)
-        Nitro::Consent.subjects.values.map do |subject|
-          subject.actions.map do |action|
-            actions = permissions[subject.permission_key] || {}
-            view_key = sanitize_view_key(actions[action.key])
-            view = subject.view_for(action, view_key)
-            next if view.nil? && view_key != true
-            Permission.new(subject, action, view)
-          end
-        end.flatten.compact
-      end
-
-      def self.sanitize_view_key(view)
-        return true if ['1', 'true'].include?(view.to_s.strip)
-        view
-      end
+      Permissions.new(permissions)
     end
   end
 end
