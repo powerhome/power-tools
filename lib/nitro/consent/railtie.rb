@@ -1,12 +1,16 @@
 module Nitro
   module Consent
     class Railtie < Rails::Railtie
-      config.consent = Struct.new(:path).new
-      config.consent.path = Rails.root.join('app', 'permissions')
+      config.before_configuration do
+        default_path = Rails.root.join('app', 'permissions')
+        config.consent = Struct.new(:path).new(default_path)
+      end
 
       config.to_prepare do
+        permission_files = Rails.application.config.consent.path.join('*.rb')
+
         Nitro::Consent.subjects.clear
-        Dir[Rails.application.config.consent.path.join('*.rb')].each(&method(:load))
+        Dir[permission_files].each(&method(:load))
       end
 
       config.after_initialize do
