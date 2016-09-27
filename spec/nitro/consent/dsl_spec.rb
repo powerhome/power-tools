@@ -77,7 +77,7 @@ RSpec.describe Nitro::Consent::DSL do
     it 'creates the action with views' do
       dsl.action :action_key, 'ACTIONNNNNN', views: [:all]
 
-      expect(subject.actions.last.views).to eql [view_all]
+      expect(subject.actions.last.view_keys).to eql [:all]
     end
 
     it 'creates the action in the with context defaults' do
@@ -85,13 +85,7 @@ RSpec.describe Nitro::Consent::DSL do
 
       dsl.action :action_key, 'ACTIONNNNNN'
 
-      expect(subject.actions.last.views).to eql [view_all]
-    end
-
-    it 'sets the action subject' do
-      dsl.action :action_key, 'ACTIONNNNNN'
-
-      expect(subject.actions.last.subject).to be subject
+      expect(subject.actions.last.view_keys).to eql [:all]
     end
 
     it 'allows to override defaults' do
@@ -99,7 +93,7 @@ RSpec.describe Nitro::Consent::DSL do
 
       dsl.action :action_key, 'ACTIONNNNNN', views: [:no_access]
 
-      expect(subject.actions.last.views).to eql [view_no_access]
+      expect(subject.actions.last.view_keys).to eql [:no_access]
     end
   end
 

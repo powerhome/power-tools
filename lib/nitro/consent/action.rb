@@ -1,12 +1,20 @@
 module Nitro
   module Consent
-    class Action < Struct.new(:subject, :key, :label, :options)
-      def view_keys
-        subject.views.keys & options.fetch(:views, [])
+    class Action
+      attr_reader :key, :label, :options
+
+      def initialize(key, label, options = {})
+        @key = key
+        @label = label
+        @options = options
       end
 
-      def views
-        subject.views.values_at(*view_keys)
+      def view_keys
+        @options.fetch(:views, [])
+      end
+
+      def default_view
+        @options[:default_view]
       end
     end
   end

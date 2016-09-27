@@ -36,9 +36,9 @@ describe Nitro::Consent do
 
       permission = Nitro::Consent.permissions(permissions_hash).first
 
-      expect(permission.subject.key).to be SomeModel
-      expect(permission.action.key).to be :action1
-      expect(permission.view.key).to be :view1
+      expect(permission.subject_key).to be SomeModel
+      expect(permission.action_key).to be :action1
+      expect(permission.view_key).to be :view1
     end
 
     it 'maps symbol subjects' do
@@ -46,9 +46,33 @@ describe Nitro::Consent do
 
       permission = Nitro::Consent.permissions(permissions_hash).first
 
-      expect(permission.subject.key).to be :features
-      expect(permission.action.key).to be :beta
-      expect(permission.view).to be nil
+      expect(permission.subject_key).to be :features
+      expect(permission.action_key).to be :beta
+      expect(permission.view_key).to be true
+    end
+
+    it 'empty view means no permission' do
+      permissions_hash = { features: { beta: '' } }
+
+      permissions = Nitro::Consent.permissions(permissions_hash)
+
+      expect(permissions).to be_empty
+    end
+
+    it '0 view means no permission' do
+      permissions_hash = { features: { beta: 0 } }
+
+      permissions = Nitro::Consent.permissions(permissions_hash)
+
+      expect(permissions).to be_empty
+    end
+
+    it '"0" view means no permission' do
+      permissions_hash = { features: { beta: '0' } }
+
+      permissions = Nitro::Consent.permissions(permissions_hash)
+
+      expect(permissions).to be_empty
     end
   end
 end

@@ -1,28 +1,22 @@
 module Nitro
   module Consent
     class Subject
-      attr_reader :key, :label, :actions
+      attr_reader :key, :label, :actions, :views
 
       def initialize(key, label)
         @key = key
         @label = label
         @actions = []
+        @views = Nitro::Consent.default_views.clone
       end
 
       def permission_key
         ActiveSupport::Inflector.underscore(@key.to_s).to_sym
       end
 
-      def views
-        @views ||= Nitro::Consent.default_views.clone
-      end
-
-      def add_action(*attrs)
-        @actions << Action.new(self, *attrs)
-      end
-
-      def conditions(view, *args)
-        views[view.to_sym] && views[view.to_sym].conditions(*args)
+      def view_for(action, key)
+        view = @views.keys & action.view_keys & [key]
+        @views[view.first]
       end
     end
   end

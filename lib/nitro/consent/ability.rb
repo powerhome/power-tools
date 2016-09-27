@@ -5,8 +5,8 @@ module Nitro
 
       def initialize(permissions, *args)
         Nitro::Consent.permissions(permissions).each do |permission|
-          view = permission.view && permission.view.conditions(*args)
-          can permission.action.key, permission.subject.key, view
+          conditions = permission.conditions(*args)
+          can permission.action_key, permission.subject_key, conditions
         end
       end
     end

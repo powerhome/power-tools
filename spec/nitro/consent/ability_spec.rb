@@ -2,39 +2,42 @@ require 'spec_helper'
 
 RSpec.describe Nitro::Consent::Ability do
   it 'it authorizes symbol permissions' do
-    subject = Nitro::Consent::Subject.new(:features, nil)
-    action = Nitro::Consent::Action.new(nil, :some_crazy_feature)
-    permission = Nitro::Consent::Permission.new(subject, action)
+    ability = Nitro::Consent::Ability.new(features: { beta: '1' })
 
-    expect(Nitro::Consent).to receive(:permissions).and_return [permission]
-    ability = Nitro::Consent::Ability.new(features: { some_crazy_feature: '1' })
-
-    expect(ability).to be_able_to(:some_crazy_feature, :features)
+    expect(ability).to be_able_to(:beta, :features)
   end
 
   it 'it authorizes model permissions' do
-    subject = Nitro::Consent::Subject.new(SomeModel, nil)
-    action = Nitro::Consent::Action.new(nil, :some_crazy_feature)
-    permission = Nitro::Consent::Permission.new(subject, action)
+    ability = Nitro::Consent::Ability.new(some_model: { action1: '1' })
 
-    expect(Nitro::Consent).to receive(:permissions).and_return [permission]
-    ability = Nitro::Consent::Ability.new(feature: { some_crazy_feature: '1' })
-
-    expect(ability).to be_able_to(:some_crazy_feature, SomeModel)
+    expect(ability).to be_able_to(:action1, SomeModel)
+    expect(ability).to be_able_to(:action1, SomeModel.new)
   end
 
   it 'adds view conditions to cancan conditions' do
-    subject = Nitro::Consent::Subject.new(SomeModel, nil)
-    action = Nitro::Consent::Action.new(nil, :some_crazy_feature)
-    view = double(Nitro::Consent::View, conditions: { name: 'lol' })
-    permission = Nitro::Consent::Permission.new(subject, action, view)
+    ability = Nitro::Consent::Ability.new(some_model: { action1: :lol })
 
-    expect(Nitro::Consent).to receive(:permissions).and_return [permission]
-    ability = Nitro::Consent::Ability.new(feature: { some_crazy_feature: '1' })
+    expect(ability).to be_able_to(:action1, SomeModel)
 
-    expect(ability).to be_able_to(:some_crazy_feature, SomeModel)
+    expect(ability).to be_able_to(:action1, SomeModel.new('lol'))
+    expect(ability).to_not be_able_to(:action1, SomeModel.new('nop'))
+  end
 
-    expect(ability).to be_able_to(:some_crazy_feature, SomeModel.new('lol'))
-    expect(ability).to_not be_able_to(:some_crazy_feature, SomeModel.new('nop'))
+  it 'empty view means no permission' do
+    ability = Nitro::Consent::Ability.new(some_model: { action1: '' })
+
+    expect(ability).to_not be_able_to(:action1, SomeModel)
+  end
+
+  it '0 view means no permission' do
+    ability = Nitro::Consent::Ability.new(some_model: { action1: 0 })
+
+    expect(ability).to_not be_able_to(:action1, SomeModel)
+  end
+
+  it '"0" view means no permission' do
+    ability = Nitro::Consent::Ability.new(some_model: { action1: '0' })
+
+    expect(ability).to_not be_able_to(:action1, SomeModel)
   end
 end

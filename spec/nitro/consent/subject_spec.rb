@@ -11,20 +11,4 @@ RSpec.describe Nitro::Consent::Subject do
       expect(subject.views[:view1]).to be view
     end
   end
-
-  describe '#conditions' do
-    it 'is the conditions from the view given the view key' do
-      user = 'user'
-      half_thing_view = double(conditions: nil)
-
-      subject.views[:half_thing] = half_thing_view
-      expect(half_thing_view).to receive(:conditions).with(user).and_return('conditions')
-
-      expect(subject.conditions(:half_thing, user)).to eql 'conditions'
-    end
-
-    it 'is nil when view is not defined' do
-      expect(subject.conditions(:whatever)).to be_nil
-    end
-  end
 end

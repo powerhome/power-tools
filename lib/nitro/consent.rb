@@ -3,6 +3,7 @@ require 'nitro/consent/subject'
 require 'nitro/consent/view'
 require 'nitro/consent/action'
 require 'nitro/consent/dsl'
+require 'nitro/consent/permission'
 require 'nitro/consent/ability' if defined?(CanCan)
 require 'nitro/consent/railtie' if defined?(Rails)
 
@@ -27,19 +28,22 @@ module Nitro
       Permissions.load(permissions)
     end
 
-    Permission = Struct.new(:subject, :action, :view)
-
     module Permissions
       def self.load(permissions)
         Nitro::Consent.subjects.values.map do |subject|
           subject.actions.map do |action|
             actions = permissions[subject.permission_key]
             next unless actions
-            view = actions[action.key]
-            next if view.to_s.strip.empty? || view.to_s == '0'
-            Permission.new(subject, action, subject.views[view.to_s.to_sym])
+            view_key = sanitize_view_key(actions[action.key])
+            next if view_key == false
+            Permission.new(subject, action, view_key)
           end
         end.flatten.compact
+      end
+
+      def self.sanitize_view_key(view)
+        return false if ['0', ''].include?(view.to_s.strip)
+        view
       end
     end
   end
