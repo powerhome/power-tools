@@ -10,7 +10,9 @@ module Nitro
       end
 
       def get_action(subject_key, action_key)
-        Nitro::Consent.subjects[subject_key].try(:actions).try(:[], action_key)
+        (Nitro::Consent.subjects[subject_key].try(:actions) || []).find do |action|
+          action.key.eql?(action_key)
+        end
       end
 
       def get_action_view_keys(subject_key, action_key)
