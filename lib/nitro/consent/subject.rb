@@ -15,7 +15,7 @@ module Nitro
       end
 
       def view_for(action, key)
-        view = @views.keys & action.view_keys & [key]
+        view = @views.keys & action.view_keys & [key, action.default_view]
         @views[view.first]
       end
     end

@@ -16,12 +16,11 @@ module Nitro
       end
 
       def view_key
-        @view
+        @view && @view.key
       end
 
       def conditions(*args)
-        view = @subject.view_for(@action, view_key)
-        view && view.conditions(*args)
+        @view && @view.conditions(*args)
       end
     end
   end

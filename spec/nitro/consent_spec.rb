@@ -44,11 +44,11 @@ describe Nitro::Consent do
     it 'maps symbol subjects' do
       permissions_hash = { features: { beta: true } }
 
-      permission = Nitro::Consent.permissions(permissions_hash).first
+      permission = Nitro::Consent.permissions(permissions_hash).last
 
       expect(permission.subject_key).to be :features
       expect(permission.action_key).to be :beta
-      expect(permission.view_key).to be true
+      expect(permission.view_key).to be nil
     end
 
     it 'empty view means no permission' do
@@ -56,7 +56,7 @@ describe Nitro::Consent do
 
       permissions = Nitro::Consent.permissions(permissions_hash)
 
-      expect(permissions).to be_empty
+      expect(permissions.map(&:subject_key)).to_not include(:feature)
     end
 
     it '0 view means no permission' do
@@ -64,7 +64,7 @@ describe Nitro::Consent do
 
       permissions = Nitro::Consent.permissions(permissions_hash)
 
-      expect(permissions).to be_empty
+      expect(permissions.map(&:subject_key)).to_not include(:feature)
     end
 
     it '"0" view means no permission' do
@@ -72,7 +72,31 @@ describe Nitro::Consent do
 
       permissions = Nitro::Consent.permissions(permissions_hash)
 
-      expect(permissions).to be_empty
+      expect(permissions.map(&:subject_key)).to_not include(:feature)
+    end
+
+    it 'does not include permissions not given that do not default' do
+      permissions_hash = {}
+
+      permissions = Nitro::Consent.permissions(permissions_hash)
+
+      expect(permissions.map(&:subject_key)).to_not include(:feature)
+    end
+
+    it 'is the default view when no permission' do
+      permissions_hash = { some_model: { destroy: '0' } }
+
+      permission = Nitro::Consent.permissions(permissions_hash).first
+
+      expect(permission.view_key).to be :self
+    end
+
+    it 'always includes the default permissions' do
+      permissions_hash = {}
+
+      permission = Nitro::Consent.permissions(permissions_hash).first
+
+      expect(permission.view_key).to be :self
     end
   end
 end

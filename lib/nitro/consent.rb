@@ -32,17 +32,17 @@ module Nitro
       def self.load(permissions)
         Nitro::Consent.subjects.values.map do |subject|
           subject.actions.map do |action|
-            actions = permissions[subject.permission_key]
-            next unless actions
+            actions = permissions[subject.permission_key] || {}
             view_key = sanitize_view_key(actions[action.key])
-            next if view_key == false
-            Permission.new(subject, action, view_key)
+            view = subject.view_for(action, view_key)
+            next if view.nil? && view_key == false
+            Permission.new(subject, action, view)
           end
         end.flatten.compact
       end
 
       def self.sanitize_view_key(view)
-        return false if ['0', ''].include?(view.to_s.strip)
+        return false if ['0', 'false', ''].include?(view.to_s.strip)
         view
       end
     end
