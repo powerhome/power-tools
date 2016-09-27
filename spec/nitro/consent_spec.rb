@@ -96,7 +96,7 @@ describe Nitro::Consent do
 
       permission = Nitro::Consent.permissions(permissions_hash).first
 
-      expect(permission.view_key).to be :self
+      expect(permission.view_key).to be :future
     end
 
     it 'always includes the default permissions' do
@@ -104,7 +104,7 @@ describe Nitro::Consent do
 
       permission = Nitro::Consent.permissions(permissions_hash).first
 
-      expect(permission.view_key).to be :self
+      expect(permission.view_key).to be :future
     end
   end
 end

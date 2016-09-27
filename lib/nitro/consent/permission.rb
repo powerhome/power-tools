@@ -22,6 +22,10 @@ module Nitro
       def conditions(*args)
         @view && @view.conditions(*args)
       end
+
+      def object_conditions(*args)
+        @view && @view.object_conditions(*args)
+      end
     end
   end
 end

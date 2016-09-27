@@ -44,4 +44,11 @@ RSpec.describe Nitro::Consent::Ability do
 
     expect(ability).to_not be_able_to(:action1, SomeModel)
   end
+
+  it 'cannot perform action when instance condition forbids' do
+    permissions[:some_model] = { destroy: :future }
+
+    expect(ability).to_not be_able_to(:destroy, SomeModel.new(nil, Date.new - 10))
+    expect(ability).to be_able_to(:destroy, SomeModel.new(nil, Date.new + 10))
+  end
 end
