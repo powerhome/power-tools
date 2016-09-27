@@ -26,8 +26,7 @@ module Nitro
       end
 
       def action(key, label, options = {})
-        merged_options = @defaults.merge(options)
-        @subject.actions[key] = Action.new(key, label, @subject, merged_options)
+        @subject.add_action key, label, @defaults.merge(options)
       end
 
       def self.build(subject, defaults = {}, &block)

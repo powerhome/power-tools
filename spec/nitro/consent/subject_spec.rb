@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Nitro::Consent::Subject do
-  subject { Nitro::Consent::Subject.new(nil, nil, nil) }
+  subject { Nitro::Consent::Subject.new(nil, nil) }
 
   describe '#views' do
     it 'starts as the default_views' do

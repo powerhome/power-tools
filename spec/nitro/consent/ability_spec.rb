@@ -2,8 +2,8 @@ require 'spec_helper'
 
 RSpec.describe Nitro::Consent::Ability do
   it 'it authorizes symbol permissions' do
-    subject = Nitro::Consent::Subject.new(:features, nil, nil)
-    action = Nitro::Consent::Action.new(:some_crazy_feature)
+    subject = Nitro::Consent::Subject.new(:features, nil)
+    action = Nitro::Consent::Action.new(nil, :some_crazy_feature)
     permission = Nitro::Consent::Permission.new(subject, action)
 
     expect(Nitro::Consent).to receive(:permissions).and_return [permission]
@@ -13,8 +13,8 @@ RSpec.describe Nitro::Consent::Ability do
   end
 
   it 'it authorizes model permissions' do
-    subject = Nitro::Consent::Subject.new(SomeModel, nil, nil)
-    action = Nitro::Consent::Action.new(:some_crazy_feature)
+    subject = Nitro::Consent::Subject.new(SomeModel, nil)
+    action = Nitro::Consent::Action.new(nil, :some_crazy_feature)
     permission = Nitro::Consent::Permission.new(subject, action)
 
     expect(Nitro::Consent).to receive(:permissions).and_return [permission]
@@ -24,8 +24,8 @@ RSpec.describe Nitro::Consent::Ability do
   end
 
   it 'adds view conditions to cancan conditions' do
-    subject = Nitro::Consent::Subject.new(SomeModel, nil, nil)
-    action = Nitro::Consent::Action.new(:some_crazy_feature)
+    subject = Nitro::Consent::Subject.new(SomeModel, nil)
+    action = Nitro::Consent::Action.new(nil, :some_crazy_feature)
     view = double(Nitro::Consent::View, conditions: { name: 'lol' })
     permission = Nitro::Consent::Permission.new(subject, action, view)
 

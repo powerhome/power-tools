@@ -1,6 +1,6 @@
 module Nitro
   module Consent
-    class Action < Struct.new(:key, :label, :subject, :options)
+    class Action < Struct.new(:subject, :key, :label, :options)
       def view_keys
         subject.views.keys & options.fetch(:views, [])
       end
