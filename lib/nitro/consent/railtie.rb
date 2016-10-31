@@ -1,22 +1,20 @@
 module Nitro
   module Consent
+    # Plugs consent permission load to the Rails class loading cycle
     class Railtie < Rails::Railtie
       config.before_configuration do
         default_path = Rails.root.join('app', 'permissions')
-        config.consent = Struct.new(:path).new(default_path)
+        config.consent = Struct.new(:paths).new([default_path])
       end
 
       config.to_prepare do
-        permission_files = Rails.application.config.consent.path.join('*.rb')
-
         Nitro::Consent.subjects.clear
-        Dir[permission_files].each(&method(:load))
+        Nitro::Consent.load_subjects! Rails.application.config.consent.paths
       end
 
       config.after_initialize do
-        ActiveSupport::Dependencies.autoload_paths.delete_if do |autoload_path|
-          autoload_path.eql?(config.consent.path.to_s)
-        end
+        permissions_paths = config.consent.paths.map(&:to_s)
+        ActiveSupport::Dependencies.autoload_paths -= permissions_paths
       end
     end
   end

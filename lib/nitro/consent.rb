@@ -20,6 +20,11 @@ module Nitro
       @subjects ||= {}
     end
 
+    def self.load_subjects!(paths)
+      permission_files = paths.map { |dir| dir.join('*.rb') }
+      Dir[*permission_files].each(&Kernel.method(:load))
+    end
+
     def self.define(key, label, options = {}, &block)
       defaults = options.fetch(:defaults, {})
       subjects[key] = Subject.new(key, label).tap do |subject|
