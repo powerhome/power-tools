@@ -1,0 +1,18 @@
+Nitro::Consent.define <%= @name %>, "<%= @description %>" do
+  # Define your views
+  # i.e.:
+  # view :department, 'Same department only' do |user|
+  #   { department_id: user.department_id }
+  # end
+
+  # Define your actions
+  # i.e.:
+  # action :read, "Can view <%= @subject %>"
+
+  # Define actions with different views
+  # i.e.:
+  # action :update, "Can edit existing <%= @subject %>", views: :department
+
+  # Find more examples at:
+  # https://github.com/powerhome/consent
+end
