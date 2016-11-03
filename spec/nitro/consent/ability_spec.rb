@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-RSpec.describe Nitro::Consent::Ability do
+RSpec.describe Consent::Ability do
   let(:user) { double(id: 1) }
   let(:permissions) { {} }
-  let(:ability) { Nitro::Consent::Ability.new(permissions, user) }
+  let(:ability) { Consent::Ability.new(permissions, user) }
 
   it 'it authorizes symbol permissions' do
     permissions[:features] = { beta: '1' }

@@ -1,4 +1,4 @@
-# Nitro::Consent
+# Consent
 
 ## Installation
 
@@ -42,7 +42,7 @@ be an `ActiveRecord` class, a `:symbol`, or any Plain Old Ruby Object.
 You define a subject with the following DSL:
 
 ```ruby
-Nitro::Consent.define Project, 'Our Projects' do
+Consent.define Project, 'Our Projects' do
   #in this case, Project is the subject
   # and `Our Projects` is the description that makes it clear to users
   # what the subject is acting upon.
@@ -55,7 +55,7 @@ The scope is the action that's being performed on the subject. It can be anythin
 For instance:
 
 ```ruby
-Nitro::Consent.define :features, 'Beta Features' do
+Consent.define :features, 'Beta Features' do
   # whatever you put inside this method defines the scope
 end
 ```
@@ -74,7 +74,7 @@ It follows a match condition and will return all objects that meet the criteria
 and is based off a boolean:
 
 ```ruby
-Nitro::Consent.define Project, 'Projects' do
+Consent.define Project, 'Projects' do
   view :department, "User's department only" do |user|
     { department_id: user.id }
   end
@@ -99,7 +99,7 @@ second condition is given for constraining object instances. For example, if you
 want to restrict a view for smaller volume projects:
 
 ```ruby
-Nitro::Consent.define Project, 'Projects' do
+Consent.define Project, 'Projects' do
   view :small_volumes, "User's department only",
     -> (user) {
       ['amount < ?', user.volume_limit]
@@ -120,7 +120,7 @@ An action is anything you can perform on a given subject. In the example of
 Features this would look like the following using Consent's DSL:
 
 ```ruby
-Nitro::Consent.define :features, 'Beta Features' do
+Consent.define :features, 'Beta Features' do
   action :beta_chat, 'Beta Chat App'
 end
 ```
@@ -128,7 +128,7 @@ end
 To associate different views to the same action:
 
 ```ruby
-Nitro::Consent.define Project, 'Projects' do
+Consent.define Project, 'Projects' do
   # returns conditions that can be used as a matcher for objects so the matcher
   # can return true or false (hash version)
   view :department, "User's department only" do |user|
@@ -206,7 +206,7 @@ In other words:
 
 ## CanCan Integration
 
-Consent provides a CanCan ability (Nitro::Consent::Ability) to integrate your
+Consent provides a CanCan ability (Consent::Ability) to integrate your
 permissions with frameworks like Rails. To use it with Rails check out the
 example at [Ability for Other Users](https://github.com/CanCanCommunity/cancancan/wiki/Ability-for-Other-Users)
 on CanCanCan's wiki.
@@ -215,7 +215,7 @@ In the ability you define the scope of the permissions. This is typically an
 user:
 
 ```ruby
-Nitro::Consent::Ability.new(user.permissions, user)
+Consent::Ability.new(user.permissions, user)
 ```
 
 The first parameter given to the ability is the permissions hash, seen at
@@ -225,7 +225,7 @@ in the exact same order, so it's up to you to define what your context is.
 
 ## Rails Integration
 
-Consent is integrated into Rails with `Nitro::Consent::Railtie`. To define where
+Consent is integrated into Rails with `Consent::Railtie`. To define where
 your permission files will be, use `config.consent.path`. This defaults to
 `app/permissions/` to conform to Rails' standards.
 

@@ -1,25 +1,25 @@
 require 'spec_helper'
 
-RSpec.describe Nitro::Consent::DSL do
-  let(:subject) { Nitro::Consent::Subject.new(nil, nil) }
+RSpec.describe Consent::DSL do
+  let(:subject) { Consent::Subject.new(nil, nil) }
   let(:defaults) { {} }
-  let(:dsl) { Nitro::Consent::DSL.new(subject, defaults) }
+  let(:dsl) { Consent::DSL.new(subject, defaults) }
 
   describe '.build' do
     it 'builds the subject through the DSL' do
       context_object = nil
 
-      Nitro::Consent::DSL.build subject do
+      Consent::DSL.build subject do
         context_object = self
       end
 
-      expect(context_object).to be_a(Nitro::Consent::DSL)
+      expect(context_object).to be_a(Consent::DSL)
     end
 
     it 'builds defines the defaults' do
       context_defaults = nil
 
-      Nitro::Consent::DSL.build subject, default: :whatever do
+      Consent::DSL.build subject, default: :whatever do
         context_defaults = @defaults
       end
 
@@ -103,7 +103,7 @@ RSpec.describe Nitro::Consent::DSL do
 
       block = -> (_, __) {}
       expected_defaults = { lol: 'rofl', foo: 'bar' }
-      expect(Nitro::Consent::DSL).to receive(:build)
+      expect(Consent::DSL).to receive(:build)
         .with(subject, expected_defaults, &block)
 
       dsl.with_defaults lol: 'rofl', &block

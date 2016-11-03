@@ -2,14 +2,14 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'cancan'
 require 'cancan/matchers'
 require 'active_support/inflector'
-require 'nitro/consent'
+require 'consent'
 require 'date'
 
 SomeModel = Struct.new(:name, :created_at)
 
-Nitro::Consent.default_views[:no_access] = Nitro::Consent::View.new('', 'No Access')
+Consent.default_views[:no_access] = Consent::View.new('', 'No Access')
 
-Nitro::Consent.define SomeModel, 'My Label' do
+Consent.define SomeModel, 'My Label' do
   view :future, 'Future only',
     -> (_, model) { model.created_at > Date.new },
     -> (_) { ['created_at > ?', Date.new] }
@@ -27,6 +27,6 @@ Nitro::Consent.define SomeModel, 'My Label' do
   action :destroy, 'Destroy', views: [:lol, :self], default_view: :future
 end
 
-Nitro::Consent.define :features, 'My Label' do
+Consent.define :features, 'My Label' do
   action :beta, 'Beta feature'
 end

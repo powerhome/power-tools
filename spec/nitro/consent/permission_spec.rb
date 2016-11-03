@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-RSpec.describe Nitro::Consent::Permission do
+RSpec.describe Consent::Permission do
   let(:action) { double }
   let(:subject) { double }
 
   describe '#conditions' do
     it 'is the conditions from the view given the view key' do
       view = double
-      permission = Nitro::Consent::Permission.new(subject, action, view)
+      permission = Consent::Permission.new(subject, action, view)
 
       expect(view).to receive(:conditions).with('user').and_return 'condition'
 
@@ -15,7 +15,7 @@ RSpec.describe Nitro::Consent::Permission do
     end
 
     it 'is nil when view is not defined' do
-      permission = Nitro::Consent::Permission.new(subject, action, nil)
+      permission = Consent::Permission.new(subject, action, nil)
       expect(permission.conditions).to be_nil
     end
   end

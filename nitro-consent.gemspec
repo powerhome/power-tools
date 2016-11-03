@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'nitro/consent/version'
+require 'consent/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'nitro-consent'
-  spec.version       = Nitro::Consent::VERSION
+  spec.version       = Consent::VERSION
   spec.authors       = ['Carlos Palhares']
   spec.email         = ['chjunior@gmail.com']
 
