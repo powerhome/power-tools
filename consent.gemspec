@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'consent/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'nitro-consent'
+  spec.name          = 'consent'
   spec.version       = Consent::VERSION
   spec.authors       = ['Carlos Palhares']
   spec.email         = ['chjunior@gmail.com']
