@@ -12,10 +12,6 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Consent'
   spec.description   = 'Consent'
 
-  if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = 'http://gems.powerhrg.com'
-  end
-
   spec.files = `git ls-files`.split.reject do |file|
     file =~ /^(test|spec|features)/
   end
