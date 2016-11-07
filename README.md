@@ -1,4 +1,4 @@
-# Consent
+# Consent [![Build Status](https://travis-ci.org/powerhome/consent.svg?branch=master)](https://travis-ci.org/powerhome/consent)
 
 ## Installation
 
