@@ -1,5 +1,13 @@
 sudo: false
 language: ruby
 rvm:
-  - 2.2.2
+- 2.2.2
 before_install: gem install bundler -v 1.12.1
+deploy:
+  provider: rubygems
+  api_key:
+    secure: aCipdg6IqKaxQmWQXFlqI2JqGOrCAxzYlutOn6nCSk9VCzmlRjDoEp1M99ASvmF5CP3KQgfRq8bxfLql8jss8tymK0u2ExvKaUglK0zb2KoLQDGDGuHw3RxCTnaxPBuO4/2PuS+nso6IcdqUaGOzh8FA7ePKPBmxl3kyNtArEDV88Eyx6tQYs1/1w153bAeBk57nTiu8CPS+dIWg+guQADTLPZ61fH4xKjPWXnr65pFF7YtU5YdPBHFkqL60X384OZj1c7ZTGvFj70+36oo617HigSg8HCE+E0R1N4JQ8/5xo2yHBdrtgsAqYyYWRgm1C6qu+T6yKMuokdoSd0Ji3Rigz6VRrOJfjmQQkwMnno9fCY3vND62zOb9Ow+MCNuQYSgNHc+YPURKmT05wadG0FpZdmo6hstPusleuG89NxnB/s2YjR0QWQK05MW1uhFdru1S2gBd1fMH1GLoThhdfGG1UJSkKOipUJyRupFaB9zimJO3HwaTP0Q+wP8MGZDAqbyzQ3bJSZaQmJC6loC2EtxxnOQxUIxaySLtNEU2LOr9IijExj1ldXkz8X1fIWwRr6BPnIeChFnuST+L9UDYtqk1WgQTUs+tOAxUjepAWhtIUL5h3Jg2NZd9RxPXq8IngDWZJwT8yA3E9wloQx5JzTIMas5wHwCQJuwjjk5ibss=
+  gem: consent
+  on:
+    tags: true
+    repo: powerhome/consent
