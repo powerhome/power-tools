@@ -1,0 +1,18 @@
+require 'rails_helper'
+
+describe '<%= @name %> permissions', type: :permissions do
+  subject { <%= @name %> }
+  # Define the user to be spec'ed
+  #
+  # let(:user) { double(entity_ids: [1, 2]) }
+
+  # Define consent expectations for views
+  #
+  # it { is_expected.to consent_view(:entity, {entity_id: [1, 2]}).to(user) }
+
+  # Define consent expectations for actions
+  #
+  # it { is_expected.to consent_action(:read) }
+  # it { is_expected.to consent_action(:update) }
+  # it { is_expected.to consent_action(:create) }
+end

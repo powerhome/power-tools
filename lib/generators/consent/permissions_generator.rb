@@ -7,6 +7,8 @@ module Consent
       template "permissions.rb.erb", "app/permissions/#{file_path}.rb", assigns: {
         description: description
       }
+
+      template "permissions_spec.rb.erb", "spec/permissions/#{file_path}_spec.rb"
     end
   end
 end
