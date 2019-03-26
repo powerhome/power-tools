@@ -1,0 +1,1 @@
+* DSL validate Consent state

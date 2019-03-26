@@ -6,9 +6,9 @@ RSpec.describe Consent::Ability do
   let(:ability) { Consent::Ability.new(permissions, user) }
 
   it 'it authorizes symbol permissions' do
-    permissions[:features] = { beta: '1' }
+    permissions[:beta] = { lol_til_death: '1' }
 
-    expect(ability).to be_able_to(:beta, :features)
+    expect(ability).to be_able_to(:lol_til_death, :beta)
   end
 
   it 'it authorizes model permissions' do

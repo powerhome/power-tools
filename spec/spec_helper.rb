@@ -27,6 +27,10 @@ Consent.define SomeModel, 'My Label' do
   action :destroy, 'Destroy', views: [:lol, :self], default_view: :future
 end
 
-Consent.define :features, 'My Label' do
-  action :beta, 'Beta feature'
+Consent.define :beta, 'LOL Department (Beta)' do
+  action :lol_til_death, 'LOL Until you die'
+end
+
+Consent.define :beta, 'Frustration Department (Beta)' do
+  action :request_frustration, 'Request Frustration'
 end

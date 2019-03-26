@@ -11,6 +11,16 @@ RSpec.describe Consent::Permissions do
     expect(permission.view_key).to be :view1
   end
 
+  it 'maps a permissions hash to consent subjects with subjects split in different definitions' do
+    permissions_hash = { beta: { lol_til_death: true, request_frustration: true } }
+
+    subjects = Consent.permissions(permissions_hash).map(&:subject_key)
+    actions = Consent.permissions(permissions_hash).map(&:action_key)
+
+    expect(subjects).to include :beta
+    expect(actions).to include :lol_til_death, :request_frustration
+  end
+
   it 'maps string view keys' do
     permissions_hash = { 'some_model' => { 'action1' => 'view1' } }
 
@@ -22,45 +32,45 @@ RSpec.describe Consent::Permissions do
   end
 
   it 'maps symbol subjects' do
-    permissions_hash = { features: { beta: true } }
+    permissions_hash = { beta: { lol_til_death: true } }
 
     permission = Consent.permissions(permissions_hash).to_a.last
 
-    expect(permission.subject_key).to be :features
-    expect(permission.action_key).to be :beta
+    expect(permission.subject_key).to be :beta
+    expect(permission.action_key).to be :lol_til_death
     expect(permission.view_key).to be nil
   end
 
   it 'empty view means no permission' do
-    permissions_hash = { features: { beta: '' } }
+    permissions_hash = { beta: { lol_til_death: '' } }
 
     permissions = Consent.permissions(permissions_hash)
 
-    expect(permissions.map(&:subject_key)).to_not include(:features)
+    expect(permissions.map(&:subject_key)).to_not include(:beta)
   end
 
   it '0 view means no permission' do
-    permissions_hash = { features: { beta: 0 } }
+    permissions_hash = { beta: { lol_til_death: 0 } }
 
     permissions = Consent.permissions(permissions_hash)
 
-    expect(permissions.map(&:subject_key)).to_not include(:features)
+    expect(permissions.map(&:subject_key)).to_not include(:beta)
   end
 
   it '"0" view means no permission' do
-    permissions_hash = { features: { beta: '0' } }
+    permissions_hash = { beta: { lol_til_death: '0' } }
 
     permissions = Consent.permissions(permissions_hash)
 
-    expect(permissions.map(&:subject_key)).to_not include(:features)
+    expect(permissions.map(&:subject_key)).to_not include(:beta)
   end
 
   it 'unexisting view means no permission' do
-    permissions_hash = { features: { beta: :something_funky } }
+    permissions_hash = { beta: { lol_til_death: :something_funky } }
 
     permissions = Consent.permissions(permissions_hash)
 
-    expect(permissions.map(&:subject_key)).to_not include(:features)
+    expect(permissions.map(&:subject_key)).to_not include(:beta)
   end
 
   it 'does not include permissions not given that do not default' do
@@ -68,7 +78,7 @@ RSpec.describe Consent::Permissions do
 
     permissions = Consent.permissions(permissions_hash)
 
-    expect(permissions.map(&:subject_key)).to_not include(:features)
+    expect(permissions.map(&:subject_key)).to_not include(:beta)
   end
 
   it 'is the default view when no permission' do

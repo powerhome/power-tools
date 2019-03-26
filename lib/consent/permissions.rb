@@ -7,7 +7,7 @@ module Consent
     end
 
     def each(&block)
-      Consent.subjects.values.each do |subject|
+      Consent.subjects.each do |subject|
         subject.actions.map do |action|
           map_permission subject, action
         end.compact.each(&block)

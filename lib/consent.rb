@@ -16,7 +16,19 @@ module Consent
   end
 
   def self.subjects
-    @subjects ||= {}
+    @subjects ||= []
+  end
+
+  def self.find_subjects(subject_key)
+    @subjects.find_all do |subject|
+      subject.key.eql?(subject_key)
+    end
+  end
+
+  def self.find_view(subject_key, action_key, view_key)
+    Consent.find_subject(subject_key)
+           .map{|subject| subject.view(action_key, view_key)}
+           .first
   end
 
   def self.load_subjects!(paths)
@@ -26,7 +38,7 @@ module Consent
 
   def self.define(key, label, options = {}, &block)
     defaults = options.fetch(:defaults, {})
-    subjects[key] = Subject.new(key, label).tap do |subject|
+    subjects << Subject.new(key, label).tap do |subject|
       DSL.build(subject, defaults, &block)
     end
   end
