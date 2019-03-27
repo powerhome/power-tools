@@ -25,10 +25,19 @@ module Consent
     end
   end
 
-  def self.find_view(subject_key, action_key, view_key)
-    Consent.find_subject(subject_key)
-           .map{|subject| subject.view(action_key, view_key)}
-           .first
+  def self.find_action(subject_key, action_key)
+    Consent.find_subjects(subject_key)
+           .map(&:actions).flatten
+           .find do |action|
+             action.key.eql?(action_key)
+           end
+  end
+
+  def self.find_view(subject_key, view_key)
+    views = Consent.find_subjects(subject_key)
+                   .map{|subject| subject.views}
+                   .reduce({}, &:merge)
+    views[view_key]
   end
 
   def self.load_subjects!(paths)
