@@ -41,8 +41,8 @@ module Consent
   end
 
   def self.load_subjects!(paths)
-    permission_files = paths.map { |dir| dir.join('*.rb') }
-    Dir[*permission_files].each(&Kernel.method(:load))
+    permission_files = paths.map { |dir| File.join(dir, '*.rb') }
+    Dir[*permission_files].each(&Kernel.method(:require))
   end
 
   def self.define(key, label, options = {}, &block)
