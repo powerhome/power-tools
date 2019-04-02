@@ -34,11 +34,9 @@ RSpec.describe Consent::Permissions do
   it 'maps symbol subjects' do
     permissions_hash = { beta: { lol_til_death: true } }
 
-    permission = Consent.permissions(permissions_hash).to_a.last
+    permissions = Consent.permissions(permissions_hash).to_a.map(&:subject_key)
 
-    expect(permission.subject_key).to be :beta
-    expect(permission.action_key).to be :lol_til_death
-    expect(permission.view_key).to be nil
+    expect(permissions).to include :beta
   end
 
   it 'empty view means no permission' do
