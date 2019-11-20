@@ -19,13 +19,3 @@ Style/Documentation:
   Exclude:
     - 'spec/**/*'
     - 'test/**/*'
-    - 'lib/consent.rb'
-    - 'lib/consent/rspec.rb'
-    - 'lib/consent/ability.rb'
-    - 'lib/consent/action.rb'
-    - 'lib/consent/dsl.rb'
-    - 'lib/consent/permission.rb'
-    - 'lib/consent/permissions.rb'
-    - 'lib/consent/subject.rb'
-    - 'lib/consent/view.rb'
-    - 'lib/generators/consent/permissions_generator.rb'

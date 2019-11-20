@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Consent
-  class PermissionsGenerator < Rails::Generators::NamedBase
+  class PermissionsGenerator < Rails::Generators::NamedBase # :nodoc:
     source_root File.expand_path('templates', __dir__)
     argument :description, type: :string, required: false
 

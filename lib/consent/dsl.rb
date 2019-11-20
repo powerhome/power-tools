@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Consent
-  class DSL
+  class DSL # :nodoc:
     attr_reader :subject
 
     def initialize(subject, defaults)

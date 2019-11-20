@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Consent
+  # Defines a CanCan(Can)::Ability class based on a permissions hash
   class Ability
     include CanCan::Ability
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Consent
-  class Subject
+  class Subject # :nodoc:
     attr_reader :key, :label, :actions, :views
 
     def initialize(key, label)

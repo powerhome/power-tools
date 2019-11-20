@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Consent
-  class Permissions
+  class Permissions # :nodoc:
     include Enumerable
 
     def initialize(permissions)

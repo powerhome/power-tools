@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Consent
-  class Permission
+  class Permission # :nodoc:
     def initialize(subject, action, view = nil)
       @subject = subject
       @action = action
