@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Consent
   class DSL
     attr_reader :subject
@@ -11,13 +13,13 @@ module Consent
       DSL.build(@subject, @defaults.merge(new_defaults), &block)
     end
 
-    # rubocop:disable Link/UnusedBlockArgument, Link/Eval
+    # rubocop:disable Lint/UnusedBlockArgument, Security/Eval
     def eval_view(key, label, collection_conditions)
       view key, label do |user|
         eval(collection_conditions)
       end
     end
-    # rubocop:enable Link/UnusedBlockArgument, Link/Eval
+    # rubocop:enable Lint/UnusedBlockArgument, Security/Eval
 
     def view(key, label, instance = nil, collection = nil, &block)
       collection ||= block

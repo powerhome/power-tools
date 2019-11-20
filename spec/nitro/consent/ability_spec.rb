@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Consent::Ability do
@@ -46,9 +48,11 @@ RSpec.describe Consent::Ability do
   end
 
   it 'cannot perform action when instance condition forbids' do
+    past = SomeModel.new(nil, Date.new - 10)
+    future = SomeModel.new(nil, Date.new + 10)
     permissions[:some_model] = { destroy: :future }
 
-    expect(ability).to_not be_able_to(:destroy, SomeModel.new(nil, Date.new - 10))
-    expect(ability).to be_able_to(:destroy, SomeModel.new(nil, Date.new + 10))
+    expect(ability).to_not be_able_to(:destroy, past)
+    expect(ability).to be_able_to(:destroy, future)
   end
 end

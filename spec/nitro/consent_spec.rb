@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Consent do
@@ -22,7 +24,7 @@ describe Consent do
     it 'yields a in dsl context with defaults' do
       defaults = { views: [:my_view] }
 
-      block = -> (_, __) {}
+      block = ->(_, __) {}
       expect(Consent::DSL).to receive(:build)
         .with(an_instance_of(Consent::Subject), defaults, &block)
 

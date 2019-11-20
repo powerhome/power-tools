@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Consent::View do
@@ -5,7 +7,7 @@ RSpec.describe Consent::View do
 
   describe '#conditions' do
     it 'is the callable with the given args' do
-      view = Consent::View.new(nil, nil, nil, -> (obj) { obj.id })
+      view = Consent::View.new(nil, nil, nil, ->(obj) { obj.id })
 
       expect(view.conditions(obj)).to eql '1235'
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Consent
   # Rails file reloader to detect permission changes and apply them to consent
   class Reloader

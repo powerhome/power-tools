@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Consent
   class Permissions
     include Enumerable
@@ -25,12 +27,14 @@ module Consent
 
     def full(subject, action, view_key)
       return unless Consent::FULL_ACCESS.include?(view_key.to_s.strip)
+
       Permission.new(subject, action)
     end
 
     def partial(subject, action, view_key)
       view = subject.view_for(action, view_key.to_s.to_sym)
       return if view.nil?
+
       Permission.new(subject, action, view)
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Consent::Subject do
@@ -15,7 +17,7 @@ RSpec.describe Consent::Subject do
   describe '#view_for' do
     let(:all_view) { double }
     let(:none_view) { double }
-    let(:action) { double(view_keys: [:all, :none, :some], default_view: :some) }
+    let(:action) { double(view_keys: %i[all none some], default_view: :some) }
 
     before do
       subject.views[:all] = all_view

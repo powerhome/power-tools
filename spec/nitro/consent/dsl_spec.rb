@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Consent::DSL do
@@ -101,7 +103,7 @@ RSpec.describe Consent::DSL do
     it 'creates a new DSL context with merged defaults' do
       defaults[:foo] = 'bar'
 
-      block = -> (_, __) {}
+      block = ->(_, __) {}
       expected_defaults = { lol: 'rofl', foo: 'bar' }
       expect(Consent::DSL).to receive(:build)
         .with(subject, expected_defaults, &block)

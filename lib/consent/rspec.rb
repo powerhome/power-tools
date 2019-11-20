@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'consent'
 
 module Consent
@@ -11,17 +13,25 @@ module Consent
 
       match do |subject_key|
         action = Consent.find_action(subject_key, action_key)
-        action && @views ? action.view_keys.sort.eql?(@views.sort) : !action.nil?
+        if action && @views
+          values_match?(action.view_keys.sort, @views.sort)
+        else
+          !action.nil?
+        end
       end
 
       failure_message do |subject_key|
         action = Consent.find_action(subject_key, action_key)
-        message = "expected %s (%s) to provide action %s" % [
-          subject_key.to_s, subject.class, action_key
-        ]
+        message = format(
+          'expected %<skey>s (%<sclass>s) to provide action %<action>s',
+          skey: subject_key.to_s, sclass: subject.class, action: action_key
+        )
 
         if action && @views
-          '%s with views %s, but actual views are %p' % [message, @views, action.view_keys]
+          format(
+            '%<message>s with views %<views>s, but actual views are %<keys>p',
+            message: message, views: @views, keys: action.view_keys
+          )
         else
           message
         end
@@ -35,21 +45,36 @@ module Consent
 
       match do |subject_key|
         view = Consent.find_view(subject_key, view_key)
-        conditions ? view.try(:conditions, *@context).eql?(conditions) : !view.nil?
+        if conditions
+          view&.conditions(*@context).eql?(conditions)
+        else
+          !view.nil?
+        end
       end
 
       failure_message do |subject_key|
         view = Consent.find_view(subject_key, view_key)
-        message = "expected %s (%s) to provide view %s with %p, but" % [
-          subject_key.to_s, subject.class, view_key, conditions
-        ]
+        message = format(
+          'expected %<skey>s (%<sclass>s) to provide view %<view>s with` \
+          `%<conditions>p, but',
+          skey: subject_key.to_s, sclass: subject.class,
+          view: view_key, conditions: conditions
+        )
 
         if view && conditions
           actual_conditions = view.conditions(*@context)
-          '%s conditions are %p' % [message, actual_conditions]
+          format(
+            '%<message>s conditions are %<conditions>p',
+            message: message, conditions: actual_conditions
+          )
         else
-          actual_views = Consent.find_subjects(subject_key).map(&:views).map(&:keys).flatten
-          '%s available views are %p' % [message, actual_views]
+          actual_views = Consent.find_subjects(subject_key)
+                                .map(&:views)
+                                .map(&:keys).flatten
+          format(
+            '%<message>s available views are %<views>p',
+            message: message, views: actual_views
+          )
         end
       end
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'consent/version'
 require 'consent/subject'
 require 'consent/view'
@@ -9,7 +11,7 @@ require 'consent/ability' if defined?(CanCan)
 require 'consent/railtie' if defined?(Rails)
 
 module Consent
-  FULL_ACCESS = %w(1 true).freeze
+  FULL_ACCESS = %w[1 true].freeze
 
   def self.default_views
     @default_views ||= {}
@@ -35,7 +37,7 @@ module Consent
 
   def self.find_view(subject_key, view_key)
     views = Consent.find_subjects(subject_key)
-                   .map{|subject| subject.views}
+                   .map(&:views)
                    .reduce({}, &:merge)
     views[view_key]
   end

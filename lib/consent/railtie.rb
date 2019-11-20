@@ -1,4 +1,6 @@
-require "consent/reloader"
+# frozen_string_literal: true
+
+require 'consent/reloader'
 
 module Consent
   # Plugs consent permission load to the Rails class loading cycle

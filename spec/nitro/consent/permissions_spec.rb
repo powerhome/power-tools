@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Consent::Permissions do
@@ -11,8 +13,11 @@ RSpec.describe Consent::Permissions do
     expect(permission.view_key).to be :view1
   end
 
-  it 'maps a permissions hash to consent subjects with subjects split in different definitions' do
-    permissions_hash = { beta: { lol_til_death: true, request_frustration: true } }
+  it 'maps a permissions hash to consent subjects with subjects split in' \
+    'different definitions' do
+    permissions_hash = {
+      beta: { lol_til_death: true, request_frustration: true }
+    }
 
     subjects = Consent.permissions(permissions_hash).map(&:subject_key)
     actions = Consent.permissions(permissions_hash).map(&:action_key)

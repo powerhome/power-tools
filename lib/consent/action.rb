@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Consent
   class Action
     attr_reader :key, :label, :options
