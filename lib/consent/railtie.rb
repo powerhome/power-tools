@@ -1,22 +1,20 @@
+require "consent/reloader"
+
 module Consent
   # Plugs consent permission load to the Rails class loading cycle
   class Railtie < Rails::Railtie
-    config.before_configuration do
-      default_path = Rails.root.join('app', 'permissions')
-      config.consent = Struct.new(:paths).new([default_path])
-    end
-
-    config.to_prepare do
-      Consent.subjects.clear
-      Consent.load_subjects!(
-        Rails.application.config.consent.paths,
+    config.before_configuration do |app|
+      default_path = app.root.join('app', 'permissions')
+      config.consent = Consent::Reloader.new(
+        default_path,
         ActiveSupport::Dependencies.mechanism
       )
     end
 
-    config.after_initialize do
-      permissions_paths = config.consent.paths.map(&:to_s)
-      ActiveSupport::Dependencies.autoload_paths -= permissions_paths
+    initializer 'initialize consent permissions reloading' do |app|
+      app.reloaders << config.consent
+      ActiveSupport::Dependencies.autoload_paths -= config.consent.paths
+      config.to_prepare { app.config.consent.execute_if_updated }
     end
   end
 end
