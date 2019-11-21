@@ -8,7 +8,10 @@ module Consent
 
     config.to_prepare do
       Consent.subjects.clear
-      Consent.load_subjects! Rails.application.config.consent.paths
+      Consent.load_subjects!(
+        Rails.application.config.consent.paths,
+        ActiveSupport::Dependencies.mechanism
+      )
     end
 
     config.after_initialize do

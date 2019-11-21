@@ -40,9 +40,9 @@ module Consent
     views[view_key]
   end
 
-  def self.load_subjects!(paths)
+  def self.load_subjects!(paths, mechanism = :require)
     permission_files = paths.map { |dir| File.join(dir, '*.rb') }
-    Dir[*permission_files].each(&Kernel.method(:require))
+    Dir[*permission_files].each(&Kernel.method(mechanism))
   end
 
   def self.define(key, label, options = {}, &block)
