@@ -11,6 +11,10 @@ module Consent
       )
     end
 
+    config.after_initialize do |app|
+      app.config.consent.execute
+    end
+
     initializer 'initialize consent permissions reloading' do |app|
       app.reloaders << config.consent
       ActiveSupport::Dependencies.autoload_paths -= config.consent.paths

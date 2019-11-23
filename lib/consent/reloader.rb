@@ -17,13 +17,10 @@ module Consent
     end
 
     def updater
-      @updater ||= begin
-        updater = ActiveSupport::FileUpdateChecker.new([], watch_dirs) { reload! }
-        updater.tap(&:execute)
-      end
+      @updater ||= ActiveSupport::FileUpdateChecker.new([], globs) { reload! }
     end
 
-    def watch_dirs
+    def globs
       pairs = paths.map { |path| [path.to_s, %w[rb]] }
       Hash[pairs]
     end
