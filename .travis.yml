@@ -4,6 +4,9 @@ rvm:
 - 2.2.2
 - 2.5.0
 before_install: gem install bundler -v 1.17.3
+script:
+  - bundle exec rubocop
+  - bundle exec rspec
 deploy:
   provider: rubygems
   api_key:
