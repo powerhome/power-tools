@@ -8,20 +8,20 @@ RSpec.describe Consent::Ability do
   let(:ability) { Consent::Ability.new(permissions, user) }
 
   it 'it authorizes symbol permissions' do
-    permissions[:beta] = { lol_til_death: '1' }
+    ability.consent subject: :beta, action: :lol_til_death
 
     expect(ability).to be_able_to(:lol_til_death, :beta)
   end
 
   it 'it authorizes model permissions' do
-    permissions[:some_model] = { action1: '1' }
+    ability.consent subject: SomeModel, action: :action1
 
     expect(ability).to be_able_to(:action1, SomeModel)
     expect(ability).to be_able_to(:action1, SomeModel.new)
   end
 
   it 'adds view conditions to cancan conditions' do
-    permissions[:some_model] = { action1: :lol }
+    ability.consent subject: SomeModel, action: :action1, view: :lol
 
     expect(ability).to be_able_to(:action1, SomeModel)
 
@@ -29,30 +29,20 @@ RSpec.describe Consent::Ability do
     expect(ability).to_not be_able_to(:action1, SomeModel.new('nop'))
   end
 
-  it 'empty view means no permission' do
-    permissions[:some_model] = { action1: '' }
-
+  it 'no permission is granted unless explicitly granted' do
     expect(ability).to_not be_able_to(:action1, SomeModel)
   end
 
-  it '0 view means no permission' do
-    permissions[:some_model] = { action1: 0 }
-
-    expect(ability).to_not be_able_to(:action1, SomeModel)
-  end
-
-  it '"0" view means no permission' do
-    permissions[:some_model] = { action1: '0' }
-
-    expect(ability).to_not be_able_to(:action1, SomeModel)
+  it 'has the default view granted when defined' do
+    past = SomeModel.new(nil, Date.new - 10)
+    future = SomeModel.new(nil, Date.new + 10)
+    expect(ability).to be_able_to(:destroy, future)
+    expect(ability).to_not be_able_to(:destroy, past)
   end
 
   it 'cannot perform action when instance condition forbids' do
     past = SomeModel.new(nil, Date.new - 10)
-    future = SomeModel.new(nil, Date.new + 10)
-    permissions[:some_model] = { destroy: :future }
 
     expect(ability).to_not be_able_to(:destroy, past)
-    expect(ability).to be_able_to(:destroy, future)
   end
 end
