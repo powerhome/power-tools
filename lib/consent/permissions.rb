@@ -28,14 +28,14 @@ module Consent
     def full(subject, action, view_key)
       return unless Consent::FULL_ACCESS.include?(view_key.to_s.strip)
 
-      Permission.new(subject, action)
+      Permission.new(subject.key, action.key)
     end
 
     def partial(subject, action, view_key)
       view = subject.view_for(action, view_key.to_s.to_sym)
       return if view.nil?
 
-      Permission.new(subject, action, view)
+      Permission.new(subject.key, action.key, view.key)
     end
   end
 end
