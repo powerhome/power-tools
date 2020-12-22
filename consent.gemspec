@@ -12,6 +12,8 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Consent'
   spec.description   = 'Consent'
+  
+  spec.licenses = ['MIT']
 
   spec.files = `git ls-files`.split.reject do |file|
     file =~ /^(test|spec|features)/
