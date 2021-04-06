@@ -6,7 +6,6 @@ require 'consent/view'
 require 'consent/action'
 require 'consent/dsl'
 require 'consent/permission'
-require 'consent/permissions'
 require 'consent/ability' if defined?(CanCan)
 require 'consent/railtie' if defined?(Rails)
 
@@ -14,8 +13,6 @@ require 'consent/railtie' if defined?(Rails)
 # concise DSL for authorization so that all abilities do not have
 # to be in your `Ability` class.
 module Consent
-  FULL_ACCESS = %w[1 true].freeze
-
   # Default views available to every permission
   #
   # i.e.:
