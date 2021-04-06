@@ -4,8 +4,7 @@ require 'spec_helper'
 
 RSpec.describe Consent::Ability do
   let(:user) { double(id: 1) }
-  let(:permissions) { {} }
-  let(:ability) { Consent::Ability.new(permissions, user) }
+  let(:ability) { Consent::Ability.new(user) }
 
   it 'it authorizes symbol permissions' do
     ability.consent subject: :beta, action: :lol_til_death

@@ -5,21 +5,36 @@ module Consent
   class Ability
     include CanCan::Ability
 
-    def initialize(permissions, *args)
+    def initialize(*args, apply_defaults: true)
       @context = *args
-      Consent.permissions(permissions).each do |permission|
-        consent permission: permission
-      end
+      apply_defaults! if apply_defaults
     end
 
     def consent(permission: nil, subject: nil, action: nil, view: nil)
       permission ||= Permission.new(subject, action, view)
       return unless permission.valid?
 
-      conditions = permission.conditions(*@context)
-      ocond = permission.object_conditions(*@context)
+      can(
+        permission.action_key, permission.subject_key,
+        permission.conditions(*@context),
+        &permission.object_conditions(*@context)
+      )
+    end
 
-      can permission.action_key, permission.subject_key, conditions, &ocond
+  private
+
+    def apply_defaults!
+      Consent.subjects.each do |subject|
+        subject.actions.each do |action|
+          next unless action.default_view
+
+          consent(
+            subject: subject.key,
+            action: action.key,
+            view: action.default_view
+          )
+        end
+      end
     end
   end
 end
