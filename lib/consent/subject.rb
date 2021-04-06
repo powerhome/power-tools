@@ -10,10 +10,5 @@ module Consent
       @actions = []
       @views = Consent.default_views.clone
     end
-
-    def view_for(action, key)
-      view = @views.keys & action.view_keys & [key]
-      @views[view.first] || @views[action.default_view]
-    end
   end
 end

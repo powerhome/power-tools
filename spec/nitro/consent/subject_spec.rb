@@ -13,20 +13,4 @@ RSpec.describe Consent::Subject do
       expect(subject.views[:view1]).to be view
     end
   end
-
-  describe '#view_for' do
-    let(:all_view) { double }
-    let(:none_view) { double }
-    let(:action) { double(view_keys: %i[all none some], default_view: :some) }
-
-    before do
-      subject.views[:all] = all_view
-      subject.views[:none] = none_view
-      subject.actions << action
-    end
-
-    it 'is the view with the given key' do
-      expect(subject.view_for(action, :all)).to be all_view
-    end
-  end
 end
