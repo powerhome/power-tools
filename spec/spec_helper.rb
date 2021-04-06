@@ -3,7 +3,6 @@
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 require 'cancan'
 require 'cancan/matchers'
-require 'active_support/inflector'
 require 'consent'
 require 'date'
 
