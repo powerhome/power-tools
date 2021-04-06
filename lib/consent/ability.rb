@@ -14,6 +14,8 @@ module Consent
 
     def consent(permission: nil, subject: nil, action: nil, view: nil)
       permission ||= Permission.new(subject, action, view)
+      return unless permission.valid?
+
       conditions = permission.conditions(*@context)
       ocond = permission.object_conditions(*@context)
 
