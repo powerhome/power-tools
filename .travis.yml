@@ -1,8 +1,10 @@
 sudo: false
 language: ruby
 rvm:
-- 2.2.2
-- 2.5.0
+- 2.5.8
+- 2.6.6
+- 2.7.2
+- 3.0.0
 before_install: gem install bundler -v 1.17.3
 script:
   - bundle exec rubocop
@@ -15,4 +17,4 @@ deploy:
   on:
     tags: true
     repo: powerhome/consent
-    ruby: 2.5.0
+    ruby: 2.6.6
