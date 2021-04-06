@@ -18,21 +18,21 @@ Or install it yourself as:
 
 ## What is Consent
 
-Consent makes defining permissions easier by providing a clean, concise DSL for authorization so that all abilities do not have to be in your `Ability`
+Consent makes defining permissions easier by providing a clean, concise DSL for authorization
+so that all abilities do not have to be in your `Ability`
 class.
 
-Consent takes application permissions and models them so that permissions are organized and can be defined granularly. It does so using the
-following models:
+Consent takes application permissions and models them so that permissions are organized and can
+be defined granularly. It does so using the following models:
 
 * View: A collection of objects limited by a given condition.
 * Action: An action performed on top of the objects limited by the view. For example, one user could only `:view` something, while another could `:manage` it.
 * Subject: Holds the scope of the actions.
-* Permission: What is given to the user. Combines a subject, an action and
-a view.
+* Permission: The combination of a subject, an action, and a view (or full-access).
 
 ## What Consent Is Not
 
-Consent isn't a tool to enforce permissions -- it is intended to be used with CanCanCan and is only to make permissions more easily readable and definable.
+Consent isn't a tool to enforce permissions -- it supports CanCan(Can) for that goal.
 
 ## Subject
 
@@ -50,7 +50,8 @@ Consent.define Project, 'Our Projects' do
 end
 ```
 
-The scope is the action that's being performed on the subject. It can be anything, but will typically be an ActiveRecord class, a `:symbol`, or a PORO.
+The scope is the action that's being performed on the subject. It can be anything, but will
+typically be an ActiveRecord class, a `:symbol`, or a PORO.
 
 For instance:
 
@@ -62,16 +63,15 @@ end
 
 ## Views
 
-Views are the rules that limit the access to actions. For instance,
-a user may see a `Project` from his department, but not from others. That rule
-could be enforced with a `:department` view, defined like this:
+Views are the rules that limit access to actions. For instance, a user may see a `Project`
+from his department, but not from others. You can enforce it with a `:department` view,
+as in the examples below:
 
 ### Hash Conditions
 
-This is probably the most commonly used and is useful, for example,
-when the view can be defined using a where condition in an ActiveRecord context.
-It follows a match condition and will return all objects that meet the criteria
-and is based off a boolean:
+Probably the most commonly used. When the view can be defined using a `where` scope in
+an ActiveRecord context. It follows a match condition and will return all objects that meet
+the criteria:
 
 ```ruby
 Consent.define Project, 'Projects' do
@@ -81,22 +81,21 @@ Consent.define Project, 'Projects' do
 end
 ```
 
-Although hash conditions (matching object's attributes) are recommended,
-the constraints can be anything you want. Since Consent does not enforce the
-rules, those rules are directly given to CanCan. Following [CanCan rules](https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities%3A-Best-Practice)
+Although hash conditions (matching object's attributes) are recommended, the constraints can
+be anything you want. Since Consent does not enforce the rules, those rules are directly given
+to CanCan. Following [CanCan rules](https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities%3A-Best-Practice)
 for defining abilities is recommended.
 
 ### Object Conditions
 
-If you're not matching for equal values, then you would need to use an object
-condition, which matches data based off a range.
+If you're not matching for equal values, then you would need to use an object condition.
 
-If you already have an object and want to check to see whether the user has
-permission to view that specific object, you would use object conditions.
+If you already have an object and want to check to see whether the user has permission to view
+that specific object, you would use object conditions.
 
-If your needs can't be satisfied by hash conditions, it is recommended that a
-second condition is given for constraining object instances. For example, if you
-want to restrict a view for smaller volume projects:
+If your needs can't be satisfied by hash conditions, it is recommended that a second condition
+is given for constraining object instances. For example, if you want to restrict a view for smaller
+volume projects:
 
 ```ruby
 Consent.define Project, 'Projects' do
@@ -111,7 +110,7 @@ end
 ```
 
 For object conditions, the latter argument will be the referred object, while the
-former will be the context given to the [Permission](#permission) (also check
+first will be the context given to the [Permission](#permission) (also check
 [CanCan integration](#cancan-integration)).
 
 ## Action
@@ -161,48 +160,9 @@ end
 
 ## Permission
 
-A permission is what is consented to the user. It is the *permission* to perform
+A permission is what is consented to the user. It consentment to perform
 an *action* on a limited *view* of the *subject*. It marries the three concepts
 to consent an access to the user.
-
-A permission is not specified by the user, it is calculated from a permissions
-hash owned by a `User`, or a `Role` on an application.
-
-The permissions hash looks like the following:
-
-```ruby
-{
-  project: {
-    read: 'department',
-    approve: 'small_volumes'
-  }
-}
-```
-
-In other words:
-
-```ruby
-{
-  <subject>: {
-    <action>: <view>
-  }
-}
-```
-
-### Full Access
-
-Full (unrestricted by views) access is granted when view is `'1'`, `true` or
-`'true'`. For instance:
-
-In other words:
-
-```ruby
-{
-  projects: {
-    approve: true
-  }
-}
-```
 
 ## CanCan Integration
 
@@ -215,19 +175,66 @@ In the ability you define the scope of the permissions. This is typically an
 user:
 
 ```ruby
-Consent::Ability.new(user.permissions, user)
+Consent::Ability.new(user)
 ```
 
-The first parameter given to the ability is the permissions hash, seen at
-[Permission](#permission). The following parameters are the permission context.
-These parameters are given directly to the condition blocks defined by the views
-in the exact same order, so it's up to you to define what your context is.
+You'd more commonly define a subclass of `Consent::Ability`, and consent access
+to the user by calling `consent`:
+
+```ruby
+class MyAbility < Consent::Ability
+  def initialize(user)
+    super user
+
+    consent :read, Project, :department
+  end
+end
+```
+
+You can also consent full access by not specifying the view:
+
+```ruby
+  consent :read, Project
+```
+
+If you have a somehow manageable permission, you can consent them in batch in your ability:
+
+```ruby
+class MyAbility < Consent::Ability
+  def initialize(user)
+    super user
+
+    user.permissions.each do |permission|
+      consent permission.action, permission.subject, permission.view
+    end
+  end
+end
+```
+
+Consenting the same permission multiple times is handled as a Union by CanCanCan:
+
+```ruby
+class MyAbility < Consent::Ability
+  def initialize(user)
+    super user
+
+    consent :read, Project, :department
+    consent :read, Project, :future_projects
+  end
+end
+
+user = User.new(department_id: 13)
+ability = MyAbility.new(user)
+
+Project.accessible_by(ability, :read).to_sql
+=> SELECT * FROM projects WHERE ((department_id = 13) OR (starts_at > '2021-04-06'))
+```
 
 ## Rails Integration
 
 Consent is integrated into Rails with `Consent::Railtie`. To define where
 your permission files will be, use `config.consent.path`. This defaults to
-`app/permissions/` to conform to Rails' standards.
+`#{Rails.root}/app/permissions/` to conform to Rails' standards.
 
 ## Development
 
