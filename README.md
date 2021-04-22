@@ -171,7 +171,7 @@ permissions with frameworks like Rails. To use it with Rails check out the
 example at [Ability for Other Users](https://github.com/CanCanCommunity/cancancan/wiki/Ability-for-Other-Users)
 on CanCanCan's wiki.
 
-In the ability you define the scope of the permissions. This is typically an
+In the ability you define the scope of the permissions. This is typically a
 user:
 
 ```ruby
