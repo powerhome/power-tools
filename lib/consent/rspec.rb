@@ -39,7 +39,7 @@ module Consent
       match do |subject_key|
         action = Consent.find_action(subject_key, action_key)
         if action && @views
-          values_match?(action.view_keys.sort, @views.sort)
+          values_match?(action.views.keys.sort, @views.sort)
         else
           !action.nil?
         end
@@ -55,7 +55,7 @@ module Consent
         if action && @views
           format(
             '%<message>s with views %<views>s, but actual views are %<keys>p',
-            message: message, views: @views, keys: action.view_keys
+            message: message, views: @views, keys: action.views.keys
           )
         else
           message
@@ -69,16 +69,12 @@ module Consent
       end
 
       match do |subject_key|
-        view = Consent.find_view(subject_key, view_key)
-        if conditions
-          view&.conditions(*@context).eql?(conditions)
-        else
-          !view.nil?
+        Consent.find_subjects(subject_key).any? do |subject|
+          subject.views[view_key]&.conditions(*@context).eql?(conditions)
         end
       end
 
       failure_message do |subject_key|
-        view = Consent.find_view(subject_key, view_key)
         message = format(
           'expected %<skey>s (%<sclass>s) to provide view %<view>s with` \
           `%<conditions>p, but',
@@ -86,11 +82,13 @@ module Consent
           view: view_key, conditions: conditions
         )
 
-        if view && conditions
-          actual_conditions = view.conditions(*@context)
+        matching_conditions = Consent.find_subjects(subject_key).map do |subject|
+          subject.views[view_key]&.conditions(*@context)
+        end.compact
+        if matching_conditions
           format(
             '%<message>s conditions are %<conditions>p',
-            message: message, conditions: actual_conditions
+            message: message, conditions: matching_conditions
           )
         else
           actual_views = Consent.find_subjects(subject_key)
