@@ -20,13 +20,14 @@ module Consent
 
       can(
         action, subject,
-        view&.conditions(*@context),
-        &view&.object_conditions(*@context)
+        view&.conditions(*@context), &view&.object_conditions(*@context)
       )
     end
 
     def consent(**kwargs)
-      consent!(**kwargs) rescue Consent::ViewNotFound
+      consent!(**kwargs)
+    rescue Consent::ViewNotFound
+      nil
     end
 
     private

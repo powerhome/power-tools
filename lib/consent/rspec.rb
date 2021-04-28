@@ -82,13 +82,13 @@ module Consent
           view: view_key, conditions: conditions
         )
 
-        matching_conditions = Consent.find_subjects(subject_key).map do |subject|
+        found_conditions = Consent.find_subjects(subject_key).map do |subject|
           subject.views[view_key]&.conditions(*@context)
         end.compact
-        if matching_conditions
+        if found_conditions
           format(
             '%<message>s conditions are %<conditions>p',
-            message: message, conditions: matching_conditions
+            message: message, conditions: found_conditions
           )
         else
           actual_views = Consent.find_subjects(subject_key)

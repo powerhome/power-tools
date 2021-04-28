@@ -56,8 +56,9 @@ module Consent
   #
   # @return [Consent::View,nil]
   def self.find_view(subject_key, action_key, view_key)
-    action = find_action(subject_key, action_key)
-    action&.views[view_key] || raise(Consent::ViewNotFound)
+    find_action(subject_key, action_key)&.yield_self do |action|
+      action.views[view_key] || raise(Consent::ViewNotFound)
+    end
   end
 
   # Loads all permission (ruby) files from the given directory

@@ -12,7 +12,7 @@ module Consent
     end
 
     def views
-      @views ||= @subject.views.slice *@options.fetch(:views, [])
+      @views ||= @subject.views.slice(*@options.fetch(:views, []))
     end
 
     def default_view

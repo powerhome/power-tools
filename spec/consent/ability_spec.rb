@@ -49,7 +49,10 @@ RSpec.describe Consent::Ability do
     ability.consent subject: SomeModel, action: :create, view: :lol
     ability.consent subject: SomeModel, action: :destroy, view: :lol
 
-    expect(ability.send(:relevant_rules, :create, SomeModel).first.conditions).to eql(name: "ROFL")
-    expect(ability.send(:relevant_rules, :destroy, SomeModel).first.conditions).to eql(name: "lol")
+    create_rule = ability.send(:relevant_rules, :create, SomeModel).first
+    destroy_rule = ability.send(:relevant_rules, :destroy, SomeModel).first
+
+    expect(create_rule.conditions).to eql(name: 'ROFL')
+    expect(destroy_rule.conditions).to eql(name: 'lol')
   end
 end
