@@ -35,7 +35,7 @@ module Consent
   #
   # @return [Array<Consent::Subject>]
   def self.find_subjects(subject_key)
-    @subjects.find_all do |subject|
+    subjects.find_all do |subject|
       subject.key.eql?(subject_key)
     end
   end
@@ -44,11 +44,11 @@ module Consent
   #
   # @return [Consent::Action,nil]
   def self.find_action(subject_key, action_key)
-    Consent.find_subjects(subject_key)
-           .map(&:actions).flatten
-           .find do |action|
-             action.key.eql?(action_key)
-           end
+    find_subjects(subject_key)
+      .flat_map(&:actions)
+      .find do |action|
+        action.key.eql?(action_key)
+      end
   end
 
   # Finds a view within a subject context
@@ -86,12 +86,5 @@ module Consent
     subjects << Subject.new(key, label).tap do |subject|
       DSL.build(subject, defaults, &block)
     end
-  end
-
-  # Maps a permissions hash to a Consent::Permissions
-  #
-  # @return [Consent::Permissions]
-  def self.permissions(permissions)
-    Permissions.new(permissions)
   end
 end
