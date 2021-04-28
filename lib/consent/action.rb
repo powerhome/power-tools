@@ -2,9 +2,10 @@
 
 module Consent
   class Action # :nodoc:
-    attr_reader :key, :label, :options
+    attr_reader :subject, :key, :label, :options
 
-    def initialize(key, label, options = {})
+    def initialize(subject, key, label, options = {})
+      @subject = subject
       @key = key
       @label = label
       @options = options
