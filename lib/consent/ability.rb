@@ -10,15 +10,23 @@ module Consent
       apply_defaults! if apply_defaults
     end
 
-    def consent(permission: nil, subject: nil, action: nil, view: nil)
-      permission ||= Permission.new(subject, action, view)
-      return unless permission.valid?
+    def consent!(subject: nil, action: nil, view: nil)
+      view = case view
+             when Consent::View
+               view
+             when Symbol
+               Consent.find_view(subject, action, view)
+             end
 
       can(
-        permission.action_key, permission.subject_key,
-        permission.conditions(*@context),
-        &permission.object_conditions(*@context)
+        action, subject,
+        view&.conditions(*@context),
+        &view&.object_conditions(*@context)
       )
+    end
+
+    def consent(**kwargs)
+      consent!(**kwargs) rescue Consent::ViewNotFound
     end
 
     private

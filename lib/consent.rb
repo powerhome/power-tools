@@ -13,6 +13,8 @@ require 'consent/railtie' if defined?(Rails)
 # concise DSL for authorization so that all abilities do not have
 # to be in your `Ability` class.
 module Consent
+  ViewNotFound = Class.new(StandardError)
+
   # Default views available to every permission
   #
   # i.e.:
@@ -54,11 +56,9 @@ module Consent
   # Finds a view within a subject context
   #
   # @return [Consent::View,nil]
-  def self.find_view(subject_key, view_key)
-    views = Consent.find_subjects(subject_key)
-                   .map(&:views)
-                   .reduce({}, &:merge)
-    views[view_key]
+  def self.find_view(subject_key, action_key, view_key)
+    action = find_action(subject_key, action_key)
+    action&.views[view_key] || raise(Consent::ViewNotFound)
   end
 
   # Loads all permission (ruby) files from the given directory

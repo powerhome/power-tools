@@ -11,12 +11,14 @@ module Consent
       @options = options
     end
 
-    def view_keys
-      @options.fetch(:views, [])
+    def views
+      @views ||= @subject.views.slice *@options.fetch(:views, [])
     end
 
     def default_view
-      @options[:default_view]
+      return unless @options.key?(:default_view)
+
+      @default_view ||= @subject.views[@options[:default_view]]
     end
   end
 end

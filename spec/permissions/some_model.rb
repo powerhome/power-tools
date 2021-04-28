@@ -17,3 +17,11 @@ Consent.define SomeModel, 'My Label' do
   action :action1, 'Action One', views: %i[view1 lol]
   action :destroy, 'Destroy', views: %i[lol self], default_view: :future
 end
+
+Consent.define SomeModel, 'Another for the model' do
+  view :lol, 'ROFL Only' do |_|
+    { name: 'ROFL' }
+  end
+
+  action :create, 'Create', views: %i[lol self]
+end

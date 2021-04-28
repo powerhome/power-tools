@@ -79,7 +79,7 @@ RSpec.describe Consent::DSL do
     it 'creates the action with views' do
       dsl.action :action_key, 'ACTIONNNNNN', views: [:all]
 
-      expect(subject.actions.last.view_keys).to eql [:all]
+      expect(subject.actions.last.views.keys).to eql [:all]
     end
 
     it 'creates the action in the with context defaults' do
@@ -87,7 +87,7 @@ RSpec.describe Consent::DSL do
 
       dsl.action :action_key, 'ACTIONNNNNN'
 
-      expect(subject.actions.last.view_keys).to eql [:all]
+      expect(subject.actions.last.views.keys).to eql [:all]
     end
 
     it 'allows to override defaults' do
@@ -95,7 +95,7 @@ RSpec.describe Consent::DSL do
 
       dsl.action :action_key, 'ACTIONNNNNN', views: [:no_access]
 
-      expect(subject.actions.last.view_keys).to eql [:no_access]
+      expect(subject.actions.last.views.keys).to eql [:no_access]
     end
   end
 

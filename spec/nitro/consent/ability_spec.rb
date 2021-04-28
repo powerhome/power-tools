@@ -45,9 +45,11 @@ RSpec.describe Consent::Ability do
     expect(ability).to_not be_able_to(:destroy, past)
   end
 
-  it 'cannot consent an invalid permission' do
-    ability.consent subject: :unexistent, action: :unexistent
+  it 'contextualizes the view/action in the subject definition' do
+    ability.consent subject: SomeModel, action: :create, view: :lol
+    ability.consent subject: SomeModel, action: :destroy, view: :lol
 
-    expect(ability).to_not be_able_to(:unexistent, :unexistent)
+    expect(ability.send(:relevant_rules, :create, SomeModel).first.conditions).to eql(name: "ROFL")
+    expect(ability.send(:relevant_rules, :destroy, SomeModel).first.conditions).to eql(name: "lol")
   end
 end
