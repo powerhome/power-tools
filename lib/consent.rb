@@ -5,7 +5,6 @@ require 'consent/subject'
 require 'consent/view'
 require 'consent/action'
 require 'consent/dsl'
-require 'consent/permission'
 require 'consent/ability' if defined?(CanCan)
 require 'consent/railtie' if defined?(Rails)
 
