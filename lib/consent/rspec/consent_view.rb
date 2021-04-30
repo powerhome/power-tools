@@ -41,7 +41,12 @@ module Consent
       private
 
       def comparable_conditions(conditions)
-        conditions
+        case conditions.class.to_s
+        when 'ActiveRecord::Relation'
+          conditions.to_sql
+        else
+          conditions
+        end
       end
 
       def failure_message_base(failure) # rubocop:disable Metrics/MethodLength

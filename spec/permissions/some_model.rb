@@ -9,6 +9,10 @@ Consent.define SomeModel, 'My Label' do
     { owner_id: user.id }
   end
 
+  view :scoped_self, 'Default view',
+       ->(_user, _obj) { true }
+  ->(user) { SomeModel.where(owner_id: user.id) }
+
   view :view1, 'View 1'
   view :lol, 'Lol Only' do |_|
     { name: 'lol' }
