@@ -14,6 +14,11 @@ module Consent
         self
       end
 
+      def description
+        message = "consents view #{@view_key}"
+        "#{message} with conditions #{@conditions}" if @conditions
+      end
+
       def with_conditions(conditions)
         @conditions = comparable_conditions(conditions)
         self
@@ -41,12 +46,9 @@ module Consent
       private
 
       def comparable_conditions(conditions)
-        case conditions.class.to_s
-        when 'ActiveRecord::Relation'
-          conditions.to_sql
-        else
-          conditions
-        end
+        return conditions.to_sql if conditions.respond_to?(:to_sql)
+
+        conditions
       end
 
       def failure_message_base(failure) # rubocop:disable Metrics/MethodLength

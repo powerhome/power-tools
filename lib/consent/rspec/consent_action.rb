@@ -16,6 +16,11 @@ module Consent
         self
       end
 
+      def description
+        message = "consents action #{@action_key}"
+        "#{message} with views #{@views}" if @views
+      end
+
       def matches?(subject_key)
         @subject_key = subject_key
         @action = Consent.find_action(@subject_key, @action_key)
