@@ -7,7 +7,7 @@ This gem is focused on providing standard rubocop configuration for Power Home R
 Add this line to your application's Gemfile under development:
 
 ```ruby
-gem 'rubocop-powerhome', require: false
+gem "rubocop-powerhome", require: false
 ```
 
 And then execute:

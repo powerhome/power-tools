@@ -7,7 +7,7 @@ This gem is focused on providing Cops to support a healthy cobra app development
 Add this line to your application's Gemfile under development:
 
 ```ruby
-gem 'rubocop-cobra', require: false
+gem "rubocop-cobra", require: false
 ```
 
 And then execute:
