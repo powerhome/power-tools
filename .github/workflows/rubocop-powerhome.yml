@@ -3,6 +3,9 @@ name: rubocop-powerhome
 on:
   push:
 
+env:
+  PROJECT_DIR: rubocop-powerhome
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,20 +22,24 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-          working-directory: ./rubocop-powerhome
+          working-directory: ${{ env.PROJECT_DIR }}
       - name: Run the build script
-        working-directory: ./rubocop-powerhome
+        working-directory: ${{ env.PROJECT_DIR }}
         run: bundle exec rake
 
   release:
     needs: build
     runs-on: ubuntu-latest
+    if: contains(github.ref, 'refs/tags/v')
     steps:
       - uses: actions/checkout@v2
-      - name: Release Gem
-        uses: cadwallion/publish-rubygems-action@master
-        if: contains(github.ref, 'refs/tags/v')
+      - id: version-changed
+        uses: tj-actions/changed-files@v20
+        with:
+          files: ${{ env.PROJECT_DIR }}/**/version.rb
+      - uses: xjunior/publish-rubygems-action@master
+        if: steps.version-changed.outputs.any_changed == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
           RUBYGEMS_API_KEY: ${{ secrets.rubygems_api_key }}
-          RELEASE_COMMAND: 'cd rubocop-powerhome && rake release'
+          WORKDIR: ${{ env.PROJECT_DIR }}
