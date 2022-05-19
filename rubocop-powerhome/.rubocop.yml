@@ -1,0 +1,9 @@
+require:
+  - rubocop-powerhome
+
+Naming/FileName:
+  Exclude:
+    - lib/rubocop-powerhome.rb
+
+Rails:
+  Enabled: false

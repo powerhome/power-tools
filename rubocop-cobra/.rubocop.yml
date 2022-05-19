@@ -1,0 +1,11 @@
+inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-powerhome
+
+Naming/FileName:
+ Exclude:
+   - lib/rubocop-cobra.rb
+
+Rails:
+  Enabled: false

@@ -1,0 +1,38 @@
+name: rubocop-cobra
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Ruby ${{ matrix.ruby }}
+    strategy:
+      matrix:
+        ruby:
+          - '2.7.4'
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+          working-directory: ./rubocop-cobra
+      - name: Run the build script
+        working-directory: ./rubocop-cobra
+        run: bundle exec rake
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Release Gem
+        uses: cadwallion/publish-rubygems-action@master
+        if: contains(github.ref, 'refs/tags/v')
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+          RUBYGEMS_API_KEY: ${{ secrets.rubygems_api_key }}
+          RELEASE_COMMAND: 'cd rubocop-cobra && rake release'

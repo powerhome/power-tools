@@ -1,0 +1,78 @@
+AllCops:
+  TargetRubyVersion: 2.7
+  NewCops: enable
+
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent
+
+Lint/OrAssignmentToConstant:
+  Enabled: false
+
+Lint/ScriptPermission:
+  Enabled: false
+
+Naming/MethodParameterName:
+  AllowedNames:
+    - io
+    - id
+    - to
+    - by
+    - 'on'
+    - in
+    - at
+
+Rails:
+  Enabled: true
+
+# This was the rubocop default until Oct. 2019, when it was changed to slashes.
+# This preserves the original setting.
+Rails/FilePath:
+  EnforcedStyle: arguments
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Rake:
+  Enabled: true
+
+RSpec:
+  Enabled: false
+
+RSpec/FactoryBot:
+  Enabled: true
+
+Style/Documentation:
+  Enabled: false
+
+Style/HashEachMethods:
+  Enabled: false
+
+Style/HashTransformKeys:
+  Enabled: false
+
+Style/HashTransformValues:
+  Enabled: false
+
+Style/Lambda:
+  EnforcedStyle: literal
+
+Style/NumericPredicate:
+  Enabled: false
+
+Style/RescueStandardError:
+  EnforcedStyle: implicit
+
+# Single quotes being faster is hardly measurable and only affects parse time.
+# Enforcing double quotes reduces the times where you need to change them when introducing an interpolation.
+# Use single quotes only if their semantics are needed.
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma

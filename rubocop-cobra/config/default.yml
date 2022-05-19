@@ -1,0 +1,57 @@
+Cobra:
+  Enabled: true
+
+Cobra/CommandFilePlacement:
+  Description: 'This cop disallows adding global helpers to the `app/commands` directory.'
+  Enabled: true
+  VersionAdded: '0.1.0'
+
+Cobra/ControllerFilePlacement:
+  Description: 'This cop disallows adding global controllers to the `app/controllers` directory.'
+  Enabled: true
+  VersionAdded: '0.1.0'
+
+Cobra/DependencyVersion:
+  Description: 'External component dependencies should be declared with a version'
+  Enabled: true
+  VersionAdded: '0.1.0'
+
+Cobra/GemRequirement:
+  Description: 'Component Gemfile dependencies must specify "require: nil"'
+  Enabled: true
+  VersionAdded: '0.1.0'
+
+Cobra/HelperFilePlacement:
+  Description: 'This cop disallows adding global helpers to the `app/helpers` directory.'
+  Enabled: true
+  VersionAdded: '0.1.0'
+
+Cobra/Inheritance:
+  Description: 'Enforce classes inherit from their own modularized parent classes'
+  Enabled: true
+  VersionAdded: '0.1.0'
+
+Cobra/JobFilePlacement:
+  Description: 'This cop disallows adding global jobs to the `app/jobs` directory.'
+  Enabled: true
+  VersionAdded: '0.1.0'
+
+Cobra/LibFilePlacement:
+  Description: 'This cop disallows adding library files directly into the `lib/` directory.'
+  Enabled: true
+  VersionAdded: '0.1.0'
+
+Cobra/MailerFilePlacement:
+  Description: 'This cop disallows adding global helpers to the `app/mailers` directory.'
+  Enabled: true
+  VersionAdded: '0.1.0'
+
+Cobra/ModelFilePlacement:
+  Description: 'This cop disallows adding global models to the `app/models` directory.'
+  Enabled: true
+  VersionAdded: '0.1.0'
+
+Cobra/PresenterFilePlacement:
+  Description: 'This cop disallows adding global presenters to the `app/presenters` directory.'
+  Enabled: true
+  VersionAdded: '0.1.0'
