@@ -1,6 +1,6 @@
 # Rubocop::Powerhome
 
-This gem is focused on providing standard rubocop configuration for Power Home Remodeling ruby apps.
+This gem is focused on providing standard Rubocop configuration for Power Home Remodeling ruby apps.
 
 ## Installation
 
@@ -25,6 +25,8 @@ require:
 
 That's it! You can override the standard configuration after that.
 
+It's recommended that you set `AllCops/TargetRubyVersion` in your project because some cops are Ruby version-dependent. See more [here](https://docs.rubocop.org/rubocop/configuration.html#setting-the-target-ruby-version).
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
@@ -37,4 +39,4 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/powerh
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+The gem is available as open-source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
