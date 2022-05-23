@@ -16,6 +16,7 @@ module RuboCop
       require_relative "cobra/mailer_file_placement"
       require_relative "cobra/model_file_placement"
       require_relative "cobra/presenter_file_placement"
+      require_relative "cobra/view_component_file_placement"
     end
   end
 end

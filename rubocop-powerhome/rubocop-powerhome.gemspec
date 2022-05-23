@@ -41,4 +41,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "rubocop-rake"
   spec.add_runtime_dependency "rubocop-rspec"
   spec.metadata["rubygems_mfa_required"] = "true"
+
+  spec.add_development_dependency "pry-byebug", "3.9.0"
 end
