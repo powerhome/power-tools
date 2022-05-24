@@ -1,0 +1,49 @@
+name: eslint-config
+
+on:
+  push:
+
+env:
+  PROJECT_DIR: eslint-config
+  NODE_VERSION: '14.18.1'
+  REGISTRY_URL: 'https://registry.npmjs.org'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with: 
+          node-version: ${{ env.NODE_VERSION }}
+      - run: yarn install --frozen-lockfile
+        working-directory: ${{ env.PROJECT_DIR }}
+      - name: Run the build script
+        run: yarn lint
+        working-directory: ${{ env.PROJECT_DIR }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    name: Release
+    if: contains(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v2
+      - id: version-changed
+        uses: tj-actions/changed-files@v20
+        with:
+          files: ${{ env.PROJECT_DIR }}/package.json
+      - name: Set up Node ${{ env.NODE_VERSION }}
+        if: steps.version-changed.outputs.any_changed == 'true'
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.REGISTRY_URL }}
+      - run: yarn install --frozen-lockfile
+        working-directory: ${{ env.PROJECT_DIR }}
+      - run: yarn publish
+        working-directory: ${{ env.PROJECT_DIR }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

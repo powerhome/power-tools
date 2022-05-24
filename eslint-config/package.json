@@ -1,0 +1,43 @@
+{
+  "name": "@powerhome/eslint-config",
+  "version": "0.1.0",
+  "license": "MIT",
+  "exports": {
+    "./base": "./lib/base.js",
+    "./flow": "./lib/flow.js",
+    "./typescript": "./lib/typescript.js",
+    ".": "./lib/typescript.js"
+  },
+  "keywords": [
+    "eslint",
+    "eslintconfig"
+  ],
+  "scripts": {
+    "lint": "eslint lib/*"
+  },
+  "peerDependencies": {
+    "eslint": "7.21.0",
+    "eslint-plugin-flowtype": "5.2.0",
+    "eslint-plugin-jsx-control-statements": "2.2.1",
+    "eslint-plugin-react": "7.22.0",
+    "eslint-plugin-react-hooks": "4.2.0",
+    "eslint-webpack-plugin": "2.5.1",
+    "@typescript-eslint/eslint-plugin": "4.16.1",
+    "@typescript-eslint/parser": "4.16.1",
+    "babel-eslint": "8",
+    "typescript": "4.2.2"
+  },
+  "devDependencies": {
+    "semver": "7.3.2",
+    "eslint": "7.21.0",
+    "eslint-plugin-flowtype": "5.2.0",
+    "eslint-plugin-jsx-control-statements": "2.2.1",
+    "eslint-plugin-react": "7.22.0",
+    "eslint-plugin-react-hooks": "4.2.0",
+    "eslint-webpack-plugin": "2.5.1",
+    "@typescript-eslint/eslint-plugin": "4.16.1",
+    "@typescript-eslint/parser": "4.16.1",
+    "babel-eslint": "8",
+    "typescript": "4.2.2"
+  }
+}
