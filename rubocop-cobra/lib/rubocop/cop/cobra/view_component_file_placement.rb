@@ -14,15 +14,24 @@ module RuboCop
       # @example
       #   # bad
       #   # path: components/my_component/app/components/foo_component.rb
-      #   class FooComponent
+      #   class FooComponent < ::ViewComponent::Base
       #     # ...
       #   end
       #
       #   # bad
       #   # path: components/my_component/app/components/my_component/foo_component.rb
       #   module MyComponent
-      #     class FooComponent
+      #     class FooComponent < MyComponent::ApplicationComponent
       #       # ...
+      #     end
+      #   end
+      #
+      #   # acceptable
+      #   # path: components/my_component/app/components/my_component/application_component.rb
+      #   module MyComponent
+      #     class ApplicationComponent < ::ViewComponent::Base
+      #         # ...
+      #       end
       #     end
       #   end
       #
@@ -30,7 +39,7 @@ module RuboCop
       #   # path: components/my_component/app/components/my_component/resource/foo_component.rb
       #   module MyComponent
       #     module Resource
-      #       class FooComponent
+      #       class FooComponent < MyComponent::ApplicationComponent
       #         # ...
       #       end
       #     end
@@ -70,7 +79,7 @@ module RuboCop
           return false unless path.include?("#{component_path}/")
 
           sub_path = path.split("#{component_path}/").last
-          sub_path.include?("/")
+          sub_path.include?("/") || sub_path == "application_component.rb"
         end
 
         def correct_path

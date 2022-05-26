@@ -55,3 +55,8 @@ Cobra/PresenterFilePlacement:
   Description: 'This cop disallows adding global presenters to the `app/presenters` directory.'
   Enabled: true
   VersionAdded: '0.1.0'
+
+Cobra/ViewComponentFilePlacement:
+  Description: 'This cop disallows adding global view_components to the `app/components` directory.'
+  Enabled: true
+  VersionAdded: '0.4.0'
