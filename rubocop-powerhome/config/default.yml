@@ -24,6 +24,11 @@ Naming/MethodParameterName:
     - in
     - at
 
+Naming/ViewComponent:
+  Description: 'This cop requires ViewComponent classes to end with Component in their classname.'
+  Enabled: true
+  VersionAdded: '0.4.0'
+
 Rails:
   Enabled: true
 
