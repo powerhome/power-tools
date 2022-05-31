@@ -64,6 +64,11 @@ Style/HashTransformValues:
 Style/Lambda:
   EnforcedStyle: literal
 
+Style/NoHelpers:
+  Description: 'This cop blocks global helper modules from existing in an application.'
+  Enabled: true
+  VersionAdded: '0.4.0'
+
 Style/NumericPredicate:
   Enabled: false
 
