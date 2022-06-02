@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.4.1] - 2022-06-02
+
+- Fix bug in Naming/ViewComponent when class does not inherit
+
 ## [0.4.0] - 2022-06-01
 
 - Adds Naming/ViewComponent cop

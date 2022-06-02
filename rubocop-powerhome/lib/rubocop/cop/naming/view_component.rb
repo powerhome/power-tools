@@ -30,7 +30,7 @@ module RuboCop
       private
 
         def view_component_class?(inheritance_klass)
-          inheritance_klass.end_with?("::ApplicationComponent", "ViewComponent::Base")
+          inheritance_klass&.end_with?("::ApplicationComponent", "ViewComponent::Base")
         end
       end
     end

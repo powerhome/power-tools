@@ -12,9 +12,16 @@ RSpec.describe RuboCop::Cop::Naming::ViewComponent do
     RUBY
   end
 
-  it "does not register offense for class that do not inherit from ApplicationComponent or ViewComponent::Base" do
+  it "does not register offense for class that does not inherit from ApplicationComponent or ViewComponent::Base" do
     expect_no_offenses(<<~RUBY)
       class Foo < ApplicationRecord
+      end
+    RUBY
+  end
+
+  it "does not register offense for class that does not inherit from anything" do
+    expect_no_offenses(<<~RUBY)
+      class Foo
       end
     RUBY
   end
