@@ -1,0 +1,9 @@
+site_name: ESLint Config Powerhome
+site_description: Provides eslint-config for Power Home Remodeling apps
+repo_url: https://github.com/powerhome/power_linting
+edit_uri: edit/main/eslint-config/docs/
+nav:
+  - 'Home': 'README.md'
+
+plugins:
+  - techdocs-core
