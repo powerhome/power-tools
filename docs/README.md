@@ -4,11 +4,11 @@ This repo provides tools for linting Power Home Remodeling project source.
 
 ## `rubocop-powerhome`
 
-This gem is focused on providing standard rubocop configuration for Power Home Remodeling ruby apps. See more in [`rubocop-powerhome`](./rubocop-powerhome).
+This gem is focused on providing standard rubocop configuration for Power Home Remodeling ruby apps. See more in [`rubocop-powerhome`](../rubocop-powerhome).
 
 ## `rubocop-cobra`
 
-This gem is focused on providing Cops to support a healthy cobra app development. See more in [`rubocop-cobra`](./rubocop-cobra).
+This gem is focused on providing Cops to support a healthy cobra app development. See more in [`rubocop-cobra`](../rubocop-cobra).
 
 ## Contributing
 
