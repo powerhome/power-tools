@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Provide style guide references and helpful hints on violations.
+
 ## [0.4.1] - 2022-06-02
 
 - Fix bug in Naming/ViewComponent when class does not inherit

@@ -1,6 +1,8 @@
 AllCops:
   TargetRubyVersion: 2.7
   NewCops: enable
+  DisplayStyleGuide: true
+  ExtraDetails: true
 
 Gemspec/RequiredRubyVersion:
   Enabled: false
