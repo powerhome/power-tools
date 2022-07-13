@@ -11,7 +11,7 @@ spec:
   type: library
   owner: heroes-for-hire
   lifecycle: production
-  system: power-application-framework
+  system: power-tools
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -26,4 +26,4 @@ spec:
   owner: heroes-for-hire
   lifecycle: production
   subcomponentOf: power-tools
-  system: power-application-framework
+  system: power-tools
