@@ -4,7 +4,7 @@ $LOAD_PATH.push File.expand_path("lib", __dir__)
 
 Gem::Specification.new do |s|
   s.name        = "nitro_config"
-  s.version     = "0.0.1"
+  s.version     = NitroConfig::VERSION
   s.authors     = ["Nitro Developers"]
   s.email       = ["dev@powerhrg.com"]
   s.homepage    = "http://nitro.powerhrg.com"
