@@ -53,4 +53,4 @@ These packages are maintained by [Power's](https://github.com/powerhome) Heroes 
 
 ## Contributing 💙
 
-Contributions are welcome! Feel free to [open a ticket]() or a [PR]().
+Contributions are welcome! Feel free to [open a ticket](https://github.com/powerhome/power-tools/issues/new) or a [PR](https://github.com/powerhome/power-tools/pulls).
