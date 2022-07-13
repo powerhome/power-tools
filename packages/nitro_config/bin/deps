@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -e
+
+echo ">>> Installing dependencies"
+if [ -z $CI ] ; then
+  time bundle check || bundle install --quiet
+else
+  time bundle check || bundle install
+fi

@@ -1,0 +1,5 @@
+site_name: Nitro Config
+nav:
+  - "Home": "README.md"
+plugins:
+  - techdocs-core

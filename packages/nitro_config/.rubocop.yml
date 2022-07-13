@@ -1,0 +1,2 @@
+inherit_gem:
+  nitro_linting: .rubocop_standard.yml

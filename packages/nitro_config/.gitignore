@@ -1,0 +1,7 @@
+.yardoc
+coverage
+/doc
+**/tmp/*
+!**/tmp/.gitkeep
+vendor/bundle
+*.log
