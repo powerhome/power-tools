@@ -1,0 +1,29 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: power-tools
+  title: PowerTools
+  description: PowerTools packages for applications.
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: library
+  owner: heroes-for-hire
+  lifecycle: production
+  system: power-application-framework
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: nitro_config
+  title: Nitro Config
+  description: Easier configuration for cobra applications
+  annotations:
+    backstage.io/techdocs-ref: dir:nitro_config
+spec:
+  type: library
+  owner: heroes-for-hire
+  lifecycle: production
+  subcomponentOf: power-tools
+  system: power-application-framework
