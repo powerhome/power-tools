@@ -6,7 +6,8 @@ At [Power Home Remodeling](https://powerhrg.com/), we have created foundational 
 
 power-tools currently contains the following packages (marked for release to rubygems 💎 or npm ☕️):
 
-[nitro_config]() 💎
+[nitro_config](https://github.com/powerhome/power-tools/blob/main/packages/nitro_config/docs/README.md) 💎
+
 When included in a Rails application, NitroConfig loads the configuration file at `config/config.yml` within the application directory and makes its values available at `NitroConfig.config`. Config values are loaded based on the Rails environment, permitting the specification of multiple environments' configurations in a single file.
 
 ## Installation 🛠

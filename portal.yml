@@ -20,7 +20,7 @@ metadata:
   title: Nitro Config
   description: Easier configuration for cobra applications
   annotations:
-    backstage.io/techdocs-ref: dir:nitro_config
+    backstage.io/techdocs-ref: dir:packages/nitro_config
 spec:
   type: library
   owner: heroes-for-hire
