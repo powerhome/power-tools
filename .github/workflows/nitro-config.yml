@@ -1,0 +1,46 @@
+name: nitro_config
+
+on:
+  push:
+
+env:
+  PROJECT_DIR: packages/nitro_config
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Ruby ${{ matrix.ruby }}
+    strategy:
+      matrix:
+        ruby:
+          - '2.7.4'
+          - '3.1.2'
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+          working-directory: ${{ env.PROJECT_DIR }}
+      - name: Run the build script
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: bundle exec rake
+
+  # release:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   if: contains(github.ref, 'refs/tags/v')
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - id: version-changed
+  #       uses: tj-actions/changed-files@v22
+  #       with:
+  #         files: ${{ env.PROJECT_DIR }}/**/version.rb
+  #     - uses: xjunior/publish-rubygems-action@master
+  #       if: steps.version-changed.outputs.any_changed == 'true'
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.github_token }}
+  #         RUBYGEMS_API_KEY: ${{ secrets.rubygems_api_key }}
+  #         WORKDIR: ${{ env.PROJECT_DIR }}
