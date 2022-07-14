@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
 
   s.metadata['allowed_push_host'] = 'http://rubygems.powerhrg.com'
   s.license = 'MIT'
-  s.required_ruby_version = '>= 3.0'
+  s.required_ruby_version = '>= 2.7'
 
   s.files = Dir['{app,config,db,lib}/**/*'] + ['Rakefile', 'docs/README.md']
 
