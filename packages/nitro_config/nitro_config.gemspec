@@ -2,12 +2,14 @@
 
 $LOAD_PATH.push File.expand_path("lib", __dir__)
 
+require_relative "lib/nitro_config/version"
+
 Gem::Specification.new do |s|
   s.name        = "nitro_config"
   s.version     = NitroConfig::VERSION
   s.authors     = ["Nitro Developers"]
   s.email       = ["dev@powerhrg.com"]
-  s.homepage    = "http://nitro.powerhrg.com"
+  s.homepage    = "https://github.com/powerhome/power-tools/blob/main/packages/nitro_config/docs/README.md"
   s.summary     = "Nitro Configuration Loader"
   s.description = "Loads Nitro configuration and makes it available to the application"
 
@@ -26,11 +28,11 @@ Gem::Specification.new do |s|
     s.add_dependency "activesupport", "5.2.8"
   end
 
-  s.add_development_dependency "nitro_linting", "0.0.1"
   s.add_development_dependency "pry-byebug", "3.9.0"
   s.add_development_dependency "rainbow", "2.2.2"
   s.add_development_dependency "rake", "~> 13.0"
   s.add_development_dependency "rspec", "3.9.0"
+  s.add_development_dependency "rubocop-powerhome", "0.4.1"
   s.add_development_dependency "simplecov", "0.15.1"
   s.add_development_dependency "yard", "0.9.21"
 end
