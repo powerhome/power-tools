@@ -5,7 +5,7 @@ module NitroConfig
   class Error < StandardError
     def initialize(path)
       super "#{path} not found in app config! If you're working in development, you probably need to" \
-            "`cp config/config_sample.yml config/config.yml` or create a symlink for convenience."
+            '`cp config/config_sample.yml config/config.yml` or create a symlink for convenience.'
     end
   end
 end

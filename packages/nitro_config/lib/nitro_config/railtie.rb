@@ -5,7 +5,7 @@ module NitroConfig
   # @private
   class Railtie < Rails::Railtie
     config.before_configuration do |app|
-      NitroConfig.load! app.root.join("config", "config.yml"), Rails.env
+      NitroConfig.load! app.root.join('config', 'config.yml'), Rails.env
     rescue Errno::ENOENT => e
       abort("Failed to initialize Nitro Config for #{app}:\n#{e.message}")
     end
