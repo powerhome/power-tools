@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
     s.add_dependency 'activesupport', '5.2.8'
   end
 
+  s.add_development_dependency 'license_finder', '~> 7.0'
   s.add_development_dependency 'pry-byebug', '3.9.0'
   s.add_development_dependency 'rainbow', '2.2.2'
   s.add_development_dependency 'rake', '~> 13.0'
