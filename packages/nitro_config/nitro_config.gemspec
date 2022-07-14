@@ -7,8 +7,8 @@ require_relative 'lib/nitro_config/version'
 Gem::Specification.new do |s|
   s.name        = 'nitro_config'
   s.version     = NitroConfig::VERSION
-  s.authors     = ['Nitro Developers']
-  s.email       = ['dev@powerhrg.com']
+  s.authors     = ['Carlos Palhares', 'Jill Klang']
+  s.email       = ['chjunior@gmail.com', 'jillian.emilie@gmail.com']
   s.homepage    = 'https://github.com/powerhome/power-tools/blob/main/packages/nitro_config/docs/README.md'
   s.summary     = 'Nitro Configuration Loader'
   s.description = 'Loads Nitro configuration and makes it available to the application'
