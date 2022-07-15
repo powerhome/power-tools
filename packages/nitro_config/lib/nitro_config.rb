@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'yaml'
+require "yaml"
 
-require 'nitro_config/options'
+require "nitro_config/options"
 
 # When included in a Rails application, NitroConfig loads the
 # configuration file at `config/config.yml` within the application
@@ -49,5 +49,5 @@ module NitroConfig
     ->(*_args) { config.get!(*args) }
   end
 
-  require 'nitro_config/railtie' if defined?(Rails)
+  require "nitro_config/railtie" if defined?(Rails)
 end

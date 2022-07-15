@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 def next?
-  File.basename(__FILE__) == 'Gemfile.next'
+  File.basename(__FILE__) == "Gemfile.next"
 end
 
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
 gemspec

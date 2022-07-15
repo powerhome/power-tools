@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'active_support/core_ext/hash/indifferent_access'
-require 'active_support/core_ext/object/try'
-require 'active_support/hash_with_indifferent_access'
+require "active_support/core_ext/hash/indifferent_access"
+require "active_support/core_ext/object/try"
+require "active_support/hash_with_indifferent_access"
 
-require 'nitro_config/error'
+require "nitro_config/error"
 
 module NitroConfig
-  PATH_SEPARATOR = '/'
+  PATH_SEPARATOR = "/"
 
   # Representation of a config key-value tree with path-based access
   class Options < HashWithIndifferentAccess
