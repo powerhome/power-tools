@@ -27,6 +27,9 @@ jobs:
       - name: Run the build script
         working-directory: ${{ env.PROJECT_DIR }}
         run: bundle exec rake
+      - name: Ensure license compliance
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: bundle exec license_finder
 
   release:
     needs: build
