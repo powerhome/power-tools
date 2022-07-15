@@ -41,7 +41,7 @@ UI testing will be done by opening a PR/branch, and then opening a PR for a clie
 ```ruby=
 # Gemfile
 
-gem "nitro_config", github: "powerhome/nitro_config", branch: "example-branch-name"
+gem "nitro_config", git: "https://github.com/powerhome/power-tools", glob: "packages/nitro_config/nitro_config.gemspec"
 ```
 
 ## Release 🚀
