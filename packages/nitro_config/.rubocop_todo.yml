@@ -10,5 +10,6 @@
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
 # IgnoredMethods: refine
 Metrics/BlockLength:
-  Exclude:
-    - spec/**/*
+  IgnoredMethods:
+    - describe
+    - context
