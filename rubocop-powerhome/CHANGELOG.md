@@ -1,6 +1,7 @@
 ## [Unreleased]
 
 - Provide style guide references and helpful hints on violations.
+- Ignore Metrics/BlockLength on Rspec's context and describe
 
 ## [0.4.1] - 2022-06-02
 

@@ -88,3 +88,8 @@ Style/TrailingCommaInArrayLiteral:
 
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: comma
+
+Metrics/BlockLength:
+  IgnoredMethods:
+    - describe
+    - context
