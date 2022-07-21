@@ -9,7 +9,7 @@ Bundler.require(:development)
 require "data_tracker"
 
 Combustion.initialize! :active_record do |app|
-  app.config.active_record.sqlite3.represent_boolean_as_integer = true
+  app.config.active_record.sqlite3.try(:represent_boolean_as_integer=, true)
 end
 
 require "rspec/rails"
