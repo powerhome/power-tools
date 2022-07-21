@@ -17,12 +17,12 @@ module DataTracker
     end
 
     def before_create(record)
-      relation, options = @create
+      relation, _options = @create
       record.public_send("#{relation}=", @value.call)
     end
 
     def before_update(record)
-      relation, options = @update
+      relation, _options = @update
       record.public_send("#{relation}=", @value.call)
     end
 
