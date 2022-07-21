@@ -42,4 +42,42 @@ RSpec.describe DataTracker do
       expect(sale).to_not belong_to(:created_by_department)
     end
   end
+
+  describe "data tracking" do
+    let(:marketing) { ::Internal::Department.create(name: "Marketing") }
+    let(:steve) do
+      ::Internal::User.create(
+        name: "Stephen Doe",
+        department: marketing
+      )
+    end
+    let(:sales) { ::Internal::Department.create(name: "Sales") }
+    let(:john) do
+      ::Internal::User.create(
+        name: "John Doe",
+        department: sales
+      )
+    end
+
+    it "tracks the data on create" do
+      ::Internal::Current.user = john
+      created_lead = ::Internal::Lead.create
+
+      expect(created_lead.created_by).to eql john
+      expect(created_lead.created_by_department).to eql sales
+    end
+
+    it "tracks the data on update" do
+      ::Internal::Current.user = steve
+      created_lead = ::Internal::Lead.create
+
+      ::Internal::Current.user = john
+      created_lead.update(strength: 100)
+
+      expect(created_lead.created_by).to eql steve
+      expect(created_lead.created_by_department).to eql marketing
+      expect(created_lead.updated_by).to eql john
+      expect(created_lead.updated_by_department).to eql sales
+    end
+  end
 end

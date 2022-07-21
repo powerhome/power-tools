@@ -11,6 +11,7 @@ ActiveRecord::Schema.define(version: 1) do
   end
 
   create_table(:leads, force: true) do |t|
+    t.integer :strength
     t.references :created_by
     t.references :created_by_department
     t.references :updated_by
@@ -18,6 +19,7 @@ ActiveRecord::Schema.define(version: 1) do
   end
 
   create_table(:sales, force: true) do |t|
+    t.integer :price
     t.references :created_by
     t.references :updated_by
   end
