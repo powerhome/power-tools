@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "data_tracker/version"
+require_relative "data_tracker/tracker"
 
 # :nodoc
 module DataTracker
@@ -18,49 +19,6 @@ module DataTracker
   def self.apply(model)
     @trackers.each do |_key, tracker|
       tracker.apply(model)
-    end
-  end
-
-  # :nodoc
-  class Tracker
-    def initialize(&block)
-      instance_eval(&block)
-      super
-    end
-
-    def apply(model)
-      apply_create(model)
-      apply_update(model)
-    end
-
-  private
-
-    def apply_create(model)
-      return unless @create
-
-      relation, options = @create
-
-      model.belongs_to relation, **options
-    end
-
-    def apply_update(model)
-      return unless @update
-
-      relation, options = @update
-
-      model.belongs_to relation, **options
-    end
-
-    def update(relation, **options)
-      @update = [relation, options]
-    end
-
-    def create(relation, **options)
-      @create = [relation, options]
-    end
-
-    def value(&block)
-      @value = block
     end
   end
 
