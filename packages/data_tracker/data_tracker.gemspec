@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = spec.summary
   spec.homepage = "https://github.com/powerhome/power-tools"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 2.6.0"
+  spec.required_ruby_version = ">= 2.7"
 
   spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
 
@@ -30,9 +30,11 @@ Gem::Specification.new do |spec|
   spec.bindir = "exe"
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-  
+
   spec.add_development_dependency "activerecord", ">= 5.2.8.1"
-  spec.add_development_dependency "sqlite3", "~> 1.4.2"
   spec.add_development_dependency "combustion", "~> 1.3"
   spec.add_development_dependency "rspec-rails", "~> 5.1.2"
+  spec.add_development_dependency "shoulda-matchers", "~> 5.1.0"
+  spec.add_development_dependency "sqlite3", "~> 1.4.2"
+  spec.metadata["rubygems_mfa_required"] = "true"
 end
