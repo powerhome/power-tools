@@ -79,5 +79,16 @@ RSpec.describe DataTracker do
       expect(created_lead.updated_by).to eql john
       expect(created_lead.updated_by_department).to eql sales
     end
+
+    it "does not track data when the model does not have the required column" do
+      ::Internal::Current.user = steve
+      created_sale = ::Internal::Sale.create
+
+      ::Internal::Current.user = john
+      created_sale.update(price: 100_000)
+
+      expect(created_sale.created_by).to eql steve
+      expect(created_sale.updated_by).to eql john
+    end
   end
 end

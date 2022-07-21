@@ -31,8 +31,16 @@ module DataTracker
     def apply_relation(model, relation_options, event)
       relation, options = relation_options
 
+      return unless foreign_key_exist?(model, relation, **options)
+
       model.belongs_to relation, **options
       model.set_callback event, :before, self
+    end
+
+    def foreign_key_exist?(model, relation, foreign_key: nil, **)
+      raise ArgumentError, "foreign_key is not set for #{relation}" unless foreign_key
+
+      model.column_names.include?(foreign_key.to_s)
     end
   end
 end
