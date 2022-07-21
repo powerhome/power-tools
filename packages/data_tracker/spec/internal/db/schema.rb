@@ -23,4 +23,10 @@ ActiveRecord::Schema.define(version: 1) do
     t.references :created_by
     t.references :updated_by
   end
+
+  create_table(:scores, force: true) do |t|
+    t.integer :score
+    t.references :created_by
+    t.references :updated_by
+  end
 end

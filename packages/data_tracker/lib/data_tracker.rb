@@ -17,9 +17,9 @@ module DataTracker
     ::DataTracker::DSL.build(&block)
   end
 
-  def self.apply(model)
-    @trackers.each do |_key, tracker|
-      tracker.apply(model)
+  def self.apply(model, overrides = {})
+    @trackers.each do |key, tracker|
+      tracker.apply(model, overrides.fetch(key, {}))
     end
   end
 end

@@ -6,6 +6,7 @@ RSpec.describe DataTracker do
   describe "relationships", type: :model do
     let(:lead) { ::Internal::Lead.new }
     let(:sale) { ::Internal::Sale.new }
+    let(:score) { ::Internal::Score.new }
 
     it "sets up 'create' relationships for all trackers" do
       expect(lead).to belong_to(:created_by).class_name("::Internal::User")
@@ -22,6 +23,11 @@ RSpec.describe DataTracker do
       expect(sale).to belong_to(:created_by)
       expect(sale).to_not belong_to(:updated_by_department)
       expect(sale).to_not belong_to(:created_by_department)
+    end
+
+    it "allows to override relation options" do
+      expect(score).to belong_to(:created_by).class_name("::Internal::ManagerUser")
+      expect(score).to belong_to(:updated_by).class_name("::Internal::ManagerUser")
     end
   end
 
@@ -71,6 +77,17 @@ RSpec.describe DataTracker do
 
       expect(created_sale.created_by).to eql steve
       expect(created_sale.updated_by).to eql john
+    end
+
+    it "tracks data with the given overrides" do
+      ::Internal::Current.user = steve
+      created_score = ::Internal::Score.create
+
+      ::Internal::Current.user = john
+      created_score.update(score: 10)
+
+      expect(created_score.created_by).to eql ::Internal::ManagerUser.find(steve.id)
+      expect(created_score.updated_by).to eql ::Internal::ManagerUser.find(john.id)
     end
   end
 end
