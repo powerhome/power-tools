@@ -18,9 +18,14 @@ kind: Component
 metadata:
   name: nitro_config
   title: Nitro Config
-  description: Easier configuration for cobra applications
+  description: >-
+    When included in a Rails application, NitroConfig loads the configuration
+    file at `config/config.yml` within the application directory and makes
+    its values available at `NitroConfig.config`. Config values are loaded
+    based on the Rails environment, permitting the specification of
+    multiple environments' configurations in a single file.
   annotations:
-    backstage.io/techdocs-ref: dir:nitro_config
+    backstage.io/techdocs-ref: dir:packages/nitro_config
 spec:
   type: library
   owner: heroes-for-hire
