@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 require_relative "data_tracker/dsl"
-require_relative "data_tracker/version"
+require_relative "data_tracker/model_helper"
+require_relative "data_tracker/railtie" if defined?(Rails)
 require_relative "data_tracker/tracker"
+require_relative "data_tracker/version"
 
 # :nodoc
 module DataTracker

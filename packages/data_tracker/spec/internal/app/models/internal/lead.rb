@@ -2,6 +2,6 @@
 
 module Internal
   class Lead < ::Internal::ApplicationRecord
-    DataTracker.apply(self)
+    track_data
   end
 end

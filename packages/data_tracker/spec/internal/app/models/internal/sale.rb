@@ -2,6 +2,6 @@
 
 module Internal
   class Sale < ::Internal::ApplicationRecord
-    DataTracker.apply(self)
+    track_data
   end
 end
