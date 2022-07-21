@@ -15,7 +15,7 @@ module DataTracker
       record.public_send("#{@relation}=", @value.call)
     end
   end
-  
+
   # :nodoc
   class Tracker
     def initialize(create:, update:, value:)
