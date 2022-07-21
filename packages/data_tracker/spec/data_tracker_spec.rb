@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe DataTracker do
   describe "relationships", type: :model do
     let(:lead) { ::Internal::Lead.new }
