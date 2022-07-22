@@ -38,7 +38,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: xjunior/publish-rubygems-action@master
-        if: steps.version-changed.outputs.any_changed == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
           RUBYGEMS_API_KEY: ${{ secrets.rubygems_api_key }}
