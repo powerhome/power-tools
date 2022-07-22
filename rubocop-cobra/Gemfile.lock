@@ -1,7 +1,7 @@
 PATH
   remote: ../rubocop-powerhome
   specs:
-    rubocop-powerhome (0.4.1)
+    rubocop-powerhome (0.5.0)
       rubocop
       rubocop-performance
       rubocop-rails
@@ -88,13 +88,13 @@ GEM
       rubocop (>= 1.7.0, < 2.0)
     rubocop-rake (0.6.0)
       rubocop (~> 1.0)
-    rubocop-rspec (2.11.1)
-      rubocop (~> 1.19)
+    rubocop-rspec (2.12.1)
+      rubocop (~> 1.31)
     ruby-progressbar (1.11.0)
     rubyzip (2.3.2)
     thor (1.2.1)
     tomlrb (2.0.3)
-    tzinfo (2.0.4)
+    tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.2.0)
     with_env (1.1.0)
