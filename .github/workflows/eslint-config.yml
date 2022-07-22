@@ -28,13 +28,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     name: Release
-    if: contains(github.ref, 'refs/tags/v')
+    if: ${{ contains(github.ref, 'refs/tags/v') && contains(github.ref, github.workflow) }}
     steps:
       - uses: actions/checkout@v3
-      - id: version-changed
-        uses: tj-actions/changed-files@v24
-        with:
-          files: ${{ env.PROJECT_DIR }}/package.json
       - name: Set up Node ${{ env.NODE_VERSION }}
         if: steps.version-changed.outputs.any_changed == 'true'
         uses: actions/setup-node@v3
