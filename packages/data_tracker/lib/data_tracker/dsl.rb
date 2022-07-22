@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-# :nodoc
 module DataTracker
-  # :nodoc
+  # DataTracker DSL modules
   module DSL
     def self.build(&block)
       Setup.module_eval(&block)
     end
 
-    # :nodoc
+    # DataTracker::DSL::Setup is the DSL cotext of the block in DataTracker.setup
+    #
     module Setup
     module_function
 
@@ -17,7 +17,8 @@ module DataTracker
       end
     end
 
-    # :nodoc
+    # DataTracker::DSL::Setup is the DSL cotext of the block in `DSL::Setup.tracker`
+    #
     class Tracking
       def self.build(&block)
         tracker = new

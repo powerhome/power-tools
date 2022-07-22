@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module DataTracker
+  # Auto injects the ::DataTracker::ModelHelper into ActiveRecord classes
+  #
   class Railtie < Rails::Railtie
     railtie_name :data_tracker
 
