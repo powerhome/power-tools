@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: version-changed
-        uses: tj-actions/changed-files@v23
+        uses: tj-actions/changed-files@v24
         with:
           files: ${{ env.PROJECT_DIR }}/**/version.rb
       - uses: xjunior/publish-rubygems-action@master
