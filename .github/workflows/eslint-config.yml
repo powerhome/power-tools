@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: version-changed
-        uses: tj-actions/changed-files@v23
+        uses: tj-actions/changed-files@v24
         with:
           files: ${{ env.PROJECT_DIR }}/package.json
       - name: Set up Node ${{ env.NODE_VERSION }}
