@@ -5,9 +5,9 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in audit_tracker.gemspec
 gemspec
 
+gem "byebug"
 gem "license_finder", ">= 7.0"
 gem "rake", ">= 13.0"
 gem "rspec", ">= 3.0"
 gem "rubocop", ">= 1.32"
 gem "rubocop-powerhome", ">= 0.4.1"
-gem "byebug"

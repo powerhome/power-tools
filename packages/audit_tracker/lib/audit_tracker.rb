@@ -23,7 +23,7 @@ module AuditTracker
   # and trackers with the same key override each other depending on load order.
   #
   # I.e.:
-  #  
+  #
   #   AuditTracker.setup do
   #     tracker :user do
   #       value { ::Internal::Current.user }
