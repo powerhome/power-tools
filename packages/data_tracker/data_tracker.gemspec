@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Carlos Palhares"]
   spec.email = ["chjunior@gmail.com"]
 
-  spec.summary = "DataTracker helps you centralize data tracking configuration to be used accross different models"
+  spec.summary = "DataTracker helps you centralize data tracking configuration to be used across different models"
   spec.description = spec.summary
   spec.homepage = "https://github.com/powerhome/power-tools"
   spec.license = "MIT"
