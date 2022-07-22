@@ -20,7 +20,6 @@ ActiveRecord::Schema.define(version: 1) do
 
   create_table(:sales, force: true) do |t|
     t.integer :price
-    t.references :created_by
     t.references :updated_by
   end
 

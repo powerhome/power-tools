@@ -21,7 +21,7 @@ RSpec.describe DataTracker do
 
     it "is does not create relationships when columns don't exist" do
       expect(sale).to belong_to(:updated_by)
-      expect(sale).to belong_to(:created_by)
+      expect(sale).to_not belong_to(:created_by)
       expect(sale).to_not belong_to(:updated_by_department)
       expect(sale).to_not belong_to(:created_by_department)
     end
@@ -83,7 +83,6 @@ RSpec.describe DataTracker do
       ::Internal::Current.user = john
       created_sale.update(price: 100_000)
 
-      expect(created_sale.created_by).to eql steve
       expect(created_sale.updated_by).to eql john
     end
 
