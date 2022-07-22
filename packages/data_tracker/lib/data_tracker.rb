@@ -17,9 +17,40 @@ module DataTracker
     @trackers ||= {}
   end
 
-  # Setup a DataTracker::Tracker
+  # Setup `DataTracker::Tracker`'s
   #
-  # TODO: write documentation
+  # setup entry point for data trackers. Multiple calls to this method are cumulative,
+  # and trackers with the same key override each other depending on load order.
+  #
+  # I.e.:
+  #  
+  #   DataTracker.setup do
+  #     tracker :user do
+  #       value { ::Internal::Current.user }
+  #       create :created_by, foreign_key: :created_by_id, class_name: "::Internal::User"
+  #       update :updated_by, foreign_key: :updated_by_id, class_name: "::Internal::User"
+  #     end
+  #     tracker :user_department do
+  #       value { ::Internal::Current.user&.department }
+  #       create(
+  #         :created_by_department,
+  #         foreign_key: :created_by_department_id,
+  #         class_name: "::Internal::Department"
+  #       )
+  #       update(
+  #         :updated_by_department,
+  #         foreign_key: :updated_by_department_id,
+  #         class_name: "::Internal::Department"
+  #       )
+  #     end
+  #   end
+  #
+  # Trackers will track a specific value, so the `value`` is always required to be defined.
+  # Each line after that define a different event. `create` and `update` are helper methods
+  # to create events.
+  #
+  # Each event defined will generate an active record relation, and will update that relation
+  # before the event (i.e.: `before_update`, `before_create`).
   #
   def self.setup(&block)
     ::DataTracker::DSL.build(&block)
@@ -29,7 +60,8 @@ module DataTracker
   #
   # I.e.:
   #
-  #  The following would create two trackers (user and user_department), but only apply the former to Lead:
+  #  The following would create two trackers (user and user_department), but only apply the
+  #  former to Lead:
   #
   #  DataTracker.setup do
   #    tracker(:user) do
@@ -46,7 +78,7 @@ module DataTracker
   #
   # @param model [ActiveRecord::Base] any activerecord model
   # @param options [Hash<Symbol,(Hash,Boolean)>] tracking options
-  # @see {::DataTracker::ModelHelper}
+  # @see ::DataTracker::ModelHelper
   def self.apply(model, options)
     @trackers.each do |key, tracker|
       next unless options[key]
