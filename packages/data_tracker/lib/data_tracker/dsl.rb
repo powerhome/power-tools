@@ -27,19 +27,20 @@ module DataTracker
       end
 
       def tracker
-        ::DataTracker::Tracker.new(
-          create: @create,
-          update: @update,
-          value: @value
-        )
+        ::DataTracker::Tracker.new(on: @on, value: @value)
+      end
+
+      def on(event, relation, **options)
+        @on ||= []
+        @on << [event, relation, options]
       end
 
       def update(relation, **options)
-        @update = [relation, options]
+        on(:update, relation, **options)
       end
-
+      
       def create(relation, **options)
-        @create = [relation, options]
+        on(:create, relation, **options)
       end
 
       def value(&block)

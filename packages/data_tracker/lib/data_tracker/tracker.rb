@@ -22,25 +22,23 @@ module DataTracker
   # is built into DataTracker.trackers via DataTracker.setup.
   #
   class Tracker
-    def initialize(create:, update:, value:)
-      @create = create
-      @update = update
+    def initialize(on:, value:)
+      @on = on
       @value = value
 
       super()
     end
 
     def apply(model, overrides)
-      apply_relation(model, @create, :create, overrides) if @create
-      apply_relation(model, @update, :update, overrides) if @update
+      @on.each do |event, relation, options|
+        options = options.merge(overrides[relation] || {})
+        apply_relation(model, relation, options, event)
+      end
     end
 
   private
 
-    def apply_relation(model, relation_options, event, overrides)
-      relation, relation_options = relation_options
-      options = relation_options.merge(overrides.fetch(relation, {}))
-
+    def apply_relation(model, relation, options, event)
       return unless foreign_key_exist?(model, relation, **options)
 
       value = options.delete(:value) || @value
