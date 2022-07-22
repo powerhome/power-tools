@@ -7,6 +7,7 @@ RSpec.describe DataTracker do
     let(:lead) { ::Internal::Lead.new }
     let(:sale) { ::Internal::Sale.new }
     let(:score) { ::Internal::Score.new }
+    let(:home) { ::Internal::Home.new }
 
     it "sets up 'create' relationships for all trackers" do
       expect(lead).to belong_to(:created_by).class_name("::Internal::User")
@@ -23,6 +24,13 @@ RSpec.describe DataTracker do
       expect(sale).to belong_to(:created_by)
       expect(sale).to_not belong_to(:updated_by_department)
       expect(sale).to_not belong_to(:created_by_department)
+    end
+
+    it "is does not create relationships when the tracker is disabled" do
+      expect(home).to belong_to(:updated_by)
+      expect(home).to belong_to(:created_by)
+      expect(home).to_not belong_to(:updated_by_department)
+      expect(home).to_not belong_to(:created_by_department)
     end
 
     it "allows to override relation options" do
@@ -77,6 +85,17 @@ RSpec.describe DataTracker do
 
       expect(created_sale.created_by).to eql steve
       expect(created_sale.updated_by).to eql john
+    end
+
+    it "is does not create relationships when the tracker is disabled" do
+      ::Internal::Current.user = steve
+      created_home = ::Internal::Home.create
+
+      ::Internal::Current.user = john
+      created_home.update(price: 200_000)
+
+      expect(created_home.created_by).to eql steve
+      expect(created_home.updated_by).to eql john
     end
 
     it "tracks data with the given overrides" do

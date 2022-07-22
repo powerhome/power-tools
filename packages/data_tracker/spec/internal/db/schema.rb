@@ -29,4 +29,12 @@ ActiveRecord::Schema.define(version: 1) do
     t.references :created_by
     t.references :updated_by
   end
+
+  create_table(:homes, force: true) do |t|
+    t.integer :price
+    t.references :created_by
+    t.references :created_by_department
+    t.references :updated_by
+    t.references :updated_by_department
+  end
 end

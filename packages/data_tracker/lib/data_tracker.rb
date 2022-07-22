@@ -25,11 +25,33 @@ module DataTracker
     ::DataTracker::DSL.build(&block)
   end
 
-  # Applies all trackers to a given model
+  # Enables the given trackers in the given model
   #
-  def self.apply(model, overrides = {})
+  # I.e.:
+  #
+  #  The following would create two trackers (user and user_department), but only apply the former to Lead:
+  #
+  #  DataTracker.setup do
+  #    tracker(:user) do
+  #      update :updated_by, foreign_key: "updated_by_id", class_name: "::User"
+  #      value { User.current }
+  #    end
+  #    tracker(:user_department) do
+  #      update :updated_by_department, foreign_key: "updated_by_department_id", class_name: "::Department"
+  #      value { User.current&.department }
+  #    end
+  #  end
+  #
+  #  DataTracker.apply(::Lead, user: true)
+  #
+  # @param model [ActiveRecord::Base] any activerecord model
+  # @param options [Hash<Symbol,(Hash,Boolean)>] tracking options
+  # @see {::DataTracker::ModelHelper}
+  def self.apply(model, options)
     @trackers.each do |key, tracker|
-      tracker.apply(model, overrides.fetch(key, {}))
+      next unless options[key]
+
+      tracker.apply(model, options[key] == true ? {} : options[key])
     end
   end
 end
