@@ -6,7 +6,7 @@ require "bundler"
 
 Bundler.require(:development)
 
-require "data_tracker"
+require "audit_tracker"
 
 Combustion.initialize! :active_record do |app|
   app.config.active_record.sqlite3.try(:represent_boolean_as_integer=, true)

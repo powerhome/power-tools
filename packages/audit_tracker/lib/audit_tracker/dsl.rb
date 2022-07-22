@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
-module DataTracker
-  # DataTracker DSL modules
+module AuditTracker
+  # AuditTracker DSL modules
   module DSL
     def self.build(&block)
       Setup.module_eval(&block)
     end
 
-    # DataTracker::DSL::Setup is the DSL cotext of the block in DataTracker.setup
+    # AuditTracker::DSL::Setup is the DSL cotext of the block in AuditTracker.setup
     #
     module Setup
     module_function
 
       def tracker(key, &block)
-        ::DataTracker.trackers[key] = Tracking.build(&block)
+        ::AuditTracker.trackers[key] = Tracking.build(&block)
       end
     end
 
-    # DataTracker::DSL::Setup is the DSL cotext of the block in `DSL::Setup.tracker`
+    # AuditTracker::DSL::Setup is the DSL cotext of the block in `DSL::Setup.tracker`
     #
     class Tracking
       def self.build(&block)
@@ -27,7 +27,7 @@ module DataTracker
       end
 
       def tracker
-        ::DataTracker::Tracker.new(on: @on, value: @value)
+        ::AuditTracker::Tracker.new(on: @on, value: @value)
       end
 
       def on(event, relation, **options)

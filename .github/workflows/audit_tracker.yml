@@ -1,10 +1,10 @@
-name: data_tracker
+name: audit_tracker
 
 on:
   push:
 
 env:
-  PROJECT_DIR: packages/data_tracker
+  PROJECT_DIR: packages/audit_tracker
 
 jobs:
   build:

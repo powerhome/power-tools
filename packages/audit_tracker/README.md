@@ -1,23 +1,23 @@
-# DataTracker
+# AuditTracker
 
-DataTracker helps you centralize data tracking configuration to be used across different models.
+AuditTracker helps you centralize data tracking configuration to be used across different models.
 
 ## Installation
 
 Install the gem and add it to the application's Gemfile by executing:
 
-    $ bundle add data_tracker
+    $ bundle add audit_tracker
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install data_tracker
+    $ gem install audit_tracker
 
 ## Usage Example
 
-In this example, we'll track the actors that created or updated different models, like the user, title, and their department at the time. This is represented like this in DataTracker:
+In this example, we'll track the actors that created or updated different models, like the user, title, and their department at the time. This is represented like this in AuditTracker:
 
 ```ruby
-DataTracker.setup do
+AuditTracker.setup do
   tracker :user do
     value { ::Internal::Current.user }
     create :created_by, foreign_key: :created_by_id, class_name: "::Internal::User"
@@ -65,7 +65,7 @@ home.updated_by_department => NoMethodError
 
 ### Disabling individual relations
 
-To enable each relation, DataTracker will first check if the column exists (`foreign_key`). If it doesn't exist, the relation won't be created, and the tracker won't be enabled for it.
+To enable each relation, AuditTracker will first check if the column exists (`foreign_key`). If it doesn't exist, the relation won't be created, and the tracker won't be enabled for it.
 
 ```ruby
 module Internal

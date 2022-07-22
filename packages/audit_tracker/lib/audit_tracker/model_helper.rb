@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-module DataTracker
+module AuditTracker
   # Model helper for setting up trackers in an ActiveRecord model
   #
   module ModelHelper
     #
-    # Helper to apply Datatracker to a model. This helper is automatically added
-    # to ActiveRecord::Base when it loads (@see {DataTracker::Railtie})
+    # Helper to apply AuditTracker to a model. This helper is automatically added
+    # to ActiveRecord::Base when it loads (@see {AuditTracker::Railtie})
     #
     # `track_data` options are the keys of the trackers defined. Each tracker is
     # enabled by passing `true` to it's key.
@@ -35,7 +35,7 @@ module DataTracker
     #
     # @param options [Hash<Symbol,(Hash, Boolean)>] options hash
     def track_data(**options)
-      ::DataTracker.apply(self, **options)
+      ::AuditTracker.apply(self, **options)
     end
   end
 end

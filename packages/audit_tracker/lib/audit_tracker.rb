@@ -1,30 +1,30 @@
 # frozen_string_literal: true
 
-require_relative "data_tracker/dsl"
-require_relative "data_tracker/model_helper"
-require_relative "data_tracker/railtie" if defined?(Rails)
-require_relative "data_tracker/tracker"
-require_relative "data_tracker/version"
+require_relative "audit_tracker/dsl"
+require_relative "audit_tracker/model_helper"
+require_relative "audit_tracker/railtie" if defined?(Rails)
+require_relative "audit_tracker/tracker"
+require_relative "audit_tracker/version"
 
-# DataTracker helps you centralize data tracking configuration to be used accross
+# AuditTracker helps you centralize data tracking configuration to be used accross
 # different models
-module DataTracker
-  # Trackers setup in DataTracker
+module AuditTracker
+  # Trackers setup in AuditTracker
   #
-  # @return [Hash<Symbol,::DataTracker::Tracker>]
+  # @return [Hash<Symbol,::AuditTracker::Tracker>]
   #
   def self.trackers
     @trackers ||= {}
   end
 
-  # Setup `DataTracker::Tracker`'s
+  # Setup `AuditTracker::Tracker`'s
   #
   # setup entry point for data trackers. Multiple calls to this method are cumulative,
   # and trackers with the same key override each other depending on load order.
   #
   # I.e.:
   #  
-  #   DataTracker.setup do
+  #   AuditTracker.setup do
   #     tracker :user do
   #       value { ::Internal::Current.user }
   #       create :created_by, foreign_key: :created_by_id, class_name: "::Internal::User"
@@ -53,7 +53,7 @@ module DataTracker
   # before the event (i.e.: `before_update`, `before_create`).
   #
   def self.setup(&block)
-    ::DataTracker::DSL.build(&block)
+    ::AuditTracker::DSL.build(&block)
   end
 
   # Enables the given trackers in the given model
@@ -63,7 +63,7 @@ module DataTracker
   #  The following would create two trackers (user and user_department), but only apply the
   #  former to Lead:
   #
-  #  DataTracker.setup do
+  #  AuditTracker.setup do
   #    tracker(:user) do
   #      update :updated_by, foreign_key: "updated_by_id", class_name: "::User"
   #      value { User.current }
@@ -74,11 +74,11 @@ module DataTracker
   #    end
   #  end
   #
-  #  DataTracker.apply(::Lead, user: true)
+  #  AuditTracker.apply(::Lead, user: true)
   #
   # @param model [ActiveRecord::Base] any activerecord model
   # @param options [Hash<Symbol,(Hash,Boolean)>] tracking options
-  # @see ::DataTracker::ModelHelper
+  # @see ::AuditTracker::ModelHelper
   def self.apply(model, options)
     @trackers.each do |key, tracker|
       next unless options[key]

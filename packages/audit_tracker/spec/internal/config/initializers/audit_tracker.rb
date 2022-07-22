@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-DataTracker.setup do
+AuditTracker.setup do
   tracker(:user) do
     create :created_by, foreign_key: :created_by_id, class_name: "::Internal::User"
     update :updated_by, foreign_key: :updated_by_id, class_name: "::Internal::User"

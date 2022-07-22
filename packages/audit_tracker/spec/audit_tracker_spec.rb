@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe DataTracker do
+RSpec.describe AuditTracker do
   describe "relationships", type: :model do
     let(:lead) { ::Internal::Lead.new }
     let(:sale) { ::Internal::Sale.new }

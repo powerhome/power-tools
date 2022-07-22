@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module DataTracker
+module AuditTracker
   #
-  # ::DataTracker::Tracker represents the tracker and is responsible
+  # ::AuditTracker::Tracker represents the tracker and is responsible
   # for setting up the models to be tracked
   #
   # I.e.:
@@ -18,8 +18,8 @@ module DataTracker
   # necessary foreign keys, the relationships (`created_by` and `updated_by`)
   # and callbacks (before create / update) will be added to it.
   #
-  # ::DataTracker::Tracker is the core of DataTracker, and a collection of trackers
-  # is built into DataTracker.trackers via DataTracker.setup.
+  # ::AuditTracker::Tracker is the core of AuditTracker, and a collection of trackers
+  # is built into AuditTracker.trackers via AuditTracker.setup.
   #
   class Tracker
     def initialize(on:, value:)

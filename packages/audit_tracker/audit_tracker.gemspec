@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require_relative "lib/data_tracker/version"
+require_relative "lib/audit_tracker/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "data_tracker"
-  spec.version = DataTracker::VERSION
+  spec.name = "audit_tracker"
+  spec.version = AuditTracker::VERSION
   spec.authors = ["Carlos Palhares"]
   spec.email = ["chjunior@gmail.com"]
 
-  spec.summary = "DataTracker helps you centralize data tracking configuration to be used across different models"
+  spec.summary = "AuditTracker helps you centralize data tracking configuration to be used across different models"
   spec.description = spec.summary
   spec.homepage = "https://github.com/powerhome/power-tools"
   spec.license = "MIT"
@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
-  spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/main/packages/data_tracker/docs/CHANGELOG.md"
+  spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/main/packages/audit_tracker/docs/CHANGELOG.md"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
