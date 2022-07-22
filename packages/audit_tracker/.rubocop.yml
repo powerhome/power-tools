@@ -1,4 +1,2 @@
 require:
   - rubocop-powerhome
-
-inherit_from: .rubocop_todo.yml
