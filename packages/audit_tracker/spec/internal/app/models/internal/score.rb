@@ -2,7 +2,7 @@
 
 module Internal
   class Score < ::Internal::ApplicationRecord
-    track_data(
+    track_audit_data(
       user: {
         created_by: {
           class_name: "::Internal::ManagerUser",

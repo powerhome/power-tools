@@ -2,6 +2,6 @@
 
 module Internal
   class Home < ::Internal::ApplicationRecord
-    track_data user: true
+    track_audit_data user: true
   end
 end

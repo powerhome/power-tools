@@ -35,7 +35,7 @@ Then, enable the trackers on each model:
 
 ```ruby
 class Lead < ApplicationRecord
-  track_data user: true, user_department: true
+  track_audit_data user: true, user_department: true
 end
 ```
 
@@ -53,7 +53,7 @@ When a relation is disabled, the tracker is not setup:
 ```ruby
 module Internal
   class Home < ::Internal::ApplicationRecord
-    track_data user: true
+    track_audit_data user: true
   end
 end
 
@@ -70,7 +70,7 @@ To enable each relation, AuditTracker will first check if the column exists (`fo
 ```ruby
 module Internal
   class Sale < ::Internal::ApplicationRecord
-    track_data user: true
+    track_audit_data user: true
   end
 end
 
@@ -89,7 +89,7 @@ To override a relation option in a tracker, use the tracker options:
 
 module Internal
   class Score < ::Internal::ApplicationRecord
-    track_data(
+    track_audit_data(
       user: {
         created_by: {
           class_name: "::Internal::ManagerUser",
