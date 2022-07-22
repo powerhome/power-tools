@@ -97,7 +97,7 @@ GEM
     thor (1.2.1)
     thread_safe (0.3.6)
     tomlrb (2.0.3)
-    tzinfo (1.2.9)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
     unicode-display_width (2.1.0)
     with_env (1.1.0)
