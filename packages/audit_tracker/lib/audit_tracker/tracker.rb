@@ -76,7 +76,10 @@ module AuditTracker
     private
 
       def call(record)
-        record.public_send("#{@relation}=", @value.call)
+        association = record.association(@relation)
+        return if record.attribute_changed?(association.reflection.foreign_key)
+
+        association.writer(@value.call)
       end
     end
   end

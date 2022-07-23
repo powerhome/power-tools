@@ -115,5 +115,16 @@ RSpec.describe AuditTracker do
       expect(created_score.created_by).to eql ::Internal::ManagerUser.find(steve.id)
       expect(created_score.updated_by).to eql ::Internal::ManagerUser.find(john.id)
     end
+
+    it "does not overwrite values manually set" do
+      ::Internal::Current.user = steve
+      created_home = ::Internal::Home.create(created_by: john, updated_by: john)
+
+      ::Internal::Current.user = john
+      created_home.update(price: 100_00, updated_by: steve)
+
+      expect(created_home.created_by).to eql john
+      expect(created_home.updated_by).to eql steve
+    end
   end
 end
