@@ -63,6 +63,14 @@ RSpec.describe AuditTracker do
       expect(created_lead.created_by_department).to eql sales
     end
 
+    it "tracks updates relationships on create" do
+      ::Internal::Current.user = john
+      created_lead = ::Internal::Lead.create
+
+      expect(created_lead.updated_by).to eql john
+      expect(created_lead.updated_by_department).to eql sales
+    end
+
     it "tracks the data on update" do
       ::Internal::Current.user = steve
       created_lead = ::Internal::Lead.create

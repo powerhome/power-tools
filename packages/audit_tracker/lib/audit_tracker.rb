@@ -49,6 +49,9 @@ module AuditTracker
   # Each line after that define a different event. `create` and `update` are helper methods
   # to create events.
   #
+  # `update` is tied to the `:save` event of activerecord. That means that the value will be
+  # tracked before create and before update.
+  #
   # Each event defined will generate an active record relation, and will update that relation
   # before the event (i.e.: `before_update`, `before_create`).
   #

@@ -36,7 +36,7 @@ module AuditTracker
       end
 
       def update(relation, **options)
-        on(:update, relation, **options)
+        on(:save, relation, **options)
       end
 
       def create(relation, **options)
