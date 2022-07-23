@@ -44,7 +44,7 @@ module AuditTracker
       value = options.delete(:value) || @value
 
       model.belongs_to relation, **options
-      model.set_callback event, :before, Callback.new(value, relation)
+      model.set_callback event, :before, Callback.new(value, relation, event)
     end
 
     def foreign_key_exist?(model, relation, foreign_key: nil, **)
@@ -55,16 +55,27 @@ module AuditTracker
 
     # :nodoc:
     class Callback
-      def initialize(value_fn, relation)
+      def initialize(value_fn, relation, event)
         @value = value_fn
         @relation = relation
+        @event = event
       end
 
-      def before_create(record)
-        record.public_send("#{@relation}=", @value.call)
+      def respond_to_missing?(method)
+        method.to_s.eql?("before_#{@event}")
       end
 
-      def before_update(record)
+      def method_missing(method, ...)
+        if respond_to_missing?(method)
+          call(...)
+        else
+          super
+        end
+      end
+
+    private
+
+      def call(record)
         record.public_send("#{@relation}=", @value.call)
       end
     end
