@@ -39,6 +39,7 @@ module AuditTracker
   private
 
     def apply_relation(model, relation, options, event)
+      return unless table_exists?(model)
       return unless foreign_key_exist?(model, relation, **options)
 
       value = options.delete(:value) || @value
@@ -51,6 +52,10 @@ module AuditTracker
       raise ArgumentError, "foreign_key is not set for #{relation}" unless foreign_key
 
       model.column_names.include?(foreign_key.to_s)
+    end
+
+    def table_exists?(model)
+      model.table_exists? rescue false
     end
 
     # :nodoc:
