@@ -55,7 +55,9 @@ module AuditTracker
     end
 
     def table_exists?(model)
-      model.table_exists? rescue false
+      model.table_exists?
+    rescue
+      false
     end
 
     # :nodoc:
