@@ -8,8 +8,11 @@ AuditTracker.setup do
   end
 
   tracker(:department) do
-    create :created_by_department, foreign_key: :created_by_department_id, class_name: "::Internal::Department"
-    update :updated_by_department, foreign_key: :updated_by_department_id, class_name: "::Internal::Department"
-    value { Internal::Current.user&.department }
+    create :created_by_department, foreign_key: :created_by_department_id,
+                                   class_name: "::Internal::Department",
+                                   value: ->(object) { object&.created_by&.department }
+    update :updated_by_department, foreign_key: :updated_by_department_id,
+                                   class_name: "::Internal::Department",
+                                   value: ->(object) { object&.updated_by&.department }
   end
 end

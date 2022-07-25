@@ -6,10 +6,10 @@ module Internal
 
     track_audit_data(
       user: {
-        created_by: { value: -> { ::Internal::Current.user.becomes(::Internal::ManagerUser) } },
+        created_by: { value: ->(*) { ::Internal::Current.user.becomes(::Internal::ManagerUser) } },
         updated_by: {
           class_name: "::Internal::ManagerUser",
-          value: -> { ::Internal::Current.user.becomes(::Internal::ManagerUser) },
+          value: ->(*) { ::Internal::Current.user.becomes(::Internal::ManagerUser) },
         },
       }
     )

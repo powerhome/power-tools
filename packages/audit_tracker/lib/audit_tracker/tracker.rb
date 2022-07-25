@@ -90,7 +90,7 @@ module AuditTracker
         association = record.association(@relation)
         return if record.attribute_changed?(association.reflection.foreign_key)
 
-        association.writer(@value.call)
+        association.writer(@value.call(record))
       end
     end
   end
