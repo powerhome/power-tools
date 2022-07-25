@@ -33,8 +33,11 @@ RSpec.describe AuditTracker do
       expect(home).to_not belong_to(:created_by_department)
     end
 
-    it "allows to override relation options" do
+    it "does not override existing relationships" do
       expect(score).to belong_to(:created_by).class_name("::Internal::ManagerUser")
+    end
+
+    it "allows to override relation options" do
       expect(score).to belong_to(:updated_by).class_name("::Internal::ManagerUser")
     end
   end

@@ -44,8 +44,12 @@ module AuditTracker
 
       value = options.delete(:value) || @value
 
-      model.belongs_to relation, **options
+      model.belongs_to(relation, **options) unless relation_exist?(model, relation)
       model.set_callback event, :before, Callback.new(value, relation, event)
+    end
+
+    def relation_exist?(model, relation)
+      model.reflect_on_association(relation).present?
     end
 
     def foreign_key_exist?(model, relation, foreign_key: nil, **)
