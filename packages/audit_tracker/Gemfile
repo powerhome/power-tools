@@ -5,6 +5,10 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in audit_tracker.gemspec
 gemspec
 
+rails_version = ENV.fetch("RAILS_VERSION", ">= 5.2.8.1")
+
+gem "rails", rails_version
+
 gem "byebug"
 gem "license_finder", ">= 7.0"
 gem "rake", ">= 13.0"

@@ -9,12 +9,22 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }}
+    name: Ruby ${{ matrix.ruby }} / Rails ${{ matrix.rails }}
     strategy:
       matrix:
         ruby:
           - '2.7.4'
           - '3.1.2'
+        rails:
+          - '7.0.3.1'
+          - '6.1.6.1'
+          - '6.0.5.1'
+          - '5.2.8.1'
+        exclude:
+          - rails: '5.2.8.1'
+            ruby: '3.1.2'
+          - rails: '7.0.3.1'
+            ruby: '2.7.4'
 
     steps:
       - uses: actions/checkout@v3
@@ -24,9 +34,13 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
           working-directory: ${{ env.PROJECT_DIR }}
+        env:
+          RAILS_VERSION: ${{ matrix.rails }}
       - name: Run the build script
         working-directory: ${{ env.PROJECT_DIR }}
         run: bundle exec rake
+        env:
+          RAILS_VERSION: ${{ matrix.rails }}
       - name: Ensure license compliance
         working-directory: ${{ env.PROJECT_DIR }}
         run: bundle exec license_finder
