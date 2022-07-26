@@ -48,16 +48,12 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
-    if: contains(github.ref, 'refs/tags/v')
+    if: ${{ contains(github.ref, 'refs/tags/v') && contains(github.ref, github.workflow) }}
     steps:
       - uses: actions/checkout@v3
-      - id: version-changed
-        uses: tj-actions/changed-files@v23
-        with:
-          files: ${{ env.PROJECT_DIR }}/**/version.rb
       - uses: xjunior/publish-rubygems-action@master
-        if: steps.version-changed.outputs.any_changed == 'true'
         env:
+          RELEASE_COMMAND: rake build release:guard_clean release:rubygem_push
           GITHUB_TOKEN: ${{ secrets.github_token }}
           RUBYGEMS_API_KEY: ${{ secrets.rubygems_api_key }}
           WORKDIR: ${{ env.PROJECT_DIR }}
