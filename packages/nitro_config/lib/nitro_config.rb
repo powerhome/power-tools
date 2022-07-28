@@ -21,7 +21,7 @@ module NitroConfig
   #
   # @return [NitroConfig::Options] the loaded configuration
   def self.load!(file, env)
-    @config = NitroConfig::Options.new(YAML.load_file(file)[env])
+    @config = NitroConfig::Options.load_yml(file, env)
   end
 
   # Provides the loaded global configuration

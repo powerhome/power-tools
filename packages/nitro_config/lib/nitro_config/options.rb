@@ -8,6 +8,15 @@ module NitroConfig
 
   # Representation of a config key-value tree with path-based access
   class Options < HashWithIndifferentAccess
+    def self.load_yml(path, environment)
+      yaml = begin
+               YAML.load_file(path, aliases: true)
+             rescue ArgumentError
+               YAML.load_file(path)
+             end
+      new(yaml[environment])
+    end
+
     # Preserves values in the global configuration which might be altered within the yielded block.
     # This is useful for testing, where a test needs to assert behaviour with certain settings values,
     # but you want them to be restored for the next test.
