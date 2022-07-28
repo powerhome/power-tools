@@ -8,8 +8,6 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }} / Rails ${{ matrix.rails }}
     strategy:
       matrix:
         ruby:
@@ -25,35 +23,7 @@ jobs:
             ruby: '3.1.2'
           - rails: '7.0.3.1'
             ruby: '2.7.4'
-
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - uses: ./.github/build-ruby.yml
         with:
-          ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
-          working-directory: ${{ env.PROJECT_DIR }}
-        env:
-          RAILS_VERSION: ${{ matrix.rails }}
-      - name: Run the build script
-        working-directory: ${{ env.PROJECT_DIR }}
-        run: bundle exec rake
-        env:
-          RAILS_VERSION: ${{ matrix.rails }}
-      - name: Ensure license compliance
-        working-directory: ${{ env.PROJECT_DIR }}
-        run: bundle exec license_finder
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    if: ${{ contains(github.ref, 'refs/tags/v') && contains(github.ref, github.workflow) }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: xjunior/publish-rubygems-action@master
-        env:
-          RELEASE_COMMAND: rake build release:guard_clean release:rubygem_push
-          GITHUB_TOKEN: ${{ secrets.github_token }}
-          RUBYGEMS_API_KEY: ${{ secrets.rubygems_api_key }}
-          WORKDIR: ${{ env.PROJECT_DIR }}
+          package: ${{ github.workflow }}
