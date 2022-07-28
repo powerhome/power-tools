@@ -2,7 +2,9 @@
 
 require "yaml"
 
+require "nitro_config/error"
 require "nitro_config/options"
+require "nitro_config/railtie" if defined?(Rails)
 
 # When included in a Rails application, NitroConfig loads the
 # configuration file at `config/config.yml` within the application
@@ -48,6 +50,4 @@ module NitroConfig
   def self.get_deferred!(*args)
     ->(*_args) { config.get!(*args) }
   end
-
-  require "nitro_config/railtie" if defined?(Rails)
 end
