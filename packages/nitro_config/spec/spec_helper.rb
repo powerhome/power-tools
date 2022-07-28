@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
+require "bundler"
+
+Bundler.require :default, :development
+
 require "nitro_config"
-require "byebug"
 
 RSpec.configure do |config|
   if ENV["CI"]

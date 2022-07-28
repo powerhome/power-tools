@@ -1,0 +1,12 @@
+base: &base
+  key:
+    nested:
+      value: "Hello World"
+
+test:
+  <<: *base
+  env_name: test
+
+development:
+  <<: *base
+  env_name: development
