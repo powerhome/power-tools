@@ -4,6 +4,12 @@ on:
       package:
         required: true
         type: string
+      ruby:
+        required: true
+        type: string
+      rails:
+        required: true
+        type: string
 
 env:
   PROJECT_DIR: ${{ format("packages/{0}", inputs.package) }}
@@ -11,21 +17,21 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }} / Rails ${{ matrix.rails }}
+    name: Ruby ${{ inputs.ruby }} / Rails ${{ inputs.rails }}
     steps:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby }}
+          ruby-version: ${{ inputs.ruby }}
           bundler-cache: true
           working-directory: ${{ env.PROJECT_DIR }}
         env:
-          RAILS_VERSION: ${{ matrix.rails }}
+          RAILS_VERSION: ${{ inputs.rails }}
       - name: Run the build script
         working-directory: ${{ env.PROJECT_DIR }}
         run: bundle exec rake
         env:
-          RAILS_VERSION: ${{ matrix.rails }}
+          RAILS_VERSION: ${{ inputs.rails }}
       - name: Ensure license compliance
         working-directory: ${{ env.PROJECT_DIR }}
         run: bundle exec license_finder
