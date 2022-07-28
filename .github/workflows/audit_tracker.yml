@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  build:
+  ruby:
     uses: ./.github/workflows/_ruby-package.yml
     with:
       package: ${{ github.workflow }}
