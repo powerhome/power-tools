@@ -23,7 +23,7 @@ jobs:
             ruby: '2.7.4'
     steps:
       - uses: actions/checkout@v3
-      - uses: .github/workflows/_build-ruby
+      - uses: ./.github/workflows/_build-ruby
         with:
           package: ${{ github.workflow }}
           ruby: ${{ matrix.ruby }}
@@ -34,6 +34,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: .github/workflows/_release-ruby
+      - uses: ./.github/workflows/_release-ruby
         with:
           package: ${{ github.workflow }}
