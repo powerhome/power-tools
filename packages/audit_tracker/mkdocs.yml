@@ -1,0 +1,6 @@
+site_name: Audit Tracker
+nav:
+  - "Home": "README.md"
+  - "Changelog": "CHANGELOG.md"
+plugins:
+  - techdocs-core
