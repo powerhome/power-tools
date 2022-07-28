@@ -17,7 +17,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Ruby ${{ inputs.ruby }} / Rails ${{ inputs.rails }}
+    name: Ruby ${{ matrix.ruby }} / Rails ${{ matrix.rails }}
     strategy:
       matrix:
         ruby: ${{ fromJSON(inputs.ruby) }}
@@ -32,16 +32,16 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ inputs.ruby }}
+          ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
           working-directory: ${{ env.PROJECT_DIR }}
         env:
-          RAILS_VERSION: ${{ inputs.rails }}
+          RAILS_VERSION: ${{ matrix.rails }}
       - name: Run the build script
         working-directory: ${{ env.PROJECT_DIR }}
         run: bundle exec rake
         env:
-          RAILS_VERSION: ${{ inputs.rails }}
+          RAILS_VERSION: ${{ matrix.rails }}
       - name: Ensure license compliance
         working-directory: ${{ env.PROJECT_DIR }}
         run: bundle exec license_finder
