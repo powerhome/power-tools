@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       rails:
-        required: true
+        required: false
         type: string
 
 env:
