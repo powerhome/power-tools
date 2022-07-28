@@ -12,7 +12,7 @@ on:
         type: string
 
 env:
-  PROJECT_DIR: ${{ format("packages/{0}", inputs.package) }}
+  PROJECT_DIR: 'packages/${{ inputs.package }}'
 
 jobs:
   build:
