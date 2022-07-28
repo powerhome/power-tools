@@ -25,6 +25,6 @@ jobs:
           - rails: '7.0.3.1'
             ruby: '2.7.4'
     steps:
-      - uses: ./.github/build-ruby.yml
+      - uses: ./.github/ruby-packages.yml
         with:
           package: ${{ github.workflow }}
