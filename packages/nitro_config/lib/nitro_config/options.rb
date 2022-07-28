@@ -10,10 +10,10 @@ module NitroConfig
   class Options < HashWithIndifferentAccess
     def self.load_yml(path, environment)
       yaml = begin
-               YAML.load_file(path, aliases: true)
-             rescue ArgumentError
-               YAML.load_file(path)
-             end
+        YAML.load_file(path, aliases: true)
+      rescue ArgumentError
+        YAML.load_file(path)
+      end
       new(yaml[environment])
     end
 
