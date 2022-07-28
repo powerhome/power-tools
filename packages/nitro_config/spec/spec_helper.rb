@@ -1,22 +1,9 @@
 # frozen_string_literal: true
 
-require "rubocop/rspec/support"
-
-# Per SimpleCov documentation, this MUST be required before any appplication code
-# https://github.com/colszowka/simplecov#getting-started
-unless ENV["SIMPLECOV"] == "false"
-  require "simplecov"
-  SimpleCov.start "rails" do
-    add_filter "/spec"
-  end
-end
-
 require "nitro_config"
-require "pry-byebug"
+require "byebug"
 
 RSpec.configure do |config|
-  config.include RuboCop::RSpec::ExpectOffense
-
   if ENV["CI"]
     config.before(:example, :focus) { raise "Should not commit focused specs" }
   else

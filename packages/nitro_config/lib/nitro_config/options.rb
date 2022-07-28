@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "active_support/core_ext/hash/indifferent_access"
-require "active_support/core_ext/object/try"
 require "active_support/hash_with_indifferent_access"
 
 module NitroConfig
@@ -52,7 +51,7 @@ module NitroConfig
     def get!(path)
       split_path = path.respond_to?(:split) ? path.split(PATH_SEPARATOR) : path
       split_path.flatten.reduce(self) do |config, key|
-        raise(NitroConfig::Error, path) unless config.try(:has_key?, key)
+        raise(NitroConfig::Error, path) unless config&.key?(key)
 
         config[key]
       end
