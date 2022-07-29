@@ -1,16 +1,22 @@
 # frozen_string_literal: true
 
 require "active_support/core_ext/hash/indifferent_access"
-require "active_support/core_ext/object/try"
 require "active_support/hash_with_indifferent_access"
-
-require "nitro_config/error"
 
 module NitroConfig
   PATH_SEPARATOR = "/"
 
   # Representation of a config key-value tree with path-based access
   class Options < HashWithIndifferentAccess
+    def self.load_yml(path, environment)
+      yaml = begin
+        YAML.load_file(path, aliases: true)
+      rescue ArgumentError
+        YAML.load_file(path)
+      end
+      new(yaml[environment])
+    end
+
     # Preserves values in the global configuration which might be altered within the yielded block.
     # This is useful for testing, where a test needs to assert behaviour with certain settings values,
     # but you want them to be restored for the next test.
@@ -54,7 +60,7 @@ module NitroConfig
     def get!(path)
       split_path = path.respond_to?(:split) ? path.split(PATH_SEPARATOR) : path
       split_path.flatten.reduce(self) do |config, key|
-        raise(NitroConfig::Error, path) unless config.try(:has_key?, key)
+        raise(NitroConfig::Error, path) unless config&.key?(key)
 
         config[key]
       end

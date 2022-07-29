@@ -14,6 +14,7 @@ Gem::Specification.new do |spec|
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.7"
 
+  spec.metadata["rubygems_mfa_required"] = "true"
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
   spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/main/packages/audit_tracker/docs/CHANGELOG.md"
@@ -34,5 +35,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec-rails", "~> 5.1.2"
   spec.add_development_dependency "shoulda-matchers", "~> 5.1.0"
   spec.add_development_dependency "sqlite3", "~> 1.4.2"
-  spec.metadata["rubygems_mfa_required"] = "true"
 end

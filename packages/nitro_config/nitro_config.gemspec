@@ -1,36 +1,35 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.push File.expand_path("lib", __dir__)
-
 require_relative "lib/nitro_config/version"
 
-Gem::Specification.new do |s|
-  s.name        = "nitro_config"
-  s.version     = NitroConfig::VERSION
-  s.authors     = ["Carlos Palhares", "Jill Klang"]
-  s.email       = ["chjunior@gmail.com", "jillian.emilie@gmail.com"]
-  s.homepage    = "https://github.com/powerhome/power-tools/blob/main/packages/nitro_config/docs/README.md"
-  s.summary     = "Nitro Configuration Loader"
-  s.description = "Loads Nitro configuration and makes it available to the application"
+Gem::Specification.new do |spec|
+  spec.name = "nitro_config"
+  spec.version = NitroConfig::VERSION
+  spec.authors = ["Carlos Palhares", "Jill Klang"]
+  spec.email = ["chjunior@gmail.com", "jillian.emilie@gmail.com"]
 
-  s.license = "MIT"
-  s.required_ruby_version = ">= 2.7"
+  spec.summary = "Nitro Configuration Loader"
+  spec.description = "Loads Nitro configuration and makes it available to the application"
+  spec.homepage = "https://github.com/powerhome/power-tools"
+  spec.license = "MIT"
+  spec.required_ruby_version = ">= 2.7"
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "docs/README.md"]
+  spec.metadata["rubygems_mfa_required"] = "true"
+  spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata["source_code_uri"] = spec.homepage
+  spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/main/packages/nitro_config/docs/CHANGELOG.md"
 
-  if ENV["RAILS_NEXT"]
-    s.add_dependency "activesupport", "6.0.5"
-  else
-    s.add_dependency "activesupport", "5.2.8"
+  # Specify which files should be added to the gem when it is released.
+  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
+  spec.files = Dir.chdir(__dir__) do
+    `git ls-files -z`.split("\x0").reject do |f|
+      (f == __FILE__) || f.match(%r{\A(?:(?:bin|test|spec|features)/|\.(?:git|travis|circleci)|appveyor)})
+    end
   end
+  spec.bindir = "exe"
+  spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
+  spec.require_paths = ["lib"]
 
-  s.add_development_dependency "license_finder", "~> 7.0"
-  s.add_development_dependency "pry-byebug", "3.9.0"
-  s.add_development_dependency "rainbow", "2.2.2"
-  s.add_development_dependency "rake", "~> 13.0"
-  s.add_development_dependency "rspec", "3.9.0"
-  s.add_development_dependency "rubocop-powerhome", "0.5.0"
-  s.add_development_dependency "simplecov", "0.15.1"
-  s.add_development_dependency "yard", "0.9.21"
-  s.metadata["rubygems_mfa_required"] = "true"
+  spec.add_dependency "activesupport", ">= 5.2.8.1"
+  spec.add_development_dependency "combustion", "~> 1.3"
 end
