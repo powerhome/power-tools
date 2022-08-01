@@ -1,5 +1,8 @@
 on:
   workflow_call:
+    secrets:
+      rubygems_api_key:
+        required: true
     inputs:
       package:
         required: true
@@ -55,6 +58,5 @@ jobs:
       - uses: xjunior/publish-rubygems-action@master
         env:
           RELEASE_COMMAND: rake build release:guard_clean release:rubygem_push
-          GITHUB_TOKEN: ${{ secrets.github_token }}
           RUBYGEMS_API_KEY: ${{ secrets.rubygems_api_key }}
           WORKDIR: ${{ env.PROJECT_DIR }}
