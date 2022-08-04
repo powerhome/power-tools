@@ -2,8 +2,8 @@
 
 require "logger"
 require "active_support"
-require "nitro_logging/railtie" if defined?(Rails)
-require "nitro_logging/log_chooser"
+require "lumberaxe/railtie" if defined?(Rails)
+require "lumberaxe/log_chooser"
 
-module NitroLogging
+module Lumberaxe
 end

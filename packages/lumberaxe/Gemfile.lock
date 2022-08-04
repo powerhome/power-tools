@@ -13,7 +13,7 @@ PATH
 PATH
   remote: .
   specs:
-    nitro_logging (0.0.1)
+    lumberaxe (0.0.1)
       activesupport (= 5.2.8.1)
 
 GEM
@@ -122,7 +122,7 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 2.1)
   nitro_linting!
-  nitro_logging!
+  lumberaxe!
   parser (>= 2.5, != 2.5.1.1)
   pry-byebug (= 3.9.0)
   rainbow (= 2.2.2)

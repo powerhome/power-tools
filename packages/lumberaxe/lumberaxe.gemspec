@@ -3,7 +3,7 @@
 $LOAD_PATH.push File.expand_path("lib", __dir__)
 
 Gem::Specification.new do |s|
-  s.name        = "nitro_logging"
+  s.name        = "lumberaxe"
   s.version     = "0.0.1"
   s.authors     = ["Nitro Developers"]
   s.email       = ["dev@powerhrg.com"]

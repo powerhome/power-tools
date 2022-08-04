@@ -1,3 +1,3 @@
-# NitroLogging
+# Lumberaxe
 
-Nitro Logging handles logging output formatting.
+Lumberaxe handles logging output formatting.

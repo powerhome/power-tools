@@ -2,7 +2,7 @@
 
 require "active_support/tagged_logging"
 
-module NitroLogging
+module Lumberaxe
   class LogChooser
     cattr_accessor :log_level
 

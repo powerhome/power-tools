@@ -10,11 +10,11 @@
 # Cop supports --auto-correct.
 Style/GlobalStdStream:
   Exclude:
-    - 'lib/nitro_logging/log_chooser.rb'
+    - 'lib/lumberaxe/log_chooser.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: Mode.
 Style/StringConcatenation:
   Exclude:
-    - 'lib/nitro_logging/log_chooser.rb'
+    - 'lib/lumberaxe/log_chooser.rb'
