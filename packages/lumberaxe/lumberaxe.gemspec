@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "docs/README.md"]
 
   spec.add_dependency "activesupport", "5.2.8.1"
+  spec.add_dependency "lograge"
 
   spec.add_development_dependency "bundler", "~> 2.1"
   spec.add_development_dependency "license_finder", "~> 7.0"
