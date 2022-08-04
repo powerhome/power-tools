@@ -1,1 +1,3 @@
 * @powerhome/heroes-for-hire
+packages/**/*.gemspec
+packages/**/Gemfile
