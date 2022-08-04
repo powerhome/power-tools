@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-echo "This component doesn't have a database"

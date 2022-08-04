@@ -7,8 +7,3 @@ git_source(:github) do |repo_name|
 end
 
 gemspec
-
-path ".." do
-  # Dependencies on other components go here
-  gem "nitro_linting", require: nil
-end

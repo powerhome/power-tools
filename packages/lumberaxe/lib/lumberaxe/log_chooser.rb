@@ -17,7 +17,7 @@ module Lumberaxe
     # is to send their logging output to STDOUT instead of various
     # logfiles on disk.
     def self.primary_logdev
-      STDOUT
+      $stdout
     end
 
     def self.structured_logging?
@@ -31,6 +31,18 @@ module Lumberaxe
     def call(severity, time, progname, data)
       data = { message: data.to_s } unless data.is_a?(Hash)
 
+      formatter = {
+        level: severity,
+        time: time,
+        progname: progname,
+      }.merge(format_data(data))
+
+      "#{formatter.to_json}\r\n}"
+    end
+
+  private
+
+    def format_data(data)
       data.merge!(current_tags.each_with_object({}) do |tag, hash|
         if tag.include?("=")
           key, value = tag.split("=")
@@ -41,12 +53,6 @@ module Lumberaxe
         end
         hash
       end)
-
-      {
-        level: severity,
-        time: time,
-        progname: progname,
-      }.merge(data).to_json + "\r\n"
     end
   end
 end
