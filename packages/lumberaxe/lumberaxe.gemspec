@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "lib/lumberaxe/version"
+
 $LOAD_PATH.push File.expand_path("lib", __dir__)
 
 Gem::Specification.new do |spec|
@@ -7,22 +9,24 @@ Gem::Specification.new do |spec|
   spec.version     = Lumberaxe::VERSION
   spec.authors     = ["Carlos Palhares", "Jill Klang"]
   spec.email       = ["chjunior@gmail.com", "jillian.emilie@gmail.com"]
-  spec.homepage    = "http://nitro.powerhrg.com"
+
   spec.summary     = "Power-ful logging wrapper"
   spec.description = "Lumberaxe handles logging output formatting."
+  spec.homepage = "https://github.com/powerhome/power-tools"
+  spec.license = "MIT"
+  spec.required_ruby_version = ">= 2.7"
 
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the "allowed_push_host"
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  raise "RubyGems 2.0 or newer is required to protect against public gem pushes." unless s.respond_to?(:metadata)
-
-  spec.metadata["allowed_push_host"] = "http://rubygems.powerhrg.com"
-  spec.license = "LicenseRef-NitroComponent"
+  spec.metadata["rubygems_mfa_required"] = "true"
+  spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata["source_code_uri"] = spec.homepage
+  spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/main/packages/lumberaxe/docs/CHANGELOG.md"
 
   spec.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "docs/README.md"]
 
   spec.add_dependency "activesupport", "5.2.8.1"
 
   spec.add_development_dependency "bundler", "~> 2.1"
+  spec.add_development_dependency "license_finder", "~> 7.0"
   spec.add_development_dependency "parser", ">= 2.5", "!= 2.5.1.1"
   spec.add_development_dependency "pry-byebug", "3.9.0"
   spec.add_development_dependency "rainbow", "2.2.2"
