@@ -4,5 +4,15 @@
     "enabled": true
   },
   "labels": ["dependencies"],
-  "timezone": "America/New_York"
+  "timezone": "America/New_York",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true
+    }
+  ]
 }
