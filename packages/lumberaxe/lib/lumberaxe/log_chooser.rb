@@ -16,7 +16,7 @@ module Lumberaxe
     # Standard practice for applications running in Docker containers
     # is to send their logging output to STDOUT instead of various
     # logfiles on disk.
-    def self.primary_logdev
+    cattr_accessor :primary_logdev do
       $stdout
     end
 
