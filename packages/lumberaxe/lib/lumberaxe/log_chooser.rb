@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "active_support/tagged_logging"
-
 module Lumberaxe
   class LogChooser
     cattr_accessor :log_level

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
-require "lumberaxe"
+require "bundler"
 
+Bundler.require :default, :development
+
+require "lumberaxe"
 require "pry-byebug"
 
 RSpec.configure do |config|
