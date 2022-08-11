@@ -11,7 +11,7 @@ module Lumberaxe
 
       {
         level: severity,
-        time: Time.now, # rubocop:disable Rails/TimeZone
+        time: time,
         progname: progname,
       }.merge(data).to_json.concat("\r\n")
     end

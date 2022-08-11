@@ -12,7 +12,7 @@ RSpec.describe Lumberaxe, type: :request do
   end
 
   it "logs HTTP requests" do
-    expect { subject }.to output(/"method":"POST","path":"\/campgrounds"/).to_stdout_from_any_process
+    expect { subject }.to output(%r{"method":"POST","path":"/campgrounds"}).to_stdout_from_any_process
   end
 
   it "logs any params" do
@@ -24,6 +24,8 @@ RSpec.describe Lumberaxe, type: :request do
   end
 
   it "logs error response" do
-    expect { post "/campgrounds", params: { campground: { name: nil } } }.to output(/"status":422/).to_stdout_from_any_process
+    expect do
+      post "/campgrounds", params: { campground: { name: nil } }
+    end.to output(/"status":422/).to_stdout_from_any_process
   end
 end

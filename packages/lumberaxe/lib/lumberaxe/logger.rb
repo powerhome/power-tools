@@ -9,7 +9,7 @@ module Lumberaxe
       self.level = level
 
       self.formatter = JSONFormatter.new
-      self.extend ActiveSupport::TaggedLogging
+      extend ActiveSupport::TaggedLogging
     end
   end
 end

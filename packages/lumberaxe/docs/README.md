@@ -17,7 +17,9 @@ config.log_tags = [
 ]
 ```
 
-Updating the formatter for your webserver is also recommended.
+## Setting JSON logging
+
+To set up JSON logging on puma, add this to your puma config:
 
 ```ruby
 # puma.rb
