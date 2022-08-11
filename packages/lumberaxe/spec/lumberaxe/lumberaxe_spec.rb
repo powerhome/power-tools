@@ -7,7 +7,19 @@ RSpec.describe Lumberaxe, type: :request do
     post "/campgrounds", params: { campground: { name: "Cloudland Canyon" }, format: :json }
   end
 
-  it "contains key/value pairs" do
+  it "tags request_id" do
+    expect { subject }.to output(/"request_id":/).to_stdout_from_any_process
+  end
+
+  it "tags IP" do
+    expect { subject }.to output(/"IP":/).to_stdout_from_any_process
+  end
+
+  it "contains the defined progname" do
+    expect { subject }.to output(/"progname":"app"/).to_stdout_from_any_process
+  end
+
+  it "contains message key/value pairs" do
     expect { subject }.to output(/"message":/).to_stdout_from_any_process
   end
 

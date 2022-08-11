@@ -6,6 +6,11 @@ module Lumberaxe
   class Railtie < Rails::Railtie
     initializer "lumberaxe.configurations", before: :initialize_logger do |app|
       Rails.logger = app.config.logger || Lumberaxe::Logger.new(progname: "app", level: app.config.log_level)
+
+      app.config.log_tags = [
+        ->(req) { "request_id=#{req.uuid}" },
+        ->(req) { "IP=#{req.remote_ip}" },
+      ]
     end
 
     initializer "lumberaxe.lograge" do

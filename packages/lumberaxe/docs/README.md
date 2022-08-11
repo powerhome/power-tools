@@ -4,17 +4,12 @@ Lumberaxe handles logging output formatting.
 
 # Usage
 
-After installing the gem, add any additional log tags you would like
+After installing the gem, require it as part of your application configuration.
 
 ```ruby
 # application.rb
 
 require "lumberaxe"
-
-config.log_tags = [
-  ->(req) { "request_id=#{req.uuid}" },
-  ->(req) { "IP=#{req.remote_ip}" },
-]
 ```
 
 ## Setting JSON logging
