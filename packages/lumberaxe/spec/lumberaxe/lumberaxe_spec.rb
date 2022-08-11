@@ -19,6 +19,10 @@ RSpec.describe Lumberaxe, type: :request do
     expect { subject }.to output(/"params":{"campground":{"name":"Cloudland Canyon"}/).to_stdout_from_any_process
   end
 
+  it "logs anything passed to the rails logger" do
+    expect { subject }.to output(/Creating campground named Cloudland Canyon/).to_stdout_from_any_process
+  end
+
   it "logs DB requests" do
     expect { subject }.to output(/INSERT INTO/).to_stdout_from_any_process
   end

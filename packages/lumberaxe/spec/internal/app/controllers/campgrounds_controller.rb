@@ -5,6 +5,8 @@ class CampgroundsController < ApplicationController
     campground_params = params.require(:campground).permit(:name)
     campground = Campground.new(campground_params)
 
+    Rails.logger.warn("Creating campground named #{campground.name}")
+
     if campground.save
       render json: campground, status: :created
     else
