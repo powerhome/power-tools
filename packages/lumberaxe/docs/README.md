@@ -24,12 +24,5 @@ To set up JSON logging on puma, add this to your puma config:
 ```ruby
 # puma.rb
 
-log_formatter do |message|
-  {
-    level: "INFO",
-    time: Time.now,
-    progname: "puma",
-    message: message,
-  }.to_json.concat("\r\n")
-end
+log_formatter &Lumberaxe.puma_formatter
 ```
