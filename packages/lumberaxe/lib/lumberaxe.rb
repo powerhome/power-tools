@@ -3,7 +3,8 @@
 require "logger"
 require "active_support"
 require "lumberaxe/railtie" if defined?(Rails)
-require "lumberaxe/log_chooser"
+require "lumberaxe/logger"
+require "lumberaxe/json_formatter"
 
 module Lumberaxe
 end
