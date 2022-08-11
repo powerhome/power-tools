@@ -5,7 +5,7 @@ require "lograge"
 module Lumberaxe
   class Railtie < Rails::Railtie
     initializer "lumberaxe.configurations", before: :initialize_logger do |app|
-      Rails.logger = Lumberaxe::Logger.new(progname: "app", level: app.config.log_level)
+      Rails.logger = app.config.logger || Lumberaxe::Logger.new(progname: "app", level: app.config.log_level)
     end
 
     initializer "lumberaxe.lograge" do

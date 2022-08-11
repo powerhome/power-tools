@@ -9,6 +9,8 @@ After installing the gem, add any additional log tags you would like
 ```ruby
 # application.rb
 
+require "lumberaxe"
+
 config.log_tags = [
   ->(req) { "request_id=#{req.uuid}" },
   ->(req) { "IP=#{req.remote_ip}" },
