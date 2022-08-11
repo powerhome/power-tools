@@ -35,9 +35,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activesupport", ">= 5.2.8.1"
   spec.add_dependency "lograge", "0.10.0"
 
-  # spec.add_development_dependency "bundler", "~> 2.1"
+  spec.add_development_dependency "bundler", "~> 2.1"
   spec.add_development_dependency "combustion", "~> 1.3"
-  spec.add_development_dependency "license_finder", "~> 7.0"
+  spec.add_development_dependency "license_finder", ">= 7.0"
   spec.add_development_dependency "parser", ">= 2.5", "!= 2.5.1.1"
   spec.add_development_dependency "pry-byebug", "3.9.0"
   spec.add_development_dependency "rails", ">= 5.2.8.1"
