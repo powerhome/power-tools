@@ -9,4 +9,5 @@ pkg
 !tmp/.gitignore
 vendor/bundle
 *.log
+*.sqlite
 *.sqlite3
