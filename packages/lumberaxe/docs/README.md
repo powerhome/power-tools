@@ -19,5 +19,5 @@ To set up JSON logging on puma, add this to your puma config:
 ```ruby
 # puma.rb
 
-log_formatter &Lumberaxe.puma_formatter
+log_formatter(&Lumberaxe.puma_formatter)
 ```
