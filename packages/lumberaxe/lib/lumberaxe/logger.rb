@@ -4,7 +4,7 @@ module Lumberaxe
   class Logger < ::ActiveSupport::Logger
     cattr_accessor :log_level
 
-    def initialize(output = $stdout, level: log_level, progname:)
+    def initialize(output = $stdout, progname:, level: log_level)
       super output
 
       self.progname = progname
