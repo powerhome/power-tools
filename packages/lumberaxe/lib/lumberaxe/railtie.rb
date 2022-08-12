@@ -11,6 +11,8 @@ module Lumberaxe
         ->(req) { "request_id=#{req.uuid}" },
         ->(req) { "IP=#{req.remote_ip}" },
       ]
+
+      Lumberaxe::Logger.log_level = app.config.log_level
     end
 
     initializer "lumberaxe.lograge" do
