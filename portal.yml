@@ -49,3 +49,19 @@ spec:
   lifecycle: production
   subcomponentOf: power-tools
   system: power-application-framework
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: lumberaxe
+  title: Lumberaxe
+  description: Handles logging output formatting
+  annotations:
+    backstage.io/techdocs-ref: dir:packages/lumberaxe
+spec:
+  type: library
+  owner: heroes-for-hire
+  system: nitro
+  lifecycle: production
+  subcomponentOf: power-tools
+  system: power-application-framework

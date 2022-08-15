@@ -10,6 +10,14 @@ power-tools currently contains the following packages (marked for release to rub
 
 When included in a Rails application, NitroConfig loads the configuration file at `config/config.yml` within the application directory and makes its values available at `NitroConfig.config`. Config values are loaded based on the Rails environment, permitting the specification of multiple environments' configurations in a single file.
 
+[audit_tracker](https://github.com/powerhome/power-tools/blob/main/packages/audit_tracker/docs/README.md) 💎
+
+AuditTracker helps you centralize data tracking configuration to be used across different models.
+
+[lumberaxe](https://github.com/powerhome/power-tools/blob/main/packages/lumberaxe/docs/README.md) 💎
+
+Lumberaxe handles logging output formatting.
+
 ## Installation 🛠
 
 These packages are all meant to install inside of an application and aren't intended to stand alone; currently, they are all published to [RubyGems](https://rubygems.org/) and you can use standard Bundler methods to install them.

@@ -1,0 +1,3 @@
+test:
+  service: Disk
+  root: /Users/jill/power-tools/packages/lumberaxe/tmp/storage

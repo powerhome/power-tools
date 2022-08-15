@@ -1,0 +1,5 @@
+site_name: Lumberaxe
+nav:
+  - "Home": "README.md"
+plugins:
+  - techdocs-core
