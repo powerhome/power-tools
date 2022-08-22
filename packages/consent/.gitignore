@@ -1,0 +1,18 @@
+/.bundle/
+/.yardoc
+/_yardoc/
+coverage
+pkg
+/spec/reports/
+**/tmp/*
+!**/tmp/.gitkeep
+!tmp/.gitignore
+vendor/bundle
+*.log
+*.sqlite
+*.sqlite3
+Gemfile.lock
+
+# Ignore uploaded files in development
+/storage/*
+!/storage/.keep

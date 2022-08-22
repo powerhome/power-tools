@@ -18,6 +18,10 @@ AuditTracker helps you centralize data tracking configuration to be used across 
 
 Lumberaxe handles logging output formatting.
 
+[consent](https://github.com/powerhome/power-tools/blob/main/packages/consent/docs/README.md) 💎
+
+Consent provides permission-based authorization.
+
 ## Installation 🛠
 
 These packages are all meant to install inside of an application and aren't intended to stand alone; currently, they are all published to [RubyGems](https://rubygems.org/) and you can use standard Bundler methods to install them.
@@ -63,3 +67,4 @@ These packages are maintained by [Power's](https://github.com/powerhome) Heroes 
 ## Contributing 💙
 
 Contributions are welcome! Feel free to [open a ticket](https://github.com/powerhome/power-tools/issues/new) or a [PR](https://github.com/powerhome/power-tools/pulls).
+
