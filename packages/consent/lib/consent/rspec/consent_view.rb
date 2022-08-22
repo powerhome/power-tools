@@ -27,23 +27,20 @@ module Consent
       def matches?(subject_key)
         @subject_key = subject_key
         @target = Consent.find_subjects(subject_key)
-                         .map do |subject|
-                           subject.views[@view_key]&.conditions(*@context)
-                         end
-                         .compact
-                         .map(&method(:comparable_conditions))
+                         .filter_map { |subject| subject.views[@view_key]&.conditions(*@context) }
+                         .map { |c| comparable_conditions(c) }
         @target.include?(@conditions)
       end
 
       def failure_message
-        failure_message_base 'to'
+        failure_message_base "to"
       end
 
       def failure_message_when_negated
-        failure_message_base 'to not'
+        failure_message_base "to not"
       end
 
-      private
+    private
 
       def comparable_conditions(conditions)
         return conditions.to_sql if conditions.respond_to?(:to_sql)
@@ -61,7 +58,7 @@ module Consent
 
         if @target.any?
           format(
-            '%<message>s conditions are %<conditions>p',
+            "%<message>s conditions are %<conditions>p",
             message: message, conditions: @target
           )
         else
@@ -69,7 +66,7 @@ module Consent
                                 .map(&:views)
                                 .map(&:keys).flatten
           format(
-            '%<message>s available views are %<views>p',
+            "%<message>s available views are %<views>p",
             message: message, views: actual_views
           )
         end

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'consent'
+require "consent"
 
-require_relative 'rspec/consent_action'
-require_relative 'rspec/consent_view'
+require_relative "rspec/consent_action"
+require_relative "rspec/consent_view"
 
 module Consent
   # RSpec helpers for consent. Given permissions are loaded,

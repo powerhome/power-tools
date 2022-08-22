@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'consent/version'
-require 'consent/subject'
-require 'consent/view'
-require 'consent/action'
-require 'consent/dsl'
-require 'consent/ability' if defined?(CanCan)
-require 'consent/railtie' if defined?(Rails)
+require "consent/version"
+require "consent/subject"
+require "consent/view"
+require "consent/action"
+require "consent/dsl"
+require "consent/ability" if defined?(CanCan)
+require "consent/railtie" if defined?(Rails)
 
 # Consent makes defining permissions easier by providing a clean,
 # concise DSL for authorization so that all abilities do not have
@@ -56,7 +56,7 @@ module Consent
   #
   # @return [Consent::View,nil]
   def self.find_view(subject_key, action_key, view_key)
-    find_action(subject_key, action_key)&.yield_self do |action|
+    find_action(subject_key, action_key)&.then do |action|
       action.views[view_key] || raise(Consent::ViewNotFound)
     end
   end
@@ -67,7 +67,7 @@ module Consent
   # @param paths [Array<String,#to_s>] paths where the ruby files are located
   # @param mechanism [:require,:load] mechanism to load the files
   def self.load_subjects!(paths, mechanism = :require)
-    permission_files = paths.map { |dir| File.join(dir, '*.rb') }
+    permission_files = paths.map { |dir| File.join(dir, "*.rb") }
     Dir[*permission_files].each(&Kernel.method(mechanism))
   end
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'consent'
-RSpec::Support.require_rspec_support 'fuzzy_matcher'
+require "consent"
+RSpec::Support.require_rspec_support "fuzzy_matcher"
 
 module Consent
   module Rspec
@@ -35,25 +35,25 @@ module Consent
       end
 
       def failure_message
-        failure_message_base 'to'
+        failure_message_base "to"
       end
 
       def failure_message_when_negated
-        failure_message_base 'to not'
+        failure_message_base "to not"
       end
 
-      private
+    private
 
       def failure_message_base(failure) # rubocop:disable Metrics/MethodLength
         message = format(
-          'expected %<skey>s (%<sclass>s) %<failure> provide action %<action>s',
+          "expected %<skey>s (%<sclass>s) %<failure> provide action %<action>s",
           skey: @subject_key.to_s, sclass: @subject_key.class,
           action: @action_key, failure: failure
         )
 
         if @action && @views
           format(
-            '%<message>s with views %<views>s, but actual views are %<keys>p',
+            "%<message>s with views %<views>s, but actual views are %<keys>p",
             message: message, views: @views, keys: @action.views.keys
           )
         else

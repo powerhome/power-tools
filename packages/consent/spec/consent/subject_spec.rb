@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Consent::Subject do
   subject { Consent::Subject.new(nil, nil) }
 
-  describe '#views' do
-    it 'starts as the default_views' do
+  describe "#views" do
+    it "starts as the default_views" do
       view = double
       Consent.default_views[:view1] = view
 

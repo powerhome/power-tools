@@ -30,7 +30,7 @@ module Consent
       nil
     end
 
-    private
+  private
 
     def apply_defaults!
       Consent.subjects.each do |subject|

@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
-require 'cancan'
-require 'cancan/matchers'
-require 'consent'
-require 'date'
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+require "cancan"
+require "cancan/matchers"
+require "consent"
+require "date"
 
-require 'active_record'
+require "active_record"
 
 ActiveRecord::Base.establish_connection(
-  adapter: 'sqlite3',
-  database: File.join(__dir__, 'test.db')
+  adapter: "sqlite3",
+  database: File.join(__dir__, "test.db")
 )
 
 class SomeModel < ActiveRecord::Base
@@ -25,5 +25,5 @@ RSpec.configure do |config|
   end
 end
 
-Consent.default_views[:no_access] = Consent::View.new('', 'No Access')
-Consent.load_subjects! [File.join(__dir__, 'permissions')]
+Consent.default_views[:no_access] = Consent::View.new("", "No Access")
+Consent.load_subjects! [File.join(__dir__, "permissions")]

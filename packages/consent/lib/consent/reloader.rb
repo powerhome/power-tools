@@ -4,6 +4,7 @@ module Consent
   # Rails file reloader to detect permission changes and apply them to consent
   class Reloader
     attr_reader :paths
+
     delegate :updated?, :execute, :execute_if_updated, to: :updater
 
     def initialize(default_path, mechanism)
@@ -11,7 +12,7 @@ module Consent
       @mechanism = mechanism
     end
 
-    private
+  private
 
     def reload!
       Consent.subjects.clear
@@ -24,7 +25,7 @@ module Consent
 
     def globs
       pairs = paths.map { |path| [path.to_s, %w[rb]] }
-      Hash[pairs]
+      pairs.to_h
     end
   end
 end

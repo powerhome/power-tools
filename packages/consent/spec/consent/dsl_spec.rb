@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Consent::DSL do
   let(:subject) { Consent::Subject.new(nil, nil) }
   let(:defaults) { {} }
   let(:dsl) { Consent::DSL.new(subject, defaults) }
 
-  describe '.build' do
-    it 'builds the subject through the DSL' do
+  describe ".build" do
+    it "builds the subject through the DSL" do
       context_object = nil
 
       Consent::DSL.build subject do
@@ -18,7 +18,7 @@ RSpec.describe Consent::DSL do
       expect(context_object).to be_a(Consent::DSL)
     end
 
-    it 'builds defines the defaults' do
+    it "builds defines the defaults" do
       context_defaults = nil
 
       Consent::DSL.build subject, default: :whatever do
@@ -29,15 +29,15 @@ RSpec.describe Consent::DSL do
     end
   end
 
-  describe '#view' do
-    it 'adds a view to the subject' do
-      dsl.view :view_key, 'View YEY'
+  describe "#view" do
+    it "adds a view to the subject" do
+      dsl.view :view_key, "View YEY"
 
-      expect(subject.views[:view_key].label).to eql 'View YEY'
+      expect(subject.views[:view_key].label).to eql "View YEY"
     end
 
-    it 'accepts a block for conditions' do
-      dsl.view :view_key, 'View YEY' do |user|
+    it "accepts a block for conditions" do
+      dsl.view :view_key, "View YEY" do |user|
         { id: user.id }
       end
 
@@ -46,23 +46,23 @@ RSpec.describe Consent::DSL do
     end
   end
 
-  describe '#eval_view' do
-    it 'accepts a conditions string for eval' do
-      dsl.eval_view :view_key, 'View YEY', '{object: 1}'
+  describe "#eval_view" do
+    it "accepts a conditions string for eval" do
+      dsl.eval_view :view_key, "View YEY", "{object: 1}"
 
       expect(subject.views[:view_key].conditions(nil)).to eql(object: 1)
     end
 
-    it 'is a view that evaluate the condition as ruby with the user variable' do
+    it "is a view that evaluate the condition as ruby with the user variable" do
       user = double(id: 1)
 
-      dsl.eval_view :view_key, 'View YEY', '{user: user.id}'
+      dsl.eval_view :view_key, "View YEY", "{user: user.id}"
 
       expect(subject.views[:view_key].conditions(user)).to eql(user: 1)
     end
   end
 
-  describe '#action' do
+  describe "#action" do
     let(:view_all) { double }
     let(:view_no_access) { double }
     before do
@@ -70,45 +70,45 @@ RSpec.describe Consent::DSL do
       subject.views[:no_access] = view_no_access
     end
 
-    it 'creates the action in the subject' do
-      dsl.action :action_key, 'ACTIONNNNNN'
+    it "creates the action in the subject" do
+      dsl.action :action_key, "ACTIONNNNNN"
 
-      expect(subject.actions.last.label).to eql 'ACTIONNNNNN'
+      expect(subject.actions.last.label).to eql "ACTIONNNNNN"
     end
 
-    it 'creates the action with views' do
-      dsl.action :action_key, 'ACTIONNNNNN', views: [:all]
+    it "creates the action with views" do
+      dsl.action :action_key, "ACTIONNNNNN", views: [:all]
 
       expect(subject.actions.last.views.keys).to eql [:all]
     end
 
-    it 'creates the action in the with context defaults' do
+    it "creates the action in the with context defaults" do
       defaults[:views] = [:all]
 
-      dsl.action :action_key, 'ACTIONNNNNN'
+      dsl.action :action_key, "ACTIONNNNNN"
 
       expect(subject.actions.last.views.keys).to eql [:all]
     end
 
-    it 'allows to override defaults' do
+    it "allows to override defaults" do
       defaults[:views] = [:all]
 
-      dsl.action :action_key, 'ACTIONNNNNN', views: [:no_access]
+      dsl.action :action_key, "ACTIONNNNNN", views: [:no_access]
 
       expect(subject.actions.last.views.keys).to eql [:no_access]
     end
   end
 
-  describe '#with_defaults' do
-    it 'creates a new DSL context with merged defaults' do
-      defaults[:foo] = 'bar'
+  describe "#with_defaults" do
+    it "creates a new DSL context with merged defaults" do
+      defaults[:foo] = "bar"
 
-      block = ->(_, __) {}
-      expected_defaults = { lol: 'rofl', foo: 'bar' }
+      block = ->(*) {}
+      expected_defaults = { lol: "rofl", foo: "bar" }
       expect(Consent::DSL).to receive(:build)
         .with(subject, expected_defaults, &block)
 
-      dsl.with_defaults lol: 'rofl', &block
+      dsl.with_defaults lol: "rofl", &block
     end
   end
 end
