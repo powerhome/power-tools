@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require "consent/version"
-require "consent/subject"
-require "consent/view"
 require "consent/action"
 require "consent/dsl"
 require "consent/subject_coder"
+require "consent/subject"
+require "consent/version"
+require "consent/view"
 require "consent/ability" if defined?(CanCan)
 require "consent/railtie" if defined?(Rails)
 

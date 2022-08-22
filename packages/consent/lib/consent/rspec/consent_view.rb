@@ -62,7 +62,7 @@ module Consent
             message: message, conditions: @target
           )
         else
-          actual_views = Consent.find_subjects(subject_key)
+          actual_views = Consent.find_subjects(@subject_key)
                                 .map(&:views)
                                 .map(&:keys).flatten
           format(
