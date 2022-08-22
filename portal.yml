@@ -65,3 +65,19 @@ spec:
   lifecycle: production
   subcomponentOf: power-tools
   system: power-application-framework
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: consent
+  title: Consent
+  description: Permission-based authorization
+  annotations:
+    backstage.io/techdocs-ref: dir:packages/consent
+spec:
+  type: library
+  owner: heroes-for-hire
+  system: nitro
+  lifecycle: production
+  subcomponentOf: power-tools
+  system: power-application-framework

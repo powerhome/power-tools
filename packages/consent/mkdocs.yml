@@ -1,8 +1,5 @@
-site_name: Power Tools
-site_description: Packages for application configuration.
-repo_url: https://github.com/powerhome/power-tools
-edit_uri: edit/main/nitro_config/docs/
+site_name: Consent
 nav:
-  - 'Home': 'README.md'
+  - "Home": "README.md"
 plugins:
   - techdocs-core
