@@ -28,4 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rubocop', '~> 0.65.0'
   spec.add_development_dependency 'sqlite3', '~> 1.4.2'
+  spec.add_development_dependency "license_finder", ">= 7.0"
 end
