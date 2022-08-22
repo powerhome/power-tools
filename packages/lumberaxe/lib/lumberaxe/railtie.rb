@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "lograge"
+require "lumberaxe"
 
 module Lumberaxe
   class Railtie < Rails::Railtie
