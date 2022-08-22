@@ -9,7 +9,7 @@ After installing the gem, require it as part of your application configuration.
 ```ruby
 # application.rb
 
-require "lumberaxe"
+require "lumberaxe/railtie"
 ```
 
 ## Setting JSON logging

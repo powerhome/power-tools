@@ -12,3 +12,7 @@ vendor/bundle
 *.sqlite
 *.sqlite3
 Gemfile.lock
+
+# Ignore uploaded files in development
+/storage/*
+!/storage/.keep
