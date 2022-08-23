@@ -9,14 +9,14 @@ RSpec.describe Consent::Ability do
       ::Consent::Permission.new(subject: ExampleModel, action: :report, view: :lol),
     ]
   end
-  let(:user) { double(id: 1) }
+  let(:user) { double(id: 1, role_id: 1) }
 
-  it "it authorizes symbol permissions" do
-    ability = Consent::Ability.new(user)
+  it "it allows symbol permissions with conditions" do
+    ability = Consent::Ability.new(user, super_user: false, apply_defaults: false)
 
-    ability.consent subject: :beta, action: :super_ai
+    ability.consent subject: :beta, action: :report_3d, view: :role
 
-    expect(ability).to be_able_to(:super_ai, :beta)
+    expect(ability).to be_able_to(:report_3d, :beta)
   end
 
   it "it authorizes model permissions" do

@@ -55,6 +55,12 @@ describe Consent::ModelAdditions do
       expect(ExampleDepartment.accessible_through(ability, :report, ExampleModel, relation: %i[example_role example_department])).to match_array([it])
     end
 
+    it "allows querying through symbol subjects" do
+      ability.consent action: :report_3d, subject: :beta, view: :role
+
+      expect(ExampleRole.accessible_through(ability, :report_3d, :beta)).to match_array([developer])
+    end
+
     describe "when the user has multiple permission sets" do
       it "will be permitted the on the union of both sets" do
         ability.consent subject: ExampleModel, action: :report, view: :secondary_role

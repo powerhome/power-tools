@@ -9,6 +9,7 @@ require "consent/model_additions"
 require "consent/reloader"
 require "consent/subject_coder"
 require "consent/subject"
+require "consent/symbol_adapter"
 require "consent/version"
 require "consent/view"
 
