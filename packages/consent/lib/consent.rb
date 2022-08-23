@@ -14,15 +14,15 @@ require "consent/version"
 require "consent/view"
 
 # Consent makes defining permissions easier by providing a clean,
-# concise DSL for authorization so that all abilities do not have
-# to be in your `Ability` class.
+# concise DSL for authorization so that your `Ability` isn't bloated
+# with all logic.
 module Consent
   FULL_ACCESS = %w[1 true].freeze
   NO_ACCESS = :no_access
 
-  def self.table_name_prefix
-    "nitro_auth_authorization_"
-  end
+  # Custom table_name_prefix for the Consent tables.
+  # Default: "consent_"
+  cattr_accessor(:table_name_prefix) { "consent_" }
 
   ViewNotFound = Class.new(StandardError)
 
