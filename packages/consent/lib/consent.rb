@@ -78,9 +78,9 @@ module Consent
   #
   # @param paths [Array<String,#to_s>] paths where the ruby files are located
   # @param mechanism [:require,:load] mechanism to load the files
-  def self.load_subjects!(paths, mechanism = :require)
+  def self.load_subjects!(paths)
     permission_files = paths.map { |dir| File.join(dir, "*.rb") }
-    Dir[*permission_files].each(&Kernel.method(mechanism))
+    Dir[*permission_files].each { |file| Kernel.load(file) }
   end
 
   # Defines a subject with the given key, label and options

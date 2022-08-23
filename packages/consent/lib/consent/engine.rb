@@ -7,10 +7,7 @@ module Consent
   class Engine < Rails::Engine
     config.before_configuration do |app|
       default_path = app.root.join("app", "permissions")
-      config.consent = Consent::Reloader.new(
-        default_path,
-        ActiveSupport::Dependencies.mechanism
-      )
+      config.consent = Consent::Reloader.new(default_path)
     end
 
     config.after_initialize do |app|
