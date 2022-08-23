@@ -13,12 +13,12 @@ Consent.define ExampleModel, "My Label" do
        ->(_user, _obj) { true },
        ->(user) { ExampleModel.where(owner_id: user.id) }
 
-  view :view1, "View 1"
   view :lol, "Lol Only" do |_|
     { name: "lol" }
   end
 
-  action :action1, "Action One", views: %i[view1 lol]
+  action :update, "Update models"
+  action :report, "Report models", views: %i[lol self]
   action :destroy, "Destroy", views: %i[lol self], default_view: :future
 end
 
@@ -27,5 +27,5 @@ Consent.define ExampleModel, "Another for the model" do
     { name: "ROFL" }
   end
 
-  action :create, "Create", views: %i[lol self]
+  action :create, "Create", views: %i[lol]
 end
