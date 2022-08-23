@@ -38,8 +38,8 @@ RSpec.describe ::Consent::Authorizable, type: :model do
     let(:role) { ExampleRole.new }
 
     it "adds all given permissions to the set" do
-      role.grant_all(reports: { candidates: :all })
-      role.grant_all(reports: { users: :territory })
+      role.grant_all({ reports: { candidates: :all } })
+      role.grant_all({ reports: { users: :territory } })
 
       expect(role.permissions.size).to eql 2
       expect(role.permissions.first.subject).to eql :reports
@@ -51,8 +51,8 @@ RSpec.describe ::Consent::Authorizable, type: :model do
     end
 
     it "replaces a given permission when it matches" do
-      role.grant_all(reports: { candidates: :all, users: :territory })
-      role.grant_all(reports: { users: :all })
+      role.grant_all({ reports: { candidates: :all, users: :territory } })
+      role.grant_all({ reports: { users: :all } })
 
       role.save!
 
@@ -66,7 +66,7 @@ RSpec.describe ::Consent::Authorizable, type: :model do
     end
 
     it "replaces all existing permissions when required" do
-      role.grant_all(reports: { candidates: :all, users: :territory })
+      role.grant_all({ reports: { candidates: :all, users: :territory } })
       role.save!
 
       role.grant_all({ reports: { sales: :department } }, replace: true)
@@ -80,7 +80,7 @@ RSpec.describe ::Consent::Authorizable, type: :model do
     end
 
     it "ignores no access grants" do
-      role.grant_all(reports: { candidates: :no_access, users: :no_access, sales: :no_access, projects: :all })
+      role.grant_all({ reports: { candidates: :no_access, users: :no_access, sales: :no_access, projects: :all } })
 
       expect(role.permissions.size).to eql 1
       expect(role.permissions.first.subject).to eql :reports
@@ -90,8 +90,8 @@ RSpec.describe ::Consent::Authorizable, type: :model do
 
     describe "grant_all!" do
       it "saves the changes atomically" do
-        role.grant_all!(reports: { users: :no_access, projects: :all })
-        role.grant_all!(reports: { users: :all, projects: :no_access }) do
+        role.grant_all!({ reports: { users: :no_access, projects: :all } })
+        role.grant_all!({ reports: { users: :all, projects: :no_access } }) do
           raise
         end
       rescue
