@@ -13,6 +13,7 @@ class CreateNitroAuthAuthorizationPermissions < ActiveRecord::Migration[5.2]
 
     add_index :nitro_auth_authorization_permissions, :role_id
     add_index :nitro_auth_authorization_permissions, :subject
-    add_index :nitro_auth_authorization_permissions, %i[subject action]
+    add_index :nitro_auth_authorization_permissions, %i[subject action],
+              name: :idx_nitro_auth_authorization_permissions_on_subject_and_action
   end
 end
