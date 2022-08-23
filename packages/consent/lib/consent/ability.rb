@@ -49,6 +49,16 @@ module Consent
       end
     end
 
+    # Consents a subject/action/view to the ability
+    #
+    # `consent!` will add a `can` permission to the ability based on the
+    # view rules defined in the Consent definitions.
+    #
+    # @param [Class,Symbol] subject the target subject of the action
+    # @param [Symbol] action the action being granted on the subject
+    # @param [Symbol,nil] view the conditions/rules on which the action is granted
+    # @raises Consent::ViewNotFound when the view key doesn't exist in the context
+    #
     def consent!(subject: nil, action: nil, view: nil)
       view = case view
              when Consent::View
@@ -63,6 +73,10 @@ module Consent
       )
     end
 
+    # Consents a subject/action/view to the ability
+    #
+    # @see ::Consent::Ability#consent
+    #
     def consent(**kwargs)
       consent!(**kwargs)
     rescue Consent::ViewNotFound
