@@ -1,9 +1,17 @@
 # frozen_string_literal: true
 
 require "bundler"
-require "cancancan"
+require "combustion"
+
+require "active_record/railtie" # active_record has to be loaded before cancan
+require "consent/engine"
+
+Combustion.initialize! :active_record do |app|
+  app.config.consent.paths << app.root.join("app", "permissions")
+end
+
 require "cancan/matchers"
-require "consent"
+require "rspec/rails"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -15,4 +23,5 @@ RSpec.configure do |config|
   end
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
+  config.use_transactional_fixtures = true
 end

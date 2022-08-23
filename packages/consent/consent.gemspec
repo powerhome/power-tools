@@ -19,9 +19,10 @@ Gem::Specification.new do |spec|
   spec.files = `git ls-files`.split.grep_v(/^(test|spec|features)/)
   spec.require_paths = ["lib"]
 
+  spec.add_dependency "cancancan", "3.2.1"
+
   spec.add_development_dependency "activerecord", ">= 5", "< 7"
   spec.add_development_dependency "bundler", "~> 2.1"
-  spec.add_development_dependency "cancancan", "~> 1.15.0"
   spec.add_development_dependency "combustion", "~> 1.3"
   spec.add_development_dependency "license_finder", ">= 7.0"
   spec.add_development_dependency "pry-byebug", "3.9.0"

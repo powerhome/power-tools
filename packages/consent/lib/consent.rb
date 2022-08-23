@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
+require "cancancan"
+
+require "consent/ability"
 require "consent/action"
 require "consent/dsl"
+require "consent/model_additions"
+require "consent/reloader"
 require "consent/subject_coder"
 require "consent/subject"
 require "consent/version"
 require "consent/view"
-require "consent/ability" if defined?(CanCan)
-require "consent/engine" if defined?(Rails)
 
 # Consent makes defining permissions easier by providing a clean,
 # concise DSL for authorization so that all abilities do not have
