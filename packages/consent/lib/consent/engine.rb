@@ -4,7 +4,7 @@ require "consent/reloader"
 
 module Consent
   # Plugs consent permission load to the Rails class loading cycle
-  class Railtie < Rails::Railtie
+  class Engine < Rails::Engine
     config.before_configuration do |app|
       default_path = app.root.join("app", "permissions")
       config.consent = Consent::Reloader.new(
@@ -17,10 +17,18 @@ module Consent
       app.config.consent.execute
     end
 
-    initializer "initialize consent permissions reloading" do |app|
+    initializer "consent.reloader" do |app|
       app.reloaders << config.consent
       ActiveSupport::Dependencies.autoload_paths -= config.consent.paths
       config.to_prepare { app.config.consent.execute }
     end
+
+    # initializer "consent.append_migrations" do |app|
+    #   unless app.root.to_s.match? root.to_s
+    #     config.paths["db/migrate"].expanded.each do |expanded_path|
+    #       app.config.paths["db/migrate"] << expanded_path
+    #     end
+    #   end
+    # end
   end
 end

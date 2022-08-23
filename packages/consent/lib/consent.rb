@@ -7,12 +7,19 @@ require "consent/subject"
 require "consent/version"
 require "consent/view"
 require "consent/ability" if defined?(CanCan)
-require "consent/railtie" if defined?(Rails)
+require "consent/engine" if defined?(Rails)
 
 # Consent makes defining permissions easier by providing a clean,
 # concise DSL for authorization so that all abilities do not have
 # to be in your `Ability` class.
 module Consent
+  FULL_ACCESS = %w[1 true].freeze
+  NO_ACCESS = :no_access
+
+  def self.table_name_prefix
+    "nitro_auth_authorization_"
+  end
+
   ViewNotFound = Class.new(StandardError)
 
   # Default views available to every permission
