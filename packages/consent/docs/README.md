@@ -16,6 +16,15 @@ Or install it yourself as:
 
     $ gem install consent
 
+Then, require the engine in your `application.rb`
+
+```ruby
+require "active_record/railtie"
+require "consent/engine"
+```
+
+If you wish to use the activerecord adapter (`accessible_by` and `accessible_through`), you must load `active_record/railtie` before loading the `consent/engine`.
+
 ## What is Consent
 
 Consent makes defining permissions easier by providing a clean, concise DSL for authorization
