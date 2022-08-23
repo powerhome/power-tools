@@ -19,7 +19,7 @@ module Consent
     def copy_permissions(from:, override:)
       raise ArgumentError, "Subject and Action are always required" if from[:subject].blank? || from[:action].blank?
 
-      ::Consent::Permission.to(from).each do |permission|
+      ::Consent::Permission.to(**from).each do |permission|
         ::Consent::Permission.create!(
           permission.slice(:subject, :action, :view, :role_id).merge(override)
         )
