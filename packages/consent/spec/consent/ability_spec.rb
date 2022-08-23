@@ -14,9 +14,9 @@ RSpec.describe Consent::Ability do
   it "it authorizes symbol permissions" do
     ability = Consent::Ability.new(user)
 
-    ability.consent subject: :beta, action: :lol_til_death
+    ability.consent subject: :beta, action: :super_ai
 
-    expect(ability).to be_able_to(:lol_til_death, :beta)
+    expect(ability).to be_able_to(:super_ai, :beta)
   end
 
   it "it authorizes model permissions" do

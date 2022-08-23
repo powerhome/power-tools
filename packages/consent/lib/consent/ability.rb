@@ -99,6 +99,14 @@ module Consent
       super action, subject, *args
     end
 
+    # @private
+    def relation_model_adapter(model_class, action_or_pair, subject, relation)
+      action, subject = extract_action_subject(action_or_pair, subject)
+      ::CanCan::ModelAdapters::AbstractAdapter
+        .adapter_class(model_class)
+        .new(model_class, relation_rules(model_class, action, subject, relation))
+    end
+
   private
 
     def apply_defaults!
@@ -112,6 +120,17 @@ module Consent
             view: action.default_view
           )
         end
+      end
+    end
+
+    def relation_rules(model_class, action, subject, relation)
+      relevant_rules(action, subject).map do |rule|
+        unless rule.conditions.is_a?(Hash)
+          raise ::CanCan::Error, "accessible_through is only available with hash conditions"
+        end
+
+        conditions = rule.conditions.dig(*Array(relation))
+        ::CanCan::Rule.new(rule.base_behavior, action, model_class, conditions, rule.block)
       end
     end
 

@@ -17,8 +17,23 @@ Consent.define ExampleModel, "My Label" do
     { name: "lol" }
   end
 
+  view :role, "Same role" do |user|
+    {
+      example_role: { id: user.role_id },
+      additional_role: { id: user.role_id },
+    }
+  end
+
+  view :role_department, "Same role department" do |user|
+    { example_role: { example_department: { id: user.role_id } } }
+  end
+
+  view :secondary_role, "User's secondary role" do |user|
+    { example_role: { id: user.secondary_role_id } }
+  end
+
   action :update, "Update models"
-  action :report, "Report models", views: %i[lol self]
+  action :report, "Report models", views: %i[lol self role secondary_role role_department]
   action :destroy, "Destroy", views: %i[lol self], default_view: :future
 end
 

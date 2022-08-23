@@ -23,6 +23,12 @@ module Consent
       config.to_prepare { app.config.consent.execute }
     end
 
+    initializer "consent.accessible_through" do
+      ActiveSupport.on_load(:active_record) do
+        include Consent::ModelAdditions
+      end
+    end
+
     # initializer "consent.append_migrations" do |app|
     #   unless app.root.to_s.match? root.to_s
     #     config.paths["db/migrate"].expanded.each do |expanded_path|
