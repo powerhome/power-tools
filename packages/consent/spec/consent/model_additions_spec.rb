@@ -52,7 +52,8 @@ describe Consent::ModelAdditions do
     it "allows nested relations" do
       ability.consent action: :report, subject: ExampleModel, view: :role_department
 
-      expect(ExampleDepartment.accessible_through(ability, :report, ExampleModel, relation: %i[example_role example_department])).to match_array([it])
+      expect(ExampleDepartment.accessible_through(ability, :report, ExampleModel,
+                                                  relation: %i[example_role example_department])).to match_array([it])
     end
 
     it "allows querying through symbol subjects" do
