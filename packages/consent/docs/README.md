@@ -1,5 +1,13 @@
 # Consent [![Build Status](https://travis-ci.org/powerhome/consent.svg?branch=master)](https://travis-ci.org/powerhome/consent)
 
+## What is Consent
+
+Consent makes defining permissions easier by providing a clean, concise DSL for authorization
+so that all abilities do not have to be in your `Ability` class.
+
+Also, Consent adds an `Authorizable` model, so that you can easily grant permissions to your
+ActiveRecord models.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -25,33 +33,69 @@ require "consent/engine"
 
 If you wish to use the activerecord adapter (`accessible_by` and `accessible_through`), you must load `active_record/railtie` before loading the `consent/engine`.
 
-## What is Consent
+### Install and run the migrations
 
-Consent makes defining permissions easier by providing a clean, concise DSL for authorization
-so that all abilities do not have to be in your `Ability`
-class.
+Copy and execute the migrations:
 
-Consent takes application permissions and models them so that permissions are organized and can
-be defined granularly. It does so using the following models:
+    $ rails consent_engine:install:migrations
+    $ rails db:migrate
 
-* View: A collection of objects limited by a given condition.
-* Action: An action performed on top of the objects limited by the view. For example, one user could only `:view` something, while another could `:manage` it.
-* Subject: Holds the scope of the actions.
-* Permission: The combination of a subject, an action, and a view (or full-access).
-
-## What Consent Is Not
-
-Consent isn't a tool to enforce permissions -- it supports CanCan(Can) for that goal.
-
-## Subject
-
-The subject is the central point of a group of actions and views. It will typically
-be an `ActiveRecord` class, a `:symbol`, or any Plain Old Ruby Object.
-
-You define a subject with the following DSL:
+This will create the `consent_histories` and `consent_permissions` tables. If you want to use a different table prefix, you should set `Consent.table_name_prefix =` before you execute the migrations. I.e.:
 
 ```ruby
-Consent.define Project, 'Our Projects' do
+# config/initializers/consent.rb
+
+require "consent"
+
+Consent.table_name_prefix = "my_app_"
+```
+
+## Authorizable
+
+To grant permissions, you need an authorizable model. For our example we'll call it `Role`:
+
+```ruby
+class Role < ApplicationRecord
+  include ::Consent::Authorizable
+end
+```
+
+You can now grant permissions to role with `grant`, `grant_all`, and `grant_all!`:
+
+```ruby
+role = Role.new
+role.grant subject: Project, action: :update, view: :department
+# OR
+role.grant_all({ project: { update: :department } })
+# OR
+role.grant_all({ project: { update: :department } }, replace: true) # to replace everything
+# OR
+role.grant_all!({ project: { update: :department } }, replace: true) # to grant and save
+
+role.permissions
+=> [#<Consent::Permission subject: Project, action: :update, view: :department>]
+```
+
+In the above example, we're granting `:department` view to perform `:update` in the `Project` subject.
+
+You can now create a `Consent::Ability` using the permissions granted to the role:
+
+```ruby
+ability = Consent::Ability.new(user, permissions: role.permissions)
+```
+
+## Defining permissions and views
+
+Generate permissions with the `consent:permissions` generator. I.e:
+
+    $ rails g consent:permissions Projects
+    create  app/permissions/projects.rb
+    create  spec/permissions/projects_spec.rb
+
+This will generate the permission definition:
+
+```ruby
+Consent.define Project, "Projects" do
   #in this case, Project is the subject
   # and `Our Projects` is the description that makes it clear to users
   # what the subject is acting upon.
@@ -59,18 +103,42 @@ Consent.define Project, 'Our Projects' do
 end
 ```
 
-The scope is the action that's being performed on the subject. It can be anything, but will
-typically be an ActiveRecord class, a `:symbol`, or a PORO.
-
-For instance:
+We can now define the `:update` action and a couple of different views:
 
 ```ruby
-Consent.define :features, 'Beta Features' do
-  # whatever you put inside this method defines the scope
+Consent.define Project, "Our Projects"  do
+  view :all, "All projects"
+
+  view :department, "Projects from their department" do |user|
+    { department_id: user.department_id }
+  end
+
+  view :team, "Projects from their team" do |user|
+    { team_id: user.team_id }
+  end
+
+  action :update, views: %i[department team all]
 end
 ```
 
-## Views
+The `:department` view will restrict the user to projects with matching `department_id`. That
+means that for `Project.accessible_by(ability, :update)`, with an ability using a User with
+department_id = 13, it will run a query similar to:
+
+```sql
+> user = User.new(department_id: 13)
+> ability = Consent::Ability.new(user)
+> ability.consent subject: Project, action: :update, view: :department
+> Project.accessible_by(user).to_sql
+"SELECT * FROM projects WHERE department_id = 1"
+```
+
+### Subject
+
+The subject is the central point of a group of actions and views. It will typically
+be an `ActiveRecord`, a `:symbol`, or any plain ruby class.
+
+### Views
 
 Views are the rules that limit access to actions. For instance, a user may see a `Project`
 from his department, but not from others. You can enforce it with a `:department` view,
@@ -122,7 +190,7 @@ For object conditions, the latter argument will be the referred object, while th
 first will be the context given to the [Permission](#permission) (also check
 [CanCan integration](#cancan-integration)).
 
-## Action
+### Action
 
 An action is anything you can perform on a given subject. In the example of
 Features this would look like the following using Consent's DSL:
@@ -167,57 +235,45 @@ with_defaults views: [:department, :small_volumes] do
 end
 ```
 
-## Permission
+### Permission
 
-A permission is what is consented to the user. It consentment to perform
-an *action* on a limited *view* of the *subject*. It marries the three concepts
-to consent an access to the user.
+Permission is what is granted to a role, or a user. It grants the ability to perform an *action*,
+on a limited scope (*view*) of the *subject*.
 
 ## CanCan Integration
 
-Consent provides a CanCan ability (Consent::Ability) to integrate your
-permissions with frameworks like Rails. To use it with Rails check out the
-example at [Ability for Other Users](https://github.com/CanCanCommunity/cancancan/wiki/Ability-for-Other-Users)
-on CanCanCan's wiki.
-
-In the ability you define the scope of the permissions. This is typically a
-user:
+Consent provides a CanCan ability (Consent::Ability) that can be initialized with a group of
+granted permissions. You can initialize a `Consent::Ability` with:
 
 ```ruby
-Consent::Ability.new(user)
+Consent::Ability.new(*context, super_user: <true|false>, apply_defaults: <true|false>, permissions: [Consent::Permission, ...])
 ```
 
-You'd more commonly define a subclass of `Consent::Ability`, and consent access
-to the user by calling `consent`:
+- `*context` is what is given to the view evaluating permission rules. That is typically a user;
+- `super_user` makes the ability to respond to `true` to any `can?` questions, and yields no
+  restrictions in any `accessible_by` and `accessible_through` queries;
+- `apply_defaults` grants actions with the `default_view` set automatically.
+- `permissions` is a collection of permissions to grant to the user
+
+### Manually consent permissions
+
+You can manually grant permissions with `consent`. You could possibly subclass
+`Consent::Ability` to consent some specific permissions by default:
 
 ```ruby
 class MyAbility < Consent::Ability
-  def initialize(user)
-    super user
+  def initialize(...)
+    super(...)
 
-    consent :read, Project, :department
+    consent action: :read, subject: Project, view: :department
   end
 end
 ```
 
-You can also consent full access by not specifying the view:
+You can also consent full-access by not specifying the view:
 
 ```ruby
-  consent :read, Project
-```
-
-If you have a somehow manageable permission, you can consent them in batch in your ability:
-
-```ruby
-class MyAbility < Consent::Ability
-  def initialize(user)
-    super user
-
-    user.permissions.each do |permission|
-      consent permission.action, permission.subject, permission.view
-    end
-  end
-end
+  consent action: :read, subject: Project
 ```
 
 Consenting the same permission multiple times is handled as a Union by CanCanCan:
@@ -241,7 +297,7 @@ Project.accessible_by(ability, :read).to_sql
 
 ## Rails Integration
 
-Consent is integrated into Rails with `Consent::Railtie`. To define where
+Consent is integrated into Rails with `Consent::Engine`. To define where
 your permission files will be, use `config.consent.path`. This defaults to
 `#{Rails.root}/app/permissions/` to conform to Rails' standards.
 
