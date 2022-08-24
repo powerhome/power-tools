@@ -88,14 +88,14 @@ ability = Consent::Ability.new(user, permissions: role.permissions)
 
 Generate permissions with the `consent:permissions` generator. I.e:
 
-    $ rails g consent:permissions Projects
+    $ rails g consent:permissions Project "Our Projects"
     create  app/permissions/projects.rb
     create  spec/permissions/projects_spec.rb
 
 This will generate the permission definition:
 
 ```ruby
-Consent.define Project, "Projects" do
+Consent.define Project, "Our Projects" do
   #in this case, Project is the subject
   # and `Our Projects` is the description that makes it clear to users
   # what the subject is acting upon.

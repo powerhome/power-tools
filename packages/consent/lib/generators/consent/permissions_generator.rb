@@ -8,13 +8,13 @@ module Consent
     def create_permissions
       template(
         "permissions.rb.erb",
-        "app/permissions/#{file_path}.rb",
+        "app/permissions/#{plural_file_name}.rb",
         assigns: { description: description }
       )
 
       template(
         "permissions_spec.rb.erb",
-        "spec/permissions/#{file_path}_spec.rb"
+        "spec/permissions/#{plural_file_name}_spec.rb"
       )
     end
   end
