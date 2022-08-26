@@ -242,8 +242,8 @@ on a limited scope (*view*) of the *subject*.
 
 ## CanCan Integration
 
-Consent provides a CanCan ability (Consent::Ability) that can be initialized with a group of
-granted permissions. You can initialize a `Consent::Ability` with:
+Consent provides a [CanCan](https://github.com/CanCanCommunity/cancancan#readme) ability (Consent::Ability)
+that can be initialized with a group of granted permissions. You can initialize a `Consent::Ability` with:
 
 ```ruby
 Consent::Ability.new(*context, super_user: <true|false>, apply_defaults: <true|false>, permissions: [Consent::Permission, ...])
@@ -293,6 +293,44 @@ ability = MyAbility.new(user)
 
 Project.accessible_by(ability, :read).to_sql
 => SELECT * FROM projects WHERE ((department_id = 13) OR (starts_at > '2021-04-06'))
+```
+
+## Special subject and actions
+
+### :manage
+
+Whenever the `:manage` action is granted to a user through `consent` or `can`, that means that all actions in that subject are automatically granted with the same restrictions. Take the following example:
+
+```ruby
+Consent.define User, "User permissions" do
+  view :all, "All users"
+  view :self, "Own user" do |user|
+    { id: user.id }
+  end
+
+  action :manage, "Manage users", views: %i[self all]
+  action :update, "Manage users"
+end
+
+> ability = Consent::Ability.new(User.new(id: 123))
+> ability.consent subject: User, action: :manage, view: :self
+> User.accessible_by(ability, :manage).to_sql
+=> "SELECT `users`.* FROM `users` WHERE `users`.`id` = 123"
+> User.accessible_by(ability, :view).to_sql
+=> "SELECT `users`.* FROM `users` WHERE `users`.`id` = 123"
+```
+
+### :all
+
+In CanCan, `:all` is a special subject which means `all subjects`. Whatever is granted to `:all` is applied to all subjects. I.e.:
+
+```ruby
+> ability = Consent::Ability.new(User.new(id: 123))
+> User.accessible_by(ability, :update).to_sql
+=> "SELECT `users`.* FROM `users` WHERE 1=0"
+> ability.can :update, :all
+> User.accessible_by(ability, :update).to_sql
+=> "SELECT `users`.* FROM `users`"
 ```
 
 ## Rails Integration
