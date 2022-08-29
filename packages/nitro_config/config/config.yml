@@ -1,4 +1,6 @@
 base: &base
+  another:
+    config: <%= "vrum " * 10 %>
   key:
     nested:
       value: "Hello World"

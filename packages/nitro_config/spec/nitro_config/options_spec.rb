@@ -15,6 +15,19 @@ RSpec.describe NitroConfig::Options do
     )
   end
 
+  describe ".load_yml(file, environment)" do
+    let(:config_file) { File.expand_path("../../config/config.yml", __dir__) }
+    subject { NitroConfig::Options.load_yml(config_file, "development") }
+
+    it "parses a yml file" do
+      expect(subject.get("key/nested/value")).to eql "Hello World"
+    end
+
+    it "parses a ERb from the YAML" do
+      expect(subject.get("another/config")).to eql "vrum vrum vrum vrum vrum vrum vrum vrum vrum vrum"
+    end
+  end
+
   describe "[]" do
     it "is a hash with indifferent access" do
       expect(subject).to be_a(HashWithIndifferentAccess)
