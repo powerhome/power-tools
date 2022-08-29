@@ -9,11 +9,13 @@ module NitroConfig
   # Representation of a config key-value tree with path-based access
   class Options < HashWithIndifferentAccess
     def self.load_yml(path, environment)
+      erb_result = ::ERB.new(File.read(path)).result
       yaml = begin
-        YAML.load_file(path, aliases: true)
+        YAML.safe_load(erb_result, [], [], true)
       rescue ArgumentError
-        YAML.load_file(path)
+        YAML.safe_load(erb_result, aliases: true)
       end
+
       new(yaml[environment])
     end
 
