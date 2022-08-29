@@ -22,6 +22,8 @@ Given the following example config file, the following examples demonstrate how 
 base: &base
   some:
     nested: value
+  service:
+    api: <%= ENV.fetch("SERVICE_API_URL", "http://localhost:3000/api") %>
 
 development:
   <<: *base
@@ -43,9 +45,15 @@ test:
     [3] pry(main)> NitroConfig.config.get!('some/other')
     NitroConfig::Error: some/other not found in app config!
     from /Users/ben/code/power/nitro/components/nitro_config/lib/nitro_config/options.rb:20:in `block in get!'
-    [2] pry(main)> NitroConfig.config.get('some/other', 'default')
+    [4] pry(main)> NitroConfig.config.get('some/other', 'default')
     => "default"
+    [5] pry(main)> NitroConfig.config.get('service/api')
+    => "http://localhost:3000/api"
 
     $ RAILS_ENV=test rails c
     [1] pry(main)> NitroConfig.config.get('some/nested')
     => "testvalue"
+
+    $ SERVICE_API_URL="http://test.com" rails c
+    [1] pry(main)> NitroConfig.config.get('service/api')
+    => "http://test.com"
