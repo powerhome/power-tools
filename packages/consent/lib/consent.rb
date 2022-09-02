@@ -1,17 +1,29 @@
 # frozen_string_literal: true
 
-require "consent/version"
-require "consent/subject"
-require "consent/view"
+require "cancancan"
+
+require "consent/ability"
 require "consent/action"
 require "consent/dsl"
-require "consent/ability" if defined?(CanCan)
-require "consent/railtie" if defined?(Rails)
+require "consent/model_additions"
+require "consent/reloader"
+require "consent/subject_coder"
+require "consent/subject"
+require "consent/symbol_adapter"
+require "consent/version"
+require "consent/view"
 
 # Consent makes defining permissions easier by providing a clean,
-# concise DSL for authorization so that all abilities do not have
-# to be in your `Ability` class.
+# concise DSL for authorization so that your `Ability` isn't bloated
+# with all logic.
 module Consent
+  FULL_ACCESS = %w[1 true].freeze
+  NO_ACCESS = :no_access
+
+  # Custom table_name_prefix for the Consent tables.
+  # Default: "consent_"
+  cattr_accessor(:table_name_prefix) { "consent_" }
+
   ViewNotFound = Class.new(StandardError)
 
   # Default views available to every permission
@@ -66,9 +78,9 @@ module Consent
   #
   # @param paths [Array<String,#to_s>] paths where the ruby files are located
   # @param mechanism [:require,:load] mechanism to load the files
-  def self.load_subjects!(paths, mechanism = :require)
+  def self.load_subjects!(paths)
     permission_files = paths.map { |dir| File.join(dir, "*.rb") }
-    Dir[*permission_files].each(&Kernel.method(mechanism))
+    Dir[*permission_files].each { |file| Kernel.load(file) }
   end
 
   # Defines a subject with the given key, label and options

@@ -2,21 +2,21 @@
 
 module Consent
   # Rails file reloader to detect permission changes and apply them to consent
+  # @private
   class Reloader
     attr_reader :paths
 
     delegate :updated?, :execute, :execute_if_updated, to: :updater
 
-    def initialize(default_path, mechanism)
+    def initialize(default_path)
       @paths = [default_path]
-      @mechanism = mechanism
     end
 
   private
 
     def reload!
       Consent.subjects.clear
-      Consent.load_subjects! paths, @mechanism
+      Consent.load_subjects! paths
     end
 
     def updater

@@ -1,29 +1,27 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
-require "cancan"
-require "cancan/matchers"
-require "consent"
-require "date"
+require "bundler"
+require "combustion"
 
-require "active_record"
+require "active_record/railtie" # active_record has to be loaded before cancan
+require "consent/engine"
 
-ActiveRecord::Base.establish_connection(
-  adapter: "sqlite3",
-  database: File.join(__dir__, "test.db")
-)
-
-class SomeModel < ActiveRecord::Base
-  # id INTEGER PRIMARY KEY AUTOINCREMENT
-  # name VARCHAR(255)
-  # created_at DATETIME
+Combustion.initialize! :active_record do |app|
+  app.config.consent.paths << app.root.join("app", "permissions")
 end
+
+require "cancan/matchers"
+require "rspec/rails"
 
 RSpec.configure do |config|
-  config.around(:example) do |example|
-    ActiveRecord::Base.transaction(&example)
+  config.expect_with :rspec do |expectations|
+    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
-end
 
-Consent.default_views[:no_access] = Consent::View.new("", "No Access")
-Consent.load_subjects! [File.join(__dir__, "permissions")]
+  config.mock_with :rspec do |mocks|
+    mocks.verify_partial_doubles = true
+  end
+
+  config.shared_context_metadata_behavior = :apply_to_host_groups
+  config.use_transactional_fixtures = true
+end

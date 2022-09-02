@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Consent
+  # @private
   class DSL # :nodoc:
     attr_reader :subject
 
