@@ -4,6 +4,7 @@ require "logger"
 require "active_support"
 require "lumberaxe/logger"
 require "lumberaxe/json_formatter"
+require "json"
 
 module Lumberaxe
   def self.puma_formatter(level: "INFO", progname: "puma")
