@@ -22,6 +22,11 @@ Lumberaxe handles logging output formatting.
 
 Consent provides permission-based authorization.
 
+[scim-pickens](https://github.com/powerhome/power-tools/blob/main/packages/scim-pickens/docs/README.md)
+
+🚧 *Coming soon.* This power tool is currently under construction.
+
+
 ## Installation 🛠
 
 These packages are all meant to install inside of an application and aren't intended to stand alone; currently, they are all published to [RubyGems](https://rubygems.org/) and you can use standard Bundler methods to install them.
