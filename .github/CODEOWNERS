@@ -1,3 +1,5 @@
 * @powerhome/heroes-for-hire
 packages/**/*.gemspec
 packages/**/Gemfile
+
+packages/scim_pickens/ @powerhome/s-h-i-e-l-d
