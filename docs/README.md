@@ -22,7 +22,7 @@ Lumberaxe handles logging output formatting.
 
 Consent provides permission-based authorization.
 
-[scim-pickens](https://github.com/powerhome/power-tools/blob/main/packages/scim-pickens/docs/README.md)
+[scim-pickens](https://github.com/powerhome/power-tools/blob/main/packages/scim-pickens/docs/README.md) 💎
 
 🚧 *Coming soon.* This power tool is currently under construction.
 
