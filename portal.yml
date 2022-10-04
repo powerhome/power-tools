@@ -83,11 +83,11 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: scim-pickens
+  name: scim_pickens
   title: SCIM Pickens
   description: SCIM library
   annotations:
-    backstage.io/techdocs-ref: dir:packages/scim-pickens
+    backstage.io/techdocs-ref: dir:packages/scim_pickens
 spec:
   type: library
   owner: shield
