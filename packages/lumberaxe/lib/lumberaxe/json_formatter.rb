@@ -23,7 +23,7 @@ module Lumberaxe
                       hash[key] = value
                     else
                       hash[:tags] ||= []
-                      hash[:tags] << key
+                      hash[:tags] << tag
                     end
                     hash
                   end)
