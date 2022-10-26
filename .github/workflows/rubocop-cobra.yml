@@ -1,0 +1,13 @@
+name: rubocop-cobra
+
+on:
+  push:
+
+jobs:
+  ruby:
+    uses: ./.github/workflows/_ruby-package.yml
+    with:
+      package: ${{ github.workflow }}
+      ruby: '["2.7.4", "3.1.2"]'
+      rails: '[]'
+    secrets: inherit
