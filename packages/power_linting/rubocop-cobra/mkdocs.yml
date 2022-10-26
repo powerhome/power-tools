@@ -1,0 +1,9 @@
+site_name: Rubocop Cobra
+site_description: Gem focused on providing Cops to support a healthy cobra app development
+repo_url: https://github.com/powerhome/power_linting
+edit_uri: edit/main/rubocop_cobra/docs/
+nav:
+  - 'Home': 'README.md'
+
+plugins:
+  - techdocs-core

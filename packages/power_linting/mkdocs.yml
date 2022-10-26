@@ -1,0 +1,9 @@
+site_name: Power Linting
+site_description: Power linting libraries for multiple languages
+repo_url: https://github.com/powerhome/power_linting
+edit_uri: edit/main/docs/
+nav:
+  - 'Home': 'README.md'
+
+plugins:
+  - techdocs-core

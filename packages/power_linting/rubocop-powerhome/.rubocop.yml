@@ -1,0 +1,14 @@
+require:
+  - rubocop-powerhome
+
+Naming/FileName:
+  Exclude:
+    - lib/rubocop-powerhome.rb
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - 'rubocop-powerhome.gemspec'
+
+Rails:
+  Enabled: false

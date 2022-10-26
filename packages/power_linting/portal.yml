@@ -1,0 +1,59 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: power-linting
+  title: Power Linting
+  description: Power linting libraries for multiple languages.
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: library
+  owner: heroes-for-hire
+  lifecycle: production
+  system: power-application-framework
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: eslint-config-powerhome
+  title: ESLint Config Powerhome
+  description: Provides eslint-config for Power Home Remodeling apps
+  annotations:
+    backstage.io/techdocs-ref: dir:eslint-config
+spec:
+  type: library
+  owner: heroes-for-hire
+  lifecycle: production
+  subcomponentOf: power-linting
+  system: power-application-framework
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: rubocop-cobra
+  title: Rubocop Cobra
+  description: Gem focused on providing Cops to support a healthy cobra app development
+  annotations:
+    backstage.io/techdocs-ref: dir:rubocop-cobra
+spec:
+  type: library
+  owner: heroes-for-hire
+  lifecycle: production
+  subcomponentOf: power-linting
+  system: power-application-framework
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: rubocop-powerhome
+  title: Rubocop Powerhome
+  description: Gem focused on providing standard Rubocop configuration for Power Home Remodeling ruby apps
+  annotations:
+    backstage.io/techdocs-ref: dir:rubocop-powerhome
+spec:
+  type: library
+  owner: heroes-for-hire
+  lifecycle: production
+  subcomponentOf: power-linting
+  system: power-application-framework
