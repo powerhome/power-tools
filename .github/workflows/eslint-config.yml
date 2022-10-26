@@ -4,7 +4,7 @@ on:
   push:
 
 env:
-  PROJECT_DIR: eslint-config
+  PROJECT_DIR: packages/eslint-config
   NODE_VERSION: '14.18.1'
   REGISTRY_URL: 'https://registry.npmjs.org'
 
