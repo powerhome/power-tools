@@ -22,6 +22,18 @@ Lumberaxe handles logging output formatting.
 
 Consent provides permission-based authorization.
 
+[rubocop-powerhome](https://github.com/powerhome/power-tools/blob/main/packages/rubocop-powerhome/docs/README.md) 💎
+
+This gem is focused on providing standard rubocop configuration for Power Home Remodeling ruby apps. See more in [`rubocop-powerhome`](../packages/rubocop-powerhome).
+
+[rubocop-cobra](https://github.com/powerhome/power-tools/blob/main/packages/rubocop-cobra/docs/README.md) 💎
+
+This gem is focused on providing Cops to support a healthy cobra app development. See more in [`rubocop-cobra`](../packages/rubocop-cobra).
+
+[@powerhome/eslint-config](https://github.com/powerhome/power-tools/blob/main/packages/eslint-config/docs/README.md)
+
+Shared eslint-config from Power Home Remodeling.
+
 ## Installation 🛠
 
 These packages are all meant to install inside of an application and aren't intended to stand alone; currently, they are all published to [RubyGems](https://rubygems.org/) and you can use standard Bundler methods to install them.
