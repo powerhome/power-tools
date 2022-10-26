@@ -1,0 +1,13 @@
+name: rubocop-powerhome
+
+on:
+  push:
+
+jobs:
+  ruby:
+    uses: ./.github/workflows/_ruby-package.yml
+    with:
+      package: ${{ github.workflow }}
+      ruby: '["2.7.4", "3.1.2"]'
+      rails: '["7.0.3.1","6.1.6.1","6.0.5.1","5.2.8.1"]'
+    secrets: inherit
