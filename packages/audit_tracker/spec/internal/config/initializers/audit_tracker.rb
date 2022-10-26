@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable RSpec/FactoryBot/ConsistentParenthesesStyle
 AuditTracker.setup do
   tracker(:user) do
     create :created_by, foreign_key: :created_by_id, class_name: "::Internal::User"
@@ -16,3 +17,4 @@ AuditTracker.setup do
                                    value: ->(object) { object&.updated_by&.department }
   end
 end
+# rubocop:enable RSpec/FactoryBot/ConsistentParenthesesStyle
