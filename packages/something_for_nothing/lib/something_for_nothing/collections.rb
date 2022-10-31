@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 module SomethingForNothing
+  # Builds flattened collections of objects for easy return
   class MappedCollection < Array
     def initialize(builder, records)
+      super
       @builder = builder
       @records = records
       self << records.map(&builder.method(:new))
@@ -10,6 +12,7 @@ module SomethingForNothing
     end
   end
 
+  # Easy API for paginated collections
   class PaginatedCollection < MappedCollection
     attr_accessor :total_pages, :current_page, :total_entries
 

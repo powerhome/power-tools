@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "ostruct"
-require "something_for_nothing/null_object"
+require 'ostruct'
+require 'something_for_nothing/null_object'
 
 module SomethingForNothing
   # Using a deep struct gives one a lot of built-in, easy benefits because it was
@@ -24,6 +24,7 @@ module SomethingForNothing
   #
   class DeepStruct < OpenStruct
     def initialize(hash = nil)
+      super
       @table = {}
       @hash_table = {}
 

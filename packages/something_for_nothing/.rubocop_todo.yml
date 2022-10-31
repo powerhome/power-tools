@@ -6,45 +6,8 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: TreatCommentsAsGroupSeparators, ConsiderPunctuation, Include.
-# Include: **/*.gemspec
-Gemspec/OrderedDependencies:
-  Exclude:
-    - 'something_for_nothing.gemspec'
-
-# Offense count: 1
-# Configuration parameters: Include.
-# Include: **/*.gemspec
-Gemspec/RequiredRubyVersion:
-  Exclude:
-    - 'something_for_nothing.gemspec'
-
-# Offense count: 2
-Lint/MissingSuper:
-  Exclude:
-    - 'lib/something_for_nothing/collections.rb'
-    - 'lib/something_for_nothing/deep_struct.rb'
-
 # Offense count: 2
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
 # IgnoredMethods: refine
 Metrics/BlockLength:
   Max: 42
-
-# Offense count: 3
-# Configuration parameters: AllowedConstants.
-Style/Documentation:
-  Exclude:
-    - 'spec/**/*'
-    - 'test/**/*'
-    - 'lib/something_for_nothing.rb'
-    - 'lib/something_for_nothing/collections.rb'
-
-# Offense count: 80
-# Cop supports --auto-correct.
-# Configuration parameters: ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  EnforcedStyle: double_quotes
