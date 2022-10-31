@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Naughty
+module SomethingForNothing
   class MappedCollection < Array
     def initialize(builder, records)
       @builder = builder

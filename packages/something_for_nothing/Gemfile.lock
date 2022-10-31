@@ -1,19 +1,7 @@
 PATH
-  remote: ..
-  specs:
-    nitro_linting (0.0.1)
-      rubocop (= 1.20.0)
-      rubocop-cobra (>= 0.4.0)
-      rubocop-performance (= 1.11.5)
-      rubocop-powerhome (>= 0.5.0)
-      rubocop-rails (= 2.12.2)
-      rubocop-rake (= 0.6.0)
-      rubocop-rspec (= 2.4.0)
-
-PATH
   remote: .
   specs:
-    naughty (0.0.1)
+    something_for_nothing (0.0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -74,9 +62,6 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.21.0)
       parser (>= 3.1.1.0)
-    rubocop-cobra (0.4.0)
-      rubocop
-      rubocop-powerhome
     rubocop-performance (1.11.5)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
@@ -121,14 +106,14 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 2.1)
-  naughty!
-  nitro_linting!
   pry (= 0.13.0)
   pry-byebug (= 3.9.0)
   rainbow (= 2.2.2)
   rake (~> 13.0)
   rspec (~> 3.0)
+  rubocop-powerhome (= 0.5.0)
   simplecov (= 0.15.1)
+  something_for_nothing!
   test-unit (= 3.1.5)
   yard (= 0.9.21)
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Naughty
+module SomethingForNothing
   # NullObject implements the widely-known NullObject pattern, where an instance
   # responds to any method called on it by returning another NullObject, allowing
   # arbitrary chaining of method calls without the risk of a NoMethodError.

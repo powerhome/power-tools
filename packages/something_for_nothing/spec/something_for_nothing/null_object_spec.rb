@@ -2,11 +2,11 @@
 
 require "spec_helper"
 
-describe Naughty::NullObject do
-  subject { Naughty::NullObject.new }
+describe SomethingForNothing::NullObject do
+  subject { SomethingForNothing::NullObject.new }
 
   it "responds to a random method call with another instance of itself" do
-    expect(subject.random_method).to be_a(Naughty::NullObject)
+    expect(subject.random_method).to be_a(SomethingForNothing::NullObject)
   end
 
   it "reports that it responds to a random method" do
@@ -17,7 +17,7 @@ describe Naughty::NullObject do
     expect(!!subject ? subject : "foo").to eql("foo") # rubocop:disable Style/DoubleNegation
   end
 
-  it "subject should be considered to be naughty" do
+  it "subject should be considered to be naught" do
     expect(!subject).to be true
   end
 

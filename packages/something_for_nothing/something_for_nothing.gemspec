@@ -3,7 +3,7 @@
 $LOAD_PATH.push File.expand_path("lib", __dir__)
 
 Gem::Specification.new do |s|
-  s.name        = "naughty"
+  s.name        = "something_for_nothing"
   s.version     = "0.0.1"
   s.authors     = ["Nitro Developers"]
   s.email       = ["dev@powerhrg.com"]
@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "docs/README.md"]
 
   s.add_development_dependency "bundler", "~> 2.1"
-  s.add_development_dependency "nitro_linting", "0.0.1"
+  s.add_development_dependency "rubocop-powerhome", "0.5.0"
   s.add_development_dependency "pry", "0.13.0"
   s.add_development_dependency "pry-byebug", "3.9.0"
   s.add_development_dependency "rainbow", "2.2.2"

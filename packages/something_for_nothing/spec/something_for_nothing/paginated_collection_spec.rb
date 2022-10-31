@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Naughty::PaginatedCollection do
+RSpec.describe SomethingForNothing::PaginatedCollection do
   let(:builder) { double }
   let(:records) { [] }
   let(:paginatable) { double(paginate: records) }
@@ -18,7 +18,7 @@ RSpec.describe Naughty::PaginatedCollection do
   end
 
   subject do
-    Naughty::PaginatedCollection.new(builder, paginatable)
+    SomethingForNothing::PaginatedCollection.new(builder, paginatable)
   end
 
   it { expect(subject).to respond_to :current_page }
