@@ -1,0 +1,10 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+# Specify your gem's dependencies in naughty.gemspec
+gemspec
+
+path ".." do
+  gem "nitro_linting", require: nil
+end
