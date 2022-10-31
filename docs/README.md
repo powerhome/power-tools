@@ -30,9 +30,13 @@ This gem is focused on providing standard rubocop configuration for Power Home R
 
 This gem is focused on providing Cops to support a healthy cobra app development. See more in [`rubocop-cobra`](../packages/rubocop-cobra).
 
-[@powerhome/eslint-config](https://github.com/powerhome/power-tools/blob/main/packages/eslint-config/docs/README.md)
+[@powerhome/eslint-config](https://github.com/powerhome/power-tools/blob/main/packages/eslint-config/docs/README.md) ☕️
 
 Shared eslint-config from Power Home Remodeling.
+
+[something_for_nothing](https://github.com/powerhome/power-tools/blob/main/packages/something_for_nothing/docs/README.md) 💎
+
+An easy way to implement Null Object Patterns, Deep Structs, and collections.
 
 ## Installation 🛠
 
@@ -79,4 +83,3 @@ These packages are maintained by [Power's](https://github.com/powerhome) Heroes 
 ## Contributing 💙
 
 Contributions are welcome! Feel free to [open a ticket](https://github.com/powerhome/power-tools/issues/new) or a [PR](https://github.com/powerhome/power-tools/pulls).
-
