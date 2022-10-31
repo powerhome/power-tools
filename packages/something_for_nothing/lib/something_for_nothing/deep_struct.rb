@@ -23,8 +23,7 @@ module SomethingForNothing
   # @see http://andreapavoni.com/blog/2013/4/create-recursive-openstruct-from-a-ruby-hash
   #
   class DeepStruct < OpenStruct
-    def initialize(hash = nil)
-      super
+    def initialize(hash = nil) # rubocop:disable Lint/MissingSuper
       @table = {}
       @hash_table = {}
 

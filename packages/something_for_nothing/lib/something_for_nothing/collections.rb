@@ -3,8 +3,7 @@
 module SomethingForNothing
   # Builds flattened collections of objects for easy return
   class MappedCollection < Array
-    def initialize(builder, records)
-      super
+    def initialize(builder, records) # rubocop:disable Lint/MissingSuper
       @builder = builder
       @records = records
       self << records.map(&builder.method(:new))
