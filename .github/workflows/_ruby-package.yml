@@ -14,10 +14,12 @@ on:
         required: false
         type: string
       ruby:
-        required: true
+        default: '["2.7", "3.1"]'
+        required: false
         type: string
       rails:
-        required: true
+        default: '["7.0","6.1","6.0","5.2"]'
+        required: false
         type: string
       bundler:
         default: '["2"]'

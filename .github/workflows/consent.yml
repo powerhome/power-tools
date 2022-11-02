@@ -9,6 +9,4 @@ jobs:
     with:
       package: ${{ github.workflow }}
       workdir: 'packages/${{ github.workflow }}'
-      ruby: '["2.7", "3.1"]'
-      rails: '["7.0","6.1","6.0","5.2"]'
     secrets: inherit
