@@ -51,7 +51,6 @@ jobs:
             bundler: '1'
     env:
       RAILS_VERSION: '~> ${{ matrix.rails }}'
-      BUNDLER_VERSION: '${{ matrix.bundler }}'
     steps:
       - uses: actions/checkout@v3
       - name: Set up Ruby
