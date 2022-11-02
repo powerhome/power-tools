@@ -4,49 +4,75 @@ on:
       rubygems_api_key:
         required: true
     inputs:
+      before_build:
+        type: string
+        required: false
       package:
         required: true
         type: string
+      workdir:
+        required: false
+        type: string
       ruby:
-        required: true
+        default: '["2.7", "3.1"]'
+        required: false
         type: string
       rails:
-        required: true
+        default: '["7.0","6.1","6.0","5.2"]'
+        required: false
         type: string
-
-env:
-  PROJECT_DIR: 'packages/${{ inputs.package }}'
+      bundler:
+        default: '["2"]'
+        required: false
+        type: string
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }} / Rails ${{ matrix.rails }}
+    name: Ruby ${{ matrix.ruby }} / Rails ${{ matrix.rails }} / Bundler ${{ matrix.bundler }}
     strategy:
+      fail-fast: false
       matrix:
         ruby: ${{ fromJSON(inputs.ruby) }}
         rails: ${{ fromJSON(inputs.rails) }}
+        bundler: ${{ fromJSON(inputs.bundler) }}
         exclude:
-          - rails: '5.2.8.1'
-            ruby: '3.1.2'
-          - rails: '7.0.3.1'
-            ruby: '2.7.4'
+          - rails: '5.2'
+            ruby: '3.1'
+          - rails: '5.2'
+            ruby: '3.0'
+          - rails: '6.0'
+            ruby: '3.0'
+          - rails: '6.0'
+            ruby: '3.1'
+          - rails: '7.0'
+            ruby: '2.7'
+          - rails: '7.0'
+            ruby: '3.0'
+          - ruby: '3.1'
+            bundler: '1'
+    env:
+      RAILS_VERSION: '~> ${{ matrix.rails }}'
     steps:
       - uses: actions/checkout@v3
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
+        env:
+          RAILS_VERSION: '~> ${{ matrix.rails }}'
+          BUNDLER_VERSION: '${{ matrix.bundler }}'
         with:
-          ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-          working-directory: ${{ env.PROJECT_DIR }}
-        env:
-          RAILS_VERSION: ${{ matrix.rails }}
+          bundler: ${{ matrix.bundler }}
+          ruby-version: ${{ matrix.ruby }}
+          working-directory: ${{ inputs.workdir }}
+      - name: Before build
+        if: ${{ inputs.before_build != '' }}
+        run: '${{ inputs.before_build }}'
       - name: Run the build script
-        working-directory: ${{ env.PROJECT_DIR }}
+        working-directory: ${{ inputs.workdir }}
         run: bundle exec rake
-        env:
-          RAILS_VERSION: ${{ matrix.rails }}
       - name: Ensure license compliance
-        working-directory: ${{ env.PROJECT_DIR }}
+        working-directory: ${{ inputs.workdir }}
         run: bundle exec license_finder
 
   release:
@@ -59,4 +85,4 @@ jobs:
         env:
           RELEASE_COMMAND: rake build release:guard_clean release:rubygem_push
           RUBYGEMS_API_KEY: ${{ secrets.rubygems_api_key }}
-          WORKDIR: ${{ env.PROJECT_DIR }}
+          WORKDIR: ${{ inputs.workdir }}
