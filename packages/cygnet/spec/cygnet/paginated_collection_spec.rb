@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe SomethingForNothing::PaginatedCollection do
+RSpec.describe Cygnet::PaginatedCollection do
   let(:builder) { double }
   let(:records) { [] }
   let(:paginatable) { double(paginate: records) }
@@ -18,7 +18,7 @@ RSpec.describe SomethingForNothing::PaginatedCollection do
   end
 
   subject do
-    SomethingForNothing::PaginatedCollection.new(builder, paginatable)
+    Cygnet::PaginatedCollection.new(builder, paginatable)
   end
 
   it { expect(subject).to respond_to :current_page }

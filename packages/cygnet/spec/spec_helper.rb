@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
-require 'something_for_nothing'
+require 'cygnet'
 require 'pry-byebug'
 
 RSpec.configure do |config|

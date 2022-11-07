@@ -2,5 +2,5 @@
 
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in something_for_nothing.gemspec
+# Specify your gem's dependencies in cygnet.gemspec
 gemspec

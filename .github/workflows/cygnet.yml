@@ -1,4 +1,4 @@
-name: something_for_nothing
+name: cygnet
 
 on:
   push:

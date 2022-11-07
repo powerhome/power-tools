@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module SomethingForNothing
+module Cygnet
   # Builds flattened collections of objects for easy return
   class MappedCollection < Array
     def initialize(builder, records) # rubocop:disable Lint/MissingSuper

@@ -128,7 +128,7 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: something_for_nothing
+  name: cygnet
   title: Something for Nothing
   description: >-
     Naughty is comprised of two parts.

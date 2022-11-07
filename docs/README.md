@@ -34,7 +34,7 @@ This gem is focused on providing Cops to support a healthy cobra app development
 
 Shared eslint-config from Power Home Remodeling.
 
-[something_for_nothing](https://github.com/powerhome/power-tools/blob/main/packages/something_for_nothing/docs/README.md) 💎
+[cygnet](https://github.com/powerhome/power-tools/blob/main/packages/cygnet/docs/README.md) 💎
 
 An easy way to implement Null Object Patterns, Deep Structs, and collections.
 

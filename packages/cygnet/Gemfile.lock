@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    something_for_nothing (0.0.1)
+    cygnet (0.0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -127,7 +127,7 @@ DEPENDENCIES
   rspec (~> 3.0)
   rubocop-powerhome (= 0.5.0)
   simplecov (= 0.15.1)
-  something_for_nothing!
+  cygnet!
   test-unit (= 3.1.5)
   yard (= 0.9.21)
 

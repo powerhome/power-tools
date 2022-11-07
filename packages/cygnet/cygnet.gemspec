@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative 'lib/something_for_nothing/version'
+require_relative 'lib/cygnet/version'
 
 $LOAD_PATH.push File.expand_path('lib', __dir__)
 
 Gem::Specification.new do |s|
-  s.name        = 'something_for_nothing'
-  s.version     = SomethingForNothing::VERSION
+  s.name        = 'cygnet'
+  s.version     = Cygnet::VERSION
   s.authors     = ['Carlos Palhares', 'Jill Klang']
   s.email       = ['chjunior@gmail.com', 'jillian.emilie@gmail.com']
 
@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/powerhome/power-tools'
   s.license = 'MIT'
   s.required_ruby_version = '>= 2.7'
+  # s.required_ruby_version = '3.1.2'
 
   s.files = Dir['{app,config,db,lib}/**/*'] + ['Rakefile', 'docs/README.md']
 

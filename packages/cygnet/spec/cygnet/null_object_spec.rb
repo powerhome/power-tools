@@ -2,11 +2,11 @@
 
 require 'spec_helper'
 
-describe SomethingForNothing::NullObject do
-  subject { SomethingForNothing::NullObject.new }
+describe Cygnet::NullObject do
+  subject { Cygnet::NullObject.new }
 
   it 'responds to a random method call with another instance of itself' do
-    expect(subject.random_method).to be_a(SomethingForNothing::NullObject)
+    expect(subject.random_method).to be_a(Cygnet::NullObject)
   end
 
   it 'reports that it responds to a random method' do
