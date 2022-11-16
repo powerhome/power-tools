@@ -2,5 +2,8 @@
 
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in cygnet.gemspec
 gemspec
+
+rails_version = ENV.fetch("RAILS_VERSION", ">= 5")
+
+gem "rails", rails_version
