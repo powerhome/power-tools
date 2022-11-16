@@ -1,0 +1,5 @@
+site_name: Something for Nothing
+nav:
+  - "Home": "README.md"
+plugins:
+  - techdocs-core
