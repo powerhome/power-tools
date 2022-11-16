@@ -15,7 +15,6 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/powerhome/power-tools'
   s.license = 'MIT'
   s.required_ruby_version = '>= 2.7'
-  # s.required_ruby_version = '3.1.2'
 
   s.files = Dir['{app,config,db,lib}/**/*'] + ['Rakefile', 'docs/README.md']
 
