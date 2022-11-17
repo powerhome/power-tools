@@ -1,4 +1,4 @@
-site_name: Something for Nothing
+site_name: Cygnet
 nav:
   - "Home": "README.md"
 plugins:

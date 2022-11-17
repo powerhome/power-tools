@@ -36,7 +36,7 @@ Shared eslint-config from Power Home Remodeling.
 
 [cygnet](https://github.com/powerhome/power-tools/blob/main/packages/cygnet/docs/README.md) 💎
 
-An easy way to implement Null Object Patterns, Deep Structs, and collections.
+Helping ruby developers implement easy patterns.
 
 ## Installation 🛠
 
