@@ -1,0 +1,12 @@
+name: ruby_test_helpers
+
+on:
+  push:
+
+jobs:
+  ruby:
+    uses: ./.github/workflows/_ruby-package.yml
+    with:
+      package: ${{ github.workflow }}
+      workdir: 'packages/${{ github.workflow }}'
+    secrets: inherit

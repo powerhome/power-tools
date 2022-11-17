@@ -1,0 +1,17 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: nitro-ruby-test-helpers
+  title: Nitro Ruby Test Helpers
+  description: >-
+    Making testing components easier by
+    encapsulating common helpers and patterns.
+spec:
+  type: library
+  owner: heroes-for-hire
+  system: nitro
+  lifecycle: production
+  subcomponentOf: nitro-web
+  dependsOn:
+    - component:nitro-linting
