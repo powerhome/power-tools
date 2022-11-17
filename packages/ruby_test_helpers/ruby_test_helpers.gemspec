@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'bundler', '~> 2.1'
   s.add_development_dependency 'factory_bot', '~> 4.8'
+  s.add_development_dependency "license_finder", "~> 7.0"
   s.add_development_dependency 'pry-byebug', '3.9.0'
   s.add_development_dependency 'rainbow', '2.2.2'
   s.add_development_dependency 'rake', '~> 13.0'
