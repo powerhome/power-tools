@@ -38,6 +38,10 @@ Shared eslint-config from Power Home Remodeling.
 
 Helping ruby developers implement easy patterns.
 
+[ruby_test_helpers](https://github.com/powerhome/power-tools/blob/main/packages/cygnet/docs/README.md) 💎
+
+Helping make testing in ruby easier.
+
 ## Installation 🛠
 
 These packages are all meant to install inside of an application and aren't intended to stand alone; currently, they are all published to [RubyGems](https://rubygems.org/) and you can use standard Bundler methods to install them.
