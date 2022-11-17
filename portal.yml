@@ -129,11 +129,11 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: cygnet
-  title: Something for Nothing
+  title: Cygnet
   description: >-
-    Naughty is comprised of two parts.
-    An implementation of the Null Object Pattern and
-    an implementation of nested hashes using DeepStruct.
+    Cygnet is to help ruby developers implement easy patterns.
+    It currently provides the Null Object Pattern and
+    an implementation of collections.
 spec:
   type: library
   owner: heroes-for-hire
