@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/powerhome/power-tools'
   s.license = 'MIT'
   s.required_ruby_version = '>= 2.7'
-  s.summary     = 'Helpers for Ruby component tests'
-  s.description = 'Making testing components easier by encapsulating common helpers and patterns.'
+  s.summary     = 'Helpers for Ruby tests'
+  s.description = 'Making testing code easier by encapsulating common helpers and patterns.'
 
   s.files = Dir['{app,config,db,lib}/**/*'] + ['Rakefile', 'docs/README.md']
 

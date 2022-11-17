@@ -3,6 +3,7 @@
 require 'factory_bot'
 
 module RubyTestHelpers
+  # Helpers specifically for factory_bot
   module FactoryBotHelper
     def find_or_create(name, attributes = {}, &block)
       FactoryBot::Internal.factories.find(name).build_class.find_by(attributes, &block) ||

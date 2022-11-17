@@ -3,8 +3,8 @@
 require 'ruby_test_helpers/factory_bot_helper'
 require 'active_job'
 
+# Making testing code easier by encapsulating common helpers and patterns.
 module RubyTestHelpers
-  # Your code goes here...
 end
 
 RSpec::Mocks.configuration.allow_message_expectations_on_nil = false
