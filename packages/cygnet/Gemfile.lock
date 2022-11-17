@@ -119,6 +119,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 2.1)
+  cygnet!
   license_finder (~> 7.0)
   pry (= 0.13.0)
   pry-byebug (= 3.9.0)
@@ -127,7 +128,6 @@ DEPENDENCIES
   rspec (~> 3.0)
   rubocop-powerhome (= 0.5.0)
   simplecov (= 0.15.1)
-  cygnet!
   test-unit (= 3.1.5)
   yard (= 0.9.21)
 
