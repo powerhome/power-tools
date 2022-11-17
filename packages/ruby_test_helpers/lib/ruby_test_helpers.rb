@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "ruby_test_helpers/factory_bot_helper"
-require "active_job"
+require 'ruby_test_helpers/factory_bot_helper'
+require 'active_job'
 
 module RubyTestHelpers
   # Your code goes here...

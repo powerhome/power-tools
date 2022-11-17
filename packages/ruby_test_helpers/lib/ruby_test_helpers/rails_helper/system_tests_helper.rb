@@ -8,10 +8,10 @@ module RubyTestHelpers
       end
 
       def helper
-        require "webdrivers"
-        require "capybara"
-        require "capybara_selenium"
-        require "site_prism"
+        require 'webdrivers'
+        require 'capybara'
+        require 'capybara_selenium'
+        require 'site_prism'
 
         Capybara.register_driver(:headless_firefox) do |app|
           options = Selenium::WebDriver::Firefox::Options.new(args: %w[--headless])
