@@ -38,6 +38,10 @@ Shared eslint-config from Power Home Remodeling.
 
 Helping ruby developers implement easy patterns.
 
+[ruby_slippers](https://github.com/powerhome/power-tools/blob/main/packages/ruby_slippers/docs/README.md) 💎
+
+A shared layout so that your suite of applications can have the same look and feel.
+
 ## Installation 🛠
 
 These packages are all meant to install inside of an application and aren't intended to stand alone; currently, they are all published to [RubyGems](https://rubygems.org/) and you can use standard Bundler methods to install them.

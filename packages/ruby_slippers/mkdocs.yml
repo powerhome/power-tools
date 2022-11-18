@@ -1,0 +1,5 @@
+site_name: Ruby Slippers
+nav:
+  - "Home": "README.md"
+plugins:
+  - techdocs-core
