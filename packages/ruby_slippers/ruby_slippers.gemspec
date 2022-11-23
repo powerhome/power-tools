@@ -18,6 +18,9 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib}/**/*'] + ['Rakefile', 'docs/README.md']
 
+  s.add_dependency 'cygnet', '0.0.1'
+  s.add_dependency 'rails', '>= 6.0'
+
   s.add_development_dependency 'bundler', '~> 2.1'
   s.add_development_dependency 'license_finder', '~> 7.0'
   s.add_development_dependency 'pry', '0.13.0'
