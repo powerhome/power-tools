@@ -1,3 +1,5 @@
+require "sassc-rails"
+
 module RubySlippers
   class Engine < ::Rails::Engine
     isolate_namespace RubySlippers

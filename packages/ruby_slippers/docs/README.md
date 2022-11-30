@@ -13,7 +13,7 @@ At [Power](https://powerhrg.com/#!/career), we have a suite of applications that
 1. Require the gem
 
 ```ruby
-# lib/my_cool_app.rb
+# lib/my_cool_app.rb or application.rb
 
 require "ruby_slippers"
 ```
