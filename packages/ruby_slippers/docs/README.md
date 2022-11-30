@@ -1,3 +1,5 @@
+# *NOTICE:* This app is in its _experimental_ phase and a stable version has not yet been released
+
 # Ruby Slippers 👠👠
 
 _There's no place like the general layout and the top menu for which the home button lives._
