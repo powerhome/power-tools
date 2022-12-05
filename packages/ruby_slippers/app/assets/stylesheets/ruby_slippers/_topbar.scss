@@ -1,4 +1,3 @@
-// WARNING: there is code in the monolith that is hard-coded to these class names
 .navigation-topbar {
   position: relative;
   background-color: $navigation-bg;
@@ -8,91 +7,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  .logo {
-    margin: 0 0 0 $space-large;
-  }
-
-  .topbar-link {
-    color: $white;
-  }
-
-  .dropdown {
-    margin: 0 0 0 $space-large;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    path {
-      &.bg { fill: $white; }
-      &.fg { fill: $power-royal; }
-    }
-
-    &-toggle {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      color: $white;
-      cursor: pointer !important;
-
-      a {
-        color: $white;
-      }
-
-      object {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: $font-large;
-      }
-    }
-
-    &-caret {
-      margin: 0 0 0 $space-smallest;
-    }
-
-    &-menu {
-      padding: $space-large $space-larger;
-      border-color: $sky;
-      min-width: 280px;
-      max-height: calc(100vh - #{$navigation-height});
-      overflow: auto;
-
-      .dropdown-navigation {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-
-        li {
-          padding: 0 $space-smaller;
-          border-radius: $border-rad-light;
-          margin: $space-smallest 0;
-
-          a {
-            color: $ink-lighter;
-            font-size: $font-base;
-            line-height: 1.4;
-            padding: $space-smaller 0;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-
-            i,
-            svg {
-              width: 24px;
-              text-align: center;
-              margin-right: $space-base;
-            }
-
-            &:hover {
-              color: $ink;
-            }
-          }
-        }
-      }
-    }
-  }
 
   &-left {
     display: flex;
@@ -121,43 +35,5 @@
 
   .muted {
     display: none;
-  }
-}
-
-@media (max-width: #{$screen-xs-max}) {
-  .nitro-navigation {
-    .navigation-topbar {
-      &-left,
-      &-center,
-      &-right {
-        width: auto;
-      }
-    }
-  }
-}
-
-body {
-  &.on-apple-device {
-    .nitro-navigation {
-      .navigation-topbar {
-        &-left {
-          .toggle-main-sidebar {
-            display: block;
-          }
-        }
-      }
-    }
-  }
-}
-
-@media (max-width: #{$screen-xs-max}) {
-  .nitro-navigation {
-    .navigation-topbar {
-      &-left {
-        .toggle-main-sidebar {
-          display: block;
-        }
-      }
-    }
   }
 }
