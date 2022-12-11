@@ -5,8 +5,8 @@ require "spec_helper"
 RSpec.describe Consent::Ability do
   let(:permissions) do
     [
-      ::Consent::Permission.new(subject: ExampleModel, action: :update, view: "1"),
-      ::Consent::Permission.new(subject: ExampleModel, action: :report, view: :lol),
+      Consent::Permission.new(subject: ExampleModel, action: :update, view: "1"),
+      Consent::Permission.new(subject: ExampleModel, action: :report, view: :lol),
     ]
   end
   let(:user) { double(id: 1, role_id: 1) }

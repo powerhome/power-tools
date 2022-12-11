@@ -92,15 +92,15 @@ RSpec.describe Consent::Permission, type: :model do
 
   describe "#subject" do
     it "can be a class" do
-      permission = Consent::Permission.new(subject: ::MyModule::MyClass)
+      permission = Consent::Permission.new(subject: MyModule::MyClass)
 
-      expect(permission.subject).to be ::MyModule::MyClass
+      expect(permission.subject).to be MyModule::MyClass
     end
 
     it "can be set from a snake cased string" do
       permission = Consent::Permission.new(subject: "my_module/my_class")
 
-      expect(permission.subject).to be ::MyModule::MyClass
+      expect(permission.subject).to be MyModule::MyClass
     end
 
     it "can be serialized and reloaded" do
@@ -110,7 +110,7 @@ RSpec.describe Consent::Permission, type: :model do
         view: :all
       )
 
-      expect(permission.reload.subject).to be ::MyModule::MyClass
+      expect(permission.reload.subject).to be MyModule::MyClass
     end
   end
 
