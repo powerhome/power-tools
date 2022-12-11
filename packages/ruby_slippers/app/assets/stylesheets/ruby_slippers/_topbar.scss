@@ -1,6 +1,9 @@
+body {
+  margin: 0px;
+}
+
 .navigation-topbar {
   position: relative;
-  background-color: #0056CF;
   height: 60px;
   box-sizing: border-box;
   padding: 0 16px;
@@ -8,11 +11,17 @@
   justify-content: space-between;
   align-items: center;
 
-  &-left {
+  &-left, &-center, &-right {
     display: flex;
-    justify-content: flex-start;
     align-items: center;
     width: 33.3%;
+    max-height: 50px;
+    color: #FFFFFF;
+    margin: 2px;
+  }
+
+  &-left {
+    justify-content: flex-start;
 
     .toggle-main-sidebar {
       display: none;
@@ -20,17 +29,11 @@
   }
 
   &-center {
-    display: flex;
     justify-content: center;
-    align-items: center;
-    width: 33.3%;
   }
 
   &-right {
-    display: flex;
     justify-content: flex-end;
-    align-items: center;
-    width: 33.3%;
   }
 
   .muted {
