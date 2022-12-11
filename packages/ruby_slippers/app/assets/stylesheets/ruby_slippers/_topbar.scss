@@ -39,4 +39,8 @@ body {
   .muted {
     display: none;
   }
+
+  & img {
+    max-height: 50px;
+  }
 }
