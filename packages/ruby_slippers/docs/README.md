@@ -36,7 +36,10 @@ You can find a list of available pieces in [app/views/ruby_slippers](https://git
 * `header`
 * `navigation_right`
 
-![annotated-topbar](https://user-images.githubusercontent.com/16630021/204921631-a85b40a5-3a6f-4b3a-a522-7f8adee75ad4.png)
+![annotated-topbar-example-one](https://user-images.githubusercontent.com/16630021/207151184-af939059-4dff-4382-ab53-f37fb57574fd.png)
+
+![annotated-topbar-example-two](https://user-images.githubusercontent.com/16630021/207151180-875c36ef-7e45-4b52-808b-33497c85ca8e.png)
+
 
 In our example we'll add the topbar, but we only want to inject the logo into our app. We would do so like so:
 
@@ -46,4 +49,11 @@ In our example we'll add the topbar, but we only want to inject the logo into ou
 <% end %>
 
 <%= render partial: "ruby_slippers/topbar" %>
+```
+
+By default, the color for the topbar will be the blue that Power's monolith uses. This is configurable, however, by passing in your chosen color as a local variable:
+
+```ruby
+<%= render partial: "ruby_slippers/topbar",
+    locals: { bg_color: "#282634"} %>
 ```
