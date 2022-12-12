@@ -9,7 +9,7 @@ describe Consent::PermissionMigration do
 
   describe ".copy_permissions" do
     it "creates a new permission based on the given permission" do
-      base_permission = ::Consent::Permission.create(role_id: 1, subject: :candidate, action: :access, view: :territory)
+      base_permission = Consent::Permission.create(role_id: 1, subject: :candidate, action: :access, view: :territory)
       expect(Consent::Permission.count).to eql 1
 
       copy_permissions(
@@ -37,11 +37,11 @@ describe Consent::PermissionMigration do
     end
 
     it "renames a subject affecting all grantted permissions keeping everything else" do
-      sale_perform_territory = ::Consent::Permission.create(role_id: 1, subject: :sale, action: :perform,
-                                                            view: :territory)
-      sale_perform_all = ::Consent::Permission.create(role_id: 2, subject: :sale, action: :perform, view: :all)
-      sale_read_territory = ::Consent::Permission.create(role_id: 4, subject: :sale, action: :read, view: :territory)
-      user_read_territory = ::Consent::Permission.create(role_id: 4, subject: :user, action: :read, view: :territory)
+      sale_perform_territory = Consent::Permission.create(role_id: 1, subject: :sale, action: :perform,
+                                                          view: :territory)
+      sale_perform_all = Consent::Permission.create(role_id: 2, subject: :sale, action: :perform, view: :all)
+      sale_read_territory = Consent::Permission.create(role_id: 4, subject: :sale, action: :read, view: :territory)
+      user_read_territory = Consent::Permission.create(role_id: 4, subject: :user, action: :read, view: :territory)
 
       update_permissions(
         from: { subject: :sale },
@@ -55,11 +55,11 @@ describe Consent::PermissionMigration do
     end
 
     it "can move an action from a subject to another keeping the view" do
-      sale_perform_territory = ::Consent::Permission.create(role_id: 1, subject: :sale, action: :perform,
-                                                            view: :territory)
-      sale_perform_all = ::Consent::Permission.create(role_id: 2, subject: :sale, action: :perform, view: :all)
-      sale_read_territory = ::Consent::Permission.create(role_id: 4, subject: :sale, action: :read, view: :territory)
-      user_read_territory = ::Consent::Permission.create(role_id: 4, subject: :user, action: :read, view: :territory)
+      sale_perform_territory = Consent::Permission.create(role_id: 1, subject: :sale, action: :perform,
+                                                          view: :territory)
+      sale_perform_all = Consent::Permission.create(role_id: 2, subject: :sale, action: :perform, view: :all)
+      sale_read_territory = Consent::Permission.create(role_id: 4, subject: :sale, action: :read, view: :territory)
+      user_read_territory = Consent::Permission.create(role_id: 4, subject: :user, action: :read, view: :territory)
 
       update_permissions(
         from: { subject: :sale, action: :perform },
@@ -73,11 +73,11 @@ describe Consent::PermissionMigration do
     end
 
     it "can rename an action within a subject keeping the view" do
-      sale_perform_territory = ::Consent::Permission.create(role_id: 1, subject: :sale, action: :perform,
-                                                            view: :territory)
-      sale_perform_all = ::Consent::Permission.create(role_id: 2, subject: :sale, action: :perform, view: :all)
-      sale_read_territory = ::Consent::Permission.create(role_id: 4, subject: :sale, action: :read, view: :territory)
-      user_read_territory = ::Consent::Permission.create(role_id: 4, subject: :user, action: :read, view: :territory)
+      sale_perform_territory = Consent::Permission.create(role_id: 1, subject: :sale, action: :perform,
+                                                          view: :territory)
+      sale_perform_all = Consent::Permission.create(role_id: 2, subject: :sale, action: :perform, view: :all)
+      sale_read_territory = Consent::Permission.create(role_id: 4, subject: :sale, action: :read, view: :territory)
+      user_read_territory = Consent::Permission.create(role_id: 4, subject: :user, action: :read, view: :territory)
 
       update_permissions(
         from: { subject: :sale, action: :read },
@@ -91,11 +91,11 @@ describe Consent::PermissionMigration do
     end
 
     it "can rename a view within a subject and action context" do
-      sale_perform_territory = ::Consent::Permission.create(role_id: 1, subject: :sale, action: :perform,
-                                                            view: :territory)
-      sale_perform_all = ::Consent::Permission.create(role_id: 2, subject: :sale, action: :perform, view: :all)
-      sale_read_territory = ::Consent::Permission.create(role_id: 4, subject: :sale, action: :read, view: :territory)
-      user_read_territory = ::Consent::Permission.create(role_id: 4, subject: :user, action: :read, view: :territory)
+      sale_perform_territory = Consent::Permission.create(role_id: 1, subject: :sale, action: :perform,
+                                                          view: :territory)
+      sale_perform_all = Consent::Permission.create(role_id: 2, subject: :sale, action: :perform, view: :all)
+      sale_read_territory = Consent::Permission.create(role_id: 4, subject: :sale, action: :read, view: :territory)
+      user_read_territory = Consent::Permission.create(role_id: 4, subject: :user, action: :read, view: :territory)
 
       update_permissions(
         from: { subject: :sale, action: :read, view: :territory },
