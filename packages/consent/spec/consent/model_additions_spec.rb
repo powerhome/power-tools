@@ -20,7 +20,7 @@ describe Consent::ModelAdditions do
     let!(:rim) { ExampleModel.create! name: "Outer Rim", example_role_id: developer.id, additional_role_id: manager.id }
 
     let(:role_report_permission) do
-      ::Consent::Permission.new(subject: ExampleModel, action: :report, view: :role)
+      Consent::Permission.new(subject: ExampleModel, action: :report, view: :role)
     end
 
     let(:user) { double(role_id: developer.id, secondary_role_id: director.id) }
