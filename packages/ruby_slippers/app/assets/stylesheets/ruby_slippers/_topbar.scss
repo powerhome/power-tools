@@ -1,0 +1,45 @@
+body {
+  margin: 0px;
+}
+
+.navigation-topbar {
+  position: relative;
+  height: 60px;
+  box-sizing: border-box;
+  padding: 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &-left, &-center, &-right {
+    width: 33.3%;
+  }
+
+  &-left {
+    justify-content: flex-start;
+
+    .toggle-main-sidebar {
+      display: none;
+    }
+  }
+
+  &-center {
+    justify-content: center;
+  }
+
+  &-right {
+    justify-content: flex-end;
+  }
+
+  .muted {
+    display: none;
+  }
+
+  & * {
+    max-height: 50px;
+    color: #FFFFFF;
+    display: flex;
+    margin: 2px;
+    align-items: center;
+  }
+}

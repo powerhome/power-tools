@@ -1,0 +1,20 @@
+<% bg_color ||= "#0056CF" %>
+
+<%= content_tag(:div, "",
+      class: "navigation-topbar",
+      style: "background-color:#{bg_color}") do %>
+
+  <div class="navigation-topbar-left">
+    <%= link_to "/" do %>
+      <%= yield :logo %>
+    <% end %>
+  </div>
+
+  <div class="navigation-topbar-center">
+    <%= yield :header %>
+  </div>
+
+  <div class="navigation-topbar-right">
+    <%= yield :navigation_right %>
+  </div>
+<% end %>
