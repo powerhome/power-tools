@@ -12,12 +12,7 @@ body {
   align-items: center;
 
   &-left, &-center, &-right {
-    display: flex;
-    align-items: center;
     width: 33.3%;
-    max-height: 50px;
-    color: #FFFFFF;
-    margin: 2px;
   }
 
   &-left {
@@ -40,7 +35,11 @@ body {
     display: none;
   }
 
-  & img {
+  & * {
     max-height: 50px;
+    color: #FFFFFF;
+    display: flex;
+    margin: 2px;
+    align-items: center;
   }
 }
