@@ -38,7 +38,7 @@ Shared eslint-config from Power Home Remodeling.
 
 Helping ruby developers implement easy patterns.
 
-[ruby_slippers](https://github.com/powerhome/power-tools/blob/main/packages/ruby_slippers/docs/README.md) 💎
+[rabbet](https://github.com/powerhome/power-tools/blob/main/packages/rabbet/docs/README.md) 💎
 
 A shared layout so that your suite of applications can have the same look and feel.
 
