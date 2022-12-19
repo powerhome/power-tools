@@ -2,6 +2,8 @@
 
 # Rabbet 🐰
 
+![rabbet-definition](https://user-images.githubusercontent.com/16630021/208455743-bf14911b-ddc3-4076-bcdb-3ebceb241ee9.png)
+
 At [Power](https://techatpower.com), we have a suite of applications that provide a wealth of functionality to our users, many of which were broken out from our monolith. We want all of these applications to have the same look and feel and cohesive experience. While we rely on [playbook](https://playbook.powerapp.cloud/) for specific components, we want to put some of these components and other pieces together to give us a framework for the general layout and functionality for a top menu, sidebar, and other components that are likely to be consistently framing every page of the monolith. We also want to provide some injectable containers so that applications can magically add their own functionality into this frame if they would like to do so.
 
 Rabbet is a convenient place to store these shared pieces and configure them based on the needs of the individual application.
