@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative 'lib/ruby_slippers/version'
+require_relative 'lib/rabbet/version'
 
 $LOAD_PATH.push File.expand_path('lib', __dir__)
 
 Gem::Specification.new do |s|
-  s.name        = 'ruby_slippers'
-  s.version     = RubySlippers::VERSION
+  s.name        = 'rabbet'
+  s.version     = Rabbet::VERSION
   s.authors     = ['Carlos Palhares', 'Jill Klang']
   s.email       = ['chjunior@gmail.com', 'jillian.emilie@gmail.com']
 

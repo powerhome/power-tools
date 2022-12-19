@@ -1,8 +1,8 @@
 require "sassc-rails"
 
-module RubySlippers
+module Rabbet
   class Engine < ::Rails::Engine
-    isolate_namespace RubySlippers
+    isolate_namespace Rabbet
 
     config.generators do |g|
       g.test_framework :rspec
@@ -11,6 +11,6 @@ module RubySlippers
     config.sass.load_paths ||= []
     config.assets.paths ||= []
 
-    config.sass.load_paths << "#{Gem.loaded_specs['ruby_slippers'].full_gem_path}/app/assets/stylesheets/ruby_slippers"
+    config.sass.load_paths << "#{Gem.loaded_specs['rabbet'].full_gem_path}/app/assets/stylesheets/rabbet"
   end
 end
