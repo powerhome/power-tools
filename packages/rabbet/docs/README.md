@@ -30,6 +30,15 @@ require "rabbet"
 @import "rabbet";
 ```
 
+1. Include the view helpers to help with injection
+
+```ruby
+# application_helper.rb
+
+include Rabbet::Views::Helpers
+
+```
+
 ## Usage 🐇
 
 You can find a list of available pieces in [app/views/rabbet](https://github.com/powerhome/power-tools/blob/main/packages/rabbet/app/views/rabbet/). If, for example, you'd like to add the topbar to your application, you can view the injectible pieces in [that specific file](https://github.com/powerhome/power-tools/blob/main/packages/rabbet/app/views/rabbet/_topbar.html.erb). In topbar, pieces that are injectible include:
