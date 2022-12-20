@@ -12,7 +12,17 @@ body {
   align-items: center;
 
   &-left, &-center, &-right {
-    width: 33.3%;
+    display: flex;
+    flex-basis: 33.3%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px;
+    color: #FFFFFF;
+    margin: 2px;
+    align-items: center;
   }
 
   &-left {
@@ -33,13 +43,5 @@ body {
 
   .muted {
     display: none;
-  }
-
-  & * {
-    max-height: 50px;
-    color: #FFFFFF;
-    display: flex;
-    margin: 2px;
-    align-items: center;
   }
 }
