@@ -44,10 +44,7 @@ RSpec.describe Edgestitch::Tasks do
       it "creates the structure.sql before loading a schema" do
         execution = dry_run("db:schema:load")
 
-        expect(execution).to eql <<~OUTPUT
-          ** Execute (dry run) environment
-          ** Execute (dry run) db:load_config
-          ** Execute (dry run) db:check_protected_environments
+        expect(execution).to include <<~OUTPUT
           ** Execute (dry run) db:stitch
           ** Execute (dry run) db:schema:load
         OUTPUT
@@ -56,10 +53,7 @@ RSpec.describe Edgestitch::Tasks do
       it "creates the structure.sql before loading a structure", unless: RAILS_62_ABOVE do
         execution = dry_run("db:structure:load")
 
-        expect(execution).to eql <<~OUTPUT
-          ** Execute (dry run) environment
-          ** Execute (dry run) db:load_config
-          ** Execute (dry run) db:check_protected_environments
+        expect(execution).to include <<~OUTPUT
           ** Execute (dry run) db:stitch
           ** Execute (dry run) db:structure:load
         OUTPUT
@@ -91,7 +85,7 @@ RSpec.describe Edgestitch::Tasks do
       it "creates the structure-self.sql when structure dump is called", unless: RAILS_62_ABOVE do
         execution = dry_run("db:structure:dump")
 
-        expect(execution).to eql <<~OUTPUT
+        expect(execution).to include <<~OUTPUT
           ** Execute (dry run) db:spec:sales
           ** Execute (dry run) db:structure:dump
         OUTPUT
@@ -100,7 +94,7 @@ RSpec.describe Edgestitch::Tasks do
       it "creates the structure-self.sql when schema dump is called" do
         execution = dry_run("db:schema:dump")
 
-        expect(execution).to eql <<~OUTPUT
+        expect(execution).to include <<~OUTPUT
           ** Execute (dry run) db:spec:sales
           ** Execute (dry run) db:schema:dump
         OUTPUT
