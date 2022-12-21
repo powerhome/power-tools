@@ -22,9 +22,10 @@ RSpec.describe Edgestitch::Tasks do
     Rake.application.options.dryrun = dryrun
   end
 
-  before(:all) { Rails.application.load_tasks }
-
   describe ":create" do
+    before(:all) { Rails.application.load_tasks }
+    before { Rake::Task["db:stitch"].reenable }
+
     it "defines the create task to create a structure.sql" do
       expect(Rake::Task).to be_task_defined("db:stitch")
     end
@@ -62,9 +63,8 @@ RSpec.describe Edgestitch::Tasks do
   end
 
   describe ":self" do
-    before(:all) do
-      Edgestitch::Tasks.define_self(Sales::Engine, namespace: "db:spec")
-    end
+    before(:all) { Edgestitch::Tasks.define_self(Sales::Engine, namespace: "db:spec") }
+    before { Rake::Task["db:spec:sales"].reenable }
 
     it "defines the create task to create a structure-self.sql" do
       expect(Rake::Task).to be_task_defined("db:spec:sales")
