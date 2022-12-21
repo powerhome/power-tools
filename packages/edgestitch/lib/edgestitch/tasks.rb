@@ -10,36 +10,35 @@ module Edgestitch
       include Rake::DSL
 
       def define_create(namespace = "db:stitch")
+        enhance(namespace, "db:prepare", "db:structure:load", "db:schema:load")
         desc "Create structure.sql for an app based on all loaded engines' structure-self.sql"
         task namespace => [:environment] do |_task, _args|
           ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).each do |db_config|
             ::Edgestitch::Renderer.to_file([*::Rails::Engine.subclasses, Rails.application], filename(db_config))
           end
         end
-
-        enhance(namespace, "db:prepare", "db:structure:load", "db:schema:load")
       end
 
       def define_self(engine, namespace: "db:stitch", name: engine.engine_name)
+        enhance("#{namespace}:#{name}", "db:structure:dump", "app:db:structure:dump", "db:schema:dump",
+                "app:db:schema:dump")
+
         desc "Create structure-self.sql for an engine"
         task "#{namespace}:#{name}" => [:environment] do |_, _args|
           Rails.application.eager_load!
           engine&.eager_load!
+          # puts *caller
           ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).each do |db_config|
             ::Edgestitch::Exporter.export(engine, ::Edgestitch::Mysql::Dump.new(db_config))
           end
         end
-
-        enhance("#{namespace}:#{name}", "db:structure:dump", "app:db:structure:dump", "db:schema:dump",
-                "app:db:schema:dump")
       end
 
     private
 
       def enhance(with, *tasks)
-        tasks.each do |enhanced_task|
-          Rake::Task[enhanced_task].enhance([with]) if Rake::Task.task_defined?(enhanced_task)
-        end
+        tasks.filter { |task| Rake::Task.task_defined?(task) }
+             .each { |task| Rake::Task[task].enhance([with]) }
       end
 
       def filename(db_config)
