@@ -21,7 +21,7 @@ module Edgestitch
       end
 
       def initialize(config)
-        hash = config.respond_to?(:config) ? config.config : config.configuration_hash
+        hash = config.respond_to?(:configuration_hash) ? config.configuration_hash : config.config
         @database = hash["database"] || hash[:database]
         @config = {
           "-h" => hash["host"] || hash[:host],
