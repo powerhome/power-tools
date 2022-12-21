@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateSalesPrices < ActiveRecord::Migration[5.2]
+class CreateSalesPrices < ActiveRecord::Migration[6.0]
   def change
     create_table :sales_prices do |t|
       t.integer :value

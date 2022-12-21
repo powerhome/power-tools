@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreatePayrollSalaries < ActiveRecord::Migration[5.2]
+class CreatePayrollSalaries < ActiveRecord::Migration[6.0]
   def change
     create_table :payroll_salaries do |t|
       t.integer :value
