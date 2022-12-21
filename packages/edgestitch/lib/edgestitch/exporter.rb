@@ -17,8 +17,13 @@ module Edgestitch
       @structure_file_path = @database_directory_path.join("structure-self.sql")
     end
 
-    def export(dump, io: @structure_file_path.open("w"))
-      io.puts [dump.export_tables(tables), dump.export_migrations(migrations)].join("\n\n").strip
+    def export(dump, to: @structure_file_path)
+      StringIO.open do |buffer|
+        buffer.puts dump.export_tables(tables)
+        buffer.puts
+        buffer.puts dump.export_migrations(migrations)
+        File.write to, "#{buffer.string.strip}\n"
+      end
     end
 
     def migrations

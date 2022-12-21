@@ -7,11 +7,11 @@ RSpec.describe Edgestitch::Exporter do
 
   it "exports the tables of models owned by the engine" do
     exporter = Edgestitch::Exporter.new(Sales::Engine)
-    output = StringIO.new
+    tempfile = Tempfile.new
 
-    exporter.export(dump, io: output)
+    exporter.export(dump, to: tempfile.path)
 
-    expect(output.string).to eql "tables sql\n\nmigrations sql\n"
+    expect(tempfile.read).to eql "tables sql\n\nmigrations sql\n"
   end
 
   it "selects the tables belonging to the given engine" do
