@@ -32,7 +32,6 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "acts-as-taggable-on", "~> 9.0"
   spec.add_development_dependency "bundler", "~> 2.1"
   spec.add_development_dependency "license_finder", ">= 7.0"
   spec.add_development_dependency "mysql2", "0.5.3"

@@ -23,13 +23,12 @@ RSpec.describe Edgestitch::Exporter do
   it "includes extra tables owned by the engine" do
     exporter = Edgestitch::Exporter.new(Payroll::Engine)
 
-    expect(exporter.tables).to match_array %w[payroll_salaries taggings tags]
+    expect(exporter.tables).to match_array %w[payroll_salaries payroll_ghosts]
   end
 
   it "includes only migrations inside that engine" do
     exporter = Edgestitch::Exporter.new(Payroll::Engine)
 
-    expect(exporter.migrations).to match_array [20_221_219_195_431, 20_221_219_231_318, 20_221_219_231_320,
-                                                20_221_219_231_322, 20_221_219_231_323, 20_221_219_231_324]
+    expect(exporter.migrations).to match_array [20_221_219_195_431, 20_221_221_142_539]
   end
 end
