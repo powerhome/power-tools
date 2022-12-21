@@ -14,8 +14,7 @@ require_relative "../engines/sales/lib/sales/engine"
 
 module Dummy
   class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    config.load_defaults 5.2
 
     config.active_record.schema_format = :sql
   end
