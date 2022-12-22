@@ -63,7 +63,7 @@ RSpec.describe Edgestitch::Tasks do
   end
 
   describe ":self" do
-    before(:all) { Edgestitch::Tasks.define_self(Sales::Engine, namespace: "db:spec") }
+    before(:all) { Edgestitch::Tasks.define_engine(Sales::Engine, namespace: "db:spec") }
     before { Rake::Task["db:spec:sales"].reenable }
 
     it "defines the create task to create a structure-self.sql" do

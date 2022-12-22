@@ -7,6 +7,6 @@ require_relative "config/application"
 
 Rails.application.load_tasks
 
-Edgestitch::Tasks.define_self(Marketing::Engine)
-Edgestitch::Tasks.define_self(Payroll::Engine)
-Edgestitch::Tasks.define_self(Sales::Engine)
+Edgestitch::Tasks.define_engine(Marketing::Engine)
+Edgestitch::Tasks.define_engine(Payroll::Engine)
+Edgestitch::Tasks.define_engine(Sales::Engine)
