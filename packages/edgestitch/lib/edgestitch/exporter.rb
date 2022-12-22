@@ -1,9 +1,17 @@
 # frozen_string_literal: true
 
 module Edgestitch
-  # TODO: doc
   # @private
+  #
+  # This class is responsible for exporting an engine's owned tables and
+  # migrations to a SQL file.
+  #
   class Exporter
+    # Exports an engine using a dump helper (@see Edgestitch::Mysql::Dump)
+    #
+    # @param engine [Class<Rails::Engine>] the engine to export
+    # @param dump [<#export_tables,#export_migrations>] the dump helper
+    #
     def self.export(engine, dump)
       new(engine).export(dump)
     end

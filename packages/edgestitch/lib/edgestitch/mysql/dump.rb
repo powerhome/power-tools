@@ -6,9 +6,18 @@ require_relative "./structure_constraint_order_munger"
 
 module Edgestitch
   module Mysql
-    # TODO: doc
     # @private
+    #
+    # Wrapper for the mysqldump tool to dump specific tables and migration data
+    #
     class Dump
+      # Sanitizes a DDL code with some opinionated preferences:
+      # * Constraints starting with `_fk` will start with `fk`
+      # * Clear empty lines (with empty spaces even)
+      # * Reorder constraints (@see Edgestitch::Mysql::StructureConstraintOrderMunger)
+      #
+      # @param sql [String] the DDL code to sanitize
+      # @return String the same DDL sanitized
       def self.sanitize_sql(sql)
         comment_instructions_regex = %r{^/\*![0-9]{5}\s+[^;]+;\s*$}
 
@@ -20,6 +29,8 @@ module Edgestitch
         ::Edgestitch::Mysql::StructureConstraintOrderMunger.munge(cleanups)
       end
 
+      #
+      # @param config [ActiveRecord::DatabaseConfigurations::DatabaseConfig] rails database configuration
       def initialize(config)
         hash = config.respond_to?(:configuration_hash) ? config.configuration_hash : config.config
         @database = hash["database"] || hash[:database]
@@ -31,6 +42,10 @@ module Edgestitch
         }
       end
 
+      # Exports DDL for the given tables in a mysql compatible way
+      #
+      # @param tables [Array<String>] table names
+      # @return String the DDL for the given tables
       def export_tables(tables)
         return if tables.empty?
 
@@ -40,6 +55,15 @@ module Edgestitch
         )
       end
 
+
+      # Exports INSERT statements for the given migration names.
+      #
+      # The INSERT statements are in groups of 50 migrations per multi-insert statement.
+      #
+      # Notice: this does not export the creation of the schema_migrations table.
+      #
+      # @param migrations [Array<Integer,String>] migration ids/timestamps
+      # @return String the INSERT statements.
       def export_migrations(migrations)
         migrations.in_groups_of(50, false).map do |versions|
           execute(

@@ -2,6 +2,7 @@
 
 module Edgestitch
   module Mysql
+    # @private
     class StructureConstraintOrderMunger
       class << self
         def munge(sql)

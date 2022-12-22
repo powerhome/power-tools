@@ -7,8 +7,20 @@ require "edgestitch/version"
 
 require "edgestitch/mysql/dump"
 
-# TODO: doc
-# @private
+# Facade module to access public Edgestitch functions
+#
 module Edgestitch
-  def self.install_self; end
+  module_function
+
+  # Define a db:stitch task
+  # @see Edgestitch::Tasks
+  def define_create(...)
+    ::Edgestitch::Tasks.define_create(...)
+  end
+
+  # Define a db:stitch:<engine_name> task
+  # @see Edgestitch::Tasks
+  def define_self(...)
+    ::Edgestitch::Tasks.define_self(...)
+  end
 end

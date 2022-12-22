@@ -3,8 +3,10 @@
 require "erb"
 
 module Edgestitch
-  # TODO: doc
   # @private
+  #
+  # Renders a structure.sql file based on all given engine's structure-self.sql
+  #
   class Renderer
     def initialize(engines)
       @engines = Set.new(engines)
