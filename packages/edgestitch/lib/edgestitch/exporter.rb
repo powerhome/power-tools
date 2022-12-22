@@ -21,11 +21,11 @@ module Edgestitch
     def initialize(engine)
       @engine = engine
       @database_directory_path = engine.root.join("db")
-      @extra_tables_path = @database_directory_path.join("extra_tables")
-      @structure_file_path = @database_directory_path.join("structure-self.sql")
+      @extra_tables_path = database_directory_path.join("extra_tables")
+      @structure_file_path = database_directory_path.join("structure-self.sql")
     end
 
-    def export(dump, to: @structure_file_path)
+    def export(dump, to: structure_file_path)
       StringIO.open do |buffer|
         buffer.puts dump.export_tables(tables)
         buffer.puts
@@ -36,7 +36,7 @@ module Edgestitch
 
     def migrations
       @migrations ||= begin
-        migrations_glob = @database_directory_path.join("{migrate,migrate.archive}/*.rb")
+        migrations_glob = database_directory_path.join("{migrate,migrate.archive}/*.rb")
         Dir[migrations_glob]
           .map { |filename| File.basename(filename).to_i }
           .sort
@@ -49,8 +49,10 @@ module Edgestitch
 
   private
 
+    attr_reader :database_directory_path, :extra_tables_path, :structure_file_path
+
     def extra_tables
-      @extra_tables ||= @extra_tables_path.exist? ? @extra_tables_path.readlines.map(&:strip) : []
+      @extra_tables ||= extra_tables_path.exist? ? extra_tables_path.readlines.map(&:strip) : []
     end
 
     def component_tables
