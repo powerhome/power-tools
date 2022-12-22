@@ -10,8 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors     = ["Carlos Palhares"]
   spec.email       = ["chjunior@gmail.com"]
 
-  spec.summary     = "Power-ful logging wrapper"
-  spec.description = "Lumberaxe handles logging output formatting."
+  spec.description = spec.summary = "Edgestitch allows engines to define partial structure-self.sql files to be stitched into a single structure.sql file by the umbrella application"
   spec.homepage = "https://github.com/powerhome/power-tools"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.7"
@@ -19,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.metadata["rubygems_mfa_required"] = "true"
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
-  spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/main/packages/lumberaxe/docs/CHANGELOG.md"
+  spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/main/packages/edgestitch/docs/CHANGELOG.md"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
