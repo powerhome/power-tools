@@ -2,6 +2,7 @@
 
 module Rabbet
   module Views
+    # View helpers -- currently used to help facilitate view injection
     module Helpers
       # Execute all registered view content injectors passing
       # a context hash with information that is currently provided

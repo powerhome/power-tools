@@ -14,13 +14,13 @@ Gem::Specification.new do |s|
   s.description = 'A shared layout so that your suite of applications can have the same look and feel.'
   s.homepage = 'https://github.com/powerhome/power-tools'
   s.license = 'MIT'
-  s.required_ruby_version = '>= 2.7'
+  s.required_ruby_version = '>= 3.1'
 
   s.files = Dir['{app,config,db,lib}/**/*'] + ['Rakefile', 'docs/README.md']
 
   s.add_dependency 'cygnet', '0.0.1'
   s.add_dependency 'rails', '>= 6.0'
-  s.add_dependency "sassc-rails", "2.1.2"
+  s.add_dependency 'sassc-rails', '2.1.2'
 
   s.add_development_dependency 'bundler', '~> 2.1'
   s.add_development_dependency 'license_finder', '~> 7.0'
