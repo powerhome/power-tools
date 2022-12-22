@@ -64,7 +64,7 @@ require "edgestitch/railtie"
 
 ## Usage
 
-Edgestitch will enhance the default rails tasks, so using nothing special has to be done in order to use it. Once edgestitch is correctly installed things should Just Work™️ as explained in the rails manual, but it will be generating `structure-self.sql` along with `structure.sql` files. **Important**: It's recommended that `structure.sql` files are added to `.gitignore`.
+Edgestitch will enhance the default rails tasks, so nothing special has to be done in order to use it. Once edgestitch is correctly installed things should Just Work™️ as explained in the rails manual, but it will be generating `structure-self.sql` along with `structure.sql` files. **Important**: It's recommended that `structure.sql` files are added to `.gitignore`.
 
 # How does it work
 
@@ -78,7 +78,7 @@ A model is owned by an engine when it inherits from the Engine's ApplicationMode
 
 ## Extra tables
 
-Sometimes an external dependency brings in extra tables that are not defined in any `structure-self.sql`. To be part of the ecosystem, the new tables should be owned by the engine adding them. That can be done by adding these tables to `<engine>/db/extra_tables`. It's a simple text file with a list of table names that do not inherit from `<Engine>::AplicationModel`, but are owned by that engine and should be included in its structure-self.sql.
+When an external dependency brings in extra tables (i.e. acts_as_taggable) that are not defined in any `structure-self.sql`. To be part of the ecosystem, the new tables should be owned by the engine adding them. That can be done by adding these tables to `<engine>/db/extra_tables`. It's a simple text file with a list of table names that do not inherit from `<Engine>::AplicationModel`, but are owned by that engine and should be included in its structure-self.sql.
 
 ## External Gems
 
@@ -88,7 +88,7 @@ An external gem can also define a `structure-self.sql` file to be adapted in thi
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`.
 
 ## Contributing
 
