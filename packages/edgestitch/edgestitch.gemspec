@@ -10,7 +10,8 @@ Gem::Specification.new do |spec|
   spec.authors     = ["Carlos Palhares"]
   spec.email       = ["chjunior@gmail.com"]
 
-  spec.description = spec.summary = "Edgestitch allows engines to define partial structure-self.sql files to be stitched into a single structure.sql file by the umbrella application"
+  spec.description = spec.summary = "Edgestitch allows engines to define partial structure-self.sql files to be " \
+                                    "stitched into a single structure.sql file by the umbrella application"
   spec.homepage = "https://github.com/powerhome/power-tools"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.7"
