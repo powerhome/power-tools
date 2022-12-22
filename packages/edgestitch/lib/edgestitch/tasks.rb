@@ -37,7 +37,7 @@ module Edgestitch
         desc "Create structure.sql for an app based on all loaded engines' structure-self.sql"
         task namespace => [:environment] do |_task, _args|
           ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).each do |db_config|
-            ::Edgestitch::Renderer.to_file([*::Rails::Engine.subclasses, Rails.application], filename(db_config))
+            ::Edgestitch::Stitcher.to_file(filename(db_config), *::Rails::Engine.subclasses, Rails.application)
           end
         end
       end

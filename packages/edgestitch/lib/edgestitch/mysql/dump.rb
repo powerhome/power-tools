@@ -55,7 +55,6 @@ module Edgestitch
         )
       end
 
-
       # Exports INSERT statements for the given migration names.
       #
       # The INSERT statements are in groups of 50 migrations per multi-insert statement.

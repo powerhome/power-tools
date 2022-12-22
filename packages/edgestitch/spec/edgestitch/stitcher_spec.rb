@@ -2,13 +2,9 @@
 
 require "rails_helper"
 
-RSpec.describe Edgestitch::Renderer do
-  before do
-    Rails.application.eager_load!
-  end
-
-  let(:renderer) { Edgestitch::Renderer.new([Sales::Engine, Payroll::Engine]) }
-  subject { renderer.render }
+RSpec.describe Edgestitch::Stitcher do
+  let(:stitcher) { Edgestitch::Stitcher.new([Sales::Engine, Payroll::Engine]) }
+  subject { stitcher.render }
 
   it "renders tables from all given components" do
     expect(subject).to include("spec/dummy/engines/sales/db/structure-self.sql").once

@@ -31,11 +31,11 @@ RSpec.describe Edgestitch::Tasks do
     end
 
     it "renders the structure.sql with all loaded engines" do
-      expect(Edgestitch::Renderer).to(
-        receive(:to_file).with(
-          array_including([Marketing::Engine, Payroll::Engine, Sales::Engine]),
-          Rails.root.join("db", "structure.sql").to_s
-        )
+      expect(Edgestitch::Stitcher).to(
+        receive(:to_file) do |file, *engines|
+          expect(file).to eq Rails.root.join("db", "structure.sql").to_s
+          expect(engines).to include(Marketing::Engine, Payroll::Engine, Sales::Engine, Rails.application)
+        end
       )
 
       rake_execute "db:stitch"

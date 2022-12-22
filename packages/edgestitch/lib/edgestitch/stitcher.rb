@@ -7,7 +7,7 @@ module Edgestitch
   #
   # Renders a structure.sql file based on all given engine's structure-self.sql
   #
-  class Renderer
+  class Stitcher
     def initialize(engines)
       @engines = Set.new(engines)
     end
@@ -18,11 +18,11 @@ module Edgestitch
               .uniq.each(&block)
     end
 
-    def self.to_file(engines, file)
+    def self.to_file(file, *engines)
       File.write(file, new(engines).render)
     end
   end
 end
 
 erb = ERB.new(File.read(File.join(__dir__, "stitch.sql.erb")))
-erb.def_method(Edgestitch::Renderer, "render()")
+erb.def_method(Edgestitch::Stitcher, "render()")

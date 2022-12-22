@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "edgestitch/exporter"
-require "edgestitch/renderer"
+require "edgestitch/stitcher"
 require "edgestitch/tasks"
 require "edgestitch/version"
 
