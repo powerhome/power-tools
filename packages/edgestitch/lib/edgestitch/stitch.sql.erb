@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS `schema_migrations` (
+  `version` varchar(255) NOT NULL,
+  PRIMARY KEY (`version`),
+  UNIQUE KEY `unique_schema_migrations` (`version`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+<% each_file do |file| %>
+-- <%= file.realpath %>
+<%= file.read %>
+<% end %>

@@ -1,4 +1,4 @@
-site_name: Consent
+site_name: Edgestitch
 nav:
   - "Home": "README.md"
   - "Changelog": "CHANGELOG.md"
