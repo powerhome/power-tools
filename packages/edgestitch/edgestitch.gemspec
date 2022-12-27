@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "license_finder", ">= 7.0"
   spec.add_development_dependency "mysql2", "0.5.3"
   spec.add_development_dependency "pry-byebug", "3.9.0"
-  spec.add_development_dependency "rails", ">= 5.2.8.1"
+  spec.add_development_dependency "rails", ">= 5.2.8.1", "< 7.1"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rspec-rails", "~> 5.1.2"
