@@ -1,0 +1,14 @@
+name: edgestitch
+
+on:
+  push:
+
+jobs:
+  ruby:
+    uses: ./.github/workflows/_ruby-package.yml
+    with:
+      package: ${{ github.workflow }}
+      workdir: 'packages/${{ github.workflow }}'
+      before_build: sudo /etc/init.d/mysql start
+      rails: "['6.0','6.1','7.0']"
+    secrets: inherit

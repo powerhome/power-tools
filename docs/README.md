@@ -42,6 +42,10 @@ Helping ruby developers implement easy patterns.
 
 A shared layout so that your suite of applications can have the same look and feel.
 
+[edgestitch](https://github.com/powerhome/power-tools/blob/main/packages/edgestitch/docs/README.md) 💎
+
+Edgestitch allows engines to define partial structure-self.sql files to be stitched into a single structure.sql file by the umbrella application.
+
 ## Installation 🛠
 
 These packages are all meant to install inside of an application and aren't intended to stand alone; currently, they are all published to [RubyGems](https://rubygems.org/) and you can use standard Bundler methods to install them.
