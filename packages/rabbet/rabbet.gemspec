@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = 'A shared layout so that your suite of applications can have the same look and feel.'
   s.homepage = 'https://github.com/powerhome/power-tools'
   s.license = 'MIT'
-  s.required_ruby_version = '>= 3.1'
+  s.required_ruby_version = '>= 2.7'
 
   s.files = Dir['{app,config,db,lib}/**/*'] + ['Rakefile', 'docs/README.md']
 

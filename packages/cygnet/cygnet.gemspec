@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = 'Implements the Null Object Pattern and an implmentation of nested hashes using NullObject.'
   s.homepage = 'https://github.com/powerhome/power-tools'
   s.license = 'MIT'
-  s.required_ruby_version = '>= 3.1'
+  s.required_ruby_version = '>= 2.7'
 
   s.files = Dir['{app,config,db,lib}/**/*'] + ['Rakefile', 'docs/README.md']
 
