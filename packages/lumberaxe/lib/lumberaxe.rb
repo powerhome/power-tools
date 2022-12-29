@@ -4,6 +4,7 @@ require "logger"
 require "active_support"
 require "lumberaxe/logger"
 require "lumberaxe/json_formatter"
+require "lumberaxe/tagged_logging"
 require "json"
 
 module Lumberaxe
