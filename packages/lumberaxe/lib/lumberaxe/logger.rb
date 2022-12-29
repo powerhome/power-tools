@@ -2,6 +2,8 @@
 
 module Lumberaxe
   class Logger < ::ActiveSupport::Logger
+    include ActiveSupport::LoggerSilence
+
     cattr_accessor(:log_level) { :debug }
 
     def initialize(output = $stdout, progname:, level: log_level)
@@ -12,6 +14,7 @@ module Lumberaxe
 
       self.formatter = JSONFormatter.new
       extend ActiveSupport::TaggedLogging
+      extend ActiveSupport::LoggerSilence
     end
   end
 end
