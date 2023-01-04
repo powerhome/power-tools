@@ -56,4 +56,10 @@ RSpec.describe Lumberaxe, type: :request do
       expect(subject).to include("test log message")
     end
   end
+
+  context "LoggerSilence" do
+    it "silences as expected" do
+      expect(Rails.logger.silence { "test_silencer" }).to eq("test_silencer")
+    end
+  end
 end

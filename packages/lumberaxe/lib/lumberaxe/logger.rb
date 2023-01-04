@@ -12,6 +12,7 @@ module Lumberaxe
 
       self.formatter = JSONFormatter.new
       extend ActiveSupport::TaggedLogging
+      extend ActiveSupport::LoggerSilence
     end
   end
 end
