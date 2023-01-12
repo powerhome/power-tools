@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'sassc-rails'
+require "sassc-rails"
 
 module Rabbet
   # Define engine

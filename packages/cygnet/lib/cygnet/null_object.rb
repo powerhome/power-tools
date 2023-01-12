@@ -32,7 +32,7 @@ module Cygnet
     end
 
     def to_s
-      ''
+      ""
     end
 
     def to_i
