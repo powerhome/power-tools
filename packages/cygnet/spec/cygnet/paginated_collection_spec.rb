@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Cygnet::PaginatedCollection do
   let(:builder) { double }
@@ -25,16 +25,16 @@ RSpec.describe Cygnet::PaginatedCollection do
   it { expect(subject).to respond_to :total_pages }
   it { expect(subject).to be_a Array }
 
-  it 'returns a list with the same records that it receive' do
+  it "returns a list with the same records that it receive" do
     expect(subject).to eql records
   end
 
-  context 'when paginating' do
-    it 'set total_pages' do
+  context "when paginating" do
+    it "set total_pages" do
       expect(subject.total_pages).to eql total_pages
     end
 
-    it 'set current_page' do
+    it "set current_page" do
       expect(subject.current_page).to eql current_page
     end
   end

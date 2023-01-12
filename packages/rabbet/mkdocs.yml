@@ -1,5 +1,6 @@
 site_name: Rabbet
 nav:
   - "Home": "README.md"
+  - "Changelog": "CHANGELOG.md"
 plugins:
   - techdocs-core

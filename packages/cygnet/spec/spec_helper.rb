@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
-require 'cygnet'
-require 'pry-byebug'
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+require "cygnet"
+require "pry-byebug"
 
 RSpec.configure do |config|
-  if ENV['CI']
-    config.before(:example, :focus) { raise 'Should not commit focused specs' }
+  if ENV["CI"]
+    config.before(:example, :focus) { raise "Should not commit focused specs" }
   else
     config.filter_run :focus
     config.run_all_when_everything_filtered = true
   end
   config.warnings = false
 
-  config.default_formatter = 'doc' if config.files_to_run.one?
+  config.default_formatter = "doc" if config.files_to_run.one?
 
   # Print the 10 slowest examples and example groups at the
   # end of the spec run, to help surface which specs are running

@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 require "sassc-rails"
 
 module Rabbet
+  # Define engine
   class Engine < ::Rails::Engine
     isolate_namespace Rabbet
 
