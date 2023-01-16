@@ -9,6 +9,7 @@
     "./base": "./lib/base.js",
     "./flow": "./lib/flow.js",
     "./typescript": "./lib/typescript.js",
+    "./prettier": "./lib/prettier.js",
     ".": "./lib/typescript.js"
   },
   "keywords": [
@@ -16,7 +17,9 @@
     "eslintconfig"
   ],
   "scripts": {
-    "lint": "eslint lib/*"
+    "lint": "eslint lib/*",
+    "prettier": "prettier -c --config ./lib/prettier.js .",
+    "prettier:write": "prettier --write --config ./lib/prettier.js ."
   },
   "peerDependencies": {
     "@typescript-eslint/eslint-plugin": "5.47.0",
