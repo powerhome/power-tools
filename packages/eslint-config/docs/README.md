@@ -42,10 +42,10 @@ For flow-based apps, replace `@powerhome` by `@powerhome/eslint-config/flow`. No
 Prettier takes code formatting decisions while ESlint cares about code quality measurements. Both tools were put together into the same package since they both handle code quality in JS.
 
 To install Prettier rules into your application simply add the following line to your `package.json` and Power's standards for code formatting will be loaded when you run Prettier.
+
 ```json
 "prettier": "@powerhome/eslint-config/prettier"
 ```
-
 
 ## Contributing
 
