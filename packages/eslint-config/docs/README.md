@@ -48,9 +48,11 @@ To install Prettier rules into your application simply add the following line to
 ```
 
 Prettier and ESlint rules might conflict sometimes. To find out rules that are conflicting you can run the following command line in your project:
+
 ```
 yarn eslint-config-prettier path/to/main.js
 ```
+
 That's a helper method created by the `eslint-config-prettier` package that points out which rules are conflicting.
 
 ## Contributing
