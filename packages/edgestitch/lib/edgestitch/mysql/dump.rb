@@ -50,7 +50,7 @@ module Edgestitch
         return if tables.empty?
 
         self.class.sanitize_sql(
-          execute("--compact", "--skip-lock-tables", "--single-transaction", "--no-data",
+          execute("--compact", "--skip-lock-tables", "--single-transaction", "--no-data", "--set-gtid-purged=OFF",
                   "--column-statistics=0", *tables)
         )
       end
@@ -66,7 +66,7 @@ module Edgestitch
       def export_migrations(migrations)
         migrations.in_groups_of(50, false).map do |versions|
           execute(
-            "--compact", "--skip-lock-tables", "--single-transaction",
+            "--compact", "--skip-lock-tables", "--single-transaction", "--set-gtid-purged=OFF",
             "--no-create-info", "--column-statistics=0",
             "schema_migrations",
             "-w", "version IN (#{versions.join(',')})"
