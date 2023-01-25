@@ -1,3 +1,12 @@
+## [0.3.0] - 2023-01-25
+
+- Allow disabling rails tasks enhancing by @xjunior in [#84](https://github.com/powerhome/power-tools/pull/84)
+- Set GTID purged OFF to avoid table locks by @that-jill in [#85](https://github.com/powerhome/power-tools/pull/85)
+
+## [0.2.0] - 2023-01-25
+
+- Set GTID purged OFF to avoid table locks by @xjunior in [#82](https://github.com/powerhome/power-tools/pull/82)
+
 ## [0.1.0] - 2022-12-27
 
 - First release of Edgestitch, extracted from NitroMysql.
