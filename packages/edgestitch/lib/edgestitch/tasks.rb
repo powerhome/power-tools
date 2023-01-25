@@ -34,7 +34,7 @@ module Edgestitch
       # @param enhance_rails [Boolean] whether edgestitch should enhance the above tasks or not [default: true]
       # @return [Rake::Task]
       def define_stitch(namespace = "db:stitch", enhance_rails: true)
-        enhance(namespace, "db:prepare", "db:structure:load", "db:schema:load")
+        enhance(namespace, "db:prepare", "db:structure:load", "db:schema:load") if enhance_rails
         desc "Create structure.sql for an app based on all loaded engines' structure-self.sql"
         task namespace => [:environment] do |_task, _args|
           ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).each do |db_config|
@@ -60,8 +60,10 @@ module Edgestitch
       # @param enhance_rails [Boolean] whether edgestitch should enhance the above tasks or not [default: true]
       # @return [Rake::Task]
       def define_engine(engine, namespace: "db:stitch", name: engine.engine_name, enhance_rails: true)
-        enhance("#{namespace}:#{name}", "db:structure:dump", "app:db:structure:dump", "db:schema:dump",
-                "app:db:schema:dump") if enhance_rails
+        if enhance_rails
+          enhance("#{namespace}:#{name}", "db:structure:dump", "app:db:structure:dump", "db:schema:dump",
+                  "app:db:schema:dump")
+        end
 
         desc "Create structure-self.sql for an engine"
         task "#{namespace}:#{name}" => [:environment] do |_, _args|
