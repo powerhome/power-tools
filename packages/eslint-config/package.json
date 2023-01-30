@@ -9,6 +9,7 @@
     "./base": "./lib/base.js",
     "./flow": "./lib/flow.js",
     "./typescript": "./lib/typescript.js",
+    "./prettier": "./lib/prettier.js",
     ".": "./lib/typescript.js"
   },
   "keywords": [
@@ -16,31 +17,37 @@
     "eslintconfig"
   ],
   "scripts": {
-    "lint": "eslint lib/*"
+    "lint": "eslint lib/*",
+    "prettier": "prettier -c --config ./lib/prettier.js .",
+    "prettier:write": "prettier --write --config ./lib/prettier.js ."
   },
   "peerDependencies": {
-    "eslint": "7.32.0",
-    "eslint-plugin-flowtype": "8.0.3",
-    "eslint-plugin-jsx-control-statements": "3.0.0",
-    "eslint-plugin-react": "7.31.11",
-    "eslint-plugin-react-hooks": "4.6.0",
-    "eslint-webpack-plugin": "3.2.0",
     "@typescript-eslint/eslint-plugin": "5.47.0",
     "@typescript-eslint/parser": "5.47.0",
     "babel-eslint": "8 || 10",
-    "typescript": "4.9.4"
-  },
-  "devDependencies": {
-    "semver": "7.3.8",
     "eslint": "7.32.0",
     "eslint-plugin-flowtype": "8.0.3",
     "eslint-plugin-jsx-control-statements": "3.0.0",
     "eslint-plugin-react": "7.31.11",
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-webpack-plugin": "3.2.0",
+    "typescript": "4.9.4"
+  },
+  "devDependencies": {
     "@typescript-eslint/eslint-plugin": "5.47.0",
     "@typescript-eslint/parser": "5.47.0",
     "babel-eslint": "10.1.0",
+    "eslint": "7.32.0",
+    "eslint-plugin-flowtype": "8.0.3",
+    "eslint-plugin-jsx-control-statements": "3.0.0",
+    "eslint-plugin-react": "7.31.11",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "eslint-webpack-plugin": "3.2.0",
+    "prettier": "2.8.1",
+    "semver": "7.3.8",
     "typescript": "4.9.4"
+  },
+  "dependencies": {
+    "eslint-config-prettier": "^8.6.0"
   }
 }

@@ -16,12 +16,15 @@ jobs:
       - uses: actions/checkout@v3
       - name: Set up Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
-        with: 
+        with:
           node-version: ${{ env.NODE_VERSION }}
       - run: yarn install --frozen-lockfile
         working-directory: ${{ env.PROJECT_DIR }}
-      - name: Run the build script
+      - name: Run ESlint
         run: yarn lint
+        working-directory: ${{ env.PROJECT_DIR }}
+      - name: Run Prettier
+        run: yarn prettier
         working-directory: ${{ env.PROJECT_DIR }}
 
   release:

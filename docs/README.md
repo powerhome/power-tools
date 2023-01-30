@@ -32,7 +32,7 @@ This gem is focused on providing Cops to support a healthy cobra app development
 
 [@powerhome/eslint-config](https://github.com/powerhome/power-tools/blob/main/packages/eslint-config/docs/README.md) ☕️
 
-Shared eslint-config from Power Home Remodeling.
+Shared eslint-config and Prettier formatting from Power Home Remodeling.
 
 [cygnet](https://github.com/powerhome/power-tools/blob/main/packages/cygnet/docs/README.md) 💎
 
@@ -48,12 +48,22 @@ Edgestitch allows engines to define partial structure-self.sql files to be stitc
 
 ## Installation 🛠
 
-These packages are all meant to install inside of an application and aren't intended to stand alone; currently, they are all published to [RubyGems](https://rubygems.org/) and you can use standard Bundler methods to install them.
+These packages are all meant to install inside of an application and aren't intended to stand alone; currently, they are all published to [RubyGems](https://rubygems.org/) or [npm](https://www.npmjs.com/) and you can use standard methods to install them.
 
+For ruby gems:
 ```ruby=
 # Gemfile
 
 gem "nitro_config"
+```
+
+For JS modules:
+```js
+# package.json
+
+"devDependencies": {
+  "@powerhome/eslint-config": "0.1.0"
+}
 ```
 
 ## Local Development 👩🏽‍💻
@@ -64,6 +74,14 @@ If a change needs to be made to a package, the easiest way to develop and test l
 # Gemfile
 
 gem "nitro_config", path: "~/path/to/gems/nitro_config"
+```
+
+For JS modules you can point your package.json to the local version of the package:
+```js
+# package.json
+"devDependencies": {
+  "@powerhome/eslint-config": "file:../path/to/eslint-config"
+}
 ```
 
 ⚠️ <b>Please note</b> that such a change should never be committed, as other users would not have access to the same path your computer. ⚠️
