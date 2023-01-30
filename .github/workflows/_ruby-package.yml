@@ -18,7 +18,7 @@ on:
         required: false
         type: string
       rails:
-        default: '["7.0","6.1","6.0"]'
+        default: '["7.0","6.1","6.0","5.2"]'
         required: false
         type: string
       bundler:
