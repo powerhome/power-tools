@@ -98,6 +98,12 @@ UI testing will be done by opening a PR/branch, and then opening a PR for a clie
 gem "nitro_config", git: "https://github.com/powerhome/power-tools", glob: "packages/nitro_config/nitro_config.gemspec", branch: "example-branch"
 ```
 
+For JS modules you will need to use gitpkg.now.sh to point to a subfolder within a repository since NPM/Yarn doesn't support subfolder packages yet. Add to your package.json:
+```js
+"@powerhome/eslint-config": "https://gitpkg.now.sh/powerhome/power-tools/packages/eslint-config?<branch-name>",
+```
+
+
 ## Release 🚀
 
 Releases will be published according to [Semantic Versioning](https://semver.org/) and it is the responsibility of the consumers to keep their application dependencies up to date. We recommend leveraging [renovatebot](https://github.com/renovatebot/renovate) 🤖
