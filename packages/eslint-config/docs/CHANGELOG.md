@@ -1,5 +1,13 @@
 ## Unreleased
 
+## [0.2.1] - 2023-01-31
+
+- Add readme to NPM [#90](https://github.com/powerhome/power-tools/pull/90)
+
+NPM packages require a README file at the root level of the package: https://docs.npmjs.com/about-package-readme-files
+
+This PR attempts to display the existing docs/README file through a symlink. If that doesn't work, it's possible to add a script to the publishing process to copy over the file.
+
 ## [0.2.0] - 2023-01-30
 
 - Add prettier configuration [#71](https://github.com/powerhome/power-tools/pull/71)
