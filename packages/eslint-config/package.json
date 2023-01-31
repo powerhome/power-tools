@@ -19,7 +19,8 @@
   "scripts": {
     "lint": "eslint lib/*",
     "prettier": "prettier -c --config ./lib/prettier.js .",
-    "prettier:write": "prettier --write --config ./lib/prettier.js ."
+    "prettier:write": "prettier --write --config ./lib/prettier.js .",
+    "expose-readme": "cp docs/README.md ."
   },
   "peerDependencies": {
     "@typescript-eslint/eslint-plugin": "5.47.0",

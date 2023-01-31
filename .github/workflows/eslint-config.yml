@@ -41,6 +41,8 @@ jobs:
           registry-url: ${{ env.REGISTRY_URL }}
       - run: yarn install --frozen-lockfile
         working-directory: ${{ env.PROJECT_DIR }}
+      - run: yarn expose-readme
+        working-directory: ${{ env.PROJECT_DIR }}
       - run: yarn publish
         working-directory: ${{ env.PROJECT_DIR }}
         env:
