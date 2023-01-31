@@ -46,4 +46,4 @@ jobs:
       - run: yarn publish
         working-directory: ${{ env.PROJECT_DIR }}
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_API_KEY }}
