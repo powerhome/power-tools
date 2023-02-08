@@ -8,5 +8,5 @@
 
 # rspec failure tracking
 .rspec_status
-Gemfile.lock
+
 spec/internal/db/*.sqlite
