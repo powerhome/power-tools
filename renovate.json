@@ -14,7 +14,10 @@
     {
       "matchDepTypes": ["devDependencies"],
       "automerge": true
+    },
+    {
+      "matchPackageNames": ["rubocop"],
+      "allowedVersions": "< 1.45.0"
     }
   ]
 }
-
