@@ -12,7 +12,7 @@ PATH
   remote: .
   specs:
     rubocop-cobra (0.4.0)
-      rubocop
+      rubocop (< 1.45.0)
       rubocop-powerhome
 
 GEM
