@@ -7,5 +7,3 @@ gemspec
 rails_version = ENV.fetch("RAILS_VERSION", ">= 6.0.6")
 
 gem "rails", rails_version
-
-gem "rubocop-powerhome", path: "../rubocop-powerhome"
