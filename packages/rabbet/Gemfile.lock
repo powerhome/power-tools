@@ -1,4 +1,14 @@
 PATH
+  remote: ../rubocop-powerhome
+  specs:
+    rubocop-powerhome (0.5.0)
+      rubocop (< 1.45.0)
+      rubocop-performance
+      rubocop-rails
+      rubocop-rake
+      rubocop-rspec
+
+PATH
   remote: .
   specs:
     rabbet (0.0.3)
@@ -205,12 +215,6 @@ GEM
     rubocop-performance (1.16.0)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
-    rubocop-powerhome (0.5.0)
-      rubocop
-      rubocop-performance
-      rubocop-rails
-      rubocop-rake
-      rubocop-rspec
     rubocop-rails (2.17.4)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
@@ -280,7 +284,7 @@ DEPENDENCIES
   rainbow (= 2.2.2)
   rake (~> 13.0)
   rspec (~> 3.0)
-  rubocop-powerhome (= 0.5.0)
+  rubocop-powerhome!
   simplecov (= 0.15.1)
   test-unit (= 3.1.5)
   yard (= 0.9.21)
