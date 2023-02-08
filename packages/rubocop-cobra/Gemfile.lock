@@ -2,7 +2,7 @@ PATH
   remote: ../rubocop-powerhome
   specs:
     rubocop-powerhome (0.5.0)
-      rubocop
+      rubocop (< 1.45.0)
       rubocop-performance
       rubocop-rails
       rubocop-rake
