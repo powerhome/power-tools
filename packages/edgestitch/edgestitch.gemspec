@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.push File.expand_path("lib", __dir__)
-
-require "edgestitch/version"
+require_relative "lib/edgestitch/version"
 
 Gem::Specification.new do |spec|
   spec.name        = "edgestitch"
