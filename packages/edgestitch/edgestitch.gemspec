@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "edgestitch/version"
+require_relative "lib/edgestitch/version"
 
 Gem::Specification.new do |spec|
   spec.name        = "edgestitch"
