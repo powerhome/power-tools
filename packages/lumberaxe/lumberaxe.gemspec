@@ -2,8 +2,6 @@
 
 require_relative "lib/lumberaxe/version"
 
-$LOAD_PATH.push File.expand_path("lib", __dir__)
-
 Gem::Specification.new do |spec|
   spec.name        = "lumberaxe"
   spec.version     = Lumberaxe::VERSION
