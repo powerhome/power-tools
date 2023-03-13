@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  mount NitroHistory::Engine => "/nitro_history"
+  mount SimpleTrail::Engine => "/simple_trail"
 end

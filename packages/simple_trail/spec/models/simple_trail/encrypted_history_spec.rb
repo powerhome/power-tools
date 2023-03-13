@@ -2,8 +2,8 @@
 
 require "rails_helper"
 
-RSpec.describe NitroHistory::EncryptedHistory, type: :model do
-  let!(:history) { NitroHistory::EncryptedHistory.create(source_id: 1, source_type: "Test", note: "Note 1") }
+RSpec.describe SimpleTrail::EncryptedHistory, type: :model do
+  let!(:history) { SimpleTrail::EncryptedHistory.create(source_id: 1, source_type: "Test", note: "Note 1") }
 
   it "saves the encrypted note" do
     history.reload

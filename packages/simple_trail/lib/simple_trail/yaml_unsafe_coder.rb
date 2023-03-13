@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module NitroHistory
+module SimpleTrail
   module YAMLUnsafeCoder
   module_function
 

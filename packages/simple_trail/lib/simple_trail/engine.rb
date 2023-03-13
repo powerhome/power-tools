@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module NitroHistory
+module SimpleTrail
   class Engine < ::Rails::Engine
-    isolate_namespace NitroHistory
+    isolate_namespace SimpleTrail
 
     config.generators do |g|
       g.test_framework :rspec

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module NitroHistory
+module SimpleTrail
   class EntryPresenter
     delegate :backtrace,
              :created_at,

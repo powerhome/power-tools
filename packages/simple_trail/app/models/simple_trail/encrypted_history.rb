@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-module NitroHistory
-  class EncryptedHistory < ::NitroHistory::History
+module SimpleTrail
+  class EncryptedHistory < ::SimpleTrail::History
+    extend AttrEncrypted
+
     attr_encrypted :note, key: NitroConfig.get_deferred!("encryption_key"),
                           encode: true,
                           insecure_mode: true,

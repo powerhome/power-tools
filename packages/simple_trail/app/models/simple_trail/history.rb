@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module NitroHistory
-  class History < ::NitroHistory::ApplicationRecord
-    serialize :source_changes, ::NitroHistory::YAMLUnsafeCoder
+module SimpleTrail
+  class History < ::SimpleTrail::ApplicationRecord
+    serialize :source_changes, ::SimpleTrail::YAMLUnsafeCoder
     serialize :backtrace, Array
 
     default_scope { order("id DESC") }

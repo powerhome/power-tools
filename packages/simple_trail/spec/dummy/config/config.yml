@@ -1,1 +1,15 @@
-../../../../../config/config.yml
+base: &base
+  another:
+    config: <%= "vrum " * 10 %>
+  encryption_key: simple_trail_key
+  key:
+    nested:
+      value: "Hello World"
+
+test:
+  <<: *base
+  env_name: test
+
+development:
+  <<: *base
+  env_name: development

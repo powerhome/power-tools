@@ -1,4 +1,4 @@
-# NitroHistory
+# SimpleTrail
 
 Component to store change history of your model.
 
@@ -6,15 +6,15 @@ Component to store change history of your model.
 
 ```ruby
 class Project < ApplicationRecord
-  include ::NitroHistory::Recordable
+  include ::SimpleTrail::Recordable
 end
 ```
 
-Now you can access the object history through `NitroHistory.for(object)` like:
+Now you can access the object history through `SimpleTrail.for(object)` like:
 
 ```ruby
 project = Project.create
-NitroHistory.for(project).size
+SimpleTrail.for(project).size
 # => 1
 ```
 

@@ -1,76 +1,105 @@
-You should run 'rails generator active_ldap:scaffold' to make /Users/gurban.haydarov/nitro-web/components/nitro_history/spec/dummy/config/ldap.yml.
-initialized a background worker with 10 threads
-Creating scope :open. Overwriting existing method Directory::OfficeLocation.open.
-  [1m[35m (2.1ms)[0m  [1m[35mSET NAMES utf8,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
-  [1m[35m (10.3ms)[0m  [1m[35mCREATE DATABASE `nitro_history_test` DEFAULT CHARACTER SET `utf8`[0m
-  [1m[35m (3.6ms)[0m  [1m[35mSET NAMES utf8,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
-  [1m[35m (29.7ms)[0m  [1m[35mCREATE TABLE `ar_internal_metadata` (`key` varchar(191) NOT NULL PRIMARY KEY, `value` varchar(191), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL)[0m
-  [1m[36mActiveRecord::InternalMetadata Load (2.3ms)[0m  [1m[34mSELECT  `ar_internal_metadata`.* FROM `ar_internal_metadata` WHERE `ar_internal_metadata`.`key` = 'environment' LIMIT 1[0m
-  [1m[35m (3.6ms)[0m  [1m[35mBEGIN[0m
-  [1m[36mActiveRecord::InternalMetadata Create (1.7ms)[0m  [1m[32mINSERT INTO `ar_internal_metadata` (`key`, `value`, `created_at`, `updated_at`) VALUES ('environment', 'test', '2022-10-14 18:42:13', '2022-10-14 18:42:13')[0m
-  [1m[35m (9.1ms)[0m  [1m[35mCOMMIT[0m
-  [1m[35m (2.9ms)[0m  [1m[35mSET NAMES utf8,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
-  [1m[35m (1.4ms)[0m  [1m[34mSELECT GET_LOCK('3929512479875804640', 0)[0m
-  [1m[35m (1.5ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
-Migrating to CreateTrucks (20161014174613)
-  [1m[35m (2.1ms)[0m  [1m[35mSET NAMES utf8,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
-  [1m[35m (35.3ms)[0m  [1m[35mCREATE TABLE `trucks` (`id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` varchar(191), `price` int, `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL)[0m
-  [1m[35m (35.5ms)[0m  [1m[35mCREATE TABLE `trucks` (`id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` varchar(191), `price` int, `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL)[0m
-  [1m[35m (2.8ms)[0m  [1m[34mSELECT table_name FROM information_schema.tables WHERE table_schema = database() AND table_name = 'schema_migrations' AND table_type = 'BASE TABLE'[0m
-  [1m[35m (2.1ms)[0m  [1m[35mBEGIN[0m
-  [1m[35m (2.2ms)[0m  [1m[35mBEGIN[0m
-  [1m[35m (2.0ms)[0m  [1m[32mINSERT INTO `schema_migrations` (`version`) VALUES ('20161014174613')[0m
-  [1m[36mActiveRecord::SchemaMigration Create (2.1ms)[0m  [1m[32mINSERT INTO `schema_migrations` (`version`) VALUES ('20161014174613')[0m
-  [1m[35m (6.7ms)[0m  [1m[35mCOMMIT[0m
-  [1m[35m (6.8ms)[0m  [1m[35mCOMMIT[0m
-  [1m[35m (3.1ms)[0m  [1m[34mSELECT  `ar_internal_metadata`.* FROM `ar_internal_metadata` WHERE `ar_internal_metadata`.`key` = 'environment' LIMIT 1[0m
-  [1m[36mActiveRecord::InternalMetadata Load (4.6ms)[0m  [1m[34mSELECT  `ar_internal_metadata`.* FROM `ar_internal_metadata` WHERE `ar_internal_metadata`.`key` = 'environment' LIMIT 1[0m
-  [1m[35m (3.2ms)[0m  [1m[35mBEGIN[0m
-  [1m[35m (3.4ms)[0m  [1m[35mBEGIN[0m
-  [1m[35m (2.2ms)[0m  [1m[35mCOMMIT[0m
-  [1m[35m (2.4ms)[0m  [1m[35mCOMMIT[0m
-  [1m[35m (2.5ms)[0m  [1m[34mSELECT RELEASE_LOCK('3929512479875804640')[0m
-  [1m[35m (2.7ms)[0m  [1m[34mSELECT table_name FROM information_schema.tables WHERE table_schema = database()[0m
-  [1m[35m (3.1ms)[0m  [1m[35mSHOW FULL FIELDS FROM `nitro_history_histories`[0m
-  [1m[35m (5.7ms)[0m  [1m[34mSELECT table_name FROM information_schema.tables WHERE table_schema = database() AND table_name = 'schema_migrations' AND table_type = 'BASE TABLE'[0m
-  [1m[35m (1.9ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
-  [1m[35m (2.0ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
-You should run 'rails generator active_ldap:scaffold' to make /Users/gurban.haydarov/nitro-web/components/nitro_history/spec/dummy/config/ldap.yml.
-initialized a background worker with 10 threads
-Creating scope :open. Overwriting existing method Directory::OfficeLocation.open.
-  [1m[35m (3.7ms)[0m  [1m[35mSET NAMES utf8,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
-  [1m[35m (1184.2ms)[0m  [1m[35mDROP DATABASE IF EXISTS `nitro_history_test`[0m
-  [1m[35m (4.1ms)[0m  [1m[35mSET NAMES utf8,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
-  [1m[35m (17.9ms)[0m  [1m[35mCREATE DATABASE `nitro_history_test` DEFAULT CHARACTER SET `utf8`[0m
-  [1m[35m (2.6ms)[0m  [1m[35mSET NAMES utf8,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
-  [1m[35m (48.5ms)[0m  [1m[35mCREATE TABLE `ar_internal_metadata` (`key` varchar(191) NOT NULL PRIMARY KEY, `value` varchar(191), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL)[0m
-  [1m[36mActiveRecord::InternalMetadata Load (3.5ms)[0m  [1m[34mSELECT  `ar_internal_metadata`.* FROM `ar_internal_metadata` WHERE `ar_internal_metadata`.`key` = 'environment' LIMIT 1[0m
-  [1m[35m (4.1ms)[0m  [1m[35mBEGIN[0m
-  [1m[36mActiveRecord::InternalMetadata Create (3.2ms)[0m  [1m[32mINSERT INTO `ar_internal_metadata` (`key`, `value`, `created_at`, `updated_at`) VALUES ('environment', 'test', '2022-10-14 22:48:02', '2022-10-14 22:48:02')[0m
-  [1m[35m (49.6ms)[0m  [1m[35mCOMMIT[0m
-  [1m[35m (3.0ms)[0m  [1m[35mSET NAMES utf8,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
-  [1m[35m (2.4ms)[0m  [1m[34mSELECT GET_LOCK('3929512479875804640', 0)[0m
-  [1m[35m (3.6ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
-Migrating to CreateTrucks (20161014174613)
-  [1m[35m (2.2ms)[0m  [1m[35mSET NAMES utf8,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
-  [1m[35m (55.2ms)[0m  [1m[35mCREATE TABLE `trucks` (`id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` varchar(191), `price` int, `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL)[0m
-  [1m[35m (55.4ms)[0m  [1m[35mCREATE TABLE `trucks` (`id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` varchar(191), `price` int, `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL)[0m
-  [1m[35m (3.4ms)[0m  [1m[34mSELECT table_name FROM information_schema.tables WHERE table_schema = database() AND table_name = 'schema_migrations' AND table_type = 'BASE TABLE'[0m
-  [1m[35m (2.0ms)[0m  [1m[35mBEGIN[0m
-  [1m[35m (2.1ms)[0m  [1m[35mBEGIN[0m
-  [1m[35m (3.6ms)[0m  [1m[32mINSERT INTO `schema_migrations` (`version`) VALUES ('20161014174613')[0m
-  [1m[36mActiveRecord::SchemaMigration Create (3.8ms)[0m  [1m[32mINSERT INTO `schema_migrations` (`version`) VALUES ('20161014174613')[0m
-  [1m[35m (8.1ms)[0m  [1m[35mCOMMIT[0m
-  [1m[35m (8.3ms)[0m  [1m[35mCOMMIT[0m
-  [1m[35m (3.6ms)[0m  [1m[34mSELECT  `ar_internal_metadata`.* FROM `ar_internal_metadata` WHERE `ar_internal_metadata`.`key` = 'environment' LIMIT 1[0m
-  [1m[36mActiveRecord::InternalMetadata Load (3.8ms)[0m  [1m[34mSELECT  `ar_internal_metadata`.* FROM `ar_internal_metadata` WHERE `ar_internal_metadata`.`key` = 'environment' LIMIT 1[0m
-  [1m[35m (2.6ms)[0m  [1m[35mBEGIN[0m
-  [1m[35m (2.9ms)[0m  [1m[35mBEGIN[0m
-  [1m[35m (2.7ms)[0m  [1m[35mCOMMIT[0m
-  [1m[35m (2.8ms)[0m  [1m[35mCOMMIT[0m
-  [1m[35m (2.3ms)[0m  [1m[34mSELECT RELEASE_LOCK('3929512479875804640')[0m
-  [1m[35m (3.9ms)[0m  [1m[34mSELECT table_name FROM information_schema.tables WHERE table_schema = database()[0m
-  [1m[35m (5.6ms)[0m  [1m[35mSHOW FULL FIELDS FROM `nitro_history_histories`[0m
-  [1m[35m (5.2ms)[0m  [1m[34mSELECT table_name FROM information_schema.tables WHERE table_schema = database() AND table_name = 'schema_migrations' AND table_type = 'BASE TABLE'[0m
-  [1m[35m (4.0ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
-  [1m[35m (4.2ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (1.6ms)[0m  [1m[31mDELETE FROM "trucks";[0m
+  [1m[35m (0.0ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.0ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'trucks';[0m
+  [1m[35m (0.7ms)[0m  [1m[31mDELETE FROM "simple_trail_histories";[0m
+  [1m[35m (0.0ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.0ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'simple_trail_histories';[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::EncryptedHistory Create (0.2ms)[0m  [1m[32mINSERT INTO "simple_trail_histories" ("source_type", "source_id", "note", "encrypted_note") VALUES (?, ?, ?, ?)[0m  [["source_type", "Test"], ["source_id", "1"], ["note", nil], ["encrypted_note", "bEioF1y11STlV1YdsKFv4g==\n"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::EncryptedHistory Load (0.1ms)[0m  [1m[34mSELECT "simple_trail_histories".* FROM "simple_trail_histories" WHERE "simple_trail_histories"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTruck Create (0.1ms)[0m  [1m[32mINSERT INTO "trucks" ("name", "price", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Anti-alians Window"], ["price", 1000000], ["created_at", "2023-03-13 21:36:01.370093"], ["updated_at", "2023-03-13 21:36:01.370093"]]
+  [1m[35m (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTruckWithoutHistoryOptions Create (0.1ms)[0m  [1m[32mINSERT INTO "trucks" ("name", "price", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Anti-alians Window"], ["price", 1000000], ["created_at", "2023-03-13 21:36:01.373094"], ["updated_at", "2023-03-13 21:36:01.373094"]]
+  [1m[35m (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTruck Create (0.1ms)[0m  [1m[32mINSERT INTO "trucks" ("name", "price", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Anti-alians Window"], ["price", -1], ["created_at", "2023-03-13 21:36:01.374208"], ["updated_at", "2023-03-13 21:36:01.374208"]]
+  [1m[35m (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTruck Create (0.1ms)[0m  [1m[32mINSERT INTO "trucks" ("name", "price", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Anti-alians Window"], ["price", 1000000], ["created_at", "2023-03-13 21:36:01.375111"], ["updated_at", "2023-03-13 21:36:01.375111"]]
+  [1m[35m (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Create (0.2ms)[0m  [1m[32mINSERT INTO "simple_trail_histories" ("source_type", "source_id", "source_changes", "user_id", "note", "activity") VALUES (?, ?, ?, ?, ?, ?)[0m  [["source_type", "Airplane"], ["source_id", "10"], ["source_changes", "---\nid:\n- \n- 10\n"], ["user_id", 23], ["note", "Some note"], ["activity", "do_something"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Create (0.1ms)[0m  [1m[32mINSERT INTO "simple_trail_histories" ("source_type", "source_id", "source_changes", "user_id", "note", "activity") VALUES (?, ?, ?, ?, ?, ?)[0m  [["source_type", "Airplane"], ["source_id", "10"], ["source_changes", "---\nid:\n- \n- 10\n"], ["user_id", 23], ["note", "Some note"], ["activity", "do_something"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.4ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Create (0.1ms)[0m  [1m[32mINSERT INTO "simple_trail_histories" ("source_type", "source_id", "source_changes", "user_id", "note", "activity") VALUES (?, ?, ?, ?, ?, ?)[0m  [["source_type", "Airplane"], ["source_id", "10"], ["source_changes", "---\nid:\n- \n- 10\n"], ["user_id", 23], ["note", "Some note"], ["activity", "do_something"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Create (0.2ms)[0m  [1m[32mINSERT INTO "simple_trail_histories" ("source_type", "source_id", "source_changes", "user_id", "note", "activity") VALUES (?, ?, ?, ?, ?, ?)[0m  [["source_type", "Airplane"], ["source_id", "10"], ["source_changes", "---\nid:\n- \n- 10\n"], ["user_id", 23], ["note", "Some note"], ["activity", "do_something"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::EncryptedHistory Create (0.1ms)[0m  [1m[32mINSERT INTO "simple_trail_histories" ("source_type", "source_id", "source_changes", "user_id", "note", "activity", "encrypted_note") VALUES (?, ?, ?, ?, ?, ?, ?)[0m  [["source_type", "Airplane"], ["source_id", "10"], ["source_changes", "---\nid:\n- \n- 10\n"], ["user_id", 23], ["note", nil], ["activity", "do_something"], ["encrypted_note", "N79X6rKBxFwX716YSsOpqA==\n"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "simple_trail_histories"[0m
+  [1m[36mSimpleTrail::EncryptedHistory Load (0.0ms)[0m  [1m[34mSELECT "simple_trail_histories".* FROM "simple_trail_histories" ORDER BY id ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Create (0.2ms)[0m  [1m[32mINSERT INTO "simple_trail_histories" ("source_type", "source_id", "note") VALUES (?, ?, ?)[0m  [["source_type", "Test"], ["source_id", "1"], ["note", "Note 1"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Create (0.0ms)[0m  [1m[32mINSERT INTO "simple_trail_histories" ("source_type", "source_id", "note") VALUES (?, ?, ?)[0m  [["source_type", "Test"], ["source_id", "2"], ["note", "Note 2"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Create (0.0ms)[0m  [1m[32mINSERT INTO "simple_trail_histories" ("source_changes") VALUES (?)[0m  [["source_changes", "---\nid:\n- \n- 10\n"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Load (0.0ms)[0m  [1m[34mSELECT "simple_trail_histories".* FROM "simple_trail_histories" WHERE "simple_trail_histories"."id" = ? LIMIT ?[0m  [["id", 3], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Create (0.1ms)[0m  [1m[32mINSERT INTO "simple_trail_histories" ("source_type", "source_id", "note") VALUES (?, ?, ?)[0m  [["source_type", "Test"], ["source_id", "1"], ["note", "Note 1"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Create (0.0ms)[0m  [1m[32mINSERT INTO "simple_trail_histories" ("source_type", "source_id", "note") VALUES (?, ?, ?)[0m  [["source_type", "Test"], ["source_id", "2"], ["note", "Note 2"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Load (0.1ms)[0m  [1m[34mSELECT "simple_trail_histories".* FROM "simple_trail_histories" ORDER BY id DESC[0m
+  [1m[35m (0.2ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Create (0.1ms)[0m  [1m[32mINSERT INTO "simple_trail_histories" ("source_type", "source_id", "note") VALUES (?, ?, ?)[0m  [["source_type", "Test"], ["source_id", "1"], ["note", "Note 1"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Create (0.0ms)[0m  [1m[32mINSERT INTO "simple_trail_histories" ("source_type", "source_id", "note") VALUES (?, ?, ?)[0m  [["source_type", "Test"], ["source_id", "2"], ["note", "Note 2"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Load (0.0ms)[0m  [1m[34mSELECT "simple_trail_histories".* FROM "simple_trail_histories" WHERE "simple_trail_histories"."source_id" = ? AND "simple_trail_histories"."source_type" = ? ORDER BY id DESC[0m  [["source_id", "1"], ["source_type", "Test"]]
+  [1m[35m (0.2ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Create (0.1ms)[0m  [1m[32mINSERT INTO "simple_trail_histories" ("source_type", "source_id", "note") VALUES (?, ?, ?)[0m  [["source_type", "Test"], ["source_id", "1"], ["note", "Note 1"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Create (0.0ms)[0m  [1m[32mINSERT INTO "simple_trail_histories" ("source_type", "source_id", "note") VALUES (?, ?, ?)[0m  [["source_type", "Test"], ["source_id", "2"], ["note", "Note 2"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mSimpleTrail::History Load (0.0ms)[0m  [1m[34mSELECT "simple_trail_histories".* FROM "simple_trail_histories" ORDER BY id ASC[0m
+  [1m[35m (0.2ms)[0m  [1m[31mrollback transaction[0m

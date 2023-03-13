@@ -6,11 +6,9 @@ require File.expand_path("boot", __dir__)
 require "active_record/railtie"
 require "action_controller/railtie"
 require "action_mailer/railtie"
-# require "sprockets/railtie"
-# require "rails/test_unit/railtie"
 
 Bundler.require(*Rails.groups)
-require "nitro_history"
+require "simple_trail"
 
 module Dummy
   class Application < Rails::Application

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class Truck < ApplicationRecord # rubocop:disable NitroComponent/Inheritance
-  include NitroHistory::Recordable
+class Truck < ApplicationRecord
+  include SimpleTrail::Recordable
   history_options(source_changes: :history_changes)
 
 private
