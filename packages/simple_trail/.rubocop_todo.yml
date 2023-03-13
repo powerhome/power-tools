@@ -11,7 +11,7 @@
 # AllowedMethods: enums
 Lint/ConstantDefinitionInBlock:
   Exclude:
-    - 'spec/models/nitro_history/history_spec.rb'
+    - 'spec/models/simple_trail/history_spec.rb'
 
 # Offense count: 2
 # Configuration parameters: EnforcedStyle, CheckMethodNames, CheckSymbols, AllowedIdentifiers.
@@ -19,4 +19,4 @@ Lint/ConstantDefinitionInBlock:
 # AllowedIdentifiers: capture3, iso8601, rfc1123_date, rfc822, rfc2822, rfc3339
 Naming/VariableNumber:
   Exclude:
-    - 'spec/models/nitro_history/history_spec.rb'
+    - 'spec/models/simple_trail/history_spec.rb'
