@@ -2,16 +2,13 @@
 
 source "https://rubygems.org"
 
-# Declare your gem's dependencies in nitro_history.gemspec.
+# Declare your gem's dependencies in simple_trail.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
 # development dependencies will be added by default to the :development group.
 gemspec
 
-path ".." do
-  gem "directory", require: nil
-  gem "nitro_attr_encrypted", require: nil
-  gem "nitro_auth", require: nil
-  gem "nitro_graphql", require: nil
-  gem "nitro_linting", require: nil
-  gem "nitro_mysql", require: nil
-end
+rails_version = ENV.fetch("RAILS_VERSION", ">= 5")
+
+gem "rails", rails_version
+
+gem "rubocop-powerhome", path: "../rubocop-powerhome"
