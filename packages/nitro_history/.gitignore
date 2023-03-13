@@ -1,0 +1,7 @@
+.yardoc
+/doc
+coverage
+**/tmp/*
+!**/tmp/.gitkeep
+vendor/bundle
+*.sqlite3

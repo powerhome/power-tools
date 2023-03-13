@@ -1,0 +1,5 @@
+inherit_from: .rubocop_todo.yml
+
+inherit_gem:
+  nitro_graphql: .rubocop_standard.yml
+  nitro_linting: .rubocop_standard.yml
