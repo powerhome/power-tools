@@ -1,6 +1,23 @@
-# SimpleTrail
+## What is SimpleTrail
 
-Component to store change history of your model.
+SimpleTrail makes it easy to keep history of attribute changes on a model.
+
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'simple_trail'
+```
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install simple_trail
 
 ## Usage
 
@@ -19,3 +36,18 @@ SimpleTrail.for(project).size
 ```
 
 The user performing the action will be recorded from the Thread local `:user_id`.
+
+
+Then, require the engine in your `application.rb`
+
+```ruby
+require "simple_trail"
+```
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/powerhome/power-tools.
+
+## License
+
+The package is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
