@@ -1,7 +1,6 @@
 .yardoc
 /.yardoc
 /_yardoc/
-/doc
 *.sqlite3
 .bundle
 /.bundle/
