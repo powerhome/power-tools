@@ -19,6 +19,10 @@ require File.expand_path "dummy/config/environment", __dir__
 require "rspec/rails"
 require "rspec/expectations"
 
+SimpleTrail::Config.config do
+  current_session_user_id { 13 }
+end
+
 RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
   config.use_transactional_fixtures = false # database cleaner

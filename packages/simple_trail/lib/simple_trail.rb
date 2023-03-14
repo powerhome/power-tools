@@ -8,9 +8,28 @@ require "simple_trail/recordable"
 require "simple_trail/yaml_unsafe_coder"
 
 module SimpleTrail
-  def current_session_user_id(&block)
-    
+  module Config
+    module_function
+
+    mattr_accessor :backtrace_cleaner
+    # mattr_reader :current_session_user_id
+
+    def config(&block)
+      class_eval(&block)
+    end
+
+    def current_session_user_id(&block)
+      @current_session_user_id = block if block_given?
+      @current_session_user_id
+    end
   end
+
+  module_function
+
+  def config(...)
+    Config.config(...)
+  end
+
   # Records a history activity for the given object
   #
   # @param object [#id] the object recording a history
@@ -20,7 +39,7 @@ module SimpleTrail
   # @param note [String] a note that can be attached to a history
   # @param encrypted [Boolean] whether to encrypt or not the note
   # @return [SimpleTrail::EntryPresenter]
-  def self.record!(object, activity, changes, user_id, note = nil, encrypted: false)
+  def record!(object, activity, changes, user_id, note = nil, encrypted: false)
     klass = encrypted ? SimpleTrail::EncryptedHistory : SimpleTrail::History
 
     history = klass.for_source(object).create!(
@@ -36,7 +55,7 @@ module SimpleTrail
   #
   # @param object [#id] the object recording a history
   # @return [Array<NitroNotes::EntryPresenter>]
-  def self.for(object, encrypted: false, in_natural_order: false)
+  def for(object, encrypted: false, in_natural_order: false)
     klass = encrypted ? SimpleTrail::EncryptedHistory : SimpleTrail::History
 
     history_collection = in_natural_order ? klass.for_source(object).in_natural_order : klass.for_source(object)

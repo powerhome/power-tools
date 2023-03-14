@@ -18,7 +18,7 @@ module SimpleTrail
   private
 
     def set_backtrace
-      self.backtrace = caller.select { |line| line.include?("/components") }
+      self.backtrace = SimpleTrail::Config.backtrace_cleaner&.clean(caller) || caller
     end
   end
 end

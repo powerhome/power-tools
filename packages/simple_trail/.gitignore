@@ -1,7 +1,14 @@
 .yardoc
+/.yardoc
+/_yardoc/
 /doc
+*.sqlite3
+.bundle
+/.bundle/
+vendor/bundle
 coverage
+pkg
+/spec/reports/
 **/tmp/*
 !**/tmp/.gitkeep
-vendor/bundle
-*.sqlite3
+*.log

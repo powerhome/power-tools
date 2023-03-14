@@ -6,3 +6,11 @@
 
 # You can also remove all the silencers if you're trying to debug a problem that might stem from framework code.
 # Rails.backtrace_cleaner.remove_silencers!
+
+backtrace = SimpleTrail::Config.backtrace_cleaner ||= Rails.backtrace_cleaner
+backtrace.remove_filters!
+backtrace.remove_silencers!
+backtrace.add_filter   { |line| line.gsub(Rails.root.to_s, '/simple_trail') }
+backtrace.add_silencer { |line| line =~ /ruby/ }
+backtrace.add_silencer { |line| line =~ /rspec/ }
+backtrace

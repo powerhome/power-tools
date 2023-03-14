@@ -13,9 +13,9 @@ RSpec.describe SimpleTrail::Recordable do
     expect(last_truck_history.source_changes).to include("name" => [nil, "Anti-alians Window"],
                                                          "price" => [nil, 1_000_000])
     expect(last_truck_history.backtrace.count).to eql 5
-    expect(last_truck_history.backtrace[0]).to match(%r{components/nitro_history/lib/nitro_history.rb:[0-9]+:in .record!.})
-    expect(last_truck_history.backtrace[1]).to match(%r{components/nitro_history/lib/nitro_history/recordable.rb:[0-9]+:in .__record_changes.})
-    expect(last_truck_history.backtrace[2]).to match(%r{components/nitro_history/spec/nitro_history/recordable_spec.rb:[0-9]})
+    expect(last_truck_history.backtrace[0]).to match(%r{simple_trail/lib/simple_trail.rb:[0-9]+:in .record!.})
+    expect(last_truck_history.backtrace[1]).to match(%r{simple_trail/lib/simple_trail/recordable.rb:[0-9]+:in .__record_changes.})
+    expect(last_truck_history.backtrace[2]).to match(%r{simple_trail/spec/simple_trail/recordable_spec.rb:[0-9]})
   end
 
   it "tracks update activities" do
@@ -30,8 +30,6 @@ RSpec.describe SimpleTrail::Recordable do
   end
 
   it "tracks the user id from NitroAuth.current_session" do
-    NitroAuth.current_session = build(:session_user, id: 13, name: "")
-
     truck = Truck.create! name: "Anti-alians Window", price: 1_000_000
     last_truck_history = SimpleTrail.for(truck).first
 

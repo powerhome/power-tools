@@ -19,5 +19,9 @@ module SimpleTrail
         end
       end
     end
+
+    initializer "simple_trail.backtrace_cleaner" do
+      SimpleTrail::Config.backtrace_cleaner ||= Rails.backtrace_cleaner
+    end
   end
 end

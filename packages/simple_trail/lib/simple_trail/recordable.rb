@@ -21,7 +21,7 @@ module SimpleTrail
     def __record_changes
       activity = new_record? ? :created : :updated
       yield
-      SimpleTrail.record!(self, activity, __simple_trail_source_changes, NitroAuth.current_session_user_id)
+      SimpleTrail.record!(self, activity, __simple_trail_source_changes, SimpleTrail::Config.current_session_user_id&.call)
     end
 
     def __simple_trail_source_changes
