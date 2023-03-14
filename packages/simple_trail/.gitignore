@@ -1,7 +1,9 @@
+*.log
 .yardoc
 /.yardoc
 /_yardoc/
 *.sqlite3
+*.sqlite
 .bundle
 /.bundle/
 vendor/bundle
@@ -10,5 +12,5 @@ pkg
 /spec/reports/
 **/tmp/*
 !**/tmp/.gitkeep
-*.log
 Gemfile.lock
+*.DS_Store

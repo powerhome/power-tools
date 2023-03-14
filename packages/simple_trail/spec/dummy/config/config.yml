@@ -2,9 +2,7 @@ base: &base
   another:
     config: <%= "vrum " * 10 %>
   encryption_key: simple_trail_key
-  key:
-    nested:
-      value: "Hello World"
+  key: simple_trail_key
 
 test:
   <<: *base
