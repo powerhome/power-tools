@@ -9,7 +9,7 @@ require "simple_trail/yaml_unsafe_coder"
 
 module SimpleTrail
   module Config
-    module_function
+  module_function
 
     mattr_accessor :backtrace_cleaner
     # mattr_reader :current_session_user_id
@@ -19,12 +19,12 @@ module SimpleTrail
     end
 
     def current_session_user_id(&block)
-      @current_session_user_id = block if block_given?
+      @current_session_user_id = block if block
       @current_session_user_id
     end
   end
 
-  module_function
+module_function
 
   def config(...)
     Config.config(...)
@@ -39,6 +39,8 @@ module SimpleTrail
   # @param note [String] a note that can be attached to a history
   # @param encrypted [Boolean] whether to encrypt or not the note
   # @return [SimpleTrail::EntryPresenter]
+
+  # rubocop:disable Metrics/ParameterLists
   def record!(object, activity, changes, user_id, note = nil, encrypted: false)
     klass = encrypted ? SimpleTrail::EncryptedHistory : SimpleTrail::History
 
@@ -50,6 +52,7 @@ module SimpleTrail
     )
     EntryPresenter.new(history)
   end
+  # rubocop:enable Metrics/ParameterLists
 
   # A collection of the history entries associated with the object
   #

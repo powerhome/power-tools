@@ -5,7 +5,6 @@ Gem::Specification.new do |s|
   s.version     = "0.0.1"
   s.authors     = ["Gurban Haydarov"]
   s.email       = ["gurban@hey.com"]
-  s.homepage    = "http://nitro.powerhrg.com"
   s.summary     = "Simple way to track database changes"
   s.description = "SimpleTrail is a library that keeps track of attribute changes to a database record"
 
@@ -23,7 +22,6 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", ">= 6.0.6.1"
 
   s.add_development_dependency "activerecord", ">= 5"
-  s.add_development_dependency "sqlite3", "~> 1.4.2"
   s.add_development_dependency "database_cleaner", "1.8.5"
   s.add_development_dependency "factory_bot_rails", "5.1.1"
   s.add_development_dependency "license_finder", ">= 7.0"
@@ -34,6 +32,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec-rails", "~> 5.1.2"
   s.add_development_dependency "rubocop-powerhome", "0.5.0"
   s.add_development_dependency "simplecov", "0.15.1"
+  s.add_development_dependency "sqlite3", "~> 1.4.2"
   s.add_development_dependency "test-unit", "3.1.5"
   s.add_development_dependency "yard", "0.9.21"
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Be sure to restart your server when you modify this file.
 
 # You can add backtrace silencers for libraries that you're using but don't wish to see in your backtraces.
@@ -10,7 +11,7 @@
 backtrace = SimpleTrail::Config.backtrace_cleaner ||= Rails.backtrace_cleaner
 backtrace.remove_filters!
 backtrace.remove_silencers!
-backtrace.add_filter   { |line| line.gsub(Rails.root.to_s, '/simple_trail') }
-backtrace.add_silencer { |line| line =~ /ruby/ }
-backtrace.add_silencer { |line| line =~ /rspec/ }
+backtrace.add_filter   { |line| line.gsub(Rails.root.to_s, "/simple_trail") }
+backtrace.add_silencer { |line| line.include?("ruby") }
+backtrace.add_silencer { |line| line.include?("rspec") }
 backtrace

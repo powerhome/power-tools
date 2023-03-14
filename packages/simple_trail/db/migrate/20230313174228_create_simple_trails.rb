@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/MethodLength
 class CreateSimpleTrails < ActiveRecord::Migration[6.0]
   def change
     create_table :"#{SimpleTrail.table_name_prefix}histories" do |t|
@@ -16,3 +17,4 @@ class CreateSimpleTrails < ActiveRecord::Migration[6.0]
     add_index :"#{SimpleTrail.table_name_prefix}histories", %i[source_type source_id]
   end
 end
+# rubocop:enable Metrics/MethodLength
