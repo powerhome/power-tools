@@ -12,3 +12,4 @@ pkg
 **/tmp/*
 !**/tmp/.gitkeep
 *.log
+Gemfile.lock
