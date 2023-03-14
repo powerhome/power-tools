@@ -1,4 +1,4 @@
-site_name: Nitro History
+site_name: Simple Trail
 nav:
   - "Home": "README.md"
 plugins:
