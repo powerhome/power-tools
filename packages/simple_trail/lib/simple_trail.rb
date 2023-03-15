@@ -18,6 +18,10 @@ module SimpleTrail
       class_eval(&block)
     end
 
+    def table_name_prefix(value)
+      SimpleTrail.table_name_prefix = value
+    end
+
     def current_session_user_id(&block)
       @current_session_user_id = block if block
       @current_session_user_id
@@ -25,6 +29,8 @@ module SimpleTrail
   end
 
 module_function
+
+  mattr_accessor(:table_name_prefix) { "simple_trail_" }
 
   def config(...)
     Config.config(...)
