@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "simple_trail"
+
 class Truck < ApplicationRecord
   include SimpleTrail::Recordable
   history_options(source_changes: :history_changes)
