@@ -14,3 +14,5 @@ pkg
 !**/tmp/.gitkeep
 Gemfile.lock
 *.DS_Store
+spec/dummy/db/simple_trail_test.sqlite
+spec/dummy/log/test.log
