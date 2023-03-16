@@ -63,7 +63,7 @@ module_function
   # A collection of the history entries associated with the object
   #
   # @param object [#id] the object recording a history
-  # @return [Array<NitroNotes::EntryPresenter>]
+  # @return [Array<SimpleTrail::EntryPresenter>]
   def for(object, encrypted: false, in_natural_order: false)
     klass = encrypted ? SimpleTrail::EncryptedHistory : SimpleTrail::History
 

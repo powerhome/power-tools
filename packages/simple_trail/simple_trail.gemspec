@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = "simple_trail"
-  s.version     = "0.0.1"
+  s.version     = SimpleTrail::VERSION
   s.authors     = ["Gurban Haydarov"]
   s.email       = ["gurban@hey.com"]
   s.summary     = "Simple way to track database changes"
