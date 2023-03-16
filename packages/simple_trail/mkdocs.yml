@@ -1,4 +1,4 @@
-site_name: Simple Trail
+site_name: SimpleTrail
 nav:
   - "Home": "README.md"
 plugins:
