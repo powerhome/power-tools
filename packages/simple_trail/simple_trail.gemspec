@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Gurban Haydarov"]
   s.email       = ["gurban@hey.com"]
   s.summary     = "Simple way to track database changes"
-  s.description = "SimpleTrail is a library that keeps track of attribute changes to a database record"
+  s.description = "SimpleTrail makes it easy to keep history of attribute changes on a model"
 
   s.homepage = "https://github.com/powerhome/power-tools"
   s.license = "MIT"
