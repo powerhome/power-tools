@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-module Consent
+module SimpleTrail
   VERSION = "0.0.1"
 end

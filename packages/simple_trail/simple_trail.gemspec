@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+lib = File.expand_path("lib", __dir__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require "simple_trail/version"
+
 Gem::Specification.new do |s|
   s.name        = "simple_trail"
   s.version     = SimpleTrail::VERSION
