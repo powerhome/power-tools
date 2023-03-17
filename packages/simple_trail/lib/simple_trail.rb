@@ -12,7 +12,6 @@ module SimpleTrail
   module_function
 
     mattr_accessor :backtrace_cleaner
-    # mattr_reader :current_session_user_id
 
     def config(&block)
       class_eval(&block)
