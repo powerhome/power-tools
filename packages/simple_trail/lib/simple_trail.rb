@@ -12,7 +12,12 @@ module SimpleTrail
   module_function
   mattr_accessor(:table_name_prefix) { "simple_trail_" }
 
-  def self.config(...)
+  # Allows to set configurion for SimpleTrail
+  #
+  # SimpleTrail.config do
+    # configs to be set
+  # end
+  def config(...)
     Config.config(...)
   end
 

@@ -2,8 +2,8 @@
 
 module SimpleTrail
   module YAMLUnsafeCoder
-  module_function
-
+    module_function
+    # Loads the object from YAML.
     def load(payload)
       return unless payload
 
@@ -13,7 +13,7 @@ module SimpleTrail
         YAML.load(payload) # rubocop:disable Security/YAMLLoad
       end
     end
-
+    # Dumps the object to YAML.
     def dump(obj)
       YAML.dump obj
     end
