@@ -16,6 +16,11 @@ Gemfile.lock
 *.DS_Store
 spec/dummy/db/simple_trail_test.sqlite
 spec/dummy/db/simple_trail_development.sqlite
+db/simple_trail_test.sqlite
+db/simple_trail_development.sqlite
 spec/dummy/log/test.log
 spec/dummy/log/development.log
 spec/dummy/db/structure.sql
+spec/dummy/public/packs-test
+spec/dummy/config/webpacker.yml
+.gitkeep
