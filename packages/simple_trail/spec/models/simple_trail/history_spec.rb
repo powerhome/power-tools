@@ -2,6 +2,8 @@
 
 require "rails_helper"
 
+Test = Struct.new(:id)
+
 RSpec.describe SimpleTrail::History, type: :model do
   let!(:note_one) { SimpleTrail::History.create(source_id: 1, source_type: "Test", note: "Note 1") }
   let!(:note_two) { SimpleTrail::History.create(source_id: 2, source_type: "Test", note: "Note 2") }
@@ -22,7 +24,6 @@ RSpec.describe SimpleTrail::History, type: :model do
 
   describe ".for_source" do
     it "returns history collection in natural order" do
-      Test = Struct.new(:id)
       expect(SimpleTrail::History.for_source(Test.new(1))).to eq([note_one])
     end
   end

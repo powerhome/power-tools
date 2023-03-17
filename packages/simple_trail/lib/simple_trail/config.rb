@@ -2,11 +2,12 @@
 
 module SimpleTrail
   module Config
-    module_function
+  module_function
 
     # SimpleTrail Stores backtrace info in `simple_trail_histories`
     # It's config defaults to `Rails.backtrace_cleaner`
-    # You can optionally set it to your customized backtrace cleaner via `SimpleTrail.config.backtrace_cleaner = MyBacktraceCleaner`
+    # You can optionally set it to your customized backtrace cleaner
+    # via `SimpleTrail.config.backtrace_cleaner = MyBacktraceCleaner`
     mattr_accessor :backtrace_cleaner
 
     # Allows to set configurion for SimpleTrail

@@ -9,13 +9,14 @@ require "simple_trail/yaml_unsafe_coder"
 require "simple_trail/config"
 
 module SimpleTrail
-  module_function
+module_function
+
   mattr_accessor(:table_name_prefix) { "simple_trail_" }
 
   # Allows to set configurion for SimpleTrail
   #
   # SimpleTrail.config do
-    # configs to be set
+  # configs to be set
   # end
   def config(...)
     Config.config(...)

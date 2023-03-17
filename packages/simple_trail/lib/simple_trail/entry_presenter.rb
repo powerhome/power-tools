@@ -16,6 +16,7 @@ module SimpleTrail
     def initialize(history)
       @history = history
     end
+
     # Details the changes made to the source object.
     def describe_changes
       @history.source_changes.map do |field, change|
