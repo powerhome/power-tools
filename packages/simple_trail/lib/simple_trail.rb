@@ -6,32 +6,13 @@ require "simple_trail/engine"
 require "simple_trail/entry_presenter"
 require "simple_trail/recordable"
 require "simple_trail/yaml_unsafe_coder"
+require "simple_trail/config"
 
 module SimpleTrail
-  module Config
   module_function
-
-    mattr_accessor :backtrace_cleaner
-
-    def config(&block)
-      class_eval(&block)
-    end
-
-    def table_name_prefix(value)
-      SimpleTrail.table_name_prefix = value
-    end
-
-    def current_session_user_id(&block)
-      @current_session_user_id = block if block
-      @current_session_user_id
-    end
-  end
-
-module_function
-
   mattr_accessor(:table_name_prefix) { "simple_trail_" }
 
-  def config(...)
+  def self.config(...)
     Config.config(...)
   end
 
