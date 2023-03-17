@@ -48,7 +48,7 @@ Edgestitch allows engines to define partial structure-self.sql files to be stitc
 
 [simple_trail](https://github.com/powerhome/power-tools/blob/main/packages/simple_trail/docs/README.md) 💎
 
-SimpleTrail makes it easy to keep history of attribute changes on a model.
+SimpleTrail makes it easy to keep a history of attribute changes on a model.
 
 ## Installation 🛠
 

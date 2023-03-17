@@ -1,7 +1,6 @@
 ## What is SimpleTrail
 
-SimpleTrail makes it easy to keep a history of attribute changes on a model.
-
+SimpleTrail makes it easy to keep a history of attribute changes on a model
 
 ## Installation
 
