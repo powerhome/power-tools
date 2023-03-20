@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+# Declare your gem's dependencies in simple_trail.gemspec.
+# Bundler will treat runtime dependencies like base dependencies, and
+# development dependencies will be added by default to the :development group.
+gemspec
+
+rails_version = ENV.fetch("RAILS_VERSION", ">= 6.0.6.1")
+
+gem "rails", rails_version
+
+gem "rubocop-powerhome", path: "../rubocop-powerhome"

@@ -46,6 +46,10 @@ A shared layout so that your suite of applications can have the same look and fe
 
 Edgestitch allows engines to define partial structure-self.sql files to be stitched into a single structure.sql file by the umbrella application.
 
+[simple_trail](https://github.com/powerhome/power-tools/blob/main/packages/simple_trail/docs/README.md) 💎
+
+SimpleTrail makes it easy to keep a history of attribute changes on a model.
+
 ## Installation 🛠
 
 These packages are all meant to install inside of an application and aren't intended to stand alone; currently, they are all published to [RubyGems](https://rubygems.org/) or [npm](https://www.npmjs.com/) and you can use standard methods to install them.

@@ -1,0 +1,13 @@
+base: &base
+  another:
+    config: <%= "vrum " * 10 %>
+  encryption_key: simple_trail_key
+  key: simple_trail_key
+
+test:
+  <<: *base
+  env_name: test
+
+development:
+  <<: *base
+  env_name: development
