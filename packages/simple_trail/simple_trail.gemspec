@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency "nitro_config"
   s.add_dependency "powerhome-attr_encrypted", "1.2.0"
 
-  s.add_dependency "rails", ">= 6.0.6.1"
+  s.add_dependency "rails", ">= 6.0.6.1", "< 7.0"
 
   s.add_development_dependency "activerecord", ">= 5"
   s.add_development_dependency "database_cleaner", "1.8.5"
