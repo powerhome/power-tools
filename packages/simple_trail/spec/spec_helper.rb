@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "pry-byebug"
-
 RSpec.configure do |config|
   if ENV["CI"]
     config.before(:example, :focus) { raise "Should not commit focused specs" }
@@ -12,19 +10,6 @@ RSpec.configure do |config|
   config.warnings = false
 
   config.default_formatter = "doc" if config.files_to_run.one?
-
-  # DatabaseCleaner configuration
-  require "database_cleaner"
-  config.before(:suite) do
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with(:truncation)
-  end
-
-  config.around(:each) do |example|
-    DatabaseCleaner.cleaning do
-      example.run
-    end
-  end
 
   # Print the 10 slowest examples and example groups at the
   # end of the spec run, to help surface which specs are running

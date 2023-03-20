@@ -12,7 +12,6 @@ unless ENV["SIMPLECOV"] == "false"
 end
 
 require "spec_helper"
-require "factory_bot_rails"
 
 require File.expand_path "dummy/config/environment", __dir__
 
@@ -25,9 +24,7 @@ end
 
 RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
-  config.use_transactional_fixtures = false # database cleaner
-
-  config.include FactoryBot::Syntax::Methods
+  config.use_transactional_fixtures = true
 
   config.expect_with :rspec do |c|
     c.max_formatted_output_length = 1_000_000

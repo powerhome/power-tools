@@ -12,7 +12,7 @@ RSpec.describe SimpleTrail::Recordable do
     expect(last_truck_history.source_id).to eql truck.id.to_s
     expect(last_truck_history.source_changes).to include("name" => [nil, "Anti-alians Window"],
                                                          "price" => [nil, 1_000_000])
-    expect(last_truck_history.backtrace.count).to eql 5
+    expect(last_truck_history.backtrace.count).to eql 3
     expect(last_truck_history.backtrace[0]).to match(%r{simple_trail/lib/simple_trail.rb:[0-9]+:in .record!.})
     expect(last_truck_history.backtrace[1]).to match(%r{simple_trail/lib/simple_trail/recordable.rb:[0-9]})
     expect(last_truck_history.backtrace[2]).to match(%r{simple_trail/spec/simple_trail/recordable_spec.rb:[0-9]})
