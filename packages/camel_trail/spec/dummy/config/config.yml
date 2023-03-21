@@ -1,0 +1,13 @@
+base: &base
+  another:
+    config: <%= "vrum " * 10 %>
+  encryption_key: camel_trail_key
+  key: camel_trail_key
+
+test:
+  <<: *base
+  env_name: test
+
+development:
+  <<: *base
+  env_name: development

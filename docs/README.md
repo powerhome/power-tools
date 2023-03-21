@@ -46,9 +46,9 @@ A shared layout so that your suite of applications can have the same look and fe
 
 Edgestitch allows engines to define partial structure-self.sql files to be stitched into a single structure.sql file by the umbrella application.
 
-[simple_trail](https://github.com/powerhome/power-tools/blob/main/packages/simple_trail/docs/README.md) 💎
+[camel_trail](https://github.com/powerhome/power-tools/blob/main/packages/camel_trail/docs/README.md) 💎
 
-SimpleTrail makes it easy to keep a history of attribute changes on a model.
+CamelTrail makes it easy to keep a history of attribute changes on a model.
 
 ## Installation 🛠
 

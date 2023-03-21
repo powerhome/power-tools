@@ -1,0 +1,7 @@
+development:
+  adapter:  sqlite3
+  database: db/camel_trail_development.sqlite
+
+test:
+  adapter:  sqlite3
+  database: db/camel_trail_test.sqlite
