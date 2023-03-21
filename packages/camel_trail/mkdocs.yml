@@ -1,0 +1,6 @@
+site_name: CamelTrail
+nav:
+  - "Home": "README.md"
+  - "Changelog": "CHANGELOG.md"  
+plugins:
+  - techdocs-core

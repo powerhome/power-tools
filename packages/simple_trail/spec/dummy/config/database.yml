@@ -1,7 +1,0 @@
-development:
-  adapter:  sqlite3
-  database: db/simple_trail_development.sqlite
-
-test:
-  adapter:  sqlite3
-  database: db/simple_trail_test.sqlite

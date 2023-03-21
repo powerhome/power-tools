@@ -1,6 +1,0 @@
-site_name: SimpleTrail
-nav:
-  - "Home": "README.md"
-  - "Changelog": "CHANGELOG.md"  
-plugins:
-  - techdocs-core
