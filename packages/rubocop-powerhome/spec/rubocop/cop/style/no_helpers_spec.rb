@@ -19,7 +19,7 @@ RSpec.describe RuboCop::Cop::Style::NoHelpers do
     it "when file exists inside app/helpers/" do
       source = <<~RUBY
         class FooHelper
-        ^^^^^^^^^^^^^^^ Helpers create global view methods. Instead, use view objects to encapsulate your display logic.
+        ^^^^^^^^^^^^^^^ Style/NoHelpers: Helpers create global view methods. Instead, use view objects to encapsulate your display logic.
         end
       RUBY
 
