@@ -29,7 +29,7 @@ RSpec.describe RuboCop::Cop::Naming::ViewComponent do
   it "registers an offense when class does not end with component" do
     expect_offense(<<-RUBY)
       class Foo < MyComponent::ApplicationComponent
-            ^^^ End ViewComponent classnames with 'Component'
+            ^^^ Naming/ViewComponent: End ViewComponent classnames with 'Component'
       end
     RUBY
   end
@@ -37,7 +37,7 @@ RSpec.describe RuboCop::Cop::Naming::ViewComponent do
   it "registers an offense when class does not end with component" do
     expect_offense(<<-RUBY)
       class Foo < ::ViewComponent::Base
-            ^^^ End ViewComponent classnames with 'Component'
+            ^^^ Naming/ViewComponent: End ViewComponent classnames with 'Component'
       end
     RUBY
   end
