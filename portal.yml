@@ -184,3 +184,17 @@ spec:
   system: power-application-framework
   lifecycle: production
   subcomponentOf: power-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: data_taster
+  title: DataTaster
+  description: >-
+    Delicious and sanitized data samples for development and testing.
+spec:
+  type: library
+  owner: heroes-for-hire
+  system: power-application-framework
+  lifecycle: production
+  subcomponentOf: power-tools
