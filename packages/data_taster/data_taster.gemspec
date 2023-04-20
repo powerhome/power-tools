@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email = ["jillian.emilie@gmail.com"]
 
   spec.summary = "Delicious and sanitized data samples for development and testing."
-  spec.description = "DataTaster allows applications to introduce configuration for which tables, rows, and columns they want to include for their development processes. The data is exported, sanitized, and then imported all with the help of DataTaster."
+  spec.description = "Export, sanitize, and import data to help develop better apps."
   spec.homepage = "https://github.com/powerhome/power-tools"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
