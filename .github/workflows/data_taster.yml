@@ -1,0 +1,13 @@
+name: data_taster
+
+on:
+  push:
+
+jobs:
+  ruby:
+    uses: ./.github/workflows/_ruby-package.yml
+    with:
+      package: ${{ github.workflow }}
+      workdir: 'packages/${{ github.workflow }}'
+      rails: '["any"]'
+    secrets: inherit
