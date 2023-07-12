@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [0.4.2] - 2023-02-08
+
+- Permit Rubocop upgrades again because bug was fixed.
+
+## [0.4.1] - 2023-02-08
+
+- Hold back version of Rubocop that's permitted due to incompatibility with our implementation.
+
 ## [0.4.0] - 2022-06-01
 
 - Adds Cobra/ViewComponentFilePlacement cop

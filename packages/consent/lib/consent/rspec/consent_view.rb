@@ -50,7 +50,7 @@ module Consent
 
       def failure_message_base(failure) # rubocop:disable Metrics/MethodLength
         message = format(
-          'expected %<skey>s (%<sclass>s) %<fail>s provide view %<view>s with`\
+          'expected %<skey>s (%<sclass>s) %<fail>s provide view %<view>s with`
           `%<conditions>p, but',
           skey: @subject_key.to_s, sclass: @subject_key.class,
           view: @view_key, conditions: @conditions, fail: failure

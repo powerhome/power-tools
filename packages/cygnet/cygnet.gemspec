@@ -2,8 +2,6 @@
 
 require_relative "lib/cygnet/version"
 
-$LOAD_PATH.push File.expand_path("lib", __dir__)
-
 Gem::Specification.new do |s|
   s.name        = "cygnet"
   s.version     = Cygnet::VERSION
@@ -17,6 +15,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 2.7"
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "docs/README.md"]
+  s.require_paths = ["lib"]
 
   s.add_development_dependency "bundler", "~> 2.1"
   s.add_development_dependency "license_finder", "~> 7.0"

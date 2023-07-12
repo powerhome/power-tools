@@ -2,8 +2,6 @@
 
 require_relative "lib/rabbet/version"
 
-$LOAD_PATH.push File.expand_path("lib", __dir__)
-
 Gem::Specification.new do |s|
   s.name        = "rabbet"
   s.version     = Rabbet::VERSION
@@ -17,6 +15,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 2.7"
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "docs/README.md"]
+  s.require_paths = ["lib"]
 
   s.add_dependency "cygnet", "0.0.1"
   s.add_dependency "rails", ">= 6.0"

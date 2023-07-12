@@ -46,6 +46,14 @@ A shared layout so that your suite of applications can have the same look and fe
 
 Edgestitch allows engines to define partial structure-self.sql files to be stitched into a single structure.sql file by the umbrella application.
 
+[camel_trail](https://github.com/powerhome/power-tools/blob/main/packages/camel_trail/docs/README.md) 💎
+
+CamelTrail makes it easy to keep a history of attribute changes on a model.
+
+[data_taster](https://github.com/powerhome/power-tools/blob/main/packages/data_taster/docs/README.md) 💎
+
+Delicious and sanitized data samples for development and testing.
+
 ## Installation 🛠
 
 These packages are all meant to install inside of an application and aren't intended to stand alone; currently, they are all published to [RubyGems](https://rubygems.org/) or [npm](https://www.npmjs.com/) and you can use standard methods to install them.
