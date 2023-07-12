@@ -146,12 +146,12 @@ GEM
       ast (~> 2.4.1)
       racc
     power_assert (2.0.3)
-    pry (0.13.0)
+    pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    pry-byebug (3.9.0)
+    pry-byebug (3.10.1)
       byebug (~> 11.0)
-      pry (~> 0.13.0)
+      pry (>= 0.13, < 0.15)
     racc (1.7.1)
     rack (2.2.7)
     rack-test (2.1.0)
@@ -286,8 +286,8 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 2.1)
   license_finder (~> 7.0)
-  pry (= 0.13.0)
-  pry-byebug (= 3.9.0)
+  pry (>= 0.14)
+  pry-byebug (= 3.10.1)
   rabbet!
   rainbow (= 2.2.2)
   rake (~> 13.0)
