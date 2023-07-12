@@ -2,7 +2,7 @@
 
 require "open3"
 
-require_relative "./structure_constraint_order_munger"
+require_relative "structure_constraint_order_munger"
 
 module Edgestitch
   module Mysql
@@ -71,7 +71,7 @@ module Edgestitch
             "schema_migrations",
             "-w", "version IN (#{versions.join(',')})"
           )
-        end.join.gsub(/VALUES /, "VALUES\n").gsub(/,/, ",\n")
+        end.join.gsub("VALUES ", "VALUES\n").gsub(",", ",\n")
       end
 
     private
