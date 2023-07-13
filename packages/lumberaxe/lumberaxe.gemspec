@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activesupport", ">= 6.0.6.1", "< 7.1"
   spec.add_dependency "lograge", "0.10.0"
 
+  spec.add_development_dependency "appraisal", "~> 2.4.1"
   spec.add_development_dependency "bundler", "~> 2.1"
   spec.add_development_dependency "combustion", "~> 1.3"
   spec.add_development_dependency "license_finder", ">= 7.0"
