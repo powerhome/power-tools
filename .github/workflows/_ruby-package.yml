@@ -37,14 +37,12 @@ jobs:
         rails: ${{ fromJSON(inputs.rails) }}
         bundler: ${{ fromJSON(inputs.bundler) }}
         exclude:
+          # This PR is merged, but not yet shipped in 6.0 and 6.1
+          # https://github.com/rails/rails/pull/46895
           - rails: '6.1'
             ruby: '3.2'
           - rails: '6.0'
             ruby: '3.2'
-          - rails: '7.0'
-            ruby: '2.7'
-          - rails: '7.0'
-            ruby: '3.0'
           - ruby: '3.1'
             bundler: '1'
     env:
