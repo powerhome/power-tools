@@ -37,7 +37,7 @@ jobs:
         gemfile: ${{ fromJSON(inputs.gemfiles) }}
         bundler: ${{ fromJSON(inputs.bundler) }}
     env:
-      BUNDLER_GEMFILE: '${{ matrix.gemfile }}'
+      BUNDLE_GEMFILE: '${{ matrix.gemfile }}'
       RAILS_ENV: test
     steps:
       - uses: actions/checkout@v3
