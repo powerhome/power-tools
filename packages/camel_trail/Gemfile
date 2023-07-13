@@ -7,8 +7,4 @@ source "https://rubygems.org"
 # development dependencies will be added by default to the :development group.
 gemspec
 
-rails_version = ENV.fetch("RAILS_VERSION", ">= 6.0.6.1")
-
-gem "rails", rails_version
-
 gem "rubocop-powerhome", path: "../rubocop-powerhome"

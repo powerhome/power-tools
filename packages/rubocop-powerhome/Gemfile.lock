@@ -234,7 +234,7 @@ DEPENDENCIES
   license_finder (~> 7.0)
   pry (>= 0.14.2)
   pry-byebug (= 3.10.1)
-  rails (>= 5.2.8.1)
+  rails (>= 6.0.6.1, < 7.1)
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop-powerhome!
