@@ -25,6 +25,10 @@ on:
         default: '["2"]'
         required: false
         type: string
+      exclude:
+        default: '[]'
+        required: false
+        type: string
 
 jobs:
   build:
@@ -36,6 +40,7 @@ jobs:
         ruby: ${{ fromJSON(inputs.ruby) }}
         gemfile: ${{ fromJSON(inputs.gemfiles) }}
         bundler: ${{ fromJSON(inputs.bundler) }}
+        exclude: ${{ fromJSON(inputs.exclude)}}
     env:
       BUNDLE_GEMFILE: '${{ matrix.gemfile }}'
       RAILS_ENV: test
