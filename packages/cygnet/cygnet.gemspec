@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "bundler", "~> 2.1"
   s.add_development_dependency "license_finder", "~> 7.0"
-  s.add_development_dependency "pry", "0.13.0"
-  s.add_development_dependency "pry-byebug", "3.9.0"
+  s.add_development_dependency "pry", ">= 0.14"
+  s.add_development_dependency "pry-byebug", "3.10.1"
   s.add_development_dependency "rainbow", "2.2.2"
   s.add_development_dependency "rake", "~> 13.0"
   s.add_development_dependency "rspec", "~> 3.0"

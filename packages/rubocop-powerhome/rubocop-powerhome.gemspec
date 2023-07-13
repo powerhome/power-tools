@@ -43,8 +43,9 @@ Gem::Specification.new do |spec|
   spec.metadata["rubygems_mfa_required"] = "true"
 
   spec.add_development_dependency "license_finder", "~> 7.0"
-  spec.add_development_dependency "pry-byebug", "3.9.0"
-  spec.add_development_dependency "rails", ">= 5.2.8.1", "< 7.1"
+  spec.add_development_dependency "pry", ">= 0.14.2"
+  spec.add_development_dependency "pry-byebug", "3.10.1"
+  spec.add_development_dependency "rails", ">= 6.0.6.1", "< 7.1"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.0"
 end
