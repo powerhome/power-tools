@@ -6,5 +6,13 @@ require:
 AllCops:
   TargetRubyVersion: 2.7
 
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - 'gemfiles/*'
+
+Bundler/OrderedGems:
+  Exclude:
+    - 'gemfiles/*'
+
 Rails:
   Enabled: false
