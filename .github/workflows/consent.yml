@@ -12,7 +12,7 @@ jobs:
       gemfiles: "['gemfiles/rails_6_0.gemfile','gemfiles/rails_6_1.gemfile','gemfiles/rails_7_0.gemfile']"
       exclude: |-
         [
-          { 'ruby': '3.2', 'gemfiles': 'gemfiles/rails_6_0.gemfile'},
-          { 'ruby': '3.2', 'gemfiles': 'gemfiles/rails_6_1.gemfile'},
+          { 'ruby': '3.2', 'gemfile': 'gemfiles/rails_6_0.gemfile'},
+          { 'ruby': '3.2', 'gemfile': 'gemfiles/rails_6_1.gemfile'},
         ]
     secrets: inherit
