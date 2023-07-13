@@ -51,9 +51,6 @@ jobs:
           bundler: ${{ matrix.bundler }}
           ruby-version: ${{ matrix.ruby }}
           working-directory: ${{ inputs.workdir }}
-      - name: Install appraisals
-        working-directory: ${{ inputs.workdir }}
-        run: bundle exec appraisal install
       - name: Before build
         if: ${{ inputs.before_build != '' }}
         run: '${{ inputs.before_build }}'
