@@ -29,7 +29,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }} / Bundler ${{ matrix.bundler }} / Gemfile ${{ matrix.gemfile }}
+    name: Ruby ${{ matrix.ruby }} / Bundler ${{ matrix.bundler }} / ${{ matrix.gemfile }}
     strategy:
       fail-fast: false
       matrix:
