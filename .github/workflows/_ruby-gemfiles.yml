@@ -43,6 +43,7 @@ jobs:
         exclude: ${{ fromJSON(inputs.exclude)}}
     env:
       BUNDLE_GEMFILE: '${{ matrix.gemfile }}'
+      BUNDLER_VERSION: '${{ matrix.bundler }}'
       RAILS_ENV: test
     steps:
       - uses: actions/checkout@v3
@@ -51,6 +52,7 @@ jobs:
         env:
           BUNDLE_GEMFILE: '${{ matrix.gemfile }}'
           BUNDLER_VERSION: '${{ matrix.bundler }}'
+          RAILS_ENV: test
         with:
           bundler-cache: true
           bundler: ${{ matrix.bundler }}
