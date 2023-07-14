@@ -52,7 +52,7 @@ jobs:
           BUNDLE_GEMFILE: '${{ matrix.gemfile }}'
           BUNDLER_VERSION: '${{ matrix.bundler }}'
         with:
-          bundler-cache: false
+          bundler-cache: true
           bundler: ${{ matrix.bundler }}
           ruby-version: ${{ matrix.ruby }}
           working-directory: ${{ inputs.workdir }}
