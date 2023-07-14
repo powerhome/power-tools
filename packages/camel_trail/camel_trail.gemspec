@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-lib = File.expand_path("lib", __dir__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "camel_trail/version"
+require_relative "lib/camel_trail/version"
 
 Gem::Specification.new do |s|
   s.name        = "camel_trail"
