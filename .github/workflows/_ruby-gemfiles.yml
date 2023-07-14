@@ -51,7 +51,7 @@ jobs:
         env:
           BUNDLER_VERSION: '${{ matrix.bundler }}'
         with:
-          bundler-cache: true
+          bundler-cache: false
           bundler: ${{ matrix.bundler }}
           ruby-version: ${{ matrix.ruby }}
           working-directory: ${{ inputs.workdir }}
