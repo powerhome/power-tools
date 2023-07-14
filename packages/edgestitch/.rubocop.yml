@@ -1,2 +1,10 @@
 require:
   - rubocop-powerhome
+
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - 'gemfiles/*'
+
+Bundler/OrderedGems:
+  Exclude:
+    - 'gemfiles/*'

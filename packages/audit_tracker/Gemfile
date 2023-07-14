@@ -4,10 +4,6 @@ source "https://rubygems.org"
 
 gemspec
 
-rails_version = ENV.fetch("RAILS_VERSION", ">= 5.2.8.1")
-
-gem "rails", rails_version
-
 gem "byebug"
 gem "license_finder", ">= 7.0"
 gem "rake", ">= 13.0"

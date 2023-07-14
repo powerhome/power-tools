@@ -1,0 +1,77 @@
+on:
+  workflow_call:
+    secrets:
+      rubygems_api_key:
+        required: true
+    inputs:
+      before_build:
+        type: string
+        required: false
+      package:
+        required: true
+        type: string
+      workdir:
+        required: false
+        type: string
+      ruby:
+        default: '["2.7","3.1","3.2"]'
+        required: false
+        type: string
+      gemfiles:
+        default: '["Gemfile"]'
+        required: false
+        type: string
+      bundler:
+        default: '["2"]'
+        required: false
+        type: string
+      exclude:
+        default: '[]'
+        required: false
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Ruby ${{ matrix.ruby }} / Bundler ${{ matrix.bundler }} / ${{ matrix.gemfile }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ${{ fromJSON(inputs.ruby) }}
+        gemfile: ${{ fromJSON(inputs.gemfiles) }}
+        bundler: ${{ fromJSON(inputs.bundler) }}
+        exclude: ${{ fromJSON(inputs.exclude)}}
+    env:
+      BUNDLE_GEMFILE: '${{ matrix.gemfile }}'
+      BUNDLER_VERSION: '${{ matrix.bundler }}'
+      RAILS_ENV: test
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+          bundler: ${{ matrix.bundler }}
+          ruby-version: ${{ matrix.ruby }}
+          working-directory: ${{ inputs.workdir }}
+      - name: Before build
+        if: ${{ inputs.before_build != '' }}
+        run: '${{ inputs.before_build }}'
+      - name: Run the build script
+        working-directory: ${{ inputs.workdir }}
+        run: bundle exec rake
+      - name: Ensure license compliance
+        working-directory: ${{ inputs.workdir }}
+        run: bundle exec license_finder
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.ref, 'refs/tags/v') && contains(github.ref, inputs.package) }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: powerhome/publish-rubygems-action@git-safe-directory
+        env:
+          RELEASE_COMMAND: rake build release:guard_clean release:rubygem_push
+          RUBYGEMS_API_KEY: ${{ secrets.rubygems_api_key }}
+          WORKDIR: ${{ inputs.workdir }}

@@ -10,5 +10,13 @@ Metrics/BlockLength:
     - 'spec/**/*'
     - 'rubocop-powerhome.gemspec'
 
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - 'gemfiles/*'
+
+Bundler/OrderedGems:
+  Exclude:
+    - 'gemfiles/*'
+
 Rails:
   Enabled: false

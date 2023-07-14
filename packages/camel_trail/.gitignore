@@ -12,7 +12,6 @@ pkg
 /spec/reports/
 **/tmp/*
 !**/tmp/.gitkeep
-Gemfile.lock
 *.DS_Store
 doc/*
 !doc/dependency_decisions.yml
