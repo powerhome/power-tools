@@ -49,10 +49,6 @@ jobs:
       - uses: actions/checkout@v3
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
-        env:
-          BUNDLE_GEMFILE: '${{ matrix.gemfile }}'
-          BUNDLER_VERSION: '${{ matrix.bundler }}'
-          RAILS_ENV: test
         with:
           bundler-cache: true
           bundler: ${{ matrix.bundler }}
