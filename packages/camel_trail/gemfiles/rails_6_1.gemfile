@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-gem "rails", "6.1.7.4"
 gem "rubocop-powerhome", path: "../../rubocop-powerhome"
+gem "rails", "6.1.7.4"
 
 gemspec path: "../"
