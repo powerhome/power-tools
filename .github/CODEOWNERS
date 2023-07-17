@@ -1,3 +1,4 @@
 * @powerhome/heroes-for-hire
-packages/**/*.gemspec
-packages/**/Gemfile
+**/*.gemspec
+**/Gemfile
+**/Gemfile.lock
