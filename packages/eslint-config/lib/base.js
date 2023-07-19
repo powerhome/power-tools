@@ -8,13 +8,14 @@ module.exports = {
     "plugin:react-hooks/recommended",
     "prettier",
   ],
-  parser: "babel-eslint",
+  parser: "@babel/eslint-parser",
   parserOptions: {
     ecmaVersion: 6,
     sourceType: "module",
     ecmaFeatures: {
       jsx: true,
     },
+    requireConfigFile: false,
   },
   env: {
     browser: true,
