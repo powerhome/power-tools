@@ -1,0 +1,25 @@
+@import "tokens/spacing";
+@import "tokens/colors";
+@import "tokens/border_radius";
+@import "tokens/shadows";
+@import "tokens/typography";
+
+.overflow {
+  overflow-y: scroll;
+  max-height: 230px;
+  min-width: 100px;
+}
+
+.individualsLabel {
+  padding: $space_xs 0;
+  margin-top: $space_sm;
+}
+
+.formLabel {
+  padding: $space_xs 0;
+}
+
+.modalSpacing {
+  padding: $space_md $space_md $space_lg $space_md;
+  margin: 0;
+}
