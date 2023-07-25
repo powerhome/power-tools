@@ -16,7 +16,7 @@ import {
 
 const rootNode = document.getElementById("root")
 ReactDOM.render(
-  <>
+  <StrictMode>
     <Title>Audiences Example</Title>
     <AudienceForm
       context={{
@@ -136,6 +136,6 @@ ReactDOM.render(
         ],
       }}
     />
-  </>,
+  </StrictMode>,
   rootNode,
 )
