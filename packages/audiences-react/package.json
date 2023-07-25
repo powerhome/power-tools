@@ -15,7 +15,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npx tsc --noEmit && vite build",
     "lint": "yarn eslint && yarn prettier",
     "eslint": "eslint **/*.ts",
     "prettier": "prettier -c .",
