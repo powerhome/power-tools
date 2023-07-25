@@ -1,18 +1,18 @@
-import { Card, Body, Flex, FlexItem, Caption } from "playbook-ui";
+import { Card, Body, Flex, FlexItem, Caption } from "playbook-ui"
 
-import type { AudienceCriteria } from "../types";
+import type { AudienceCriteria } from "../types"
 
-import { CriteriaDescription } from "./CriteriaDescription";
+import { CriteriaDescription } from "./CriteriaDescription"
 
 type CriteriaFieldsProps = React.PropsWithChildren & {
-  criteria: AudienceCriteria;
-};
+  criteria: AudienceCriteria
+}
 export default function CriteriaCard({
   criteria,
   children,
 }: CriteriaFieldsProps) {
   if (!criteria) {
-    return null;
+    return null
   }
 
   return (
@@ -28,5 +28,5 @@ export default function CriteriaCard({
         <FlexItem>{children}</FlexItem>
       </Flex>
     </Card>
-  );
+  )
 }

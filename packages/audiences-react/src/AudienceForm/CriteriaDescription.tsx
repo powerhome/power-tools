@@ -1,11 +1,11 @@
-import type { AudienceCriteria } from "../types";
-import { toSentence } from "../helper";
+import type { AudienceCriteria } from "../types"
+import { toSentence } from "../helper"
 
 type CriteriaDescriptionProps = {
-  criteria?: AudienceCriteria;
-};
+  criteria?: AudienceCriteria
+}
 export const CriteriaDescription = ({ criteria }: CriteriaDescriptionProps) => {
-  const { Title, Department, Territory } = criteria?.groups || {};
+  const { Title, Department, Territory } = criteria?.groups || {}
 
   return (
     <div>
@@ -27,5 +27,5 @@ export const CriteriaDescription = ({ criteria }: CriteriaDescriptionProps) => {
       )}
       {"."}
     </div>
-  );
-};
+  )
+}

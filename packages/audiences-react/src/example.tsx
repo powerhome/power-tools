@@ -1,20 +1,20 @@
-import "playbook-ui/dist/reset.css";
-import "playbook-ui/dist/playbook.css";
+import "playbook-ui/dist/reset.css"
+import "playbook-ui/dist/playbook.css"
 
-import "@fortawesome/fontawesome-free/js/all.min.js";
+import "@fortawesome/fontawesome-free/js/all.min.js"
 
-import { StrictMode } from "react";
-import ReactDOM from "react-dom";
-import { Title } from "playbook-ui";
+import { StrictMode } from "react"
+import ReactDOM from "react-dom"
+import { Title } from "playbook-ui"
 
-import AudienceForm from "./AudienceForm";
+import AudienceForm from "./AudienceForm"
 import {
   DepartmentGroupType,
   TerritoryGroupType,
   TitleGroupType,
-} from "./types";
+} from "./types"
 
-const rootNode = document.getElementById("root");
+const rootNode = document.getElementById("root")
 ReactDOM.render(
   <>
     <Title>Audiences Example</Title>
@@ -137,5 +137,5 @@ ReactDOM.render(
       }}
     />
   </>,
-  rootNode
-);
+  rootNode,
+)

@@ -1,5 +1,5 @@
-import React from "react";
-import get from "lodash/get";
+import React from "react"
+import get from "lodash/get"
 import {
   Body,
   User,
@@ -8,10 +8,10 @@ import {
   Button,
   TextInput,
   Dialog,
-} from "playbook-ui";
+} from "playbook-ui"
 
-import type { Filter, Member } from "../types";
-import { CriteriaDescription } from "../AudienceForm/CriteriaDescription";
+import type { Filter, Member } from "../types"
+import { CriteriaDescription } from "../AudienceForm/CriteriaDescription"
 
 const style = {
   listContentModal: {
@@ -23,20 +23,20 @@ const style = {
     padding: "7px 14px 0",
   },
   listLoadMoreModal: {},
-};
+}
 
 type MembersModalContentProps = {
-  allAudienceMembers: boolean;
-  fetchMore: () => void;
-  filter?: Filter;
-  loading: boolean;
-  membersList: Member[];
-  memberName: string;
-  show: boolean;
-  onHide: () => void;
-  setMemberName: React.Dispatch<React.SetStateAction<string>>;
-  total: number;
-};
+  allAudienceMembers: boolean
+  fetchMore: () => void
+  filter?: Filter
+  loading: boolean
+  membersList: Member[]
+  memberName: string
+  show: boolean
+  onHide: () => void
+  setMemberName: React.Dispatch<React.SetStateAction<string>>
+  total: number
+}
 
 const MembersModalContent = ({
   allAudienceMembers,
@@ -53,8 +53,8 @@ const MembersModalContent = ({
   const handleMemberNameSearch = ({
     target,
   }: React.ChangeEvent<HTMLInputElement>) => {
-    setMemberName(target.value);
-  };
+    setMemberName(target.value)
+  }
 
   return (
     <Dialog
@@ -110,7 +110,7 @@ const MembersModalContent = ({
         text={`Showing ${membersList.length} of ${total}`}
       />
     </Dialog>
-  );
-};
+  )
+}
 
-export default MembersModalContent;
+export default MembersModalContent

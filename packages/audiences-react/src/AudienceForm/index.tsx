@@ -1,30 +1,30 @@
-import { FormProvider, useForm } from "react-hook-form";
-import { Button, Card, Icon, Toggle, Caption, User, Flex } from "playbook-ui";
+import { FormProvider, useForm } from "react-hook-form"
+import { Button, Card, Icon, Toggle, Caption, User, Flex } from "playbook-ui"
 
 import {
   AudienceContext,
   ScimUser,
   TerritoryGroupType,
   TitleGroupType,
-} from "../types";
-import { groupName } from "../helper";
+} from "../types"
+import { groupName } from "../helper"
 
-import Header from "./Header";
+import Header from "./Header"
 import ScimObjectTypeaheadField, {
   SearchOptions,
-} from "./ScimObjectTypeaheadField";
-import CriteriaListFields, { CriteriaListProps } from "./CriteriaListFields";
+} from "./ScimObjectTypeaheadField"
+import CriteriaListFields, { CriteriaListProps } from "./CriteriaListFields"
 
 type AudienceFormProps = {
-  allowIndividuals: boolean;
-  context: AudienceContext;
-  groupOptions: CriteriaListProps["groupOptions"];
-  groupTypes: CriteriaListProps["groupTypes"];
-  loading?: boolean;
-  onSave: (updatedContext: AudienceContext) => void;
-  saving?: boolean;
-  userOptions: SearchOptions<ScimUser>;
-};
+  allowIndividuals: boolean
+  context: AudienceContext
+  groupOptions: CriteriaListProps["groupOptions"]
+  groupTypes: CriteriaListProps["groupTypes"]
+  loading?: boolean
+  onSave: (updatedContext: AudienceContext) => void
+  saving?: boolean
+  userOptions: SearchOptions<ScimUser>
+}
 
 const AudienceForm = ({
   allowIndividuals = true,
@@ -36,11 +36,11 @@ const AudienceForm = ({
   saving,
   userOptions,
 }: AudienceFormProps) => {
-  const form = useForm({ values: context });
+  const form = useForm({ values: context })
 
-  const all = form.watch("all");
+  const all = form.watch("all")
 
-  if (loading) return <Icon icon="user" />;
+  if (loading) return <Icon icon="user" />
 
   return (
     <FormProvider {...form}>
@@ -103,6 +103,6 @@ const AudienceForm = ({
         </Card.Body>
       </Card>
     </FormProvider>
-  );
-};
-export default AudienceForm;
+  )
+}
+export default AudienceForm

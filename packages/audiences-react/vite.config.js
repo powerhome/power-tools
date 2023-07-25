@@ -1,5 +1,5 @@
-const path = require("path");
-const { defineConfig } = require("vite");
+const path = require("path")
+const { defineConfig } = require("vite")
 
 module.exports = defineConfig({
   build: {
@@ -9,4 +9,4 @@ module.exports = defineConfig({
       fileName: (format) => `audiences.${format}.js`,
     },
   },
-});
+})

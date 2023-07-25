@@ -1,1 +1,1 @@
-declare module "playbook-ui";
+declare module "playbook-ui"

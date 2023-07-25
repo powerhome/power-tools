@@ -1,24 +1,24 @@
-import isEmpty from "lodash/isEmpty";
-import map from "lodash/map";
-import { Button, Dialog } from "playbook-ui";
-import { useFormContext } from "react-hook-form";
+import isEmpty from "lodash/isEmpty"
+import map from "lodash/map"
+import { Button, Dialog } from "playbook-ui"
+import { useFormContext } from "react-hook-form"
 
-import { ScimGroup } from "../types";
+import { ScimGroup } from "../types"
 
-import { CriteriaDescription } from "./CriteriaDescription";
+import { CriteriaDescription } from "./CriteriaDescription"
 import ScimObjectTypeaheadField, {
   SearchOptions,
-} from "./ScimObjectTypeaheadField";
+} from "./ScimObjectTypeaheadField"
 
 export type CriteriaFieldsModalProps = {
-  current: string;
-  onSave: () => void;
-  onCancel: () => void;
-  groupTypes: string[] | (() => string[]);
+  current: string
+  onSave: () => void
+  onCancel: () => void
+  groupTypes: string[] | (() => string[])
   groupOptions: {
-    [groupType: string]: SearchOptions<ScimGroup>;
-  };
-};
+    [groupType: string]: SearchOptions<ScimGroup>
+  }
+}
 export default function CriteriaFieldsModal({
   current,
   groupOptions,
@@ -26,8 +26,8 @@ export default function CriteriaFieldsModal({
   onSave,
   onCancel,
 }: CriteriaFieldsModalProps) {
-  const { watch } = useFormContext();
-  const value = watch(current);
+  const { watch } = useFormContext()
+  const value = watch(current)
 
   return (
     <Dialog onClose={onCancel} opened>
@@ -53,5 +53,5 @@ export default function CriteriaFieldsModal({
         <Button onClick={onCancel} text="Cancel" variant="link" />
       </Dialog.Footer>
     </Dialog>
-  );
+  )
 }

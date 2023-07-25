@@ -3,11 +3,11 @@ import get from "lodash/get"
 import MembersModalContent from "./MembersModalContent"
 
 type AllMembersModalProps = {
-  allAudienceMembers: boolean,
-  show: boolean,
-  onHide: () => void,
-  ownerId: string,
-  ownerType: string,
+  allAudienceMembers: boolean
+  show: boolean
+  onHide: () => void
+  ownerId: string
+  ownerType: string
 }
 
 const AllMembersModal = ({
@@ -17,7 +17,7 @@ const AllMembersModal = ({
   ownerId,
   ownerType,
 }: AllMembersModalProps) => {
-  const [memberName, setMemberName] = useState('')
+  const [memberName, setMemberName] = useState("")
 
   const data = {
     members: {
@@ -25,8 +25,8 @@ const AllMembersModal = ({
       totalEntries: 0,
     },
   }
-  const loading = !show;
-  const fetchMore = () => undefined;
+  const loading = !show
+  const fetchMore = () => undefined
 
   const membersList = get(data, "members.nodes", [])
   const total = get(data, "members.totalEntries", 0)
@@ -35,15 +35,15 @@ const AllMembersModal = ({
 
   return (
     <MembersModalContent
-        allAudienceMembers={allAudienceMembers}
-        fetchMore={fetchMore}
-        loading={loading}
-        memberName={memberName}
-        membersList={membersList}
-        onHide={onHide}
-        setMemberName={setMemberName}
-        show={show}
-        total={total}
+      allAudienceMembers={allAudienceMembers}
+      fetchMore={fetchMore}
+      loading={loading}
+      memberName={memberName}
+      membersList={membersList}
+      onHide={onHide}
+      setMemberName={setMemberName}
+      show={show}
+      total={total}
     />
   )
 }

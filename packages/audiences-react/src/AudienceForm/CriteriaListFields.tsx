@@ -1,56 +1,56 @@
-import { useState } from "react";
-import { Button, Flex, FlexItem } from "playbook-ui";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useState } from "react"
+import { Button, Flex, FlexItem } from "playbook-ui"
+import { useFieldArray, useFormContext } from "react-hook-form"
 
-import { AudienceCriteria } from "../types";
+import { AudienceCriteria } from "../types"
 
-import CriteriaActions from "./CriteriaActions";
-import CriteriaCard from "./CriteriaCard";
+import CriteriaActions from "./CriteriaActions"
+import CriteriaCard from "./CriteriaCard"
 import CriteriaFieldsModal, {
   CriteriaFieldsModalProps,
-} from "./CriteriaFieldsModal";
+} from "./CriteriaFieldsModal"
 
-type AudienceCriteriaField = AudienceCriteria & { id: string };
+type AudienceCriteriaField = AudienceCriteria & { id: string }
 export type CriteriaListProps = {
-  name: string;
-  groupTypes: CriteriaFieldsModalProps["groupTypes"];
-  groupOptions: CriteriaFieldsModalProps["groupOptions"];
-};
+  name: string
+  groupTypes: CriteriaFieldsModalProps["groupTypes"]
+  groupOptions: CriteriaFieldsModalProps["groupOptions"]
+}
 export default function CriteriaListFields({
   name,
   groupTypes,
   groupOptions,
 }: CriteriaListProps) {
-  const form = useFormContext();
-  const { fields, remove, append } = useFieldArray({ name });
+  const form = useFormContext()
+  const { fields, remove, append } = useFieldArray({ name })
   const [editCriteriaField, setEditCriteriaField] =
-    useState<Parameters<typeof form.resetField>[0]>();
+    useState<Parameters<typeof form.resetField>[0]>()
 
-  const watchFieldArray = form.watch(name);
+  const watchFieldArray = form.watch(name)
   const controlledFields = fields.map((field, index) => {
     return {
       ...field,
       ...watchFieldArray[index],
-    };
-  });
+    }
+  })
 
-  const closeEditor = () => setEditCriteriaField(undefined);
+  const closeEditor = () => setEditCriteriaField(undefined)
   const editCriteria = (index: number) =>
-    setEditCriteriaField(`${name}.${index}`);
+    setEditCriteriaField(`${name}.${index}`)
 
   const handleCreateCriteria = () => {
-    append({});
-    editCriteria(fields.length);
-  };
+    append({})
+    editCriteria(fields.length)
+  }
   const handleRemoveCriteria = (index: number) => {
     if (confirm("Remove criteria?")) {
-      remove(index);
+      remove(index)
     }
-  };
+  }
   const handleCancelEditCriteria = () => {
-    form.resetField(editCriteriaField!);
-    closeEditor();
-  };
+    form.resetField(editCriteriaField!)
+    closeEditor()
+  }
 
   return (
     <Flex orientation="column" justify="center" align="stretch">
@@ -64,7 +64,7 @@ export default function CriteriaListFields({
                 onRequestViewMembers={() => {}}
               />
             </CriteriaCard>
-          )
+          ),
         )}
       </FlexItem>
 
@@ -87,5 +87,5 @@ export default function CriteriaListFields({
         />
       )}
     </Flex>
-  );
+  )
 }

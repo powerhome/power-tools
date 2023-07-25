@@ -1,18 +1,18 @@
-import { Button, Icon, PbReactPopover, List, ListItem } from "playbook-ui";
+import { Button, Icon, PbReactPopover, List, ListItem } from "playbook-ui"
 
-import { useToggler } from "../hooks";
+import { useToggler } from "../hooks"
 
 type CriteriaActionsProps = {
-  onRequestRemove: () => void;
-  onRequestEdit: () => void;
-  onRequestViewMembers: () => void;
-};
+  onRequestRemove: () => void
+  onRequestEdit: () => void
+  onRequestViewMembers: () => void
+}
 export default function CriteriaActions({
   onRequestRemove,
   onRequestEdit,
   onRequestViewMembers,
 }: CriteriaActionsProps) {
-  const [showMenu, toggleShowMenu, setShowMenu] = useToggler(false);
+  const [showMenu, toggleShowMenu, setShowMenu] = useToggler(false)
 
   const actionPopoverTrigger = (
     <div className="pb_circle_icon_button_kit">
@@ -20,14 +20,14 @@ export default function CriteriaActions({
         <Icon fixedWidth fontStyle="fas" icon="ellipsis-vertical" />
       </Button>
     </div>
-  );
+  )
 
   const handleAndClose = (handler: () => void) => {
     return () => {
-      handler();
-      setShowMenu(false);
-    };
-  };
+      handler()
+      setShowMenu(false)
+    }
+  }
 
   return (
     <PbReactPopover
@@ -68,5 +68,5 @@ export default function CriteriaActions({
         </ListItem>
       </List>
     </PbReactPopover>
-  );
+  )
 }
