@@ -26,7 +26,7 @@ on:
         required: false
         type: string
       exclude:
-        default: '[]'
+        default: "[]"
         required: false
         type: string
 
@@ -42,8 +42,8 @@ jobs:
         bundler: ${{ fromJSON(inputs.bundler) }}
         exclude: ${{ fromJSON(inputs.exclude)}}
     env:
-      BUNDLE_GEMFILE: '${{ matrix.gemfile }}'
-      BUNDLER_VERSION: '${{ matrix.bundler }}'
+      BUNDLE_GEMFILE: "${{ matrix.gemfile }}"
+      BUNDLER_VERSION: "${{ matrix.bundler }}"
       RAILS_ENV: test
     steps:
       - uses: actions/checkout@v3
@@ -56,7 +56,7 @@ jobs:
           working-directory: ${{ inputs.workdir }}
       - name: Before build
         if: ${{ inputs.before_build != '' }}
-        run: '${{ inputs.before_build }}'
+        run: "${{ inputs.before_build }}"
       - name: Run the build script
         working-directory: ${{ inputs.workdir }}
         run: bundle exec rake

@@ -3,50 +3,9 @@ name: eslint-config
 on:
   push:
 
-env:
-  PROJECT_DIR: packages/eslint-config
-  NODE_BUILD_VERSION: '16.18.0'
-  REGISTRY_URL: 'https://registry.npmjs.org'
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [ 16, 18 ]
-    name: Node ${{ matrix.node }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Node ${{ matrix.node }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-      - run: yarn install --frozen-lockfile
-        working-directory: ${{ env.PROJECT_DIR }}
-      - name: Run ESlint
-        run: yarn lint
-        working-directory: ${{ env.PROJECT_DIR }}
-      - name: Run Prettier
-        run: yarn prettier
-        working-directory: ${{ env.PROJECT_DIR }}
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    name: Release
-    if: ${{ contains(github.ref, 'refs/tags/v') && contains(github.ref, github.workflow) }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Node ${{ env.NODE_BUILD_VERSION }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_BUILD_VERSION }}
-          registry-url: ${{ env.REGISTRY_URL }}
-      - run: yarn install --frozen-lockfile
-        working-directory: ${{ env.PROJECT_DIR }}
-      - run: yarn expose-readme
-        working-directory: ${{ env.PROJECT_DIR }}
-      - run: yarn publish
-        working-directory: ${{ env.PROJECT_DIR }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  node:
+    uses: ./.github/workflows/_node-workflow.yml
+    with:
+      workdir: "packages/${{ github.workflow }}"
+    secrets: inherit

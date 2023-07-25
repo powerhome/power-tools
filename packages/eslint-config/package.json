@@ -17,10 +17,12 @@
     "eslintconfig"
   ],
   "scripts": {
-    "lint": "eslint lib/*",
+    "lint": "yarn eslint && yarn prettier",
+    "eslint": "eslint lib/*",
     "prettier": "prettier -c --config ./lib/prettier.js .",
     "prettier:write": "prettier --write --config ./lib/prettier.js .",
-    "expose-readme": "cp docs/README.md ."
+    "build": "cp docs/README.md .",
+    "test": "echo 'No tests on eslint-config'"
   },
   "peerDependencies": {
     "@typescript-eslint/eslint-plugin": "6.1.0",
