@@ -1,0 +1,11 @@
+name: audiences-react
+
+on:
+  push:
+
+jobs:
+  node:
+    uses: ./.github/workflows/_node-workflow.yml
+    with:
+      workdir: "packages/${{ github.workflow }}"
+    secrets: inherit
