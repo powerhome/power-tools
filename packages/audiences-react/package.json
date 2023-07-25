@@ -17,10 +17,10 @@
     "dev": "vite",
     "build": "npx tsc --noEmit && vite build",
     "lint": "yarn eslint && yarn prettier",
+    "test": "echo 'No tests here';",
     "eslint": "eslint **/*.ts",
     "prettier": "prettier -c .",
-    "prettier:write": "prettier --write .",
-    "preview": "vite preview"
+    "prettier:write": "prettier --write ."
   },
   "repository": {
     "type": "git",
