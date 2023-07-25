@@ -6,8 +6,21 @@ AllCops:
 
 Style/FrozenStringLiteralComment:
   Exclude:
-    - 'gemfiles/*'
+    - "gemfiles/*"
+    - "spec/dummy/db/schema.rb"
 
 Bundler/OrderedGems:
   Exclude:
-    - 'gemfiles/*'
+    - "gemfiles/*"
+
+Style/NumericLiterals:
+  Exclude:
+    - "spec/dummy/db/schema.rb"
+
+Style/WordArray:
+  Exclude:
+    - "spec/dummy/db/schema.rb"
+
+Layout/EmptyLinesAroundBlockBody:
+  Exclude:
+    - "spec/dummy/db/schema.rb"

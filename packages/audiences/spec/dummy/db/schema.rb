@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -12,13 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_230_725_194_934) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_25_202008) do
   create_table "audiences_contexts", force: :cascade do |t|
     t.string "owner_type", null: false
     t.integer "owner_id", null: false
     t.boolean "match_all", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index %w[owner_type owner_id], name: "index_audiences_contexts_on_owner"
+    t.index ["owner_type", "owner_id"], name: "index_audiences_contexts_on_owner"
   end
+
+  create_table "example_owners", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
 end

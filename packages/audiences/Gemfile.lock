@@ -225,6 +225,8 @@ GEM
       rubocop-factory_bot (~> 2.22)
     ruby-progressbar (1.13.0)
     rubyzip (2.3.2)
+    shoulda-matchers (5.1.0)
+      activesupport (>= 5.2.0)
     sqlite3 (1.6.3-arm64-darwin)
     sqlite3 (1.6.3-x86_64-linux)
     thor (1.2.2)
@@ -254,6 +256,7 @@ DEPENDENCIES
   rspec-rails (>= 3.0)
   rubocop (>= 1.32)
   rubocop-powerhome!
+  shoulda-matchers (~> 5.0)
   sqlite3
 
 BUNDLED WITH
