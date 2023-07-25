@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "audiences"
+
 module Audiences
   # Audiences Engine
   #

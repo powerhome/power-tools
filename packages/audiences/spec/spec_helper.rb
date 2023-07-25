@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
-require "bundler"
-
-Bundler.require :default, :development
-
-Combustion.initialize! :all
-
-require "audiences/engine"
-require "rspec/rails"
+require "bundler/setup"
 
 RSpec.configure do |config|
   config.use_transactional_fixtures = true
