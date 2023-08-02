@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
 module Audiences
-  class ApplicationController < ActionController::Base
+  class ApplicationController < ActionController::API
   end
 end

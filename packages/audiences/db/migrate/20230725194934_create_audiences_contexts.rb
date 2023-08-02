@@ -8,5 +8,7 @@ class CreateAudiencesContexts < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
+    add_index :audiences_contexts, %w[owner_type owner_id],
+              name: "index_audiences_contexts_on_owner_type_and_owner_id", unique: true
   end
 end

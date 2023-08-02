@@ -18,6 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_25_202008) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["owner_type", "owner_id"], name: "index_audiences_contexts_on_owner"
+    t.index ["owner_type", "owner_id"], name: "index_audiences_contexts_on_owner_type_and_owner_id", unique: true
   end
 
   create_table "example_owners", force: :cascade do |t|

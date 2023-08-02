@@ -18,6 +18,7 @@ end
 
 RSpec.configure do |config|
   config.include Rack::Test::Methods, type: :request
+  config.include Rails.application.routes.url_helpers, type: :request
 
   config.infer_spec_type_from_file_location!
   config.use_transactional_fixtures = true
