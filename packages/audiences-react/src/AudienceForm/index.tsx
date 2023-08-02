@@ -1,5 +1,5 @@
 import { FormProvider, useForm } from "react-hook-form"
-import { Button, Card, Icon, Toggle, Caption, User, Flex } from "playbook-ui"
+import { Button, Card, Toggle, Caption, User, Flex } from "playbook-ui"
 
 import {
   AudienceContext,
@@ -31,16 +31,13 @@ const AudienceForm = ({
   context,
   groupOptions,
   groupTypes,
-  loading,
   onSave,
   saving,
   userOptions,
 }: AudienceFormProps) => {
   const form = useForm({ values: context })
 
-  const all = form.watch("all")
-
-  if (loading) return <Icon icon="user" />
+  const all = form.watch("match_all")
 
   return (
     <FormProvider {...form}>
@@ -49,7 +46,7 @@ const AudienceForm = ({
           <Header context={context} touched={form.formState.isDirty}>
             <Flex align="center">
               <Toggle>
-                <input {...form.register("all")} type="checkbox" />
+                <input {...form.register("match_all")} type="checkbox" />
               </Toggle>
               <Caption marginLeft="xs" size="xs" text="All Employees" />
             </Flex>

@@ -7,135 +7,17 @@ import { StrictMode } from "react"
 import ReactDOM from "react-dom"
 import { Title } from "playbook-ui"
 
-import AudienceForm from "./AudienceForm"
-import {
-  DepartmentGroupType,
-  TerritoryGroupType,
-  TitleGroupType,
-} from "./types"
+import { AudienceEditor } from "./AudienceEditor"
+
+const audienceKey =
+  "BAh7CEkiCGdpZAY6BkVUSSIfZ2lkOi8vZHVtbXkvRXhhbXBsZU93bmVyLzEGOwBUSSIMcHVycG9zZQY7AFRJIg5hdWRpZW5jZXMGOwBUSSIPZXhwaXJlc19hdAY7AFRJIh0yMDIzLTA5LTAyVDE4OjE1OjQxLjQxNloGOwBU--7bcda79e962d221c4820cc4afebd194d288d7dc5"
+const audiencContextUri = `http://localhost:3000/audiences/${audienceKey}`
 
 const rootNode = document.getElementById("root")
 ReactDOM.render(
   <StrictMode>
     <Title>Audiences Example</Title>
-    <AudienceForm
-      context={{
-        context:
-          "BAhJIh5naWQ6Ly9pZGluYWlkaS9Vc2VyLzM5NTk5BjoGRVQ=--81d7358dd5ee2ca33189bb404592df5e8d11420e",
-        all: false,
-        criteria: [
-          {
-            count: 10,
-            groups: {
-              Title: [
-                {
-                  groupType: "Title",
-                  name: "Senior Developer",
-                  id: "123",
-                },
-              ],
-              Department: [
-                {
-                  groupType: "Department",
-                  name: "Business Technology",
-                  id: "123",
-                },
-              ],
-              Territory: [
-                {
-                  groupType: "Territory",
-                  name: "Philadelphia",
-                  id: "1",
-                },
-              ],
-            },
-          },
-          {
-            count: 5,
-            groups: {
-              Title: [
-                {
-                  groupType: "Title",
-                  name: "Director",
-                  id: "123",
-                },
-              ],
-              Department: [
-                {
-                  groupType: "Department",
-                  name: "Business Technology",
-                  id: "123",
-                },
-              ],
-              Territory: [
-                {
-                  groupType: "Territory",
-                  name: "Philadelphia",
-                  id: "1",
-                },
-              ],
-            },
-          },
-        ],
-        extraMembers: [
-          {
-            id: "1",
-            name: "Wade Winningham",
-            groups: [],
-            username: "wwinningham",
-            photoUrl: "https://nitro.powerhrg.com/api/v1/users/1/avatar/badge",
-          },
-        ],
-        totalMembers: 15,
-      }}
-      allowIndividuals
-      onSave={(context) => console.log(context)}
-      userOptions={[
-        {
-          id: "1",
-          name: "Wade Winningham",
-          groups: [],
-          username: "wwinningham",
-          photoUrl: "https://nitro.powerhrg.com/api/v1/users/1/avatar/badge",
-        },
-        {
-          id: "2",
-          name: "Tim Wenhold",
-          groups: [],
-          username: "twenhold",
-          photoUrl: "https://nitro.powerhrg.com/api/v1/users/2/avatar/badge",
-        },
-      ]}
-      groupTypes={[TitleGroupType, DepartmentGroupType, TerritoryGroupType]}
-      groupOptions={{
-        Territory: [
-          {
-            groupType: "Territory",
-            name: "Philadelphia",
-            id: "1",
-          },
-        ],
-        Department: [
-          {
-            groupType: "Department",
-            name: "Business Technology",
-            id: "123",
-          },
-        ],
-        Title: [
-          {
-            groupType: "Title",
-            name: "Director",
-            id: "123",
-          },
-          {
-            groupType: "Title",
-            name: "Developer",
-            id: "321",
-          },
-        ],
-      }}
-    />
+    <AudienceEditor uri={audiencContextUri} />
   </StrictMode>,
   rootNode,
 )
