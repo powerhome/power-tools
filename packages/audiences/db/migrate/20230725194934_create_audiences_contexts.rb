@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateAudiencesContexts < ActiveRecord::Migration[7.0]
+class CreateAudiencesContexts < ActiveRecord::Migration[6.0]
   def change
     create_table :audiences_contexts do |t|
       t.references :owner, polymorphic: true, null: false
