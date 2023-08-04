@@ -28,10 +28,6 @@ export const TerritoryGroupType = "Territory"
 export const TitleGroupType = "Title"
 export const DepartmentGroupType = "Department"
 
-export interface Grouped {
-  groups: ScimGroup[]
-}
-
 export type ScimListResponse<T> = {
   totalEntries: number
   Resources: T[]
@@ -58,9 +54,7 @@ export interface BaseScim {
 }
 
 export type ScimUser = BaseScim & {
-  photoUrl: string
   username: string
-  groups: ScimGroup[]
 }
 
 export type ScimGroup = BaseScim

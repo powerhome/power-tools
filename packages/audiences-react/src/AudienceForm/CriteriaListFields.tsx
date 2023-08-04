@@ -7,6 +7,7 @@ import { AudienceCriteria } from "../types"
 import CriteriaActions from "./CriteriaActions"
 import CriteriaCard from "./CriteriaCard"
 import CriteriaFieldsModal from "./CriteriaFieldsModal"
+
 type AudienceCriteriaField = AudienceCriteria & { id: string }
 export type CriteriaListProps = {
   name: string

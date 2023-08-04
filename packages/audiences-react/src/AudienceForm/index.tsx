@@ -1,20 +1,11 @@
 import { FormProvider, useForm } from "react-hook-form"
 import { Button, Card, Toggle, Caption, User, Flex } from "playbook-ui"
 
-import {
-  AudienceContext,
-  ScimUser,
-  TerritoryGroupType,
-  TitleGroupType,
-  UserSchema,
-} from "../types"
-import { groupName } from "../helper"
+import { AudienceContext, ScimUser, UserSchema } from "../types"
 
 import Header from "./Header"
 import ScimResourceTypeahead from "./ScimResourceTypeahead"
 import CriteriaListFields from "./CriteriaListFields"
-import filter from "lodash/filter"
-import { useMemo } from "react"
 import { useScimResources } from "../useScimResources"
 
 type AudienceFormProps = {
@@ -58,7 +49,6 @@ const AudienceForm = ({
               <ScimResourceTypeahead
                 label="Other Members"
                 name="extraMembers"
-                options={[]}
                 resource={userResource}
                 valueComponent={(user: ScimUser) => (
                   <User

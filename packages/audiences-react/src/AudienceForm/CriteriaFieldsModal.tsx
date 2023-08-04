@@ -34,7 +34,6 @@ export default function CriteriaFieldsModal({
             key={`${current}.groups.${resource.id}`}
             label={resource.name}
             name={`${current}.groups.${resource.id}` as const}
-            options={[]}
           />
         ))}
       </Dialog.Body>

@@ -9,10 +9,6 @@ import {
   ScimUser,
 } from "../types"
 import { useFetch } from "use-http"
-type SearchCallback<T> = (
-  search: string,
-  callback: (options: T[]) => void,
-) => undefined
 
 interface PlaybookOption {
   label: string
@@ -35,13 +31,11 @@ function mapPlaybookOptions(
 export interface ScimResourceTypeahead {
   name: string
   resource: ScimResourceType
-  options: BaseScim[]
   valueComponent?: any
   label: string
 }
 export default function ScimResourceTypeahead({
   name,
-  options,
   resource,
   ...typeaheadProps
 }: ScimResourceTypeahead) {
@@ -54,22 +48,13 @@ export default function ScimResourceTypeahead({
     const options = await get()
     callback(mapPlaybookOptions(options.Resources))
   }
-
-  const handleLoadOptions: SearchCallback<PlaybookOption> = (
-    search,
-    playbookOptions,
-  ) => {
-    resource
-      ? searchResourceOptions(search, playbookOptions)
-      : playbookOptions(mapPlaybookOptions(options))
-  }
   const { field } = useController({ name })
 
   return (
     <Typeahead
       isMulti
       async
-      loadOptions={debounce(handleLoadOptions, 300)}
+      loadOptions={debounce(searchResourceOptions, 300)}
       placeholder=""
       {...typeaheadProps}
       {...field}
