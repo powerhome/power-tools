@@ -1,27 +1,30 @@
 import debounce from "lodash/debounce"
-import isArray from "lodash/isArray"
 import { useController } from "react-hook-form"
 import { Typeahead } from "playbook-ui"
 
-import { BaseScim } from "../types"
+import {
+  BaseScim,
+  ScimListResponse,
+  ScimResourceType,
+  ScimUser,
+} from "../types"
+import { useFetch } from "use-http"
+type SearchCallback<T> = (
+  search: string,
+  callback: (options: T[]) => void,
+) => undefined
 
 interface PlaybookOption {
   label: string
   value: any
   imageUrl?: string
 }
-export type SearchCallback<T> = (
-  search: string,
-  callback: (options: T[]) => void,
-) => undefined
-export type SearchOptions<T> = T[] | SearchCallback<T>
-
 function mapPlaybookOptions(
   objects: BaseScim[],
 ): (BaseScim & PlaybookOption)[] {
   return objects
     ? objects.map((object) => ({
-        label: object.name,
+        label: object.displayName,
         value: object.id,
         imageUrl: object.photoUrl,
         ...object,
@@ -29,24 +32,35 @@ function mapPlaybookOptions(
     : []
 }
 
-export interface ScimObjectTypeaheadFieldProps {
+export interface ScimResourceTypeahead {
   name: string
-  options: SearchOptions<BaseScim>
+  resource: ScimResourceType
+  options: BaseScim[]
   valueComponent?: any
   label: string
 }
-export default function ScimObjectTypeaheadField({
+export default function ScimResourceTypeahead({
   name,
   options,
+  resource,
   ...typeaheadProps
-}: ScimObjectTypeaheadFieldProps) {
-  const async = !isArray(options)
+}: ScimResourceTypeahead) {
+  const { get } = useFetch<ScimListResponse<BaseScim>>(resource.endpoint)
+
+  const searchResourceOptions = async (
+    _search: string,
+    callback: (options: PlaybookOption[]) => void,
+  ) => {
+    const options = await get()
+    callback(mapPlaybookOptions(options.Resources))
+  }
+
   const handleLoadOptions: SearchCallback<PlaybookOption> = (
     search,
     playbookOptions,
   ) => {
-    async
-      ? options(search, (users) => playbookOptions(mapPlaybookOptions(users)))
+    resource
+      ? searchResourceOptions(search, playbookOptions)
       : playbookOptions(mapPlaybookOptions(options))
   }
   const { field } = useController({ name })

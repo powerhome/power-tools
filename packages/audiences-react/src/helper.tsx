@@ -1,11 +1,10 @@
-import find from "lodash/find"
 import join from "lodash/join"
 import map from "lodash/map"
 
-import type { Grouped, ScimGroup } from "./types"
+import type { ScimGroup } from "./types"
 
 export function toSentence(groups: ScimGroup[]) {
-  const names = map(groups, "name")
+  const names = map(groups, "displayName")
 
   if (names.length == 1) {
     return names
@@ -21,12 +20,4 @@ export function toSentence(groups: ScimGroup[]) {
   }
 
   return ""
-}
-
-export function groupName(
-  { groups }: Grouped,
-  groupType: string,
-): string | undefined {
-  const group = find(groups, { groupType })
-  return group?.name
 }

@@ -6,21 +6,12 @@ import { AudienceCriteria } from "../types"
 
 import CriteriaActions from "./CriteriaActions"
 import CriteriaCard from "./CriteriaCard"
-import CriteriaFieldsModal, {
-  CriteriaFieldsModalProps,
-} from "./CriteriaFieldsModal"
-
+import CriteriaFieldsModal from "./CriteriaFieldsModal"
 type AudienceCriteriaField = AudienceCriteria & { id: string }
 export type CriteriaListProps = {
   name: string
-  groupTypes: CriteriaFieldsModalProps["groupTypes"]
-  groupOptions: CriteriaFieldsModalProps["groupOptions"]
 }
-export default function CriteriaListFields({
-  name,
-  groupTypes,
-  groupOptions,
-}: CriteriaListProps) {
+export default function CriteriaListFields({ name }: CriteriaListProps) {
   const form = useFormContext()
   const { fields, remove, append } = useFieldArray({ name })
   const [editCriteriaField, setEditCriteriaField] =
@@ -80,8 +71,6 @@ export default function CriteriaListFields({
       {editCriteriaField !== undefined && (
         <CriteriaFieldsModal
           current={editCriteriaField}
-          groupOptions={groupOptions}
-          groupTypes={groupTypes}
           onCancel={handleCancelEditCriteria}
           onSave={closeEditor}
         />

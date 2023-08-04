@@ -6,36 +6,33 @@ import {
   ScimUser,
   TerritoryGroupType,
   TitleGroupType,
+  UserSchema,
 } from "../types"
 import { groupName } from "../helper"
 
 import Header from "./Header"
-import ScimObjectTypeaheadField, {
-  SearchOptions,
-} from "./ScimObjectTypeaheadField"
-import CriteriaListFields, { CriteriaListProps } from "./CriteriaListFields"
+import ScimResourceTypeahead from "./ScimResourceTypeahead"
+import CriteriaListFields from "./CriteriaListFields"
+import filter from "lodash/filter"
+import { useMemo } from "react"
+import { useScimResources } from "../useScimResources"
 
 type AudienceFormProps = {
   allowIndividuals: boolean
   context: AudienceContext
-  groupOptions: CriteriaListProps["groupOptions"]
-  groupTypes: CriteriaListProps["groupTypes"]
   loading?: boolean
   onSave: (updatedContext: AudienceContext) => void
   saving?: boolean
-  userOptions: SearchOptions<ScimUser>
 }
 
 const AudienceForm = ({
   allowIndividuals = true,
   context,
-  groupOptions,
-  groupTypes,
   onSave,
   saving,
-  userOptions,
 }: AudienceFormProps) => {
   const form = useForm({ values: context })
+  const [userResource] = useScimResources(UserSchema)
 
   const all = form.watch("match_all")
 
@@ -55,24 +52,19 @@ const AudienceForm = ({
 
         {all || (
           <Card.Body>
-            <CriteriaListFields
-              name="criteria"
-              groupOptions={groupOptions}
-              groupTypes={groupTypes}
-            />
+            <CriteriaListFields name="criteria" />
 
-            {allowIndividuals && (
-              <ScimObjectTypeaheadField
+            {allowIndividuals && userResource && (
+              <ScimResourceTypeahead
                 label="Other Members"
                 name="extraMembers"
-                options={userOptions}
+                options={[]}
+                resource={userResource}
                 valueComponent={(user: ScimUser) => (
                   <User
                     avatar
                     avatarUrl={user.photoUrl}
-                    name={user.name}
-                    territory={groupName(user, TerritoryGroupType)}
-                    title={groupName(user, TitleGroupType)}
+                    name={user.displayName}
                   />
                 )}
               />

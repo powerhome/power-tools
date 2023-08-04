@@ -3,29 +3,22 @@ import map from "lodash/map"
 import { Button, Dialog } from "playbook-ui"
 import { useFormContext } from "react-hook-form"
 
-import { ScimGroup } from "../types"
-
 import { CriteriaDescription } from "./CriteriaDescription"
-import ScimObjectTypeaheadField, {
-  SearchOptions,
-} from "./ScimObjectTypeaheadField"
+import ScimResourceTypeahead from "./ScimResourceTypeahead"
+import { GroupSchema, ScimResourceType } from "../types"
+import { useScimResources } from "../useScimResources"
 
 export type CriteriaFieldsModalProps = {
   current: string
   onSave: () => void
   onCancel: () => void
-  groupTypes: string[] | (() => string[])
-  groupOptions: {
-    [groupType: string]: SearchOptions<ScimGroup>
-  }
 }
 export default function CriteriaFieldsModal({
   current,
-  groupOptions,
-  groupTypes,
   onSave,
   onCancel,
 }: CriteriaFieldsModalProps) {
+  const resourceTypes = useScimResources(GroupSchema)
   const { watch } = useFormContext()
   const value = watch(current)
 
@@ -35,12 +28,13 @@ export default function CriteriaFieldsModal({
         <CriteriaDescription criteria={value} />
       </Dialog.Header>
       <Dialog.Body>
-        {map(groupTypes, (type) => (
-          <ScimObjectTypeaheadField
-            key={`${current}.groups.${type}`}
-            label={type}
-            name={`${current}.groups.${type}` as const}
-            options={groupOptions[type]}
+        {map(resourceTypes, (resource) => (
+          <ScimResourceTypeahead
+            resource={resource}
+            key={`${current}.groups.${resource.id}`}
+            label={resource.name}
+            name={`${current}.groups.${resource.id}` as const}
+            options={[]}
           />
         ))}
       </Dialog.Body>

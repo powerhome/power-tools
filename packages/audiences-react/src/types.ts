@@ -19,6 +19,11 @@ export type Member = {
 
 // SCIM Version
 
+export const UserSchema = "urn:ietf:params:scim:schemas:core:2.0:User"
+export const GroupSchema = "urn:ietf:params:scim:schemas:core:2.0:Group"
+
+export type SchemaType = typeof UserSchema | typeof GroupSchema | never
+
 export const TerritoryGroupType = "Territory"
 export const TitleGroupType = "Title"
 export const DepartmentGroupType = "Department"
@@ -27,25 +32,38 @@ export interface Grouped {
   groups: ScimGroup[]
 }
 
-export interface BaseScim {
-  id: string
-  name: string
-  photoUrl?: string
+export type ScimListResponse<T> = {
+  totalEntries: number
+  Resources: T[]
 }
 
-export type ScimUser = {
+export type ScimResourceType = {
   id: string
   name: string
+  endpoint: string
+  schema: string
+  meta: {
+    resourceType: string
+  }
+}
+
+export interface BaseScim {
+  schemas: SchemaType[]
+  id: string
+  displayName: string
+  photoUrl?: string
+  meta: {
+    resourceType: string
+  }
+}
+
+export type ScimUser = BaseScim & {
   photoUrl: string
   username: string
   groups: ScimGroup[]
 }
 
-export type ScimGroup = {
-  id: string
-  name: string
-  groupType: string
-}
+export type ScimGroup = BaseScim
 
 export type AudienceCriteria = {
   count?: number
