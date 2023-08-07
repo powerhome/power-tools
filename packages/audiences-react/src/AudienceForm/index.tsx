@@ -31,7 +31,7 @@ const AudienceForm = ({
     <FormProvider {...form}>
       <Card margin="xs" padding="xs">
         <Card.Header headerColor="white">
-          <Header context={context} touched={form.formState.isDirty}>
+          <Header context={context}>
             <Flex align="center">
               <Toggle>
                 <input {...form.register("match_all")} type="checkbox" />
