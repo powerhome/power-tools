@@ -8,6 +8,7 @@ require File.expand_path "dummy/config/environment", __dir__
 
 require "rspec/rails"
 require "shoulda/matchers"
+require "webmock/rspec"
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|

@@ -17,3 +17,5 @@ gem "rubocop", ">= 1.32"
 gem "rubocop-powerhome", path: "../rubocop-powerhome"
 gem "shoulda-matchers", "~> 5.0"
 gem "sqlite3"
+
+gem "webmock", "~> 3.18"

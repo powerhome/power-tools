@@ -82,6 +82,8 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
+    addressable (2.8.5)
+      public_suffix (>= 2.0.2, < 6.0)
     appraisal (2.4.1)
       bundler
       rake
@@ -89,12 +91,15 @@ GEM
     ast (2.4.2)
     builder (3.2.4)
     concurrent-ruby (1.2.2)
+    crack (0.4.5)
+      rexml
     crass (1.0.6)
     date (3.3.3)
     diff-lcs (1.5.0)
     erubi (1.12.0)
     globalid (1.1.0)
       activesupport (>= 5.0)
+    hashdiff (1.0.1)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     json (2.6.3)
@@ -136,6 +141,7 @@ GEM
     parser (3.2.2.3)
       ast (~> 2.4.1)
       racc
+    public_suffix (5.0.3)
     puma (6.3.0)
       nio4r (~> 2.0)
     racc (1.7.1)
@@ -239,6 +245,10 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.4.2)
+    webmock (3.18.1)
+      addressable (>= 2.8.0)
+      crack (>= 0.3.2)
+      hashdiff (>= 0.4.0, < 2.0.0)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -264,6 +274,7 @@ DEPENDENCIES
   rubocop-powerhome!
   shoulda-matchers (~> 5.0)
   sqlite3
+  webmock (~> 3.18)
 
 BUNDLED WITH
    2.4.17
