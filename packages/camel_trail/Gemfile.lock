@@ -157,7 +157,7 @@ GEM
       bundler (>= 1.15.0)
       railties (= 6.1.7.4)
       sprockets-rails (>= 2.0.0)
-    rails-dom-testing (2.1.1)
+    rails-dom-testing (2.2.0)
       activesupport (>= 5.0.0)
       minitest
       nokogiri (>= 1.6)
@@ -195,7 +195,7 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.12.1)
-    rubocop (1.55.0)
+    rubocop (1.55.1)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
@@ -253,7 +253,7 @@ GEM
     xml-simple (1.1.9)
       rexml
     yard (0.9.21)
-    zeitwerk (2.6.10)
+    zeitwerk (2.6.11)
 
 PLATFORMS
   arm64-darwin-22
