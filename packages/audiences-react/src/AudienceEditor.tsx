@@ -9,7 +9,7 @@ type AudienceEditorProps = {
   scimUri: string
   allowIndividuals?: boolean
 }
-export function AudienceEditor({
+export default function AudienceEditor({
   uri,
   scimUri,
   allowIndividuals = true,

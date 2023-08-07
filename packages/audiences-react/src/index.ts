@@ -1,1 +1,1 @@
-export { default } from "./AudienceForm"
+export { default as AudienceEditor } from "./AudienceEditor"
