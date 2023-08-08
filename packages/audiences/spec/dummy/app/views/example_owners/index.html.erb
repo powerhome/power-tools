@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Example owners</h1>
+
+<div id="example_owners">
+  <% @example_owners.each do |example_owner| %>
+    <%= render example_owner %>
+    <p>
+      <%= link_to "Show this example owner", example_owner %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New example owner", new_example_owner_path %>

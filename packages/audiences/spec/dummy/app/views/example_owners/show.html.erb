@@ -1,1 +1,11 @@
-<%= tag(:div, data: { context: audience_context_path(@example_owner), scim: audience_scim_proxy_path }) %>
+<p style="color: green"><%= notice %></p>
+
+<div>
+  <%= link_to "Edit this example owner", edit_example_owner_path(@example_owner) %> |
+  <%= link_to "Back to example owners", example_owners_path %>
+  <%= button_to "Destroy this example owner", @example_owner, method: :delete %>
+</div>
+
+<%= render @example_owner %>
+
+<%= tag(:div, data: { context: audience_context_path(@example_owner), scim: audience_scim_proxy_path }) %>%

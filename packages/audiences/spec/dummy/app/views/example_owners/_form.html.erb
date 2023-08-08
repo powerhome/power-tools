@@ -1,0 +1,22 @@
+<%= form_with(model: example_owner) do |form| %>
+  <% if example_owner.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(example_owner.errors.count, "error") %> prohibited this example_owner from being saved:</h2>
+
+      <ul>
+        <% example_owner.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
