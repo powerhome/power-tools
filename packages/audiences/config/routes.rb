@@ -6,8 +6,8 @@ Audiences::Engine.routes.draw do
 end
 
 Rails.application.routes.draw do
-  mount ::Audiences::Engine, at: "/audiences", as: :audiences
-  
+  mount Audiences::Engine, at: "/audiences", as: :audiences
+
   direct :audience_context do |owner, options|
     audiences.route_for(:signed_context, key: Audiences.sign(owner), **options)
   end

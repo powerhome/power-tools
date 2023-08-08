@@ -3,6 +3,8 @@ require:
 
 AllCops:
   TargetRubyVersion: 2.7
+  Exclude:
+    - "spec/dummy/node_modules/**/*"
 
 Style/FrozenStringLiteralComment:
   Exclude:
