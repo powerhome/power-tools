@@ -27,3 +27,7 @@ Style/WordArray:
 Layout/EmptyLinesAroundBlockBody:
   Exclude:
     - "spec/dummy/db/schema.rb"
+
+Rails/I18nLocaleTexts:
+  Exclude:
+    - "spec/dummy/**/*"
