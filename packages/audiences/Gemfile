@@ -19,3 +19,7 @@ gem "shoulda-matchers", "~> 5.0"
 gem "sqlite3"
 
 gem "webmock", "~> 3.18"
+
+gem "vite_rails", "~> 3.0"
+
+gem "foreman", "~> 0.87.2"

@@ -9,3 +9,4 @@
 /spec/dummy/storage/
 /spec/dummy/tmp/
 /spec/dummy/log/test.log
+.vite
