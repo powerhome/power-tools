@@ -7,7 +7,7 @@ import { StrictMode } from "react"
 import ReactDOM from "react-dom"
 import { Title } from "playbook-ui"
 
-import { AudienceEditor } from "./AudienceEditor"
+import AudienceEditor from "./AudienceEditor"
 
 const audienceKey =
   "BAh7CEkiCGdpZAY6BkVUSSIfZ2lkOi8vZHVtbXkvRXhhbXBsZU93bmVyLzEGOwBUSSIMcHVycG9zZQY7AFRJIg5hdWRpZW5jZXMGOwBUSSIPZXhwaXJlc19hdAY7AFRJIh0yMDIzLTA5LTAyVDE4OjE1OjQxLjQxNloGOwBU--7bcda79e962d221c4820cc4afebd194d288d7dc5"
