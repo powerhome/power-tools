@@ -11,7 +11,7 @@ RSpec.describe "/audiences/scim", type: :request do
         .with(query: { filter: "name eq John" })
         .to_return(body: '{"anything":"comes"}', status: 201)
 
-      get audiences.scim_proxy_path(scim_path: "AnythingGoes", filter: "name eq John")
+      get audience_scim_proxy_path(scim_path: "AnythingGoes", filter: "name eq John")
 
       expect(parsed_body).to eql("anything" => "comes")
     end
@@ -21,7 +21,7 @@ RSpec.describe "/audiences/scim", type: :request do
         .with(headers: { "Authorization" => "Bearer 123456789" })
         .to_return(body: '{"anything":"comes"}', status: 201)
 
-      get audiences.scim_proxy_path(scim_path: "AnythingGoes")
+      get audience_scim_proxy_path(scim_path: "AnythingGoes")
 
       expect(parsed_body).to eql("anything" => "comes")
     end

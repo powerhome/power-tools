@@ -7,16 +7,16 @@ RSpec.describe "/audiences", type: :request do
 
   context "GET /audiences/:context_key" do
     let(:example_owner) { ExampleOwner.create(name: "Example Owner") }
-    let(:context_key) { Audiences.sign(example_owner).to_s }
 
     it "responds with the audience context json" do
-      get audiences.context_path(context_key), format: :json
+      get audience_context_path(example_owner), format: :json
 
       expect(parsed_body).to match({ "key" => anything, "match_all" => false })
     end
 
     it "responds with a valid context context_key" do
-      get audiences.context_path(context_key), format: :json
+      get audience_context_path(example_owner), format: :json
+
       audience = Audiences.load(parsed_body["key"])
 
       expect(audience.owner).to eql example_owner
