@@ -16,7 +16,7 @@ module.exports = defineConfig({
       fileName: (format) => `audiences.${format}.js`,
     },
     rollupOptions: {
-      external: ["react", "react-dom", "playbook-ui"],
+      external: ["react", "react-dom", "playbook-ui", "react/jsx-runtime"],
     },
   },
 })
