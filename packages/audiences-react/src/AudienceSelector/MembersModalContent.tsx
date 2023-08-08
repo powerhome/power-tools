@@ -10,7 +10,7 @@ import {
   Dialog,
 } from "playbook-ui"
 
-import type { Filter, Member } from "../types"
+import type { Filter, Member } from "./legacy-types"
 import { CriteriaDescription } from "../AudienceForm/CriteriaDescription"
 
 const style = {

@@ -2,7 +2,7 @@ import { useState } from "react"
 import get from "lodash/get"
 import MembersModalContent from "./MembersModalContent"
 
-import type { Filter } from "../types"
+import type { Filter } from "./legacy-types"
 
 type MembersModalProps = {
   allAudienceMembers: boolean

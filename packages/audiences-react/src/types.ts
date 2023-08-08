@@ -1,22 +1,3 @@
-export type Option = {
-  id: string
-  name: string
-}
-
-export type Filter = {
-  id: string
-  size: number // the number of people that matches this filter audience
-  userCount: number
-  departments?: Option[]
-  titles?: Option[]
-  territories?: Option[]
-}
-
-export type Member = {
-  id: string
-  name: string
-}
-
 // SCIM Version
 
 export const UserSchema = "urn:ietf:params:scim:schemas:core:2.0:User"
