@@ -5,7 +5,7 @@ on:
 
 jobs:
   ruby:
-    uses: powerhome/github-actions-workflows/.github/workflows/ruby-gem.yml@main
+    uses: powerhome/github-actions-workflows/.github/workflows/ruby-gem.yml@npm-license-compliance
     with:
       package: ${{ github.workflow }}
       workdir: "packages/${{ github.workflow }}"
