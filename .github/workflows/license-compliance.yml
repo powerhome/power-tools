@@ -1,0 +1,8 @@
+name: license-compliance
+
+on:
+  push:
+
+jobs:
+  check:
+    uses: powerhome/github-actions-workflows/.github/workflows/license-compliance.yml@npm-license-compliance
