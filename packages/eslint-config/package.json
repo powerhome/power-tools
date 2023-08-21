@@ -52,6 +52,6 @@
     "typescript": "5.1.6"
   },
   "dependencies": {
-    "eslint-config-prettier": "^8.6.0"
+    "eslint-config-prettier": "^9.0.0"
   }
 }
