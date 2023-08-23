@@ -95,7 +95,7 @@ RSpec.describe Lumberaxe, type: :request do
     it "logs any valid combination of tag formats" do
       expect do
         subject.tagged("omega", "pV=nRT", paink: "iller") { subject.info("brown") }
-      end.to output(%r{(?=.*"tags":\["omega",{"paink":"iller"}\])(?=.*"pV":"nRT")}).to_stdout_from_any_process
+      end.to output(/(?=.*"tags":\["omega",{"paink":"iller"}\])(?=.*"pV":"nRT")/).to_stdout_from_any_process
     end
   end
 end
