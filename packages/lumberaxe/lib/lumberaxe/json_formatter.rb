@@ -7,13 +7,13 @@ module Lumberaxe
     include ActiveSupport::TaggedLogging::Formatter
 
     def call(severity, time, progname, data)
-      data = data.is_a?(Hash) ? format_data(data) : { message: data.to_s }
+      data = { message: data.to_s } unless data.is_a?(Hash)
 
       {
         level: severity,
         time: time,
         progname: progname,
-      }.merge(data).to_json.concat("\r\n")
+      }.merge(format_data(data)).to_json.concat("\r\n")
     end
 
     def format_data(data)

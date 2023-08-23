@@ -62,4 +62,40 @@ RSpec.describe Lumberaxe, type: :request do
       expect(Rails.logger.silence { "test_silencer" }).to eq("test_silencer")
     end
   end
+
+  context "tagged logging" do
+    subject do
+      Lumberaxe::Logger.new(progname: "tagged_logging")
+    end
+
+    it "logs the message" do
+      expect do
+        subject.tagged("rose") { subject.info("bud") }
+      end.to output(/"message":"bud"/).to_stdout_from_any_process
+    end
+
+    it "logs tags" do
+      expect do
+        subject.tagged("hot", "sour") { subject.info("soup") }
+      end.to output(/"tags":\["hot","sour"\]/).to_stdout_from_any_process
+    end
+
+    it "logs tags as named keys" do
+      expect do
+        subject.tagged("evel=knievel") { subject.info("parachute") }
+      end.to output(/"evel":"knievel"/).to_stdout_from_any_process
+    end
+
+    it "logs hash tags" do
+      expect do
+        subject.tagged(hash: "alton") { subject.info("brown") }
+      end.to output(/"tags":\[{"hash":"alton"}\]/).to_stdout_from_any_process
+    end
+
+    it "logs any valid combination of tag formats" do
+      expect do
+        subject.tagged("omega", "pV=nRT", paink: "iller") { subject.info("brown") }
+      end.to output(%r{(?=.*"tags":\["omega",{"paink":"iller"}\])(?=.*"pV":"nRT")}).to_stdout_from_any_process
+    end
+  end
 end
