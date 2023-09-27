@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ostruct-sanitizer
+  title: Ostruct Sanitizer
+  description: Provides Rails-like sanitization rules for OpenStruct fields
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: library
+  owner: heroes-for-hire
+  lifecycle: production
