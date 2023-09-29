@@ -1,0 +1,8 @@
+require:
+  - rubocop-powerhome
+
+AllCops:
+  TargetRubyVersion: 2.6
+
+Style/OpenStructUse:
+  Enabled: false

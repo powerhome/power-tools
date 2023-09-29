@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'ostruct'
-require 'ostruct/sanitizer/version'
+require "ostruct"
+require "ostruct/sanitizer/version"
 
 module OStruct
   # Provides a series of sanitization rules to be applied on OpenStruct fields on
@@ -55,6 +55,10 @@ module OStruct
       send(method, args[0])
     end
 
+    def respond_to_missing?(method)
+      setter?(method)
+    end
+
     # Set attribute's value via setter so that any existing sanitization rules
     # may be applied
     #
@@ -65,7 +69,7 @@ module OStruct
       send("#{name}=", value)
     end
 
-    private
+  private
 
     def setter?(method)
       method[/.*(?==\z)/m].to_s.to_sym
@@ -98,7 +102,8 @@ module OStruct
       # Registers a sanitization block for a given field
       #
       # @param [Array<Symbol>] a list of field names to be sanitized
-      # @param [#call] block sanitization block to be applied to the current value of each field and returns the new sanitized value
+      # @param [#call] block sanitization block to be applied to the current value of each field
+      # and returns the new sanitized value
       #
       def sanitize(*fields, &block)
         @sanitizers ||= {}
@@ -125,7 +130,7 @@ module OStruct
       # @param [Array<Symbol>] a list of field names to be sanitized
       #
       def alphanumeric(*fields)
-        sanitize(*fields) { |value| value.gsub(/[^A-Za-z0-9\s]/, '') }
+        sanitize(*fields) { |value| value.gsub(/[^A-Za-z0-9\s]/, "") }
       end
 
       # Strips out leading and trailing spaces from the values of the given fields
@@ -141,7 +146,7 @@ module OStruct
       # @param [Array<Symbol>] fields list of fields to be sanitized
       #
       def digits(*fields)
-        sanitize(*fields) { |value| value.to_s.gsub(/[^0-9]/, '') }
+        sanitize(*fields) { |value| value.to_s.gsub(/[^0-9]/, "") }
       end
     end
   end
