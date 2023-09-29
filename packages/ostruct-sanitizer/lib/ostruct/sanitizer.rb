@@ -1,5 +1,7 @@
-require "ostruct"
-require "ostruct/sanitizer/version"
+# frozen_string_literal: true
+
+require 'ostruct'
+require 'ostruct/sanitizer/version'
 
 module OStruct
   # Provides a series of sanitization rules to be applied on OpenStruct fields on
@@ -18,9 +20,7 @@ module OStruct
   #
   module Sanitizer
     def self.included(base)
-      unless base.ancestors.include? OpenStruct
-        raise "#{self.name} can only be used within OpenStruct classes"
-      end
+      raise "#{name} can only be used within OpenStruct classes" unless base.ancestors.include? OpenStruct
 
       base.extend ClassMethods
     end
@@ -45,14 +45,14 @@ module OStruct
       # corresponding field
       super method, *args
 
-      if field = setter?(method)
-        # override setter logic to apply any existing sanitization rules before
-        # assigning the new value to the field
-        override_setter_for(field) if sanitize?(field)
-        # uses the newly created setter to set the field's value and apply any
-        # existing sanitization rules
-        send(method, args[0])
-      end
+      return unless (field = setter?(method))
+
+      # override setter logic to apply any existing sanitization rules before
+      # assigning the new value to the field
+      override_setter_for(field) if sanitize?(field)
+      # uses the newly created setter to set the field's value and apply any
+      # existing sanitization rules
+      send(method, args[0])
     end
 
     # Set attribute's value via setter so that any existing sanitization rules
@@ -79,6 +79,7 @@ module OStruct
 
     def sanitize(field, value)
       return value if value.nil?
+
       self.class.sanitizers[field].reduce(value) do |current_value, sanitizer|
         sanitizer.call(current_value)
       end
@@ -132,7 +133,7 @@ module OStruct
       # @param [Array<Symbol>] fields list of fields to be sanitized
       #
       def strip(*fields)
-        sanitize(*fields) { |value| value.strip }
+        sanitize(*fields, &:strip)
       end
 
       # Removes any non-digit character from the values of the given fields
