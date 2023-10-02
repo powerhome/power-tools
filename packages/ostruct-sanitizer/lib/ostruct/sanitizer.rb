@@ -40,7 +40,7 @@ module OStruct
     # @param [Symbol] method the missing method
     # @param [Array<Any>] args the method's arguments list
     #
-    def method_missing(method, *args)
+    def method_missing(method, *args) # rubocop:disable Style/MissingRespondToMissing
       # Give OpenStruct a chance to create getters and setters for the
       # corresponding field
       super method, *args
@@ -53,10 +53,6 @@ module OStruct
       # uses the newly created setter to set the field's value and apply any
       # existing sanitization rules
       send(method, args[0])
-    end
-
-    def respond_to_missing?(method)
-      setter?(method)
     end
 
     # Set attribute's value via setter so that any existing sanitization rules
