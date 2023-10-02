@@ -9,11 +9,7 @@ describe OStruct::Sanitizer do
 
   describe "invalid usage" do
     it "fails including OStruct::Sanitizer within a non OpenStruct class" do
-      define_invalid_usage = -> {
-        Class.new { include OStruct::Sanitizer }
-      }
-
-      expect(define_invalid_usage).to(
+      expect { Class.new { include OStruct::Sanitizer } }.to(
         raise_error "#{OStruct::Sanitizer.name} can only be used within OpenStruct classes"
       )
     end
