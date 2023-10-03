@@ -1,6 +1,4 @@
-# OStruct::Sanitizer
-
-[![Build Status](https://travis-ci.org/powerhome/ostruct-sanitizer.svg?branch=master)](https://travis-ci.org/powerhome/ostruct-sanitizer)
+# OStruct::Sanitizer 🧹
 
 Provides Rails-like sanitization hooks to be applied to OpenStruct fields upon their assignment, allowing for better encapsulation of such rules and simple extensibility.
 

@@ -40,7 +40,7 @@ module OStruct
     # @param [Symbol] method the missing method
     # @param [Array<Any>] args the method's arguments list
     #
-    def method_missing(method, *args) # rubocop:disable Style/MissingRespondToMissing
+    def method_missing(method, *args)
       # Give OpenStruct a chance to create getters and setters for the
       # corresponding field
       super method, *args
