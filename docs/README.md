@@ -54,6 +54,10 @@ CamelTrail makes it easy to keep a history of attribute changes on a model.
 
 Delicious and sanitized data samples for development and testing.
 
+[ostruct-sanitizer](https://github.com/powerhome/power-tools/blob/main/packages/ostruct-sanitizer/docs/README.md) 💎
+
+Rails-like sanitization hooks to be applied to OpenStruct fields.
+
 ## Installation 🛠
 
 These packages are all meant to install inside of an application and aren't intended to stand alone; currently, they are all published to [RubyGems](https://rubygems.org/) or [npm](https://www.npmjs.com/) and you can use standard methods to install them.

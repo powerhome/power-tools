@@ -1,0 +1,7 @@
+site_name: Ostruct Sanitizer
+site_description: Ostruct Sanitizer Documentation
+nav:
+  - "Home": "README.md"
+  - "Code of Conduct": "CODE_OF_CONDUCT.md"
+plugins:
+  - techdocs-core
