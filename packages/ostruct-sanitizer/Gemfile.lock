@@ -29,7 +29,7 @@ GEM
       xml-simple (~> 1.1.9)
     minitest (5.20.0)
     parallel (1.23.0)
-    parser (3.2.2.3)
+    parser (3.2.2.4)
       ast (~> 2.4.1)
       racc
     racc (1.7.1)
@@ -51,7 +51,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
     rspec-support (3.12.1)
-    rubocop (1.56.3)
+    rubocop (1.56.4)
       base64 (~> 0.1.1)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
@@ -72,13 +72,13 @@ GEM
     rubocop-performance (1.19.1)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
-    rubocop-powerhome (0.5.0)
-      rubocop
+    rubocop-powerhome (0.5.2)
+      rubocop (~> 1.37)
       rubocop-performance
       rubocop-rails
       rubocop-rake
       rubocop-rspec
-    rubocop-rails (2.21.1)
+    rubocop-rails (2.21.2)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.33.0, < 2.0)
@@ -109,7 +109,7 @@ DEPENDENCIES
   ostruct-sanitizer!
   rake (= 13.0.6)
   rspec (= 3.12.0)
-  rubocop-powerhome (= 0.5.0)
+  rubocop-powerhome (= 0.5.2)
 
 BUNDLED WITH
    2.4.10
