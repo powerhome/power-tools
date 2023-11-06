@@ -63,8 +63,7 @@ module Consent
           )
         else
           actual_views = Consent.find_subjects(@subject_key)
-                                .map(&:views)
-                                .map(&:keys).flatten
+                                .flat_map { |subject| subject.views.keys }
           format(
             "%<message>s available views are %<views>p",
             message: message, views: actual_views
