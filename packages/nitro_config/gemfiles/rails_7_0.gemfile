@@ -2,12 +2,12 @@
 
 source "https://rubygems.org"
 
-gem "rails", "7.0.6"
 gem "byebug"
 gem "license_finder", ">= 7.0"
 gem "rake", ">= 13.0"
 gem "rspec", ">= 3.0"
 gem "rubocop", ">= 1.32"
 gem "rubocop-powerhome", path: "../../rubocop-powerhome"
+gem "rails", "7.0.6"
 
 gemspec path: "../"
