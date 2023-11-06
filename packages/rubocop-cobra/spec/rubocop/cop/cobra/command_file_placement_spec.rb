@@ -25,7 +25,7 @@ RSpec.describe RuboCop::Cop::Cobra::CommandFilePlacement do
     it "when command is defined directly inside app/commands/" do
       source = <<~RUBY
         class Foo
-        ^^^^^^^^^ Do not add top-level files into `app/commands/`. Namespace them like `app/commands/my_component/foo.rb`
+        ^^^^^^^^^ Cobra/CommandFilePlacement: Do not add top-level files into `app/commands/`. Namespace them like `app/commands/my_component/foo.rb`
         end
       RUBY
 
@@ -37,7 +37,7 @@ RSpec.describe RuboCop::Cop::Cobra::CommandFilePlacement do
     it "when command is defined inside a different subdirectory of app/commands/" do
       source = <<~RUBY
         class Foo
-        ^^^^^^^^^ Do not add top-level files into `app/commands/`. Namespace them like `app/commands/my_component/other_namespace/foo.rb`
+        ^^^^^^^^^ Cobra/CommandFilePlacement: Do not add top-level files into `app/commands/`. Namespace them like `app/commands/my_component/other_namespace/foo.rb`
         end
       RUBY
 
