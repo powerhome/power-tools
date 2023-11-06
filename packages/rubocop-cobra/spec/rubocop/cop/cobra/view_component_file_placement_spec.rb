@@ -31,7 +31,7 @@ RSpec.describe RuboCop::Cop::Cobra::ViewComponentFilePlacement do
     it "when view_component is defined directly inside app/components/" do
       source = <<~RUBY
         class FooComponent < ::ViewComponent::Base
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Nest ViewComponent definitions in the parent component and resource namespace. For example: `app/components/my_component/<resource>/foo_component.rb`
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Cobra/ViewComponentFilePlacement: Nest ViewComponent definitions in the parent component and resource namespace. For example: `app/components/my_component/<resource>/foo_component.rb`
         end
       RUBY
 
@@ -43,7 +43,7 @@ RSpec.describe RuboCop::Cop::Cobra::ViewComponentFilePlacement do
     it "when view_component is defined directly inside mismatched subdirectory of app/components/" do
       source = <<~RUBY
         class FooComponent < ::ViewComponent::Base
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Nest ViewComponent definitions in the parent component and resource namespace. For example: `app/components/my_component/<resource>/foo_component.rb`
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Cobra/ViewComponentFilePlacement: Nest ViewComponent definitions in the parent component and resource namespace. For example: `app/components/my_component/<resource>/foo_component.rb`
         end
       RUBY
 
@@ -55,7 +55,7 @@ RSpec.describe RuboCop::Cop::Cobra::ViewComponentFilePlacement do
     it "when view_component is defined directly inside mismatched subdirectory of app/components/" do
       source = <<~RUBY
         class FooComponent < ::ViewComponent::Base
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Nest ViewComponent definitions in the parent component and resource namespace. For example: `app/components/my_component/<resource>/foo_component.rb`
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Cobra/ViewComponentFilePlacement: Nest ViewComponent definitions in the parent component and resource namespace. For example: `app/components/my_component/<resource>/foo_component.rb`
         end
       RUBY
 
@@ -67,7 +67,7 @@ RSpec.describe RuboCop::Cop::Cobra::ViewComponentFilePlacement do
     it "when view_component is defined within directory of component name, but not in an additional subdirectory" do
       source = <<~RUBY
         module MyComponent
-        ^^^^^^^^^^^^^^^^^^ Nest ViewComponent definitions in the parent component and resource namespace. For example: `app/components/my_component/<resource>/foo_component.rb`
+        ^^^^^^^^^^^^^^^^^^ Cobra/ViewComponentFilePlacement: Nest ViewComponent definitions in the parent component and resource namespace. For example: `app/components/my_component/<resource>/foo_component.rb`
           class FooComponent < MyComponent::ApplicationComponent
           end
         end

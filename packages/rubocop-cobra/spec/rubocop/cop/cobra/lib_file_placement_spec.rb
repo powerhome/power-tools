@@ -49,7 +49,7 @@ RSpec.describe RuboCop::Cop::Cobra::LibFilePlacement do
     it "when lib file is defined directly inside lib/" do
       source = <<~RUBY
         class Foo
-        ^^^^^^^^^ Do not add top-level files into `lib/`. Namespace them like `lib/awesome_component/foo.rb`
+        ^^^^^^^^^ Cobra/LibFilePlacement: Do not add top-level files into `lib/`. Namespace them like `lib/awesome_component/foo.rb`
         end
       RUBY
 
@@ -61,7 +61,7 @@ RSpec.describe RuboCop::Cop::Cobra::LibFilePlacement do
     it "when lib file is defined inside a different subdirectory of lib/" do
       source = <<~RUBY
         class Foo
-        ^^^^^^^^^ Do not add top-level files into `lib/`. Namespace them like `lib/my_component/other_namespace/my_file.rb`
+        ^^^^^^^^^ Cobra/LibFilePlacement: Do not add top-level files into `lib/`. Namespace them like `lib/my_component/other_namespace/my_file.rb`
         end
       RUBY
 

@@ -61,7 +61,7 @@ RSpec.describe RuboCop::Cop::Cobra::GemRequirement do
 
         path ".." do
           gem "nitro_component", require: true
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Component Gemfile dependencies must specify 'require: nil'.
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Cobra/GemRequirement: Component Gemfile dependencies must specify 'require: nil'.
         end
       RUBY
     end
@@ -72,7 +72,7 @@ RSpec.describe RuboCop::Cop::Cobra::GemRequirement do
 
         path ".." do
           gem "nitro_component"
-          ^^^^^^^^^^^^^^^^^^^^^ Component Gemfile dependencies must specify 'require: nil'.
+          ^^^^^^^^^^^^^^^^^^^^^ Cobra/GemRequirement: Component Gemfile dependencies must specify 'require: nil'.
         end
       RUBY
     end
@@ -85,7 +85,7 @@ RSpec.describe RuboCop::Cop::Cobra::GemRequirement do
           # Dependencies on other components go here
           gem "nitro_component", require: nil
           gem "other_component"
-          ^^^^^^^^^^^^^^^^^^^^^ Component Gemfile dependencies must specify 'require: nil'.
+          ^^^^^^^^^^^^^^^^^^^^^ Cobra/GemRequirement: Component Gemfile dependencies must specify 'require: nil'.
           gem "another_component", require: nil
         end
       RUBY

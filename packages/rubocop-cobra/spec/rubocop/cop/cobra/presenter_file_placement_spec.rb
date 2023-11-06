@@ -25,7 +25,7 @@ RSpec.describe RuboCop::Cop::Cobra::PresenterFilePlacement do
     it "when presenter is defined directly inside app/presenters/" do
       source = <<~RUBY
         class FooPresenter
-        ^^^^^^^^^^^^^^^^^^ Do not add top-level files into `app/presenters/`. Namespace them like `app/presenters/my_component/foo_presenter.rb`
+        ^^^^^^^^^^^^^^^^^^ Cobra/PresenterFilePlacement: Do not add top-level files into `app/presenters/`. Namespace them like `app/presenters/my_component/foo_presenter.rb`
         end
       RUBY
 
@@ -37,7 +37,7 @@ RSpec.describe RuboCop::Cop::Cobra::PresenterFilePlacement do
     it "when presenter is defined directly inside mismatched subdirectory of app/presenters/" do
       source = <<~RUBY
         class FooPresenter
-        ^^^^^^^^^^^^^^^^^^ Do not add top-level files into `app/presenters/`. Namespace them like `app/presenters/my_component/other_namespace/foo_presenter.rb`
+        ^^^^^^^^^^^^^^^^^^ Cobra/PresenterFilePlacement: Do not add top-level files into `app/presenters/`. Namespace them like `app/presenters/my_component/other_namespace/foo_presenter.rb`
         end
       RUBY
 

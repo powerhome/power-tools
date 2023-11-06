@@ -31,7 +31,7 @@ RSpec.describe RuboCop::Cop::Cobra::ControllerFilePlacement do
     it "when controller is defined directly inside app/controllers/" do
       source = <<~RUBY
         class FooController
-        ^^^^^^^^^^^^^^^^^^^ Do not add top-level files into `app/controllers/`. Namespace them like `app/controllers/my_component/foo_controller.rb`
+        ^^^^^^^^^^^^^^^^^^^ Cobra/ControllerFilePlacement: Do not add top-level files into `app/controllers/`. Namespace them like `app/controllers/my_component/foo_controller.rb`
         end
       RUBY
 
@@ -43,7 +43,7 @@ RSpec.describe RuboCop::Cop::Cobra::ControllerFilePlacement do
     it "when controller is defined inside a different subdirectory of app/controllers/" do
       source = <<~RUBY
         class FooController
-        ^^^^^^^^^^^^^^^^^^^ Do not add top-level files into `app/controllers/`. Namespace them like `app/controllers/my_component/other_namespace/foo_controller.rb`
+        ^^^^^^^^^^^^^^^^^^^ Cobra/ControllerFilePlacement: Do not add top-level files into `app/controllers/`. Namespace them like `app/controllers/my_component/other_namespace/foo_controller.rb`
         end
       RUBY
 
@@ -55,7 +55,7 @@ RSpec.describe RuboCop::Cop::Cobra::ControllerFilePlacement do
     it "when file is directly inside a concerns directory inside app/controllers/" do
       source = <<~RUBY
         class Foo
-        ^^^^^^^^^ Do not add top-level files into `app/controllers/concerns/`. Namespace them like `app/controllers/concerns/my_component/foo.rb`
+        ^^^^^^^^^ Cobra/ControllerFilePlacement: Do not add top-level files into `app/controllers/concerns/`. Namespace them like `app/controllers/concerns/my_component/foo.rb`
         end
       RUBY
 

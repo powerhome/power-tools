@@ -25,7 +25,7 @@ RSpec.describe RuboCop::Cop::Cobra::JobFilePlacement do
     it "when job is defined directly inside app/jobs/" do
       source = <<~RUBY
         class FooJob
-        ^^^^^^^^^^^^ Do not add top-level files into `app/jobs/`. Namespace them like `app/jobs/my_component/foo_job.rb`
+        ^^^^^^^^^^^^ Cobra/JobFilePlacement: Do not add top-level files into `app/jobs/`. Namespace them like `app/jobs/my_component/foo_job.rb`
         end
       RUBY
 
@@ -37,7 +37,7 @@ RSpec.describe RuboCop::Cop::Cobra::JobFilePlacement do
     it "when job is defined directly inside mismatched subdirectory of app/jobs/" do
       source = <<~RUBY
         class FooJob
-        ^^^^^^^^^^^^ Do not add top-level files into `app/jobs/`. Namespace them like `app/jobs/my_component/other_namespace/foo_job.rb`
+        ^^^^^^^^^^^^ Cobra/JobFilePlacement: Do not add top-level files into `app/jobs/`. Namespace them like `app/jobs/my_component/other_namespace/foo_job.rb`
         end
       RUBY
 

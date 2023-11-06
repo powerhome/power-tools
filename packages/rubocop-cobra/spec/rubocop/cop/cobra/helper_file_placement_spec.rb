@@ -25,7 +25,7 @@ RSpec.describe RuboCop::Cop::Cobra::HelperFilePlacement do
     it "when helper is defined directly inside app/helpers/" do
       source = <<~RUBY
         class Foo
-        ^^^^^^^^^ Do not add top-level files into `app/helpers/`. Namespace them like `app/helpers/my_component/foo.rb`
+        ^^^^^^^^^ Cobra/HelperFilePlacement: Do not add top-level files into `app/helpers/`. Namespace them like `app/helpers/my_component/foo.rb`
         end
       RUBY
 
@@ -37,7 +37,7 @@ RSpec.describe RuboCop::Cop::Cobra::HelperFilePlacement do
     it "when helper is defined inside a different subdirectory of app/helpers/" do
       source = <<~RUBY
         class Foo
-        ^^^^^^^^^ Do not add top-level files into `app/helpers/`. Namespace them like `app/helpers/my_component/other_namespace/foo.rb`
+        ^^^^^^^^^ Cobra/HelperFilePlacement: Do not add top-level files into `app/helpers/`. Namespace them like `app/helpers/my_component/other_namespace/foo.rb`
         end
       RUBY
 

@@ -25,7 +25,7 @@ RSpec.describe RuboCop::Cop::Cobra::MailerFilePlacement do
     it "when mailer is defined directly inside app/mailers/" do
       source = <<~RUBY
         class Foo
-        ^^^^^^^^^ Do not add top-level files into `app/mailers/`. Namespace them like `app/mailers/my_component/foo.rb`
+        ^^^^^^^^^ Cobra/MailerFilePlacement: Do not add top-level files into `app/mailers/`. Namespace them like `app/mailers/my_component/foo.rb`
         end
       RUBY
 
@@ -37,7 +37,7 @@ RSpec.describe RuboCop::Cop::Cobra::MailerFilePlacement do
     it "when mailer is defined inside a different subdirectory of app/mailers/" do
       source = <<~RUBY
         class Foo
-        ^^^^^^^^^ Do not add top-level files into `app/mailers/`. Namespace them like `app/mailers/my_component/other_namespace/foo.rb`
+        ^^^^^^^^^ Cobra/MailerFilePlacement: Do not add top-level files into `app/mailers/`. Namespace them like `app/mailers/my_component/other_namespace/foo.rb`
         end
       RUBY
 

@@ -31,7 +31,7 @@ RSpec.describe RuboCop::Cop::Cobra::ModelFilePlacement do
     it "when model is defined directly inside app/models/" do
       source = <<~RUBY
         class Foo
-        ^^^^^^^^^ Do not add top-level files into `app/models/`. Namespace them like `app/models/my_component/foo.rb`
+        ^^^^^^^^^ Cobra/ModelFilePlacement: Do not add top-level files into `app/models/`. Namespace them like `app/models/my_component/foo.rb`
         end
       RUBY
 
@@ -43,7 +43,7 @@ RSpec.describe RuboCop::Cop::Cobra::ModelFilePlacement do
     it "when model is defined directly inside mismatched subdirectory of app/models/" do
       source = <<~RUBY
         class Foo
-        ^^^^^^^^^ Do not add top-level files into `app/models/`. Namespace them like `app/models/my_component/other_namespace/foo.rb`
+        ^^^^^^^^^ Cobra/ModelFilePlacement: Do not add top-level files into `app/models/`. Namespace them like `app/models/my_component/other_namespace/foo.rb`
         end
       RUBY
 
@@ -55,7 +55,7 @@ RSpec.describe RuboCop::Cop::Cobra::ModelFilePlacement do
     it "when file is directly inside a concerns directory inside of app/models/" do
       source = <<~RUBY
         class Foo
-        ^^^^^^^^^ Do not add top-level files into `app/models/concerns/`. Namespace them like `app/models/concerns/my_component/foo.rb`
+        ^^^^^^^^^ Cobra/ModelFilePlacement: Do not add top-level files into `app/models/concerns/`. Namespace them like `app/models/concerns/my_component/foo.rb`
         end
       RUBY
 
