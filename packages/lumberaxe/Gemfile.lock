@@ -97,7 +97,7 @@ GEM
       thor (>= 0.14.6)
     concurrent-ruby (1.2.2)
     crass (1.0.6)
-    date (3.3.3)
+    date (3.3.4)
     diff-lcs (1.5.0)
     docile (1.1.5)
     erubi (1.12.0)
@@ -130,12 +130,12 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.5)
     minitest (5.20.0)
-    net-imap (0.4.2)
+    net-imap (0.4.5)
       date
       net-protocol
     net-pop (0.1.2)
       net-protocol
-    net-protocol (0.2.1)
+    net-protocol (0.2.2)
       timeout
     net-smtp (0.4.0)
       net-protocol
@@ -155,7 +155,7 @@ GEM
     pry-byebug (3.10.1)
       byebug (~> 11.0)
       pry (>= 0.13, < 0.15)
-    racc (1.7.1)
+    racc (1.7.3)
     rack (2.2.8)
     rack-test (2.1.0)
       rack (>= 1.3)
@@ -255,7 +255,7 @@ GEM
     test-unit (3.1.5)
       power_assert
     thor (1.3.0)
-    timeout (0.4.0)
+    timeout (0.4.1)
     tomlrb (2.0.3)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
