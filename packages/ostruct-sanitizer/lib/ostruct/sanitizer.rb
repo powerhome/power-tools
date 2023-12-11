@@ -28,7 +28,7 @@ module OStruct
     # Initializes the OpenStruct applying any registered sanitization rules
     #
     def initialize(attrs = {})
-      super nil
+      super(nil)
       attrs.each_pair do |field, value|
         self[field] = value
       end
@@ -43,7 +43,7 @@ module OStruct
     def method_missing(method, *args)
       # Give OpenStruct a chance to create getters and setters for the
       # corresponding field
-      super method, *args
+      super(method, *args)
 
       return unless (field = setter?(method))
 
