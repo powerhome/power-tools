@@ -3,16 +3,16 @@
 require_relative "lib/data_taster/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "data_taster"
-  spec.version = DataTaster::VERSION
-  spec.authors = ["Jill Klang"]
-  spec.email = ["jillian.emilie@gmail.com"]
+  spec.name        = "data_taster"
+  spec.version     = DataTaster::VERSION
+  spec.authors     = ["Jill Klang"]
+  spec.email       = ["jillian.emilie@gmail.com"]
 
   spec.summary = "Delicious and sanitized data samples for development and testing."
   spec.description = "Export, sanitize, and import data to help develop better apps."
   spec.homepage = "https://github.com/powerhome/power-tools"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 2.6.0"
+  spec.required_ruby_version = ">= 2.7"
 
   spec.metadata["rubygems_mfa_required"] = "true"
   spec.metadata["homepage_uri"] = spec.homepage
@@ -30,7 +30,17 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "license_finder", "~> 7.0"
+  spec.add_dependency "rails", "6.0.6.1"
 
+  spec.add_development_dependency "license_finder", "~> 7.0"
   spec.add_development_dependency "rubocop-powerhome", "0.5.0"
+
+  spec.add_development_dependency "bundler", "~> 2.1"
+  spec.add_development_dependency "parser", ">= 2.5", "!= 2.5.1.1"
+  spec.add_development_dependency "rainbow", "2.2.2"
+  spec.add_development_dependency "rake", "~> 13.0"
+  spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "simplecov", "0.15.1"
+  spec.add_development_dependency "test-unit", "3.1.5"
+  spec.add_development_dependency "yard", "0.9.34"
 end

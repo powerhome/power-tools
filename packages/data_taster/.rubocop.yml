@@ -1,13 +1,16 @@
+require:
+  - rubocop-powerhome
+
 AllCops:
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.7
 
-Style/StringLiterals:
-  Enabled: true
-  EnforcedStyle: double_quotes
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - 'gemfiles/*'
 
-Style/StringLiteralsInInterpolation:
-  Enabled: true
-  EnforcedStyle: double_quotes
+Bundler/OrderedGems:
+  Exclude:
+    - 'gemfiles/*'
 
-Layout/LineLength:
-  Max: 120
+Rails:
+  Enabled: false
