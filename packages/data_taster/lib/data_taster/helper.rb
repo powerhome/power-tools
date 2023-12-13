@@ -14,8 +14,6 @@ module DataTaster
     end
 
     def db_yml
-      # NOTE: this will be incompatible with future versions of ruby > 2.7.7
-      # see https://bugs.ruby-lang.org/issues/17866
       @db_yml ||= YAML.safe_load(ERB.new(Rails.root.join("config", "database.yml").read).result, aliases: true)
     end
 
