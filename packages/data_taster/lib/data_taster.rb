@@ -21,12 +21,12 @@ module DataTaster
   end
 
   def self.config(**args)
-    @config ||= Struct.new(
-      months: args[:months],
-      list: Array.wrap(args[:list] || Rails.root.glob("**/data_taster_export_tables.yml")),
-      source_client: args[:source_client] || raise(ArgumentError, "DataTaster.config missing source_client"),
-      working_client: args[:working_client] || raise(ArgumentError, "DataTaster.config missing working_client"),
-      include_insert: args[:include_insert] || false
+    @config ||= Config.new(
+      args[:months],
+      Array.wrap(args[:list] || Rails.root.glob("**/data_taster_export_tables.yml")),
+      args[:source_client] || raise(ArgumentError, "DataTaster.config missing source_client"),
+      args[:working_client] || raise(ArgumentError, "DataTaster.config missing working_client"),
+      args[:include_insert] || false
     )
   end
 
@@ -54,4 +54,6 @@ module DataTaster
       client.query("SET FOREIGN_KEY_CHECKS=#{foreign_key_check};")
     end
   end
+
+  Config = Struct.new(:months, :list, :source_client, :working_client, :include_insert)
 end
