@@ -62,7 +62,7 @@ module OStruct
     # @param [Any] value the attribute's value
     #
     def []=(name, value)
-      send("#{name}=", value)
+      send(:"#{name}=", value)
     end
 
   private
@@ -72,7 +72,7 @@ module OStruct
     end
 
     def override_setter_for(field)
-      define_singleton_method("#{field}=") do |value|
+      define_singleton_method(:"#{field}=") do |value|
         @table[field] = sanitize(field, value)
       end
     end
