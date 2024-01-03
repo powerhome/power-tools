@@ -262,6 +262,7 @@ DEPENDENCIES
   appraisal (~> 2.4.1)
   camel_trail!
   license_finder (>= 7.0)
+  nokogiri (< 1.16)
   rake (~> 13)
   rspec (~> 3.0)
   rspec-rails (~> 5.1.2)
