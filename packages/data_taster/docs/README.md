@@ -6,7 +6,7 @@ Database exporting tool.
 
 ### `data_taster_export_tables.yml`
 
-With DataTaster, you can configure certain tables and rows to be pulled from the source_db. Look for (or create) a `data_taster_export_tables.yml` file.
+With DataTaster, you can configure certain tables and rows to be pulled from the source_db. Look for (or create) a `data_taster_export_tables.yml` file anywhere in your repo (for example, this could live under `config/` or `db/`).
 
 By default, any table that has nothing specified in the files will not have any data selected from the source client.
 
