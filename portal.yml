@@ -202,10 +202,24 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: ostruct-sanitozer
+  name: ostruct-sanitizer
   title: OpenStruct sanitizer
   description: >-
     Provides Rails-like sanitization hooks to be applied to OpenStruct fields.
+spec:
+  type: library
+  owner: heroes-for-hire
+  system: power-application-framework
+  lifecycle: production
+  subcomponentOf: power-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: api_chai
+  title: ApiChai
+  description: >-
+    Serve up smooth API integrations with net-http, lightly steeped in graceful errors, Sentry & NewRelic reporting.
 spec:
   type: library
   owner: heroes-for-hire

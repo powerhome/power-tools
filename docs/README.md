@@ -6,57 +6,61 @@ At [Power Home Remodeling](https://powerhrg.com/), we have created foundational 
 
 power-tools currently contains the following packages (marked for release to rubygems 💎 or npm ☕️):
 
-[nitro_config](https://github.com/powerhome/power-tools/blob/main/packages/nitro_config/docs/README.md) 💎
+[api_chai](https://github.com/powerhome/power-tools/blob/main/packages/api_chai/docs/README.md) 💎
 
-When included in a Rails application, NitroConfig loads the configuration file at `config/config.yml` within the application directory and makes its values available at `NitroConfig.config`. Config values are loaded based on the Rails environment, permitting the specification of multiple environments' configurations in a single file.
+ApiChai provides a simple integration with net-http around a lightweight layer for reporting and graceful error handling.
 
 [audit_tracker](https://github.com/powerhome/power-tools/blob/main/packages/audit_tracker/docs/README.md) 💎
 
 AuditTracker helps you centralize data tracking configuration to be used across different models.
 
-[lumberaxe](https://github.com/powerhome/power-tools/blob/main/packages/lumberaxe/docs/README.md) 💎
+[camel_trail](https://github.com/powerhome/power-tools/blob/main/packages/camel_trail/docs/README.md) 💎
 
-Lumberaxe handles logging output formatting.
+CamelTrail makes it easy to keep a history of attribute changes on a model.
 
 [consent](https://github.com/powerhome/power-tools/blob/main/packages/consent/docs/README.md) 💎
 
 Consent provides permission-based authorization.
 
-[rubocop-powerhome](https://github.com/powerhome/power-tools/blob/main/packages/rubocop-powerhome/docs/README.md) 💎
-
-This gem is focused on providing standard rubocop configuration for Power Home Remodeling ruby apps. See more in [`rubocop-powerhome`](../packages/rubocop-powerhome).
-
-[rubocop-cobra](https://github.com/powerhome/power-tools/blob/main/packages/rubocop-cobra/docs/README.md) 💎
-
-This gem is focused on providing Cops to support a healthy cobra app development. See more in [`rubocop-cobra`](../packages/rubocop-cobra).
-
-[@powerhome/eslint-config](https://github.com/powerhome/power-tools/blob/main/packages/eslint-config/docs/README.md) ☕️
-
-Shared eslint-config and Prettier formatting from Power Home Remodeling.
-
 [cygnet](https://github.com/powerhome/power-tools/blob/main/packages/cygnet/docs/README.md) 💎
 
 Helping ruby developers implement easy patterns.
-
-[rabbet](https://github.com/powerhome/power-tools/blob/main/packages/rabbet/docs/README.md) 💎
-
-A shared layout so that your suite of applications can have the same look and feel.
-
-[edgestitch](https://github.com/powerhome/power-tools/blob/main/packages/edgestitch/docs/README.md) 💎
-
-Edgestitch allows engines to define partial structure-self.sql files to be stitched into a single structure.sql file by the umbrella application.
-
-[camel_trail](https://github.com/powerhome/power-tools/blob/main/packages/camel_trail/docs/README.md) 💎
-
-CamelTrail makes it easy to keep a history of attribute changes on a model.
 
 [data_taster](https://github.com/powerhome/power-tools/blob/main/packages/data_taster/docs/README.md) 💎
 
 Delicious and sanitized data samples for development and testing.
 
+[edgestitch](https://github.com/powerhome/power-tools/blob/main/packages/edgestitch/docs/README.md) 💎
+
+Edgestitch allows engines to define partial structure-self.sql files to be stitched into a single structure.sql file by the umbrella application.
+
+[lumberaxe](https://github.com/powerhome/power-tools/blob/main/packages/lumberaxe/docs/README.md) 💎
+
+Lumberaxe handles logging output formatting.
+
+[nitro_config](https://github.com/powerhome/power-tools/blob/main/packages/nitro_config/docs/README.md) 💎
+
+When included in a Rails application, NitroConfig loads the configuration file at `config/config.yml` within the application directory and makes its values available at `NitroConfig.config`. Config values are loaded based on the Rails environment, permitting the specification of multiple environments' configurations in a single file.
+
 [ostruct-sanitizer](https://github.com/powerhome/power-tools/blob/main/packages/ostruct-sanitizer/docs/README.md) 💎
 
 Rails-like sanitization hooks to be applied to OpenStruct fields.
+
+[@powerhome/eslint-config](https://github.com/powerhome/power-tools/blob/main/packages/eslint-config/docs/README.md) ☕️
+
+Shared eslint-config and Prettier formatting from Power Home Remodeling.
+
+[rabbet](https://github.com/powerhome/power-tools/blob/main/packages/rabbet/docs/README.md) 💎
+
+A shared layout so that your suite of applications can have the same look and feel.
+
+[rubocop-cobra](https://github.com/powerhome/power-tools/blob/main/packages/rubocop-cobra/docs/README.md) 💎
+
+This gem is focused on providing Cops to support a healthy cobra app development. See more in [`rubocop-cobra`](../packages/rubocop-cobra).
+
+[rubocop-powerhome](https://github.com/powerhome/power-tools/blob/main/packages/rubocop-powerhome/docs/README.md) 💎
+
+This gem is focused on providing standard rubocop configuration for Power Home Remodeling ruby apps. See more in [`rubocop-powerhome`](../packages/rubocop-powerhome).
 
 ## Installation 🛠
 
