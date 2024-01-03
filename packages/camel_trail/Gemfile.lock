@@ -115,7 +115,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.5)
     minitest (5.20.0)
-    net-imap (0.4.8)
+    net-imap (0.4.9)
       date
       net-protocol
     net-pop (0.1.2)
@@ -210,10 +210,10 @@ GEM
       rubocop (~> 1.41)
     rubocop-factory_bot (2.24.0)
       rubocop (~> 1.33)
-    rubocop-performance (1.20.0)
+    rubocop-performance (1.20.1)
       rubocop (>= 1.48.1, < 2.0)
       rubocop-ast (>= 1.30.0, < 2.0)
-    rubocop-rails (2.23.0)
+    rubocop-rails (2.23.1)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.33.0, < 2.0)
@@ -262,6 +262,7 @@ DEPENDENCIES
   appraisal (~> 2.4.1)
   camel_trail!
   license_finder (>= 7.0)
+  nokogiri (< 1.16)
   rake (~> 13)
   rspec (~> 3.0)
   rspec-rails (~> 5.1.2)
