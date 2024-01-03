@@ -30,11 +30,10 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "rails", "6.0.6.1"
-
   spec.add_development_dependency "license_finder", "~> 7.0"
   spec.add_development_dependency "rubocop-powerhome", "0.5.0"
 
+  spec.add_development_dependency "appraisal", "2.5.0"
   spec.add_development_dependency "bundler", "~> 2.1"
   spec.add_development_dependency "parser", ">= 2.5", "!= 2.5.1.1"
   spec.add_development_dependency "rainbow", "2.2.2"
