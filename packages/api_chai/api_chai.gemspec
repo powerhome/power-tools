@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email = ["jillian.emilie@gmail.com"]
 
   spec.summary = "net-http simplicity infused with error handling and reporting"
-  spec.description = "Sip on simplicity with api_chai, the gem that wraps net-http in chai-inspired charm, serving up smooth API integrations with a dash of graceful error handling and reporting."
+  spec.description = "Serve up smooth API integrations lightly steeped in graceful errors, Sentry & NewRelic reporting."
   spec.homepage = "https://github.com/powerhome/power-tools"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
