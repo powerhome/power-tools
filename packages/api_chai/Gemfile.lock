@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    api_chai (0.1.0)
+    api_chai (0.0.1)
 
 GEM
   remote: https://rubygems.org/
