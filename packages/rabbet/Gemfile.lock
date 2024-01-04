@@ -319,7 +319,6 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 2.1)
   license_finder (~> 7.0)
-  nokogiri (< 1.16)
   pry (>= 0.14)
   pry-byebug (= 3.10.1)
   rabbet!

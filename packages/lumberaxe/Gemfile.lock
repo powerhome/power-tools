@@ -280,7 +280,6 @@ DEPENDENCIES
   combustion (~> 1.3)
   license_finder (>= 7.0)
   lumberaxe!
-  nokogiri (< 1.16)
   parser (>= 2.5, != 2.5.1.1)
   pry (>= 0.14.2)
   pry-byebug (= 3.10.1)
