@@ -160,7 +160,6 @@ DEPENDENCIES
   combustion (~> 1.3)
   license_finder (>= 7.0)
   nitro_config!
-  nokogiri (< 1.16)
   rake (>= 13.0)
   rspec (>= 3.0)
   rubocop (>= 1.32)
