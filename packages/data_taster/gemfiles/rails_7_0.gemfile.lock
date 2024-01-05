@@ -12,6 +12,7 @@ PATH
   remote: ..
   specs:
     data_taster (0.2.0)
+      rails (>= 6.0)
 
 GEM
   remote: https://rubygems.org/
@@ -127,7 +128,7 @@ GEM
     net-smtp (0.4.0)
       net-protocol
     nio4r (2.7.0)
-    nokogiri (1.16.0-arm64-darwin)
+    nokogiri (1.15.5-arm64-darwin)
       racc (~> 1.4)
     parallel (1.24.0)
     parser (3.2.2.4)
@@ -246,6 +247,7 @@ DEPENDENCIES
   bundler (~> 2.1)
   data_taster!
   license_finder (~> 7.0)
+  nokogiri (< 1.16)
   parser (>= 2.5, != 2.5.1.1)
   rails (= 7.0.6)
   rainbow (= 2.2.2)
