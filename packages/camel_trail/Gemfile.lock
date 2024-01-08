@@ -11,7 +11,7 @@ PATH
 PATH
   remote: .
   specs:
-    camel_trail (0.0.1)
+    camel_trail (0.0.2)
       nitro_config
       powerhome-attr_encrypted (= 1.2.0)
       rails (>= 6.0.6.1, < 7.0)
