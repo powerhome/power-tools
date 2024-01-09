@@ -11,7 +11,7 @@ PATH
 PATH
   remote: ..
   specs:
-    camel_trail (0.0.1)
+    camel_trail (0.0.2)
       nitro_config
       powerhome-attr_encrypted (= 1.2.0)
       rails (>= 6.0.6.1, < 7.0)
@@ -115,14 +115,14 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.5)
     minitest (5.20.0)
-    net-imap (0.4.9)
+    net-imap (0.4.9.1)
       date
       net-protocol
     net-pop (0.1.2)
       net-protocol
     net-protocol (0.2.2)
       timeout
-    net-smtp (0.4.0)
+    net-smtp (0.4.0.1)
       net-protocol
     nio4r (2.7.0)
     nitro_config (0.2.0)

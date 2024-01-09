@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [2.0.1] - 2023-01-08
+
+- Bugfixes, minor version bumps
+
 ## [2.0.0] - 2022-09-02
 
 - Support multiple versions of rails (>= 5.2.8.1)
