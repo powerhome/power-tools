@@ -68,7 +68,11 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     method_source (1.0.0)
+    mini_portile2 (2.8.5)
     minitest (5.20.0)
+    nokogiri (1.16.0)
+      mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
     nokogiri (1.16.0-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.16.0-x86_64-linux)
@@ -168,6 +172,7 @@ GEM
 PLATFORMS
   arm64-darwin-22
   arm64-darwin-23
+  ruby
   x86_64-linux
 
 DEPENDENCIES
@@ -186,4 +191,4 @@ DEPENDENCIES
   sqlite3 (~> 1.4.2)
 
 BUNDLED WITH
-   2.3.26
+   2.5.4
