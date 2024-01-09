@@ -8,5 +8,5 @@ end
 
 gemspec
 
-gem "nokogiri", "< 1.16"
+gem "nokogiri", "< 1.17"
 gem "rubocop-powerhome", path: "../rubocop-powerhome"
