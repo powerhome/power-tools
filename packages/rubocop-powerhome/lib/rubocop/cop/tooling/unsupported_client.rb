@@ -1,18 +1,21 @@
+# frozen_string_literal: true
+
 module RuboCop
   module Cop
     module Tooling
       class UnsupportedClient < RuboCop::Cop::Cop
         # TODO: Update this message to reference our internal wrapper and link to its documentation
-        MSG = "Found an unsupported HTTP client. Please use `Net::HTTP` instead."
-
         HTTP_CLIENT_SEARCHES = {
-          faraday: '$(def $_ _args `(send (const nil? :Faraday) ...))',
-          # other clients
-        }
+          faraday: "$(def $_ _args `(send (const nil? :Faraday) ...))",
+          httparty: "$(def $_ _args `(send (const nil? :HTTParty) ...))",
+          rest_client: "$(def $_ _args `(send (const nil? :RestClient) ...))",
+          typhoeus: "$(def $_ _args `(send (const nil? :Typhoeus) ...))",
+          http_client: "$(def $_ _args `(send (const nil? :HTTPClient) ...))",
+        }.freeze
 
-        HTTP_CLIENT_SEARCHES.each { |client, definition| def_node_search(client, definition)  }
+        HTTP_CLIENT_SEARCHES.each { |client, definition| def_node_search(client, definition) }
 
-        def_node_search :reference_calls, '$(def $_ _args `(send nil? %1))'
+        def_node_search :reference_calls, "$(def $_ _args `(send nil? %1))"
 
         def on_class(node)
           summary(node).each_with_object(default_hash) do |(matcher, def_nodes), refs|
@@ -21,12 +24,14 @@ module RuboCop
                 refs[def_node.method_name][def_node_ref.method_name] = def_node_ref
               end
 
-              add_offense(def_node, message: "Found #{matcher}!", severity: :fatal)
+              add_offense(def_node,
+                          message: "Found #{matcher}! Please use `Net::HTTP` instead.",
+                          severity: :fatal)
             end
           end
         end
 
-        private
+      private
 
         def summary(node)
           HTTP_CLIENT_SEARCHES.keys.each_with_object(default_hash) do |matcher, summary|
@@ -40,3 +45,4 @@ module RuboCop
       end
     end
   end
+end
