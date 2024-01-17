@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.1.5] - 2024-1-17
+
+- Add support to rails 7.1
+
 ## [0.1.4] - 2023-1-1
 
 - Add LoggerSilence module to fix sprockets-rails compatibility
