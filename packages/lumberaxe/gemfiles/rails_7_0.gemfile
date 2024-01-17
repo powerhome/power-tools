@@ -2,8 +2,8 @@
 
 source "https://rubygems.org"
 
-gem "nokogiri", "< 1.16"
 gem "rubocop-powerhome", path: "../../rubocop-powerhome"
+gem "nokogiri", "< 1.16"
 gem "rails", "7.0.6"
 
 gemspec path: "../"
