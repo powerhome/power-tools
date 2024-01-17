@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "activesupport", ">= 6.0.6.1", "< 7.1"
+  spec.add_dependency "activesupport", ">= 6.0.6.1", "< 7.2"
   spec.add_dependency "lograge", "0.10.0"
 
   spec.add_development_dependency "appraisal", "~> 2.4.1"
@@ -40,7 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "parser", ">= 2.5", "!= 2.5.1.1"
   spec.add_development_dependency "pry", ">= 0.14.2"
   spec.add_development_dependency "pry-byebug", "3.10.1"
-  spec.add_development_dependency "rails", ">= 6.0.6.1", "< 7.1"
+  spec.add_development_dependency "rails", ">= 6.0.6.1", "< 7.2"
   spec.add_development_dependency "rainbow", "2.2.2"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.0"
