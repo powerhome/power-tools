@@ -8,3 +8,6 @@
 
 # rspec failure tracking
 .rspec_status
+
+*.sqlite3
+*.sqlite
