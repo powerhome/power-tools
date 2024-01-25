@@ -30,6 +30,10 @@ Helping ruby developers implement easy patterns.
 
 Delicious and sanitized data samples for development and testing.
 
+[dep_shield](https://github.com/powerhome/power-tools/blob/main/packages/dep_shield/docs/README.md) 💎
+
+Enable alerts about deprecated features & prevent new ones from being introduced.
+
 [edgestitch](https://github.com/powerhome/power-tools/blob/main/packages/edgestitch/docs/README.md) 💎
 
 Edgestitch allows engines to define partial structure-self.sql files to be stitched into a single structure.sql file by the umbrella application.
