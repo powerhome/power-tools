@@ -36,7 +36,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "license_finder", ">= 7.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rspec-rails", "~> 5.1.2"
-  spec.add_development_dependency "rubocop-powerhome", "0.5.0"
   spec.add_development_dependency "sqlite3", "~> 1.4.2"
 
   spec.add_dependency "nitro_config"
