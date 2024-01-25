@@ -7,10 +7,7 @@ module DepShield
         paths = Rails.root.glob("**/.deprecation_todo.yml")
 
         paths.each_with_object({}) do |path, list|
-          todos = YAML.load_file(path)
-          next unless todos
-
-          todos.each do |feature_name, dep_todos|
+          YAML.load_file(path)&.each do |feature_name, dep_todos|
             list[feature_name] ||= []
             list[feature_name] += dep_todos
           end
