@@ -6,4 +6,26 @@ With DepShield, developers can stay ahead of the curve by receiving real-time al
 
 ## Usage
 
-TODO: Write usage instructions here
+`DepShield#raise_or_capture!` is used to mark methods as deprecated. When called, it will intelligently warn or raise exceptions to alert developers to the deprecated activity. The method expects two arguments, a `name` (ie, the name of the deprecation you're introducing), and a `message` (usually information about what is deprecated and how to fix it). Marking something as deprecated is pretty simple:
+
+```ruby
+# components/books/lib/books.rb
+
+def self.category
+  NitroErrors.deprecate!(name: "books_default_category", message: "please use '.default_category' instead")
+  "Science Fiction"
+end
+```
+
+This is used in conjuction with NitroConfig to define how different environment should react:
+
+Option A: the result of this is a logged warning every time the method is called.
+Option B: this will raise and notify our error catcher (Sentry).
+
+If a developer needs to bypass this/defer fixing the deprecation to a future date, the call can be "grandfathered" by adding this information to the allowlist in `.deprecation_todo.yml` in the application/component that hosts the deprecated reference. For example, if you have a method in the `authors` component that references `Books.category`:
+
+```ruby
+# components/authors/lib/book_information.rb
+
+book_category = Books.category
+```
