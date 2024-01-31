@@ -1,0 +1,12 @@
+# Using NitroErrors to mark something as deprecated means that it may raise when
+# new code using deprecated methods is introduced.
+# This file can be used to whitelist preexisting methods so that they will not raise,
+# and register a list of todos for places that should be fixed.
+# The intention is for the user to remove these configuration records
+# one by one as the deprecations are removed from the code base.
+#
+# More information: https://github.com/powerhome/nitro-web/blob/master/components/nitro_errors/docs/README.md#L1
+
+# Example:
+# test_deprecation_name:
+#   - app/controllers/example_controller.rb
