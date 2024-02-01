@@ -6,6 +6,9 @@ RSpec.describe DepShield::Deprecation do
   context "#raise_or_capture!" do
     describe "configured to capture_deprecation" do
       before do
+        DepShield.todos.load(Rails.root.join("config", ".deprecation_todo.yml"))
+        DepShield.todos.load(Rails.root.join("config", ".empty_deprecation_todo.yml"))
+
         allow(NitroConfig).to receive(:get).with("nitro_errors/capture_deprecation").and_return true
       end
 
