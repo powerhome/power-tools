@@ -46,6 +46,7 @@ module Edgestitch
       def self.sanitize_migration_timestamps(sql)
         sql.gsub("VALUES ", "VALUES\n")
            .gsub(",", "\n,")
+           .gsub(";", "\n;")
       end
 
       #
