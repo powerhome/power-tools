@@ -11,6 +11,8 @@ module Edgestitch
     # Wrapper for the mysqldump tool to dump specific tables and migration data
     #
     class Dump
+      # @private
+      #
       # Sanitizes a DDL code with some opinionated preferences:
       # * Constraints starting with `_fk` will start with `fk`
       # * Clear empty lines (with empty spaces even)
@@ -18,7 +20,7 @@ module Edgestitch
       #
       # @param sql [String] the DDL code to sanitize
       # @return String the same DDL sanitized
-      def self.sanitize_sql(sql)
+      def self.sanitize_create_table(sql)
         comment_instructions_regex = %r{^/\*![0-9]{5}\s+[^;]+;\s*$}
 
         cleanups = sql.gsub(/\s+AUTO_INCREMENT=\d+/, "")
@@ -27,6 +29,24 @@ module Edgestitch
                       .gsub(/\n\s*\n\s*\n/, "\n\n")
                       .strip
         ::Edgestitch::Mysql::StructureConstraintOrderMunger.munge(cleanups)
+      end
+
+      # @private
+      #
+      # Sanitizes a DML code to insert migration timestamps with opinionated preferences:
+      # * One timestamp per line
+      # * Except for the first line, they all start with a comma
+      # * Semicolomn is in a separate line from the last one
+      #
+      # The above preferences come from the idea of minimizing merge conflicts, or make
+      # them easily handled by git automatically
+      #
+      # @param sql [String] the DML code to sanitize
+      # @return String the same DML sanitized
+      def self.sanitize_migration_timestamps(sql)
+        sql.gsub("VALUES ", "VALUES\n")
+           .gsub(",", "\n,")
+           .gsub(";", "\n;")
       end
 
       #
@@ -49,7 +69,7 @@ module Edgestitch
       def export_tables(tables)
         return if tables.empty?
 
-        self.class.sanitize_sql(
+        self.class.sanitize_create_table(
           execute("--compact", "--skip-lock-tables", "--no-data", "--set-gtid-purged=OFF",
                   "--column-statistics=0", *tables)
         )
@@ -65,13 +85,13 @@ module Edgestitch
       # @return String the INSERT statements.
       def export_migrations(migrations)
         migrations.in_groups_of(50, false).map do |versions|
-          execute(
+          self.class.sanitize_migration_timestamps execute(
             "--compact", "--skip-lock-tables", "--set-gtid-purged=OFF",
             "--no-create-info", "--column-statistics=0",
             "schema_migrations",
             "-w", "version IN (#{versions.join(',')})"
           )
-        end.join.gsub("VALUES ", "VALUES\n").gsub(",", ",\n")
+        end.join
       end
 
     private

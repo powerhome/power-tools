@@ -1,3 +1,8 @@
+## [0.4.0] - 2023-01-25
+
+- Minimize merge conflcits on structure-self.sql [#240](https://github.com/powerhome/power-tools/pull/240)
+- Let bundler manage LOAD_PATH alone [#111](https://github.com/powerhome/power-tools/pull/111)
+
 ## [0.3.0] - 2023-01-25
 
 - Allow disabling rails tasks enhancing by @xjunior in [#84](https://github.com/powerhome/power-tools/pull/84)
