@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "bundler"
-require "dep_shield"
+require "dep_shield/railtie"
 require "rspec/rails"
 
 Bundler.require :default, :development
