@@ -11,7 +11,7 @@ PATH
 PATH
   remote: ..
   specs:
-    dep_shield (0.2.1)
+    dep_shield (0.3.0)
       nitro_config
       railties (>= 6.0.6.1, <= 7.0.6)
       sentry-rails (= 5.5.0)
@@ -127,6 +127,8 @@ GEM
     nitro_config (0.2.0)
       activesupport (>= 5.2.8.1)
     nokogiri (1.15.5-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.15.5-x86_64-linux)
       racc (~> 1.4)
     parallel (1.24.0)
     parser (3.3.0.5)
@@ -251,6 +253,7 @@ GEM
 
 PLATFORMS
   arm64-darwin
+  x86_64-linux
 
 DEPENDENCIES
   appraisal (~> 2.5.0)
