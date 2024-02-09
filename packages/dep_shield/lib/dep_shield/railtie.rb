@@ -11,7 +11,7 @@ module DepShield
         callstack = payload[:callstack] || caller
 
         DepShield.raise_or_capture!(name: name, message: message, callstack: callstack)
-      end  
+      end
     end
   end
 end
