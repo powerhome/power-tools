@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.3.1]
+
+- Cleanup unnecessary dependencies and require of rails/all
+
 ## [0.3.0]
 
 - Subscribe to deprecation.rails notifications from railtie
