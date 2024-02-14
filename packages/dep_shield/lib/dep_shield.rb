@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require "nitro_config"
-require "rails/all"
-require "sentry-rails"
 require "sentry-ruby"
 
 require_relative "dep_shield/deprecation"

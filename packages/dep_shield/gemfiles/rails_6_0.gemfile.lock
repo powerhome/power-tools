@@ -13,9 +13,7 @@ PATH
   specs:
     dep_shield (0.3.0)
       nitro_config
-      railties (>= 6.0.6.1, <= 7.0.6)
-      sentry-rails (= 5.5.0)
-      sentry-ruby (= 5.5.0)
+      sentry-ruby (>= 5.5.0)
 
 GEM
   remote: https://rubygems.org/
@@ -223,9 +221,6 @@ GEM
       rubocop-factory_bot (~> 2.22)
     ruby-progressbar (1.13.0)
     rubyzip (2.3.2)
-    sentry-rails (5.5.0)
-      railties (>= 5.0)
-      sentry-ruby (~> 5.5.0)
     sentry-ruby (5.5.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
     sprockets (4.2.1)
