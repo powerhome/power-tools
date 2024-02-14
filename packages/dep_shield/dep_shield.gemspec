@@ -32,14 +32,11 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "nitro_config"
-  spec.add_dependency "railties", ">= 6.0.6.1", "<= 7.0.6"
-  spec.add_dependency "sentry-rails", "5.5.0"
-  spec.add_dependency "sentry-ruby", "5.5.0"
+  spec.add_dependency "sentry-ruby", ">= 5.5.0"
 
   spec.add_development_dependency "appraisal", "~> 2.5.0"
   spec.add_development_dependency "combustion", "~> 1.4"
   spec.add_development_dependency "license_finder", ">= 7.0"
   spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "rspec-rails", "~> 5.1.2"
   spec.add_development_dependency "sqlite3", "~> 1.4.2"
 end
