@@ -152,7 +152,7 @@ The generated file often doesn't comply with `rubocop` defined rules, so you'll 
 
 Commit everything that was generated and you can now configure your github workflow. Add the gemfiles to the workflow arguments and they should run with each of the supported ruby versions. [`edgestitch`s workflow](.github/workflows/edgestitch.yml) is a good example.
 
-When updating gems it's important to remember to run `bundle exec appraisal bundle update <gem>`, so all your lock files are updated, but CI will remember you otherwise.
+When updating gems it's important to remember to run `bundle exec appraisal bundle update <gem>`, so all your lock files are updated, but CI will remind you otherwise.
 
 To run *any* command targeting each of the Appraisals, just run `bundle exec appraisal <command>`, for further information on Appraisal refer to [their documentation](https://github.com/thoughtbot/appraisal).
 
