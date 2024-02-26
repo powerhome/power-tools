@@ -130,7 +130,7 @@ Releases will be published according to [Semantic Versioning](https://semver.org
 
 ## Supporting multiple gem versions
 
-To support multiple versions of a gem, and add a build to the pipeline, we use [Appraisal](https://github.com/thoughtbot/appraisal). The installation is simple, add `appraisals` to your gemspec as a development dependency and install it, then create an Appraisals file like the following to support multiple versions of rails:
+To support multiple versions of a gem, and add a build to the pipeline, we use [Appraisal](https://github.com/thoughtbot/appraisal). The installation is simple, add `appraisal` to your gemspec as a development dependency and install it, then create an Appraisals file like the following to support multiple versions of rails:
 
 ```ruby
 appraise "rails-6-1" do
