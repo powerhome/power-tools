@@ -128,6 +128,34 @@ For JS modules you will need to use gitpkg.now.sh to point to a subfolder within
 
 Releases will be published according to [Semantic Versioning](https://semver.org/) and it is the responsibility of the consumers to keep their application dependencies up to date. We recommend leveraging [renovatebot](https://github.com/renovatebot/renovate) 🤖
 
+## Supporting multiple gem versions
+
+To support multiple versions of a gem, and add a build to the pipeline, we use [Appraisal](https://github.com/thoughtbot/appraisal). The installation is simple, add `appraisal` to your gemspec as a development dependency and install it, then create an Appraisals file like the following to support multiple versions of rails:
+
+```ruby
+appraise "rails-6-1" do
+  gem "rails", "6.1.7.7"
+end
+
+appraise "rails-7-0" do
+  gem "rails", "7.0.8.1"
+end
+```
+
+Run `bundle exec appraisal install`, which will:
+
+1. Create a `gemfiles` directory
+1. Create a different `Gemfile` for each appraisal
+1. Install each `Gemfile` bundler and generate a lock file
+
+The generated file often doesn't comply with `rubocop` defined rules, so you'll also want to run `bundle exec rubocop -A gemfiles`.
+
+Commit everything that was generated and you can now configure your github workflow. Add the gemfiles to the workflow arguments and they should run with each of the supported ruby versions. [`edgestitch`s workflow](.github/workflows/edgestitch.yml) is a good example.
+
+When updating gems it's important to remember to run `bundle exec appraisal bundle update <gem>`, so all your lock files are updated, but CI will remind you otherwise.
+
+To run *any* command targeting each of the Appraisals, just run `bundle exec appraisal <command>`, for further information on Appraisal refer to [their documentation](https://github.com/thoughtbot/appraisal).
+
 ## Maintenance 🚧
 
 These packages are maintained by [Power's](https://github.com/powerhome) Heroes for Hire team.
