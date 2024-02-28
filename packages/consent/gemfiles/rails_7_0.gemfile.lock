@@ -123,6 +123,7 @@ GEM
     marcel (1.0.2)
     method_source (1.0.0)
     mini_mime (1.1.5)
+    mini_portile2 (2.8.5)
     minitest (5.22.2)
     net-imap (0.4.10)
       date
@@ -134,6 +135,9 @@ GEM
     net-smtp (0.4.0.1)
       net-protocol
     nio4r (2.7.0)
+    nokogiri (1.15.5)
+      mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
     nokogiri (1.15.5-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.15.5-x86_64-linux)
@@ -254,6 +258,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
+  ruby
   x86_64-linux
 
 DEPENDENCIES
@@ -266,7 +271,7 @@ DEPENDENCIES
   nokogiri (< 1.16)
   pry (>= 0.14.2)
   pry-byebug (= 3.10.1)
-  rails (= 7.0.8.1)
+  rails (~> 7.0.0)
   rake (~> 13)
   rspec (~> 3.0)
   rspec-rails (~> 5.1.2)
