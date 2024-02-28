@@ -2,5 +2,5 @@
 
 module CamelTrail
   # The current version of the gem.
-  VERSION = "0.0.2"
+  VERSION = "1.0.0"
 end

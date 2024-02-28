@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+## [1.0.0] - 2024-02-28
+
+- Adds support for Rails 7.1
+- Uses upstream `attr_encrypted` gem
+
 ## [0.0.2] - 2023-01-08
 
 - Bugfixes, minor version bumps
