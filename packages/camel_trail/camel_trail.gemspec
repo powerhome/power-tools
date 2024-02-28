@@ -18,8 +18,8 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "docs/README.md"]
 
-  s.add_dependency "nitro_config"
   s.add_dependency "attr_encrypted", "4.0.0"
+  s.add_dependency "nitro_config"
 
   s.add_dependency "rails", ">= 6.0.6.1", "< 7.2"
 
