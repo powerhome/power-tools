@@ -12,8 +12,8 @@ PATH
   remote: ..
   specs:
     camel_trail (0.0.2)
+      attr_encrypted (= 4.0.0)
       nitro_config
-      powerhome-attr_encrypted (= 1.2.0)
       rails (>= 6.0.6.1, < 7.2)
 
 GEM
@@ -98,6 +98,8 @@ GEM
       rake
       thor (>= 0.14.0)
     ast (2.4.2)
+    attr_encrypted (4.0.0)
+      encryptor (~> 3.0.0)
     base64 (0.2.0)
     bigdecimal (3.1.6)
     builder (3.2.4)
@@ -159,8 +161,6 @@ GEM
     parser (3.3.0.5)
       ast (~> 2.4.1)
       racc
-    powerhome-attr_encrypted (1.2.0)
-      encryptor (~> 3.0.0)
     psych (5.1.2)
       stringio
     racc (1.7.3)
@@ -287,7 +287,7 @@ GEM
     zeitwerk (2.6.13)
 
 PLATFORMS
-  arm64-darwin-22
+  arm64-darwin
   x86_64-linux
 
 DEPENDENCIES
@@ -305,4 +305,4 @@ DEPENDENCIES
   yard (= 0.9.21)
 
 BUNDLED WITH
-   2.4.10
+   2.5.4
