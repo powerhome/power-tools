@@ -25,10 +25,10 @@
     "test": "echo 'No tests on eslint-config'"
   },
   "peerDependencies": {
-    "@typescript-eslint/eslint-plugin": "7.0.1",
-    "@typescript-eslint/parser": "7.0.1",
+    "@typescript-eslint/eslint-plugin": "7.1.0",
+    "@typescript-eslint/parser": "7.1.0",
     "@babel/eslint-parser": "8 || 10 || 7",
-    "eslint": "8.56.0",
+    "eslint": "8.57.0",
     "eslint-plugin-flowtype": "8.0.3",
     "eslint-plugin-jsx-control-statements": "3.0.0",
     "eslint-plugin-react": "7.33.2",
@@ -37,18 +37,18 @@
     "typescript": "5.3.3"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "7.0.1",
-    "@typescript-eslint/parser": "7.0.1",
-    "@babel/core": "7.23.7",
-    "@babel/eslint-parser": "7.23.3",
-    "eslint": "8.56.0",
+    "@typescript-eslint/eslint-plugin": "7.1.0",
+    "@typescript-eslint/parser": "7.1.0",
+    "@babel/core": "7.24.0",
+    "@babel/eslint-parser": "7.23.10",
+    "eslint": "8.57.0",
     "eslint-plugin-flowtype": "8.0.3",
     "eslint-plugin-jsx-control-statements": "3.0.0",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-webpack-plugin": "4.0.1",
-    "prettier": "3.1.1",
-    "semver": "7.5.4",
+    "prettier": "3.2.5",
+    "semver": "7.6.0",
     "typescript": "5.3.3"
   },
   "dependencies": {

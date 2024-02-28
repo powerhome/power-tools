@@ -48,19 +48,19 @@ GEM
     rake (13.1.0)
     regexp_parser (2.9.0)
     rexml (3.2.6)
-    rspec (3.12.0)
-      rspec-core (~> 3.12.0)
-      rspec-expectations (~> 3.12.0)
-      rspec-mocks (~> 3.12.0)
-    rspec-core (3.12.3)
-      rspec-support (~> 3.12.0)
-    rspec-expectations (3.12.4)
+    rspec (3.13.0)
+      rspec-core (~> 3.13.0)
+      rspec-expectations (~> 3.13.0)
+      rspec-mocks (~> 3.13.0)
+    rspec-core (3.13.0)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.12.0)
-    rspec-mocks (3.12.7)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.12.0)
-    rspec-support (3.12.2)
+      rspec-support (~> 3.13.0)
+    rspec-support (3.13.1)
     rubocop (1.60.2)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
@@ -111,17 +111,17 @@ GEM
       rexml
 
 PLATFORMS
-  arm64-darwin-22
-  x86_64-linux
+  arm64-darwin-23
+  ruby
 
 DEPENDENCIES
-  bundler (~> 2.4.7)
+  bundler (~> 2.5.0)
   byebug
   license_finder (~> 7.0)
   ostruct-sanitizer!
   rake (= 13.1.0)
-  rspec (= 3.12.0)
+  rspec (= 3.13.0)
   rubocop-powerhome (= 0.5.2)
 
 BUNDLED WITH
-   2.4.10
+   2.5.6
