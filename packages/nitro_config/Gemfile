@@ -6,7 +6,7 @@ gemspec
 
 gem "byebug"
 gem "license_finder", ">= 7.0"
-gem "nokogiri", "< 1.16"
+gem "nokogiri", "< 1.17"
 gem "rake", ">= 13.0"
 gem "rspec", ">= 3.0"
 gem "rubocop", ">= 1.32"
