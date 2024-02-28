@@ -11,7 +11,7 @@ PATH
 PATH
   remote: ..
   specs:
-    camel_trail (0.0.2)
+    camel_trail (1.0.0)
       attr_encrypted (= 4.0.0)
       nitro_config
       rails (>= 6.0.6.1, < 7.2)
@@ -268,7 +268,7 @@ DEPENDENCIES
   camel_trail!
   license_finder (>= 7.0)
   nokogiri (< 1.16)
-  rails (~> 6.1.0)
+  rails (= 6.1.7.7)
   rake (~> 13)
   rspec (~> 3.0)
   rspec-rails (~> 5.1.2)
