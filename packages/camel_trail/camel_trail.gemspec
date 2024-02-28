@@ -18,10 +18,10 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "docs/README.md"]
 
+  s.add_dependency "attr_encrypted", "4.0.0"
   s.add_dependency "nitro_config"
-  s.add_dependency "powerhome-attr_encrypted", "1.2.0"
 
-  s.add_dependency "rails", ">= 6.0.6.1", "< 7.0"
+  s.add_dependency "rails", ">= 6.0.6.1", "< 7.2"
 
   s.add_development_dependency "appraisal", "~> 2.4.1"
   s.add_development_dependency "license_finder", ">= 7.0"
