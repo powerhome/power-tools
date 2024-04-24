@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe CamelTrail::EncryptedHistory, type: :model do
+RSpec.describe CamelTrail::EncryptedHistory do
   let!(:history) { CamelTrail::EncryptedHistory.create(source_id: 1, source_type: "Test", note: "Note 1") }
 
   it "saves the encrypted note" do

@@ -95,9 +95,9 @@ GEM
     erubi (1.12.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    i18n (1.14.1)
+    i18n (1.14.4)
       concurrent-ruby (~> 1.0)
-    json (2.7.1)
+    json (2.7.2)
     license_finder (7.1.0)
       bundler
       rubyzip (>= 1, < 3)
@@ -113,11 +113,10 @@ GEM
       net-imap
       net-pop
       net-smtp
-    marcel (1.0.2)
-    method_source (1.0.0)
+    marcel (1.0.4)
+    method_source (1.1.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.5)
-    minitest (5.22.2)
+    minitest (5.22.3)
     net-imap (0.4.10)
       date
       net-protocol
@@ -125,24 +124,21 @@ GEM
       net-protocol
     net-protocol (0.2.2)
       timeout
-    net-smtp (0.4.0.1)
+    net-smtp (0.5.0)
       net-protocol
-    nio4r (2.7.0)
+    nio4r (2.7.1)
     nitro_config (0.2.0)
       activesupport (>= 5.2.8.1)
-    nokogiri (1.15.5)
-      mini_portile2 (~> 2.8.2)
+    nokogiri (1.16.4-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.15.5-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.15.5-x86_64-linux)
+    nokogiri (1.16.4-x86_64-linux)
       racc (~> 1.4)
     parallel (1.24.0)
     parser (3.3.0.5)
       ast (~> 2.4.1)
       racc
     racc (1.7.3)
-    rack (2.2.8.1)
+    rack (2.2.9)
     rack-test (2.1.0)
       rack (>= 1.3)
     rails (6.1.7.7)
@@ -174,7 +170,7 @@ GEM
       rake (>= 12.2)
       thor (~> 1.0)
     rainbow (3.1.1)
-    rake (13.1.0)
+    rake (13.2.1)
     regexp_parser (2.9.0)
     rexml (3.2.6)
     rspec (3.13.0)
@@ -208,26 +204,29 @@ GEM
       rubocop-ast (>= 1.28.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.30.0)
-      parser (>= 3.2.1.0)
+    rubocop-ast (1.31.2)
+      parser (>= 3.3.0.4)
     rubocop-capybara (2.20.0)
       rubocop (~> 1.41)
     rubocop-factory_bot (2.25.1)
       rubocop (~> 1.41)
-    rubocop-performance (1.20.2)
+    rubocop-performance (1.21.0)
       rubocop (>= 1.48.1, < 2.0)
-      rubocop-ast (>= 1.30.0, < 2.0)
-    rubocop-rails (2.23.1)
+      rubocop-ast (>= 1.31.1, < 2.0)
+    rubocop-rails (2.24.1)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.33.0, < 2.0)
-      rubocop-ast (>= 1.30.0, < 2.0)
+      rubocop-ast (>= 1.31.1, < 2.0)
     rubocop-rake (0.6.0)
       rubocop (~> 1.0)
-    rubocop-rspec (2.26.1)
+    rubocop-rspec (2.29.1)
       rubocop (~> 1.40)
       rubocop-capybara (~> 2.17)
       rubocop-factory_bot (~> 2.22)
+      rubocop-rspec_rails (~> 2.28)
+    rubocop-rspec_rails (2.28.3)
+      rubocop (~> 1.40)
     ruby-progressbar (1.13.0)
     rubyzip (2.3.2)
     simplecov (0.15.1)
@@ -242,7 +241,8 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    sqlite3 (1.4.4)
+    sqlite3 (1.7.3-arm64-darwin)
+    sqlite3 (1.7.3-x86_64-linux)
     thor (1.3.1)
     timeout (0.4.1)
     tomlrb (2.0.3)
@@ -259,22 +259,20 @@ GEM
     zeitwerk (2.6.13)
 
 PLATFORMS
-  arm64-darwin-22
-  ruby
+  arm64-darwin-23
   x86_64-linux
 
 DEPENDENCIES
   appraisal (~> 2.4.1)
   camel_trail!
   license_finder (>= 7.0)
-  nokogiri (< 1.16)
   rails (= 6.1.7.7)
   rake (~> 13)
   rspec (~> 3.0)
   rspec-rails (~> 5.1.2)
   rubocop-powerhome!
   simplecov (= 0.15.1)
-  sqlite3 (~> 1.4.2)
+  sqlite3 (~> 1.7.3)
   yard (= 0.9.21)
 
 BUNDLED WITH

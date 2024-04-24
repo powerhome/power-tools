@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = spec.summary
   spec.homepage = "https://github.com/powerhome/power-tools"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 2.7"
+  spec.required_ruby_version = ">= 3.0"
 
   spec.metadata["rubygems_mfa_required"] = "true"
   spec.metadata["homepage_uri"] = spec.homepage
@@ -35,5 +35,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "combustion", "~> 1.3"
   spec.add_development_dependency "rspec-rails", "~> 5.1.2"
   spec.add_development_dependency "shoulda-matchers", "~> 5.1.0"
-  spec.add_development_dependency "sqlite3", "~> 1.4.2"
+  spec.add_development_dependency "sqlite3", "~> 1.7.3"
 end

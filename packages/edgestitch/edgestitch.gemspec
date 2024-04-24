@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
                                     "stitched into a single structure.sql file by the umbrella application."
   spec.homepage = "https://github.com/powerhome/power-tools"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 2.7"
+  spec.required_ruby_version = ">= 3.0"
 
   spec.metadata["rubygems_mfa_required"] = "true"
   spec.metadata["homepage_uri"] = spec.homepage
