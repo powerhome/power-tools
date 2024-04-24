@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.description   = "Consent permission based authorization"
   spec.homepage = "https://github.com/powerhome/power-tools"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 2.7"
+  spec.required_ruby_version = ">= 3.0"
 
   spec.files = `git ls-files`.split.grep_v(/^(test|spec|features)/)
   spec.require_paths = ["lib"]
