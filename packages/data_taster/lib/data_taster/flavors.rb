@@ -31,19 +31,20 @@ module DataTaster
       value_to_encrypt = value || default_value_for(column)
 
       klass_instance = klass.new
-
       if klass_instance.respond_to?(:attr_encrypted_encrypt)
         klass_instance.attr_encrypted_encrypt(column, value_to_encrypt)
       elsif klass_instance.respond_to?(:encrypt)
         klass_instance.encrypt(column, value_to_encrypt)
       else
-        error_message = [
-          "DataTaster only supports encryption if your model is configured with attr_encrypted.",
-          "Please visit https://github.com/attr-encrypted/attr_encrypted for more details on setup."
-        ].join(" ")
-
-        raise error_message
+        raise encryption_error_message
       end
+    end
+
+    def encryption_error_message
+      [
+        "DataTaster only supports encryption if your model is configured with attr_encrypted.",
+        "Please visit https://github.com/attr-encrypted/attr_encrypted for more details on setup.",
+      ].join(" ")
     end
 
     def default_value_for(column)
