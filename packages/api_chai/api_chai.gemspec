@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = "Serve up smooth API integrations lightly steeped in graceful errors, Sentry & NewRelic reporting."
   spec.homepage = "https://github.com/powerhome/power-tools"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 2.6.0"
+  spec.required_ruby_version = ">= 3.0"
 
   spec.metadata["rubygems_mfa_required"] = "true"
   spec.metadata["homepage_uri"] = spec.homepage

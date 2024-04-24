@@ -30,6 +30,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec-rails", "~> 5.1.2"
   s.add_development_dependency "rubocop-powerhome", "0.5.0"
   s.add_development_dependency "simplecov", "0.15.1"
-  s.add_development_dependency "sqlite3", "~> 1.4.2"
+  s.add_development_dependency "sqlite3", "~> 1.7.3"
   s.add_development_dependency "yard", "0.9.21"
 end

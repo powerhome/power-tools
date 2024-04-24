@@ -291,7 +291,6 @@ DEPENDENCIES
   bundler (~> 2.1)
   data_taster!
   license_finder (~> 7.0)
-  nokogiri (< 1.16)
   parser (>= 2.5, != 2.5.1.1)
   rainbow (= 2.2.2)
   rake (~> 13.0)

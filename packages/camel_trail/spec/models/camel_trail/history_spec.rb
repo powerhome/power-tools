@@ -4,7 +4,7 @@ require "rails_helper"
 
 Test = Struct.new(:id)
 
-RSpec.describe CamelTrail::History, type: :model do
+RSpec.describe CamelTrail::History do
   let!(:note_one) { CamelTrail::History.create(source_id: 1, source_type: "Test", note: "Note 1") }
   let!(:note_two) { CamelTrail::History.create(source_id: 2, source_type: "Test", note: "Note 2") }
 

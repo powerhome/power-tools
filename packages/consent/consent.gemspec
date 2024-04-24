@@ -14,8 +14,9 @@ Gem::Specification.new do |spec|
   spec.description   = "Consent permission based authorization"
   spec.homepage = "https://github.com/powerhome/power-tools"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 2.7"
+  spec.required_ruby_version = ">= 3.0"
 
+  spec.metadata["rubygems_mfa_required"] = "true"
   spec.files = `git ls-files`.split.grep_v(/^(test|spec|features)/)
   spec.require_paths = ["lib"]
 
@@ -32,6 +33,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rspec-rails", "~> 5.1.2"
   spec.add_development_dependency "rubocop-powerhome", "0.5.0"
-  spec.add_development_dependency "sqlite3", "~> 1.4.2"
-  spec.metadata["rubygems_mfa_required"] = "true"
+  spec.add_development_dependency "sqlite3", "~> 1.7.3"
 end

@@ -7,7 +7,7 @@ module MyModule
   end
 end
 
-RSpec.describe Consent::Permission, type: :model do
+RSpec.describe Consent::Permission do
   describe "validation" do
     it "requires a valid subject" do
       permission = Consent::Permission.new(subject: nil)
