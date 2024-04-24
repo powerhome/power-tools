@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Consent::Authorizable, type: :model do
+RSpec.describe Consent::Authorizable do
   describe "#grant" do
     let(:role) { ExampleRole.new }
 
