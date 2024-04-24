@@ -38,7 +38,7 @@ module DataTaster
         klass_instance.encrypt(column, value_to_encrypt)
       else
         error_message = [
-          "DataTaster only supports encryption if your model is configured with attr_encrypted."
+          "DataTaster only supports encryption if your model is configured with attr_encrypted.",
           "Please visit https://github.com/attr-encrypted/attr_encrypted for more details on setup."
         ].join(" ")
 
