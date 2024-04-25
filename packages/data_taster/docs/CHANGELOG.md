@@ -1,6 +1,6 @@
 ## [Unreleased]
 
-## [0.2.0] - 2024-04-25
+## [0.3.0] - 2024-04-25
 
 - Add compatibility for encryption with newer versions of attr_encrypted
 
