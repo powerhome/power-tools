@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.4.0]
+
+- Bump a lot of dependency versions up
+
 ## [0.3.1]
 
 - Cleanup unnecessary dependencies and require of rails/all

@@ -11,7 +11,7 @@ PATH
 PATH
   remote: ..
   specs:
-    dep_shield (0.4.1)
+    dep_shield (0.4.0)
       nitro_config
       sentry-ruby (>= 5.5.0)
 
