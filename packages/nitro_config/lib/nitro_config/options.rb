@@ -13,7 +13,7 @@ module NitroConfig
       yaml = begin
         YAML.safe_load(erb_result, [], [], true)
       rescue ArgumentError
-        YAML.safe_load(erb_result, aliases: true)
+        YAML.safe_load(erb_result, aliases: true, fallback: {})
       end
 
       new(yaml[environment])
