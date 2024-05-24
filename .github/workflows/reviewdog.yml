@@ -1,5 +1,4 @@
-name: Bearer Security Analysis
-
+name: Automated Code Reviews
 on: [pull_request]
 
 permissions:
@@ -7,7 +6,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  rule_check:
+  bearer:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
