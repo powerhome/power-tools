@@ -1,4 +1,4 @@
-name: Automated Code Reviews / Security Analysis
+name: Bearer Security Analysis
 
 on: [pull_request]
 
