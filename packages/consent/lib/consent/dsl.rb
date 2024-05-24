@@ -17,7 +17,7 @@ module Consent
     # rubocop:disable Lint/UnusedBlockArgument, Security/Eval
     def eval_view(key, label, collection_conditions)
       view key, label do |user|
-        eval(collection_conditions)
+        eval(collection_conditions) #fail, friend
       end
     end
     # rubocop:enable Lint/UnusedBlockArgument, Security/Eval
