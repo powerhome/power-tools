@@ -43,7 +43,7 @@ module OStruct
     def method_missing(method, *args)
       # Give OpenStruct a chance to create getters and setters for the
       # corresponding field
-      super(method, *args)
+      super
 
       return unless (field = setter?(method))
 

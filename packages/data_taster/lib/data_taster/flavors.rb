@@ -80,7 +80,7 @@ module DataTaster
     end
 
     def source_db
-      @source_db ||= db_config["database"]
+      @source_db ||= db_config[:database]
     end
   end
 end

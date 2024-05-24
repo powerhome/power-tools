@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", ">= 6.0.6.1", "< 7.2"
 
-  s.add_development_dependency "appraisal", "~> 2.4.1"
+  s.add_development_dependency "appraisal", "~> 2.5.0"
   s.add_development_dependency "license_finder", ">= 7.0"
   s.add_development_dependency "rake", "~> 13"
   s.add_development_dependency "rspec", "~> 3.0"

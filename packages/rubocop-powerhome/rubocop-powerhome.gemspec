@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary = "Powerhome Rubocop standard rules"
   spec.description = "Powerhome Rubocop standard rules"
-  spec.homepage = "https://github.com/powerhome/power_linting"
+  spec.homepage = "https://github.com/powerhome/power-tools/blob/main/packages/rubocop-powerhome/"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0"
 
@@ -35,14 +35,14 @@ Gem::Specification.new do |spec|
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
 
-  spec.add_runtime_dependency "rubocop", "~> 1.52.0"
-  spec.add_runtime_dependency "rubocop-performance"
-  spec.add_runtime_dependency "rubocop-rails"
-  spec.add_runtime_dependency "rubocop-rake"
-  spec.add_runtime_dependency "rubocop-rspec"
+  spec.add_dependency "rubocop", "1.66.1"
+  spec.add_dependency "rubocop-performance"
+  spec.add_dependency "rubocop-rails"
+  spec.add_dependency "rubocop-rake"
+  spec.add_dependency "rubocop-rspec"
   spec.metadata["rubygems_mfa_required"] = "true"
 
-  spec.add_development_dependency "appraisal", "~> 2.4.1"
+  spec.add_development_dependency "appraisal", "~> 2.5.0"
   spec.add_development_dependency "license_finder", "~> 7.0"
   spec.add_development_dependency "pry", ">= 0.14.2"
   spec.add_development_dependency "pry-byebug", "3.10.1"
