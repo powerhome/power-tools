@@ -18,7 +18,7 @@ module DataTaster
     end
 
     def db_config
-      @db_config ||= db_yaml[Rails.env].key?("primary") ? db_yml[Rails.env]["primary"] : db_yml[Rails.env]
+      @db_config ||= db_yml[Rails.env].key?("primary") ? db_yml[Rails.env]["primary"] : db_yml[Rails.env]
     end
 
     def logg(message)
