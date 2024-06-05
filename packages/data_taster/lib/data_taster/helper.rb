@@ -13,12 +13,8 @@ module DataTaster
       sanitized_command
     end
 
-    def db_yml
-      @db_yml ||= YAML.safe_load(ERB.new(Rails.root.join("config", "database.yml").read).result, aliases: true)
-    end
-
     def db_config
-      @db_config ||= db_yml[Rails.env].key?("primary") ? db_yml[Rails.env]["primary"] : db_yml[Rails.env]
+      ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, name: "primary").configuration_hash
     end
 
     def logg(message)
