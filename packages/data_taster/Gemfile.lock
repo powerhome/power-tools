@@ -11,7 +11,7 @@ PATH
 PATH
   remote: .
   specs:
-    data_taster (0.3.0)
+    data_taster (0.4.0)
       rails (>= 6.0)
 
 GEM
