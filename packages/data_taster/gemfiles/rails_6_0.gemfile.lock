@@ -11,7 +11,7 @@ PATH
 PATH
   remote: ..
   specs:
-    data_taster (0.3.0)
+    data_taster (0.4.0)
       rails (>= 6.0)
 
 GEM
@@ -272,4 +272,4 @@ DEPENDENCIES
   yard (= 0.9.34)
 
 BUNDLED WITH
-   2.4.22
+   2.5.4
