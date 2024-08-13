@@ -42,7 +42,7 @@ users:
 
 ### `DataTaster.sample!`
 
-DataTaster uses its [Sample](https://github.com/powerhome/nitro-web/blob/master/components/data_taster/lib/data_taster/sample.rb) class to load the yml files, filtered through erb methods provided through its [Flavors](https://github.com/powerhome/nitro-web/blob/master/components/data_taster/lib/data_taster/flavors.rb) class.
+DataTaster uses its [Sample](https://github.com/powerhome/power-tools/blob/main/packages/data_taster/lib/data_taster/sample.rb) class to load the yml files, filtered through erb methods provided through its [Flavors](https://github.com/powerhome/power-tools/blob/main/packages/data_taster/lib/data_taster/flavors.rb) class.
 
 Before doing so, you'll need to specify a client to use to connect to mysql and make queries. Doing so can be done by calling `DataTaster.config`, like so:
 
