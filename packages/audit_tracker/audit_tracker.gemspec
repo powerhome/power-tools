@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "activerecord", ">= 6.0.6.1", "< 7.1"
-  spec.add_development_dependency "appraisal", "~> 2.4.1"
+  spec.add_development_dependency "appraisal", "~> 2.5.0"
   spec.add_development_dependency "combustion", "~> 1.3"
   spec.add_development_dependency "rspec-rails", "~> 5.1.2"
   spec.add_development_dependency "shoulda-matchers", "~> 5.1.0"

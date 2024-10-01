@@ -5,7 +5,7 @@ module Lumberaxe
     cattr_accessor(:log_level) { :debug }
 
     def initialize(output = $stdout, progname:, level: log_level)
-      super output
+      super(output)
 
       self.progname = progname
       self.level = level

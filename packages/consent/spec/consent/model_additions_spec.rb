@@ -4,8 +4,8 @@ require "spec_helper"
 
 describe Consent::ModelAdditions do
   describe ".accessible_through" do
-    let!(:it) { ExampleDepartment.create! name: "IT" }
-    let!(:developer) { ExampleRole.create! name: "Developer", example_department: it }
+    let!(:information_tech) { ExampleDepartment.create! name: "IT" }
+    let!(:developer) { ExampleRole.create! name: "Developer", example_department: information_tech }
     let!(:manager) { ExampleRole.create! name: "Manager" }
     let!(:director) { ExampleRole.create! name: "Director" }
     let!(:omega) do
@@ -52,8 +52,9 @@ describe Consent::ModelAdditions do
     it "allows nested relations" do
       ability.consent action: :report, subject: ExampleModel, view: :role_department
 
-      expect(ExampleDepartment.accessible_through(ability, :report, ExampleModel,
-                                                  relation: %i[example_role example_department])).to match_array([it])
+      expect(ExampleDepartment.accessible_through(
+               ability, :report, ExampleModel, relation: %i[example_role example_department]
+             )).to match_array([information_tech])
     end
 
     it "allows querying through symbol subjects" do
