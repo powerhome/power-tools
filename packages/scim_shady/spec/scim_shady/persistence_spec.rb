@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe ScimShady::Persistence do
   describe "#persisted?" do
     subject { User.new }

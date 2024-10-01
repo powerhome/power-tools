@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe ScimShady::Base do
   describe "attribute assignment" do
     let(:object) { User.new({"displayName" => "John Doe"}) }

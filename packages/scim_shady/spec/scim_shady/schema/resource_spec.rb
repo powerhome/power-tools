@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe ScimShady::Schema::Resource do
   let(:user_schema) { fixture_json("Get-Schemas.json")["Resources"].first }
   subject { ScimShady::Schema::Resource.new(user_schema) }

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe ScimShady::Schema do
   it "loads the schemas from the client and caches them" do
     expect(ScimShady.client).to_not receive(:get).with(path: "Schemas")

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe ScimShady::PatchOp do
   let(:object) { User.new }
   subject { ScimShady::PatchOp.new(object) }

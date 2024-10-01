@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe ScimShady::ListResponse do
   describe "object enumerator" do
     let(:response_json) { fixture_json("Get-Groups.json") }

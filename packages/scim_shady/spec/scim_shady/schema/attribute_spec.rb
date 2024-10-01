@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe ScimShady::Schema::Attribute do
   subject { ScimShady::Schema::Attribute.new({"name" => "name", "type" => "string"}) }
 

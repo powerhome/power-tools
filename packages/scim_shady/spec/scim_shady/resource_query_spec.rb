@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe ScimShady::ResourceQuery do
   describe ".resource_path" do
     it "is the title case plural form of the class name" do

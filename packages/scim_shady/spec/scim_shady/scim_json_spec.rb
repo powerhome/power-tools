@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe ScimShady::ScimJson do
   let(:object) { User.new }
   subject { ScimShady::ScimJson.new(object) }

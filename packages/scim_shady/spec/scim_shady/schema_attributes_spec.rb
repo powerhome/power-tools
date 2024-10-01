@@ -7,6 +7,8 @@ RSpec::Matchers.define :define_attribute do |name, type:, aliased: false|
   end
 end
 
+require "spec_helper"
+
 RSpec.describe ScimShady::SchemaAttributes do
   subject { User }
 
