@@ -1,0 +1,826 @@
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+  ],
+  "totalResults": 3,
+  "startIndex": 1,
+  "itemsPerPage": 3,
+  "Resources": [
+    {
+      "name": "User",
+      "id": "urn:ietf:params:scim:schemas:core:2.0:User",
+      "description": "Represents a User",
+      "meta": {
+        "resourceType": "Schema",
+        "location": "https://example.com/api/scim/Schemas?name=urn%3Aietf%3Aparams%3Ascim%3Aschemas%3Acore%3A2.0%3AUser"
+      },
+      "attributes": [
+        {
+          "multiValued": false,
+          "required": true,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "server",
+          "returned": "default",
+          "name": "userName",
+          "type": "string"
+        },
+        {
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "type": "complex",
+          "subAttributes": [
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "familyName",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "givenName",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "middleName",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "formatted",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "honorificPrefix",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "honorificSuffix",
+              "type": "string"
+            }
+          ],
+          "name": "name"
+        },
+        {
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "name": "displayName",
+          "type": "string"
+        },
+        {
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "name": "nickName",
+          "type": "string"
+        },
+        {
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "name": "profileUrl",
+          "type": "string"
+        },
+        {
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "name": "userType",
+          "type": "string"
+        },
+        {
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "name": "preferredLanguage",
+          "type": "string"
+        },
+        {
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "name": "locale",
+          "type": "string"
+        },
+        {
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "name": "timezone",
+          "type": "string"
+        },
+        {
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "name": "active",
+          "type": "boolean"
+        },
+        {
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "writeOnly",
+          "uniqueness": "none",
+          "returned": "never",
+          "name": "password",
+          "type": "string"
+        },
+        {
+          "multiValued": true,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "type": "complex",
+          "subAttributes": [
+            {
+              "multiValued": false,
+              "required": true,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "value",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "display",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "type",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "primary",
+              "type": "boolean"
+            }
+          ],
+          "name": "emails"
+        },
+        {
+          "multiValued": true,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "type": "complex",
+          "subAttributes": [
+            {
+              "multiValued": false,
+              "required": true,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "value",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "display",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "type",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "primary",
+              "type": "boolean"
+            }
+          ],
+          "name": "phoneNumbers"
+        },
+        {
+          "multiValued": true,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "type": "complex",
+          "subAttributes": [
+            {
+              "multiValued": false,
+              "required": true,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "value",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "display",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "type",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "primary",
+              "type": "boolean"
+            }
+          ],
+          "name": "ims"
+        },
+        {
+          "multiValued": true,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "type": "complex",
+          "subAttributes": [
+            {
+              "multiValued": false,
+              "required": true,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "value",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "display",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "type",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "primary",
+              "type": "boolean"
+            }
+          ],
+          "name": "photos"
+        },
+        {
+          "multiValued": true,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "type": "complex",
+          "subAttributes": [
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "type",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "primary",
+              "type": "boolean"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "formatted",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "streetAddress",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "locality",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "region",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "postalCode",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "country",
+              "type": "string"
+            }
+          ],
+          "name": "addresses"
+        },
+        {
+          "multiValued": true,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readOnly",
+          "uniqueness": "none",
+          "returned": "default",
+          "type": "complex",
+          "subAttributes": [
+            {
+              "multiValued": false,
+              "required": true,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "value",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "display",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "type",
+              "type": "string"
+            }
+          ],
+          "name": "groups"
+        },
+        {
+          "multiValued": true,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "type": "complex",
+          "subAttributes": [
+            {
+              "multiValued": false,
+              "required": true,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "value",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "display",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "type",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "primary",
+              "type": "boolean"
+            }
+          ],
+          "name": "entitlements"
+        },
+        {
+          "multiValued": true,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "type": "complex",
+          "subAttributes": [
+            {
+              "multiValued": false,
+              "required": true,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "value",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "display",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "type",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "primary",
+              "type": "boolean"
+            }
+          ],
+          "name": "roles"
+        },
+        {
+          "multiValued": true,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "type": "complex",
+          "subAttributes": [
+            {
+              "multiValued": false,
+              "required": true,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "value",
+              "type": "binary"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "display",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "type",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "primary",
+              "type": "boolean"
+            }
+          ],
+          "name": "x509Certificates"
+        }
+      ]
+    },
+    {
+      "name": "Group",
+      "id": "urn:ietf:params:scim:schemas:core:2.0:Group",
+      "description": "Represents a Group",
+      "meta": {
+        "resourceType": "Schema",
+        "location": "https://example.com/api/scim/Schemas?name=urn%3Aietf%3Aparams%3Ascim%3Aschemas%3Acore%3A2.0%3AGroup"
+      },
+      "attributes": [
+        {
+          "multiValued": false,
+          "required": true,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "name": "displayName",
+          "type": "string"
+        },
+        {
+          "multiValued": true,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "type": "complex",
+          "subAttributes": [
+            {
+              "multiValued": false,
+              "required": true,
+              "caseExact": false,
+              "mutability": "immutable",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "value",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "immutable",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "type",
+              "type": "string"
+            },
+            {
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "immutable",
+              "uniqueness": "none",
+              "returned": "default",
+              "name": "display",
+              "type": "string"
+            }
+          ],
+          "name": "members"
+        }
+      ]
+    },
+    {
+      "name": "ExtendedGroup",
+      "description": "Extension for a Group",
+      "id": "urn:ietf:params:scim:schemas:extension:service:2.0:Group",
+      "meta": {
+        "resourceType": "Schema",
+        "location": "https://example.com/api/scim/Schemas?name=urn%3Aietf%3Aparams%3Ascim%3Aschemas%3Aextension%service%3A2.0%3AGroup"
+      },
+      "attributes": [
+        {
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "name": "mfaRequired",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "name": "ExtendedUser",
+      "description": "Extension for a User",
+      "id": "urn:ietf:params:scim:schemas:extension:service:2.0:User",
+      "meta": {
+        "resourceType": "Schema",
+        "location": "https://example.com/api/scim/Schemas?name=urn%3Aietf%3Aparams%3Ascim%3Aschemas%3Aextension%service%3A2.0%3AUser"
+      },
+      "attributes": [
+        {
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readOnly",
+          "uniqueness": "none",
+          "returned": "default",
+          "name": "department",
+          "type": "string"
+        },
+        {
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "uniqueness": "none",
+          "returned": "default",
+          "name": "mfaRequired",
+          "type": "boolean"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+  ],
+  "totalResults": 4,
+  "startIndex": 3,
+  "itemsPerPage": 2,
+  "Resources": [
+    {
+      "id": "5000",
+      "externalId": "300000",
+      "displayName": "Master of the Universe",
+      "members": [
+        {
+          "value": "123",
+          "display": "John Doe"
+        }
+      ],
+      "meta": {
+        "location": "https://example.com/api/scim/Groups/2989",
+        "created": "2024-03-21T18:26:39-04:00",
+        "lastModified": "2024-03-21T18:26:39-04:00",
+        "resourceType": "Group"
+      },
+      "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:Group",
+        "urn:ietf:params:scim:schemas:extension:service:2.0:Group"
+      ],
+      "urn:ietf:params:scim:schemas:extension:service:2.0:Group": {
+        "description": "Master of the Universe",
+        "mfaRequired": null
+      }
+    },
+    {
+      "id": "6000",
+      "externalId": "700000",
+      "displayName": "Emperors",
+      "members": [],
+      "meta": {
+        "location": "https://example.com/api/scim/Groups/2998",
+        "created": "2024-03-27T15:58:56-04:00",
+        "lastModified": "2024-03-27T16:02:56-04:00",
+        "resourceType": "Group"
+      },
+      "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:Group",
+        "urn:ietf:params:scim:schemas:extension:service:2.0:Group"
+      ],
+      "urn:ietf:params:scim:schemas:extension:service:2.0:Group": {
+        "description": "Emperors",
+        "mfaRequired": null
+      }
+    }
+  ]
+}

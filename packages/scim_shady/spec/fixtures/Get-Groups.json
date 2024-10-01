@@ -1,0 +1,63 @@
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+  ],
+  "totalResults": 4,
+  "startIndex": 1,
+  "itemsPerPage": 2,
+  "Resources": [
+    {
+      "id": "2986",
+      "externalId": "200000",
+      "displayName": "Admin",
+      "members": [
+        {
+          "value": "123",
+          "display": "John Doe"
+        },
+        {
+          "value": "999",
+          "display": "Joseph Doe"
+        },
+        {
+          "value": "888",
+          "display": "Jane Doe"
+        }
+      ],
+      "meta": {
+        "location": "https://example.com/api/scim/Groups/2989",
+        "created": "2024-03-21T18:26:39-04:00",
+        "lastModified": "2024-03-21T18:26:39-04:00",
+        "resourceType": "Group"
+      },
+      "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:Group",
+        "urn:ietf:params:scim:schemas:extension:service:2.0:Group"
+      ],
+      "urn:ietf:params:scim:schemas:extension:service:2.0:Group": {
+        "description": "Admin",
+        "mfaRequired": null
+      }
+    },
+    {
+      "id": "2998",
+      "externalId": "77217",
+      "displayName": "bi",
+      "members": [],
+      "meta": {
+        "location": "https://example.com/api/scim/Groups/2998",
+        "created": "2024-03-27T15:58:56-04:00",
+        "lastModified": "2024-03-27T16:02:56-04:00",
+        "resourceType": "Group"
+      },
+      "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:Group",
+        "urn:ietf:params:scim:schemas:extension:service:2.0:Group"
+      ],
+      "urn:ietf:params:scim:schemas:extension:service:2.0:Group": {
+        "description": "bi",
+        "mfaRequired": null
+      }
+    }
+  ]
+}
