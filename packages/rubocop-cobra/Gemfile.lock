@@ -29,6 +29,10 @@ GEM
       minitest (>= 5.1)
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
+    appraisal (2.5.0)
+      bundler
+      rake
+      thor (>= 0.14.0)
     ast (2.4.2)
     base64 (0.2.0)
     bigdecimal (3.1.8)
@@ -126,6 +130,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  appraisal (~> 2.5.0)
   license_finder (~> 7.0)
   pry (>= 0.14.2)
   pry-byebug (= 3.10.1)
