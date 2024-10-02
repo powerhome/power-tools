@@ -35,10 +35,11 @@ Gem::Specification.new do |spec|
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
 
-  spec.add_runtime_dependency "rubocop", "~> 1.52.0"
-  spec.add_runtime_dependency "rubocop-powerhome"
+  spec.add_dependency "rubocop", "1.66.1"
+  spec.add_dependency "rubocop-powerhome"
   spec.metadata["rubygems_mfa_required"] = "true"
 
+  spec.add_development_dependency "appraisal", "~> 2.5.0"
   spec.add_development_dependency "license_finder", "~> 7.0"
   spec.add_development_dependency "pry", ">= 0.14.2"
   spec.add_development_dependency "pry-byebug", "3.10.1"

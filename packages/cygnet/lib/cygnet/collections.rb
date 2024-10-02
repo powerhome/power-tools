@@ -22,7 +22,7 @@ module Cygnet
       @current_page = paginated.current_page
       @total_entries = paginated.total_entries
 
-      super builder, paginated
+      super(builder, paginated)
     end
   end
 end

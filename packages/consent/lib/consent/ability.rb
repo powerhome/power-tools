@@ -110,7 +110,7 @@ module Consent
     # For more info, check the documentation of [CanCan::Ability]
     def can?(action_or_pair, subject = nil, *args)
       action, subject = extract_action_subject(action_or_pair, subject)
-      super action, subject, *args
+      super(action, subject, *args)
     end
 
     # @private
