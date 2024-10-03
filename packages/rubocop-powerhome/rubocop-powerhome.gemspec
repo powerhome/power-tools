@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary = "Powerhome Rubocop standard rules"
   spec.description = "Powerhome Rubocop standard rules"
-  spec.homepage = "https://github.com/powerhome/power_linting"
+  spec.homepage = "https://github.com/powerhome/power-tools/blob/main/packages/rubocop-powerhome/"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0"
 
