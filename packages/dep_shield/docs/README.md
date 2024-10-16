@@ -18,7 +18,7 @@ After installing DepShield, load any todo lists in your application with:
 # components/books/lib/books.rb
 
 def self.category
-  NitroErrors.deprecate!(name: "books_default_category", message: "please use '.default_category' instead")
+  DepShield.raise_or_capture!(name: "books_default_category", message: "please use '.default_category' instead")
   "Science Fiction"
 end
 ```
