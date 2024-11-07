@@ -24,6 +24,7 @@ module Consent
 
     def view(key, label, instance = nil, collection = nil, &block)
       collection ||= block
+      eval(collection)
       @subject.views[key] = View.new(key, label, instance, collection)
     end
 
