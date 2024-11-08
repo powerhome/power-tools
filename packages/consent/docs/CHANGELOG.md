@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- removed eval_view as a legacy, unsafe concern
+
 ## [2.0.1] - 2023-01-08
 
 - Bugfixes, minor version bumps

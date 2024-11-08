@@ -14,14 +14,6 @@ module Consent
       DSL.build(@subject, @defaults.merge(new_defaults), &block)
     end
 
-    # rubocop:disable Lint/UnusedBlockArgument, Security/Eval
-    def eval_view(key, label, collection_conditions)
-      view key, label do |user|
-        eval(collection_conditions)
-      end
-    end
-    # rubocop:enable Lint/UnusedBlockArgument, Security/Eval
-
     def view(key, label, instance = nil, collection = nil, &block)
       collection ||= block
       @subject.views[key] = View.new(key, label, instance, collection)
