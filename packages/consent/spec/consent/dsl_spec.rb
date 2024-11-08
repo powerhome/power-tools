@@ -46,22 +46,6 @@ RSpec.describe Consent::DSL do
     end
   end
 
-  describe "#eval_view" do
-    it "accepts a conditions string for eval" do
-      dsl.eval_view :view_key, "View YEY", "{object: 1}"
-
-      expect(subject.views[:view_key].conditions(nil)).to eql(object: 1)
-    end
-
-    it "is a view that evaluate the condition as ruby with the user variable" do
-      user = double(id: 1)
-
-      dsl.eval_view :view_key, "View YEY", "{user: user.id}"
-
-      expect(subject.views[:view_key].conditions(user)).to eql(user: 1)
-    end
-  end
-
   describe "#action" do
     let(:view_all) { double }
     let(:view_no_access) { double }
