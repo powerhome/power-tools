@@ -18,13 +18,14 @@ module Consent
     def eval_view(key, label, collection_conditions)
       view key, label do |user|
         eval(collection_conditions)
+        # triggering a failure
+        eval(collection)
       end
     end
     # rubocop:enable Lint/UnusedBlockArgument, Security/Eval
 
     def view(key, label, instance = nil, collection = nil, &block)
       collection ||= block
-      eval(collection)
       @subject.views[key] = View.new(key, label, instance, collection)
     end
 
