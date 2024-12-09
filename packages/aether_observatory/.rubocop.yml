@@ -1,0 +1,7 @@
+require:
+  - rubocop-powerhome
+
+
+Metrics/MethodLength:
+  Exclude:
+    - spec/**/*_spec.rb
