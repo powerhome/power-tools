@@ -8,6 +8,6 @@ jobs:
     uses: powerhome/github-actions-workflows/.github/workflows/yarn-package.yml@main
     with:
       package: ${{ github.workflow }}
-      node: '["18", "20"]'
+      node: '["20", "22"]'
       workdir: "packages/${{ github.workflow }}"
     secrets: inherit
