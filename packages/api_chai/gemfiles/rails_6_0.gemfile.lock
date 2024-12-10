@@ -198,6 +198,7 @@ GEM
       rubocop (~> 1.61)
     ruby-progressbar (1.13.0)
     rubyzip (2.3.2)
+    securerandom (0.3.2)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -229,6 +230,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  activesupport (< 7.2.0)
   api_chai!
   appraisal (~> 2.5.0)
   license_finder (~> 7.0)
@@ -237,6 +239,7 @@ DEPENDENCIES
   rspec (~> 3.0)
   rubocop (~> 1.21)
   rubocop-powerhome (= 0.5.0)
+  securerandom (< 0.4.0)
 
 BUNDLED WITH
    2.4.22

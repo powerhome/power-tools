@@ -113,7 +113,7 @@ GEM
     method_source (1.1.0)
     mini_mime (1.1.5)
     minitest (5.25.4)
-    net-imap (0.5.1)
+    net-imap (0.4.18)
       date
       net-protocol
     net-pop (0.1.2)
@@ -232,7 +232,7 @@ GEM
     with_env (1.1.0)
     xml-simple (1.1.9)
       rexml
-    zeitwerk (2.7.1)
+    zeitwerk (2.6.18)
 
 PLATFORMS
   arm64-darwin-23
@@ -242,6 +242,7 @@ PLATFORMS
 DEPENDENCIES
   appraisal (~> 2.5.0)
   license_finder (~> 7.0)
+  net-imap (< 0.5.0)
   pry (>= 0.14.2)
   pry-byebug (= 3.10.1)
   rails (= 6.0.6.1)
@@ -249,6 +250,7 @@ DEPENDENCIES
   rspec (~> 3.0)
   rubocop-cobra!
   rubocop-powerhome!
+  zeitwerk (< 2.7.0)
 
 BUNDLED WITH
    2.5.23

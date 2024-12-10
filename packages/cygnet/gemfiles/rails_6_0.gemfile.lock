@@ -112,7 +112,7 @@ GEM
     method_source (1.1.0)
     mini_mime (1.1.5)
     minitest (5.25.4)
-    net-imap (0.5.1)
+    net-imap (0.4.18)
       date
       net-protocol
     net-pop (0.1.2)
@@ -241,7 +241,7 @@ GEM
     xml-simple (1.1.9)
       rexml
     yard (0.9.21)
-    zeitwerk (2.7.1)
+    zeitwerk (2.6.18)
 
 PLATFORMS
   arm64-darwin-23
@@ -253,6 +253,7 @@ DEPENDENCIES
   bundler (~> 2.1)
   cygnet!
   license_finder (~> 7.0)
+  net-imap (< 0.5.0)
   pry (>= 0.14)
   pry-byebug (= 3.10.1)
   rails (= 6.0.6.1)
@@ -263,6 +264,7 @@ DEPENDENCIES
   simplecov (= 0.15.1)
   test-unit (= 3.1.5)
   yard (= 0.9.21)
+  zeitwerk (< 2.7.0)
 
 BUNDLED WITH
    2.5.23

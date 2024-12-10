@@ -210,6 +210,7 @@ GEM
       rubocop (~> 1.61)
     ruby-progressbar (1.13.0)
     rubyzip (2.3.2)
+    securerandom (0.3.2)
     simplecov (0.15.1)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -247,6 +248,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  activesupport (< 7.2.0)
   appraisal (= 2.5.0)
   bundler (~> 2.1)
   data_taster!
@@ -258,6 +260,7 @@ DEPENDENCIES
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop-powerhome!
+  securerandom (< 0.4.0)
   simplecov (= 0.15.1)
   test-unit (= 3.1.5)
   yard (= 0.9.34)
