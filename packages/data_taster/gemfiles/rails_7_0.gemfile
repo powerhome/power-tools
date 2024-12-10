@@ -2,7 +2,11 @@
 
 source "https://rubygems.org"
 
+gem "activesupport", "< 7.2.0"
+gem "net-imap", "< 0.5.0"
 gem "rubocop-powerhome", path: "../../rubocop-powerhome", tag: "v0.5.2-rubocop-powerhome"
+gem "securerandom", "< 0.4.0"
+gem "zeitwerk", "< 2.7.0"
 gem "rails", "7.0.8.1"
 
 gemspec path: "../"

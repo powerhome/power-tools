@@ -4,3 +4,6 @@ source "https://rubygems.org"
 
 # Specify your gem's dependencies in rubocop-powerhome.gemspec
 gemspec
+
+gem "net-imap", "< 0.5.0"
+gem "zeitwerk", "< 2.7.0"

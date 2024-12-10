@@ -4,7 +4,9 @@
 
 source "https://rubygems.org"
 
+gem "net-imap", "< 0.5.0"
 gem "rails", "6.0.6.1"
 gem "rubocop-powerhome", path: "../../rubocop-powerhome"
+gem "zeitwerk", "< 2.7.0"
 
 gemspec path: "../"

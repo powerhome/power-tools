@@ -6,7 +6,9 @@ gemspec
 
 gem "byebug"
 gem "license_finder", ">= 7.0"
+gem "net-imap", "< 0.5.0"
 gem "rake", ">= 13.0"
 gem "rspec", ">= 3.0"
 gem "rubocop", ">= 1.32"
 gem "rubocop-powerhome", path: "../rubocop-powerhome"
+gem "zeitwerk", "< 2.7.0"

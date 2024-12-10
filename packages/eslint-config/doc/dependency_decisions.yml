@@ -1,11 +1,10 @@
 ---
 - - :inherit_from
   - https://raw.githubusercontent.com/powerhome/oss-guide/master/license_rules.yml
-- - :license
+- - :approve
   - "@typescript-eslint/parser"
-  - MITClause
   - :who: Carlos Palhares <carlos.palhares@powerhrg.com>
     :why: MIT License
     :versions:
       - 8.18.0
-    :when: 2024-12-10 18:09:20.123307000 Z
+    :when: 2024-12-10 20:08:46.550522000 Z

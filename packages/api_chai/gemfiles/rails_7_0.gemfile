@@ -4,9 +4,11 @@
 
 source "https://rubygems.org"
 
+gem "activesupport", "< 7.2.0"
 gem "rails", "7.0.8.1"
 gem "rake", "~> 13.0"
 gem "rspec", "~> 3.0"
 gem "rubocop", "~> 1.21"
+gem "securerandom", "< 0.4.0"
 
 gemspec path: "../"
