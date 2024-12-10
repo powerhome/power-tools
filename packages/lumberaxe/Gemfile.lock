@@ -157,7 +157,7 @@ GEM
     mini_portile2 (2.8.8)
     minitest (5.25.4)
     mutex_m (0.3.0)
-    net-imap (0.5.1)
+    net-imap (0.4.18)
       date
       net-protocol
     net-pop (0.1.2)
@@ -309,7 +309,7 @@ GEM
     xml-simple (1.1.9)
       rexml
     yard (0.9.21)
-    zeitwerk (2.7.1)
+    zeitwerk (2.6.18)
 
 PLATFORMS
   arm64-darwin-22
@@ -322,6 +322,7 @@ DEPENDENCIES
   combustion (~> 1.3)
   license_finder (>= 7.0)
   lumberaxe!
+  net-imap (< 0.5.0)
   parser (>= 2.5, != 2.5.1.1)
   pry (>= 0.14.2)
   pry-byebug (= 3.10.1)
@@ -335,6 +336,7 @@ DEPENDENCIES
   sqlite3 (~> 1.7.3)
   test-unit (= 3.1.5)
   yard (= 0.9.21)
+  zeitwerk (< 2.7.0)
 
 BUNDLED WITH
-   2.4.10
+   2.5.23

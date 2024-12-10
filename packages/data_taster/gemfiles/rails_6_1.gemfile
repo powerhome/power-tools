@@ -3,6 +3,8 @@
 source "https://rubygems.org"
 
 gem "rubocop-powerhome", path: "../../rubocop-powerhome", tag: "v0.5.2-rubocop-powerhome"
+gem "zeitwerk", "< 2.7.0"
+gem "net-imap", "< 0.5.0"
 gem "rails", "6.1.7.7"
 
 gemspec path: "../"

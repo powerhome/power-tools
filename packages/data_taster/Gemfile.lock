@@ -137,7 +137,7 @@ GEM
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
     minitest (5.25.4)
-    net-imap (0.5.1)
+    net-imap (0.4.18)
       date
       net-protocol
     net-pop (0.1.2)
@@ -273,7 +273,7 @@ GEM
     xml-simple (1.1.9)
       rexml
     yard (0.9.34)
-    zeitwerk (2.7.1)
+    zeitwerk (2.6.18)
 
 PLATFORMS
   arm64-darwin-20
@@ -292,6 +292,7 @@ DEPENDENCIES
   bundler (~> 2.1)
   data_taster!
   license_finder (~> 7.0)
+  net-imap (< 0.5.0)
   parser (>= 2.5, != 2.5.1.1)
   rainbow (= 2.2.2)
   rake (~> 13.0)
@@ -300,6 +301,7 @@ DEPENDENCIES
   simplecov (= 0.15.1)
   test-unit (= 3.1.5)
   yard (= 0.9.34)
+  zeitwerk (< 2.7.0)
 
 BUNDLED WITH
-   2.5.4
+   2.5.23
