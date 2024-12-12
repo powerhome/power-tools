@@ -2,6 +2,23 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: aether_observatory
+  title: Aether Observatory
+  description: >-
+    Aether Observatory provides a event subscription system, based on
+    ActiveSupport::Notification.
+  annotations:
+    backstage.io/techdocs-ref: dir:packages/audit_tracker
+spec:
+  type: library
+  owner: unbreakable
+  lifecycle: production
+  subcomponentOf: power-tools
+  system: power-application-framework
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: power-tools
   title: PowerTools
   description: PowerTools packages for applications.
