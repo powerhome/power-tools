@@ -8,7 +8,7 @@ metadata:
     Aether Observatory provides a event subscription system, based on
     ActiveSupport::Notification.
   annotations:
-    backstage.io/techdocs-ref: dir:packages/audit_tracker
+    backstage.io/techdocs-ref: dir:packages/aether_observatory
 spec:
   type: library
   owner: unbreakable
