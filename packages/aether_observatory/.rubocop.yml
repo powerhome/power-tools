@@ -2,9 +2,16 @@ require:
   - rubocop-powerhome
 
 AllCops:
-  Exclude:
-    - gemfiles/**/*
+  TargetRubyVersion: 3.0
 
 Metrics/MethodLength:
   Exclude:
     - spec/**/*_spec.rb
+
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - 'gemfiles/*'
+
+Bundler/OrderedGems:
+  Exclude:
+    - 'gemfiles/*'
