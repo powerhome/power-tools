@@ -11,7 +11,7 @@ PATH
 PATH
   remote: ..
   specs:
-    aether_observatory (0.0.1)
+    aether_observatory (0.0.1pre2)
       activemodel (>= 6.0.6.1)
       activesupport (>= 6.0.6.1)
 
