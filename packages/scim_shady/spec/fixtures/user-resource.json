@@ -1,0 +1,75 @@
+{
+  "id": "123",
+  "externalId": "john.doe",
+  "userName": "john.doe",
+  "displayName": "John Doe",
+  "name": {
+    "formatted": "John Doe",
+    "familyName": "Doe",
+    "givenName": "John"
+  },
+  "addresses": [
+    {
+      "type": "primary",
+      "streetAddress": "123 Main Street",
+      "locality": "New York",
+      "region": "NY",
+      "postalCode": "20000",
+      "primary": true
+    }
+  ],
+  "userType": "employee",
+  "title": "VP Of AOE",
+  "active": true,
+  "emails": [
+    {
+      "value": "john.doe@example.com",
+      "type": "primary"
+    }
+  ],
+  "groups": [
+    {
+      "value": "2",
+      "display": "Information Technology"
+    },
+    {
+      "value": "3",
+      "display": "VP Of AOE"
+    },
+    {
+      "value": "1",
+      "display": "New York"
+    }
+  ],
+  "photos": [
+    {
+      "type": "photo",
+      "value": "https://example.com/api/v1/users/123966/photo/badge",
+      "primary": true
+    },
+    {
+      "type": "thumbnail",
+      "value": "https://example.com/api/v1/users/123966/photo/thumb",
+      "primary": false
+    }
+  ],
+  "phoneNumbers": [
+    {
+      "value": "5531984843953",
+      "type": "mobile"
+    }
+  ],
+  "urn:ietf:params:scim:schemas:extension:service:2.0:User": {
+    "mfaRequired": true,
+    "department": "Technology"
+  },
+  "meta": {
+    "location": "https://example.com/api/scim/Users/123966",
+    "created": "2022-11-29T11:02:55-05:00",
+    "lastModified": "2024-03-20T10:49:50-04:00",
+    "resourceType": "UserResource"
+  },
+  "schemas": [
+    "urn:ietf:params:scim:schemas:core:2.0:User"
+  ]
+}
