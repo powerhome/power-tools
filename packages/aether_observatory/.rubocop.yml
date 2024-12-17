@@ -1,6 +1,9 @@
 require:
   - rubocop-powerhome
 
+AllCops:
+  Exclude:
+    - gemfiles/**/*
 
 Metrics/MethodLength:
   Exclude:

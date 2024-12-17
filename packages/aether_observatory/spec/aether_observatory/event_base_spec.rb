@@ -74,9 +74,9 @@ module AetherObservatory
         expect(observer_zero.returned_payload).to eq(nil)
         expect(observer_both.returned_payload.message).to eq("message")
 
-         # Teardown
-         observer_zero.stop
-         observer_both.stop
+        # Teardown
+        observer_zero.stop
+        observer_both.stop
       end
 
       context "without a prefix" do
