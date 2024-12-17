@@ -9,5 +9,6 @@ jobs:
     with:
       package: ${{ github.workflow }}
       workdir: "packages/${{ github.workflow }}"
+      gemfiles: "['gemfiles/rails_6_0.gemfile','gemfiles/rails_6_1.gemfile','gemfiles/rails_7_0.gemfile','gemfiles/rails_7_1.gemfile']"
       ruby: '["3.0","3.1","3.2","3.3"]'
     secrets: inherit
