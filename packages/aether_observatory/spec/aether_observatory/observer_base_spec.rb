@@ -4,8 +4,6 @@ require "spec_helper"
 
 module AetherObservatory
   RSpec.describe ObserverBase do
-    after(:each) { teardown }
-
     describe "#process" do
       it "processes a single event" do
         # Given
@@ -19,6 +17,9 @@ module AetherObservatory
 
         # Then
         expect(observer.returned_payload.message).to eq("message")
+
+        # Teardown
+        observer.stop
       end
 
       it "processed multiple events", :aggregate_failures do
@@ -40,6 +41,9 @@ module AetherObservatory
 
         # Then
         expect(observer.returned_payload.message).to eq("message one")
+
+        # Teardown
+        observer.stop
       end
     end
 
@@ -56,6 +60,9 @@ module AetherObservatory
 
         # Then
         expect(observer.returned_payload).to eq(nil)
+
+        # Teardown
+        observer.stop
       end
     end
 
@@ -72,6 +79,9 @@ module AetherObservatory
 
         # Then
         expect(observer.returned_payload.message).to eq("message")
+
+        # Teardown
+        observer.stop
       end
     end
 
@@ -103,11 +113,6 @@ module AetherObservatory
           end
         end
       )
-    end
-
-    def teardown
-      ActiveSupport::Notifications.notifier =
-        ActiveSupport::Notifications::Fanout.new
     end
   end
 end
