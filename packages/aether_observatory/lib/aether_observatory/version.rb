@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module AetherObservatory
-  VERSION = "0.0.1pre3"
+  VERSION = "0.0.1pre4"
 end
