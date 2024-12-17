@@ -4,8 +4,6 @@ require "spec_helper"
 
 module AetherObservatory
   RSpec.describe EventBase do
-    after(:each) { teardown }
-
     describe ".create" do
       it "sends event to a single observer" do
         # Given
@@ -22,6 +20,9 @@ module AetherObservatory
 
         # Then
         expect(observer.returned_payload.message).to eq("message")
+
+        # Teardown
+        observer.stop
       end
 
       it "sends event to multiple observers", :aggregate_failures do
@@ -45,6 +46,10 @@ module AetherObservatory
         # Then
         expect(observer_zero.returned_payload.message).to eq("message")
         expect(observer_both.returned_payload.message).to eq("message")
+
+        # Teardown
+        observer_zero.stop
+        observer_both.stop
       end
 
       it "sends event to only one of multiple observers", :aggregate_failures do
@@ -68,6 +73,10 @@ module AetherObservatory
         # Then
         expect(observer_zero.returned_payload).to eq(nil)
         expect(observer_both.returned_payload.message).to eq("message")
+
+         # Teardown
+         observer_zero.stop
+         observer_both.stop
       end
 
       context "without a prefix" do
@@ -85,6 +94,9 @@ module AetherObservatory
 
           # Then
           expect(observer.returned_payload.message).to eq("message")
+
+          # Teardown
+          observer.stop
         end
       end
     end
@@ -121,11 +133,6 @@ module AetherObservatory
           end
         end
       )
-    end
-
-    def teardown
-      ActiveSupport::Notifications.notifier =
-        ActiveSupport::Notifications::Fanout.new
     end
   end
 end
