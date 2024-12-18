@@ -1,0 +1,6 @@
+site_name: AetherObservatory
+nav:
+  - "Home": "README.md"
+  - "Changelog": "CHANGELOG.md"  
+plugins:
+  - techdocs-core

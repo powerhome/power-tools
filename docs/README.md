@@ -6,6 +6,10 @@ At [Power Home Remodeling](https://powerhrg.com/), we have created foundational 
 
 power-tools currently contains the following packages (marked for release to rubygems 💎 or npm ☕️):
 
+[aether_observatory](https://github.com/powerhome/power-tools/blob/main/packages/aether_observatory/docs/README.md) 💎
+
+AetherObservatory provides an event broadcast and subscription system based around ActiveSupport::Notifications.
+
 [api_chai](https://github.com/powerhome/power-tools/blob/main/packages/api_chai/docs/README.md) 💎
 
 ApiChai provides a simple integration with net-http around a lightweight layer for reporting and graceful error handling.
