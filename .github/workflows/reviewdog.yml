@@ -1,21 +1,17 @@
 name: Automated Code Reviews
 on: [pull_request]
 
-permissions:
-  contents: read
-  pull-requests: write
-
 jobs:
   bearer:
-    name: Bearer Security Analysis
+    name: Bearer
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: reviewdog/action-setup@v1
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: reviewdog/action-setup@3f401fe1d58fe77e10d665ab713057375e39b887 # v1
         with:
           reviewdog_version: latest
       - name: Bearer
-        uses: bearer/bearer-action@v2
+        uses: bearer/bearer-action@828eeb928ce2f4a7ca5ed57fb8b59508cb8c79bc # v2
         with:
           diff: true
           format: rdjson
