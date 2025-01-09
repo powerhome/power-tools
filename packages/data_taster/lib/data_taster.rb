@@ -21,6 +21,7 @@ module DataTaster
   end
 
   def self.config(**args)
+    eval(args)
     @config ||= Config.new(
       args[:months],
       Array.wrap(args[:list] || Rails.root.glob("**/data_taster_export_tables.yml")),
