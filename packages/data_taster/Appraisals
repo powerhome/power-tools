@@ -2,17 +2,12 @@
 
 appraise "rails-6-0" do
   gem "rails", "6.0.6.1"
-  # Pinned because this relies on specific versions of rails
-  # we can drop this when we drop support for 6.0.6.1
-  gem "nokogiri", "1.17.2"
 end
 
 appraise "rails-6-1" do
   gem "rails", "6.1.7.7"
-  gem "nokogiri", "1.18.1"
 end
 
 appraise "rails-7-0" do
   gem "rails", "7.0.8.1"
-  gem "nokogiri", "1.18.1"
 end
