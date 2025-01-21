@@ -8,7 +8,6 @@
     "enabled": true,
     "automerge": true
   },
-  "timezone": "America/New_York",
   "packageRules": [
     {
       "matchUpdateTypes": [
