@@ -1,10 +1,13 @@
 {
-  "extends": ["config:base", "group:allNonMajor"],
+  "extends": [
+    "config:base",
+    "group:allNonMajor",
+    "github>powerhome/renovate-config"
+  ],
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true
   },
-  "labels": ["dependencies"],
   "timezone": "America/New_York",
   "packageRules": [
     {
