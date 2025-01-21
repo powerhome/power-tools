@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency "cygnet", "0.0.1"
+  s.add_dependency "nokogiri", "1.17.2" # can be removed after we remove support for Rails 6.0.1
   s.add_dependency "rails", ">= 6.0"
   s.add_dependency "sassc-rails", "2.1.2"
 
