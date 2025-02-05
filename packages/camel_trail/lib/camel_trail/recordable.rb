@@ -21,6 +21,9 @@ module CamelTrail
     def __record_changes
       activity = new_record? ? :created : :updated
       yield
+
+      return if saved_changes.blank?
+
       CamelTrail.record!(self, activity, __camel_trail_source_changes,
                          CamelTrail::Config.current_session_user_id&.call)
     end
