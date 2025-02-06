@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [1.1.0] - 2025-02-06
+
+- Prevents creating records with empty `source_changes`
+
 ## [1.0.0] - 2024-02-28
 
 - Adds support for Rails 7.1

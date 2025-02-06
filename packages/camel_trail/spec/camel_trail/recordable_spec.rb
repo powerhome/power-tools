@@ -56,4 +56,13 @@ RSpec.describe CamelTrail::Recordable do
     # Changed negative price to 0
     expect(last_truck_history.source_changes).to include("price" => [nil, 0])
   end
+
+  it "does not save empty source_changes" do
+    allow_any_instance_of(Truck).to receive(:saved_changes).and_return({})
+
+    truck = Truck.create! name: "I am empty on the inside"
+    last_truck_history = CamelTrail.for(truck)
+
+    expect(last_truck_history).to eql []
+  end
 end
