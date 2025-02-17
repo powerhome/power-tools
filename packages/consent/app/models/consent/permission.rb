@@ -2,7 +2,7 @@
 
 module Consent
   class Permission < ::Consent::ApplicationRecord
-    serialize :subject, ::Consent::SubjectCoder
+    serialize :subject, coder: Consent::SubjectCoder
 
     validates :subject, presence: true
     validates :action, presence: true

@@ -2,8 +2,8 @@
 
 module CamelTrail
   class History < ::CamelTrail::ApplicationRecord
-    serialize :source_changes, ::CamelTrail::YAMLUnsafeCoder
-    serialize :backtrace, Array
+    serialize :source_changes, coder: CamelTrail::YAMLUnsafeCoder
+    serialize :backtrace, type: Array
 
     default_scope { order("id DESC") }
 
