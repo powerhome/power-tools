@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+## [1.1.0] - 2025-02-18
+
+- Drop rails 6.0 support and adds Rails 7.0 to CI [#309](https://github.com/powerhome/power-tools/pull/309)
+- Support keyword arguments for serialization [#308](https://github.com/powerhome/power-tools/pull/308)
+
 ## [1.0.0] - 2024-02-28
 
 - Adds support for Rails 7.1
