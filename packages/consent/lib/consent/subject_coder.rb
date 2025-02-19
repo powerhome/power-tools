@@ -3,6 +3,16 @@
 module Consent
   # Coder for ability subjects
   module SubjectCoder
+    module Model
+      def self.included(base)
+        if Gem::Version.new(Rails.version) > Gem::Version.new('7.0')
+          base.serialize :subject, coder: Consent::SubjectCoder
+        else
+          base.serialize :subject, Consent::SubjectCoder
+        end
+      end
+    end
+
   module_function
 
     # Loads the serialized key (snake case string) as a valid
