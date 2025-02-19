@@ -262,6 +262,7 @@ DEPENDENCIES
   camel_trail!
   license_finder (>= 7.0)
   net-imap (< 0.5.0)
+  nokogiri (< 1.18)
   rails (= 6.1.7.7)
   rake (~> 13)
   rspec (~> 3.0)

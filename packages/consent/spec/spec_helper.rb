@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "bundler"
+require "logger"
 require "combustion"
 
 require "active_record/railtie" # active_record has to be loaded before cancan

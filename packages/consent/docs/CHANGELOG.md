@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+## [2.1.0] - 2025-02-19
+
+- Add support to rails 7.1+ [#308](https://github.com/powerhome/power-tools/pull/308)
 - removed eval_view as a legacy, unsafe concern
 
 ## [2.0.1] - 2023-01-08
