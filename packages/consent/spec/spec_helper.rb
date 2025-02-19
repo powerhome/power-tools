@@ -5,6 +5,7 @@ require "combustion"
 
 require "active_record/railtie" # active_record has to be loaded before cancan
 require "consent/engine"
+require "logger"
 
 Combustion.initialize! :active_record do |app|
   app.config.consent.paths << app.root.join("app", "permissions")
