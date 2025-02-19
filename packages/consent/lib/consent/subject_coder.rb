@@ -5,7 +5,7 @@ module Consent
   module SubjectCoder
     module Model
       def self.included(base)
-        if Gem::Version.new(Rails.version) > Gem::Version.new('7.0')
+        if Gem::Version.new(Rails.version) >= Gem::Version.new("7.1")
           base.serialize :subject, coder: Consent::SubjectCoder
         else
           base.serialize :subject, Consent::SubjectCoder
