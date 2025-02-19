@@ -2,9 +2,10 @@
 
 module Consent
   class History < ::Consent::ApplicationRecord
+    include Consent::SubjectCoder::Model
+
     enum command: { grant: "grant", revoke: "revoke" }
 
-    serialize :subject, ::Consent::SubjectCoder
     validates :subject, presence: true
     validates :action, presence: true
     validates :view, presence: true
