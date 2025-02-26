@@ -11,9 +11,9 @@ RSpec.describe DWConnector::RepositoryFactory do
     it "creates a Trino repository when type is :trino" do
       repository = described_class.create(
         type: :trino,
-        table_name: table_name,
-        conditions: conditions,
-        config: config
+        table_name:,
+        conditions:,
+        config:
       )
 
       expect(repository).to be_a(DWConnector::Adapters::TrinoRepository)
@@ -22,12 +22,12 @@ RSpec.describe DWConnector::RepositoryFactory do
     end
 
     it "raises an error for unsupported repository types" do
-      expect {
+      expect do
         described_class.create(
           type: :unsupported,
-          table_name: table_name
+          table_name:
         )
-      }.to raise_error(ArgumentError, /Unsupported repository type/)
+      end.to raise_error(ArgumentError, /Unsupported repository type/)
     end
   end
 end

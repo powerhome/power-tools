@@ -14,11 +14,11 @@ RSpec.describe DWConnector::Adapters::TrinoRepository do
 
   let(:config) do
     {
-      server: server,
-      user: user,
-      password: password,
-      catalog: catalog,
-      schema: schema
+      server:,
+      user:,
+      password:,
+      catalog:,
+      schema:,
     }
   end
 
@@ -41,7 +41,7 @@ RSpec.describe DWConnector::Adapters::TrinoRepository do
         allow(ENV).to receive(:fetch).with("TRINO_USER", anything).and_return("env-user")
         allow(ENV).to receive(:fetch).with("TRINO_CATALOG", anything).and_return("env-catalog")
         allow(ENV).to receive(:fetch).with("TRINO_SCHEMA", anything).and_return("env-schema")
-        allow(ENV).to receive(:[]).with("TRINO_PASSWORD").and_return("env-password")
+        allow(ENV).to receive(:fetch).with("TRINO_PASSWORD", nil).and_return("env-password")
       end
 
       let(:empty_config) { {} }
@@ -78,11 +78,11 @@ RSpec.describe DWConnector::Adapters::TrinoRepository do
         "nextUri" => next_url,
         "columns" => [
           { "name" => "id", "type" => "integer" },
-          { "name" => "name", "type" => "varchar" }
+          { "name" => "name", "type" => "varchar" },
         ],
         "data" => [
-          [1, "Product A"]
-        ]
+          [1, "Product A"],
+        ],
       }
     end
 
@@ -92,11 +92,11 @@ RSpec.describe DWConnector::Adapters::TrinoRepository do
         "infoUri" => "#{server}/ui/query.html?20240101_1",
         "columns" => [
           { "name" => "id", "type" => "integer" },
-          { "name" => "name", "type" => "varchar" }
+          { "name" => "name", "type" => "varchar" },
         ],
         "data" => [
-          [2, "Product B"]
-        ]
+          [2, "Product B"],
+        ],
       }
     end
 
@@ -105,9 +105,9 @@ RSpec.describe DWConnector::Adapters::TrinoRepository do
         .with(
           body: "SELECT * FROM #{table_name} WHERE #{conditions}",
           headers: {
-            'Authorization' => auth_header,
-            'X-Trino-Catalog' => catalog,
-            'X-Trino-Schema' => schema
+            "Authorization" => auth_header,
+            "X-Trino-Catalog" => catalog,
+            "X-Trino-Schema" => schema,
           }
         )
         .to_return(status: 200, body: initial_response.to_json)
@@ -115,9 +115,9 @@ RSpec.describe DWConnector::Adapters::TrinoRepository do
       stub_request(:get, next_url)
         .with(
           headers: {
-            'Authorization' => auth_header,
-            'X-Trino-Catalog' => catalog,
-            'X-Trino-Schema' => schema
+            "Authorization" => auth_header,
+            "X-Trino-Catalog" => catalog,
+            "X-Trino-Schema" => schema,
           }
         )
         .to_return(status: 200, body: final_response.to_json)
@@ -130,9 +130,9 @@ RSpec.describe DWConnector::Adapters::TrinoRepository do
         .with(
           body: "SELECT * FROM #{table_name} WHERE #{conditions}",
           headers: {
-            'Authorization' => auth_header,
-            'X-Trino-Catalog' => catalog,
-            'X-Trino-Schema' => schema
+            "Authorization" => auth_header,
+            "X-Trino-Catalog" => catalog,
+            "X-Trino-Schema" => schema,
           }
         )
     end
@@ -141,9 +141,9 @@ RSpec.describe DWConnector::Adapters::TrinoRepository do
       result = repository.query
 
       expect(result).to eq([
-        { "id" => 1, "name" => "Product A" },
-        { "id" => 2, "name" => "Product B" }
-      ])
+                             { "id" => 1, "name" => "Product A" },
+                             { "id" => 2, "name" => "Product B" },
+                           ])
 
       expect(WebMock).to have_requested(:get, next_url)
     end
@@ -156,14 +156,14 @@ RSpec.describe DWConnector::Adapters::TrinoRepository do
           .with(
             body: custom_query,
             headers: {
-              'Authorization' => auth_header,
-              'X-Trino-Catalog' => catalog,
-              'X-Trino-Schema' => schema
+              "Authorization" => auth_header,
+              "X-Trino-Catalog" => catalog,
+              "X-Trino-Schema" => schema,
             }
           )
           .to_return(status: 200, body: {
             "columns" => [{ "name" => "count", "type" => "bigint" }],
-            "data" => [[42]]
+            "data" => [[42]],
           }.to_json)
       end
 
@@ -200,11 +200,11 @@ RSpec.describe DWConnector::Adapters::TrinoRepository do
       {
         "columns" => [
           { "name" => "id", "type" => "integer" },
-          { "name" => "name", "type" => "varchar" }
+          { "name" => "name", "type" => "varchar" },
         ],
         "data" => [
-          [1, "Test Product"]
-        ]
+          [1, "Test Product"],
+        ],
       }
     end
 

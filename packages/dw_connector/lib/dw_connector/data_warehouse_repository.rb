@@ -5,7 +5,7 @@ module DWConnector
     DEFAULT_TRANSFORM_OPTIONS = {
       keys: :string,        # :string or :symbol
       transform_keys: nil,  # optional proc for key transformation
-      transform_values: nil # optional proc for value transformation
+      transform_values: nil, # optional proc for value transformation
     }.freeze
 
     def self.included(base)
@@ -25,7 +25,7 @@ module DWConnector
         raise NotImplementedError, "You must implement the execute method"
       end
 
-      protected
+    protected
 
       def transform_response(result_data, result_columns)
         return [] if result_data.nil? || result_data.empty?
@@ -37,7 +37,7 @@ module DWConnector
       end
 
       def transform_row(row)
-        row = row.transform_keys(&method(:transform_key))
+        row = row.transform_keys { |key| transform_key(key) }
         row = row.transform_values(&transform_options[:transform_values]) if transform_options[:transform_values]
         row
       end

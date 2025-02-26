@@ -11,7 +11,7 @@ PATH
 PATH
   remote: .
   specs:
-    dw-connector (0.1.0)
+    dw_connector (0.1.0)
       rest-client (~> 2.1)
 
 GEM
@@ -67,6 +67,7 @@ GEM
     racc (1.8.1)
     rack (3.1.10)
     rainbow (3.1.1)
+    rake (13.2.1)
     regexp_parser (2.10.0)
     rest-client (2.1.0)
       http-accept (>= 1.7.0, < 2.0)
@@ -127,7 +128,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  dw-connector!
+  dw_connector!
+  rake (~> 13.0)
   rest-client (~> 2.1)
   rspec (~> 3.0)
   rubocop (~> 1.21)

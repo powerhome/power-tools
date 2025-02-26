@@ -72,8 +72,8 @@ RSpec.describe DWConnector::DataWarehouseRepository do
       let(:config) do
         {
           transform_options: {
-            transform_keys: ->(key) { key.to_s.downcase }
-          }
+            transform_keys: ->(key) { key.to_s.downcase },
+          },
         }
       end
 
@@ -97,16 +97,16 @@ RSpec.describe DWConnector::DataWarehouseRepository do
       let(:config) do
         {
           transform_options: {
-            transform_keys: ->(key) { key.downcase }
-          }
+            transform_keys: ->(key) { key.downcase },
+          },
         }
       end
 
       it "transforms the keys" do
         expect(repository.test_transform_row(row)).to eq({
-          "user_id" => 1,
-          "amount" => "  100.50  "
-        })
+                                                           "user_id" => 1,
+                                                           "amount" => "  100.50  ",
+                                                         })
       end
     end
 
@@ -114,16 +114,16 @@ RSpec.describe DWConnector::DataWarehouseRepository do
       let(:config) do
         {
           transform_options: {
-            transform_values: ->(value) { value.is_a?(String) ? value.strip : value }
-          }
+            transform_values: ->(value) { value.is_a?(String) ? value.strip : value },
+          },
         }
       end
 
       it "transforms the values" do
         expect(repository.test_transform_row(row)).to eq({
-          "USER_ID" => 1,
-          "AMOUNT" => "100.50"
-        })
+                                                           "USER_ID" => 1,
+                                                           "AMOUNT" => "100.50",
+                                                         })
       end
     end
 
@@ -133,16 +133,16 @@ RSpec.describe DWConnector::DataWarehouseRepository do
           transform_options: {
             keys: :symbol,
             transform_keys: ->(key) { key.downcase },
-            transform_values: ->(value) { value.is_a?(String) ? value.strip : value }
-          }
+            transform_values: ->(value) { value.is_a?(String) ? value.strip : value },
+          },
         }
       end
 
       it "applies all transformations" do
         expect(repository.test_transform_row(row)).to eq({
-          user_id: 1,
-          amount: "100.50"
-        })
+                                                           user_id: 1,
+                                                           amount: "100.50",
+                                                         })
       end
     end
   end

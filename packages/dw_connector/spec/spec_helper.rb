@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "dw-connector"
+require "dw_connector"
 require "webmock/rspec"
 
 RSpec.configure do |config|

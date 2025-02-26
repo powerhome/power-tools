@@ -1,6 +1,0 @@
-inherit_gem:
-  rubocop-powerhome: rubocop.yml
-
-AllCops:
-  TargetRubyVersion: 2.7
-  NewCops: enable

@@ -33,13 +33,13 @@ module DWConnector
         transform_response(response_data[:result_data], response_data[:result_columns])
       end
 
-      private
+    private
 
       def default_config
         {
           server: ENV.fetch("TRINO_SERVER", "http://localhost:8090"),
           user: ENV.fetch("TRINO_USER", "trino"),
-          password: ENV["TRINO_PASSWORD"],
+          password: ENV.fetch("TRINO_PASSWORD", nil),
           catalog: ENV.fetch("TRINO_CATALOG", "default"),
           schema: ENV.fetch("TRINO_SCHEMA", "default"),
         }
@@ -47,7 +47,7 @@ module DWConnector
 
       def validate_config!
         %i[server user catalog schema].each do |key|
-          value = instance_variable_get("@#{key}")
+          value = instance_variable_get(:"@#{key}")
           raise ArgumentError, "#{key} cannot be nil or empty" if value.nil? || value.empty?
         end
       end
@@ -70,7 +70,7 @@ module DWConnector
           response_data = next_uri ? fetch_next(next_uri) : nil
         end
 
-        { result_data: result_data, result_columns: result_columns }
+        { result_data:, result_columns: }
       end
 
       def send_query(sql)

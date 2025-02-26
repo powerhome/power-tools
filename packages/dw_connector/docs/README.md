@@ -17,19 +17,19 @@ A flexible Ruby data warehouse connector library that provides a standardized in
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'dw-connector'
+gem 'dw_connector'
 ```
 
 Or install it directly:
 
 ```bash
-gem install dw-connector
+gem install dw_connector
 ```
 
 ## Basic Usage
 
 ```ruby
-require 'dw-connector'
+require 'dw_connector'
 
 # Create a repository using defaults (reads from environment variables)
 repository = DWConnector::RepositoryFactory.create(
@@ -172,7 +172,7 @@ end
 Then register it in the factory:
 
 ```ruby
-# lib/dw-connector/repository_factory.rb
+# lib/dw_connector/repository_factory.rb
 def repository_for(type)
   case type
   when :trino
@@ -196,7 +196,7 @@ end
 
 ```ruby
 # In your application's Gemfile
-gem "dw-connector", path: "path/to/packages/dw-connector"
+gem "dw_connector", path: "path/to/packages/dw_connector"
 ```
 
 ## Contributing

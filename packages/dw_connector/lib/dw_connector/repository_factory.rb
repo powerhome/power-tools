@@ -3,12 +3,12 @@
 module DWConnector
   class RepositoryFactory
     class << self
-      def create(type: :trino, table_name:, conditions: nil, config: {})
+      def create(table_name:, type: :trino, conditions: nil, config: {})
         repository_class = repository_for(type)
         repository_class.new(table_name, conditions, config)
       end
 
-      private
+    private
 
       def repository_for(type)
         case type
