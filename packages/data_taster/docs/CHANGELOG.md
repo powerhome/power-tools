@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.4.1] - 2025-02-27
+
+- Fix date flavor for newer rails versions
+
 ## [0.3.0] - 2024-04-25
 
 - Add compatibility for encryption with newer versions of attr_encrypted
