@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.4.2] - 2025-02-27
+
+- Lower nokogiri requirement to 1.14
+
 ## [0.4.1] - 2025-02-27
 
 - Fix date flavor for newer rails versions
