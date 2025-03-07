@@ -2,6 +2,7 @@
 
 require "rest-client"
 require "json"
+require "base64"
 
 module DWConnector
   module Adapters
