@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary = "A Ruby connector for data warehouses"
   spec.description = "A flexible data warehouse connector with support for Trino and extensibility for other engines"
   spec.homepage = "https://github.com/powerhome/power-tools"
-  spec.required_ruby_version = ">= 2.7.0"
+  spec.required_ruby_version = ">= 3.3.5"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "#{spec.homepage}/tree/main/packages/dw_connector"
