@@ -13,6 +13,7 @@ PATH
   specs:
     dw_conduit (0.1.0)
       rest-client (~> 2.1)
+      sequel (~> 5.90.0)
 
 GEM
   remote: https://rubygems.org/
@@ -114,6 +115,8 @@ GEM
       rubocop (~> 1.61)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
+    sequel (5.90.0)
+      bigdecimal
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.6.0)

@@ -3,6 +3,7 @@
 require "rest-client"
 require "json"
 require "base64"
+require 'sequel'
 
 module DWConduit
   module Adapters
@@ -53,10 +54,21 @@ module DWConduit
         end
       end
 
+      # Build a SQL query using Sequel as a sanitizer and SQL builder.
+      # We use Sequel.mock so that no actual connection is made.
       def build_query
-        query = "SELECT * FROM #{table_name}"
-        query += " WHERE #{conditions}" if conditions
-        query
+        db = Sequel.mock
+        dataset = db.from(Sequel.identifier(table_name)).select_all
+
+        if conditions
+          unless conditions.is_a?(Hash)
+            raise ArgumentError, "Conditions must be provided as a Hash for safe query building"
+          end
+
+          dataset = dataset.where(conditions)
+        end
+
+        dataset.sql
       end
 
       def process_response(initial_response)

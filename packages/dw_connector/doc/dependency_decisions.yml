@@ -1,9 +1,0 @@
----
-- - :inherit_from
-  - https://raw.githubusercontent.com/powerhome/oss-guide/master/license_rules.yml
-- - :permit
-  - MIT AND (BSD-2-Clause OR GPL-2.0-or-later)
-  - :who:
-    :why:
-    :versions: []
-    :when: 2024-02-24 12:00:00.000000000 Z

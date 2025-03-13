@@ -32,13 +32,17 @@ gem install dw_conduit
 require 'dw_conduit'
 
 # Create a repository using defaults (reads from environment variables)
+# and providing conditions as a Hash (this is the Ruby-friendly and safe API)
 repository = DWConduit::RepositoryFactory.create(
   type: :trino,
-  table_name: "sales"
+  table_name: "sales",
+  conditions: { status: 'completed' }
 )
 
-# Query with conditions
-results = repository.query("status = 'completed'")
+# Query using the repository's conditions.
+# This will internally build a query like:
+#   SELECT * FROM sales WHERE (status = 'completed')
+results = repository.query
 
 # Execute custom SQL
 results = repository.execute("SELECT date, SUM(amount) FROM sales GROUP BY date")

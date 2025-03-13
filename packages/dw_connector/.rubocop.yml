@@ -1,8 +1,0 @@
-require:
-  - rubocop-powerhome
-  
-AllCops: 
-  TargetRubyVersion: 3.3 
-
-Rails:
-  Enabled: false

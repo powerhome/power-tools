@@ -10,15 +10,15 @@ RSpec.describe DWConduit::Adapters::TrinoRepository do
   let(:catalog) { "power_catalog" }
   let(:schema) { "test_schema" }
   let(:table_name) { "test_table" }
-  let(:conditions) { "status = 'active'" }
+  let(:conditions) { { status: 'active' } }
 
   let(:config) do
     {
-      server:,
-      user:,
-      password:,
-      catalog:,
-      schema:,
+      server: server,
+      user: user,
+      password: password,
+      catalog: catalog,
+      schema: schema,
     }
   end
 
@@ -71,6 +71,9 @@ RSpec.describe DWConduit::Adapters::TrinoRepository do
 
     let(:auth_header) { "Basic #{Base64.strict_encode64("#{user}:#{password}")}" }
 
+    # The expected SQL for { status: 'active' } via Sequel.mock:
+    let(:expected_sql) { "SELECT * FROM #{table_name} WHERE (status = 'active')" }
+
     let(:initial_response) do
       {
         "id" => "20240101_1",
@@ -103,7 +106,7 @@ RSpec.describe DWConduit::Adapters::TrinoRepository do
     before do
       stub_request(:post, query_url)
         .with(
-          body: "SELECT * FROM #{table_name} WHERE #{conditions}",
+          body: expected_sql,
           headers: {
             "Authorization" => auth_header,
             "X-Trino-Catalog" => catalog,
@@ -128,7 +131,7 @@ RSpec.describe DWConduit::Adapters::TrinoRepository do
 
       expect(WebMock).to have_requested(:post, query_url)
         .with(
-          body: "SELECT * FROM #{table_name} WHERE #{conditions}",
+          body: expected_sql,
           headers: {
             "Authorization" => auth_header,
             "X-Trino-Catalog" => catalog,
@@ -180,6 +183,7 @@ RSpec.describe DWConduit::Adapters::TrinoRepository do
     context "when the query fails" do
       before do
         stub_request(:post, query_url)
+          .with(body: expected_sql)
           .to_return(
             status: 400,
             body: { "error" => { "message" => "SQL syntax error" } }.to_json
