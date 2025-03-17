@@ -12,7 +12,7 @@ Every package should:
 * [ ] [include a mkdocs.yml file](https://portal.powerapp.cloud/docs/default/system/portal/user-guide/distributing-documentation/)
 * [ ] have a CI workflow set up in `.github/workflows/your-package.yml`
 * [ ] use [Semantic Versioning](https://semver.org/) -- any packages that are currently only used in a single repository are considered to be experimental until they can be verified in a second repo
-* [ ] be versioned, with its own constant `packages/yourpackage/lib/yourpackage/version.rb`
+* [ ] be versioned, with its own constant (`packages/yourpackage/lib/yourpackage/version.rb` for ruby gems)
 * [ ] track its versioned changes with a changelog
 * [ ] include proper testing, both automated and manual. See [Testing](./README.md#testing-) for more
 
