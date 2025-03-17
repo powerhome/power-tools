@@ -166,4 +166,4 @@ These packages are maintained by [Power's](https://github.com/powerhome) Heroes 
 
 ## Contributing 💙
 
-Contributions are welcome! Feel free to [open a ticket](https://github.com/powerhome/power-tools/issues/new) or a [PR](https://github.com/powerhome/power-tools/pulls).
+Contributions are welcome! Feel free to [open a ticket](https://github.com/powerhome/power-tools/issues/new) or a [PR](https://github.com/powerhome/power-tools/pulls). For new packages, we have set up [a checklist/guide](./CONTRIBUTING.md) to ensure it fits into this repo.
