@@ -21,7 +21,7 @@ Additional, ruby gems should have:
 * [ ] defined a required_ruby_version in their gemspec
 * [ ] set up linting via `rubocop-powerhome`; it is expected that all violations are addressed
 * [ ] validated licenses with [license_finder](https://github.com/pivotal/LicenseFinder)
-* [ ] managed Ruby/Rails and/or other fundamental package versions through [appraisal](https://github.com/thoughtbot/appraisal)
+* [ ] managed Ruby/Rails and/or other fundamental package versions through [appraisal](./README.md#supporting-multiple-gem-versions)
 
 ## Publishing your tool
 
