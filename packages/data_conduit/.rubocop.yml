@@ -2,7 +2,7 @@ require:
   - rubocop-powerhome
   
 AllCops: 
-  TargetRubyVersion: 3.3 
+  TargetRubyVersion: 3.0
 
 Rails:
   Enabled: false

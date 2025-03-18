@@ -3,7 +3,7 @@
 require "rest-client"
 require "json"
 require "base64"
-require 'sequel'
+require "sequel"
 
 module DataConduit
   module Adapters
@@ -83,7 +83,7 @@ module DataConduit
           response_data = next_uri ? fetch_next(next_uri) : nil
         end
 
-        { result_data:, result_columns: }
+        { result_data: result_data, result_columns: result_columns }
       end
 
       def send_query(sql)

@@ -10,7 +10,7 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
   let(:catalog) { "power_catalog" }
   let(:schema) { "test_schema" }
   let(:table_name) { "test_table" }
-  let(:conditions) { { status: 'active' } }
+  let(:conditions) { { status: "active" } }
 
   let(:config) do
     {

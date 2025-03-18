@@ -11,9 +11,9 @@ RSpec.describe DataConduit::RepositoryFactory do
     it "creates a Trino repository when type is :trino" do
       repository = described_class.create(
         type: :trino,
-        table_name:,
-        conditions:,
-        config:
+        table_name: table_name,
+        conditions: conditions,
+        config: config
       )
 
       expect(repository).to be_a(DataConduit::Adapters::TrinoRepository)
@@ -25,7 +25,7 @@ RSpec.describe DataConduit::RepositoryFactory do
       expect do
         described_class.create(
           type: :unsupported,
-          table_name:
+          table_name: table_name
         )
       end.to raise_error(ArgumentError, /Unsupported repository type/)
     end
