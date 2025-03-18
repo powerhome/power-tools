@@ -1,0 +1,8 @@
+# Appraisals
+appraise "sequel-5.90" do
+  gem "sequel", "5.90.0"
+end
+
+appraise "sequel-latest" do
+  gem "sequel", "~> 5.90"
+end
