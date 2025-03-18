@@ -1,5 +1,5 @@
-site_name: Data Warehouse Ruby Connector
-
+site_name: DW Conduit
+site_description: Data Warehouse Ruby Connector
 nav:
   - "Home": "README.md"
   - "Changelog": "CHANGELOG.md"
