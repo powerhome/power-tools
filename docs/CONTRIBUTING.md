@@ -7,7 +7,7 @@ Every package should:
 * [ ] be a library maintained by employees/teams of Power Home Remodeling. The employee/team that publishes the gem is responsible for addressing any issues, bugs, and keeping the dependencies up-to-date
 * [ ] be open-sourced and available to the community for free, and we should ensure that any code added to this repository has been cleared with management so we're not infringing on Power's intellectual property.
 * [ ] have an entry in power-tool's [readme](./README.md), listed alphabetically and annotated as outlined there.
-* [ ] have it's own readme with specific installation and usage guidelines.
+* [ ] have its own readme with specific installation and usage guidelines.
 * [ ] be accurately [registered in the Portal catalog](../portal.yml)
 * [ ] [include a mkdocs.yml file](https://portal.powerapp.cloud/docs/default/system/portal/user-guide/distributing-documentation/)
 * [ ] have a CI workflow set up in `.github/workflows/your-package.yml`
@@ -15,6 +15,7 @@ Every package should:
 * [ ] be versioned, with its own constant (`packages/yourpackage/lib/yourpackage/version.rb` for ruby gems)
 * [ ] track its versioned changes with a changelog
 * [ ] include proper testing, both automated and manual. See [Testing](./README.md#testing-) for more
+* [ ] commit all lockfiles, including yarn.lock, gemfile.lock and/or any appraisal-based lockfiles
 
 Additional, ruby gems should have:
 
