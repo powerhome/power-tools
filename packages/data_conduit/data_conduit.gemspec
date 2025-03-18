@@ -21,10 +21,11 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "rest-client", "~> 2.1"
+  spec.add_dependency "securerandom", "~> 0.2.2"
 
-  spec.add_development_dependency "license_finder", "~> 7.0"
-
+  spec.add_development_dependency "activesupport", "~> 7.1.0"
   spec.add_development_dependency "appraisal", "~> 2.5.0"
+  spec.add_development_dependency "license_finder", "~> 7.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rubocop", "~> 1.21"
   spec.add_development_dependency "rubocop-powerhome"
