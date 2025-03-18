@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop", "~> 1.21"
   spec.add_development_dependency "rubocop-powerhome"
   spec.add_development_dependency "webmock", "~> 3.18"
+  spec.add_development_dependency "appraisal", "~> 2.5.0"
   spec.add_dependency "sequel", "~> 5.90.0"
   spec.metadata["rubygems_mfa_required"] = "true"
 end

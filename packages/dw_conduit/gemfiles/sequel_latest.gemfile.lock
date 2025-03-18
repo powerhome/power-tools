@@ -1,5 +1,5 @@
 PATH
-  remote: ../rubocop-powerhome
+  remote: ../../rubocop-powerhome
   specs:
     rubocop-powerhome (0.5.3)
       rubocop (= 1.66.1)
@@ -9,7 +9,7 @@ PATH
       rubocop-rspec
 
 PATH
-  remote: .
+  remote: ..
   specs:
     dw_conduit (0.1.0)
       rest-client (~> 2.1)
@@ -143,6 +143,7 @@ DEPENDENCIES
   rspec (~> 3.0)
   rubocop (~> 1.21)
   rubocop-powerhome!
+  sequel (~> 5.90)
   webmock (~> 3.18)
 
 BUNDLED WITH
