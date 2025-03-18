@@ -38,7 +38,7 @@ Delicious and sanitized data samples for development and testing.
 
 Enable alerts about deprecated features & prevent new ones from being introduced.
 
-[dw_conduit](https://github.com/powerhome/power-tools/blob/main/packages/dw_conduit/docs/README.md) 💎
+[data_conduit](https://github.com/powerhome/power-tools/blob/main/packages/data_conduit/docs/README.md) 💎
 
  Ruby data warehouse connector library that provides a standardized interface for querying different data warehouse engines.
 

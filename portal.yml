@@ -261,8 +261,8 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: dw_conduit
-  title: DWConduit
+  name: data_conduit
+  title: DataConduit
   description: >-
     Ruby data warehouse connector library that provides a standardized interface for querying different data warehouse engines.
 spec:

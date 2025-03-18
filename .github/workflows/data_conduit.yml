@@ -1,4 +1,4 @@
-name: dw_conduit
+name: data_conduit
 
 on:
   push:
