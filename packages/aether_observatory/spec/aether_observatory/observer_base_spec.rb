@@ -13,7 +13,7 @@ module AetherObservatory
 
         # When
         observer.start
-        event.create!(message: "message")
+        event.create(message: "message")
 
         # Then
         expect(observer.returned_payload.message).to eq("message")
@@ -31,13 +31,13 @@ module AetherObservatory
 
         # When
         observer.start
-        event.create!(message: "message zero")
+        event.create(message: "message zero")
 
         # Then
         expect(observer.returned_payload.message).to eq("message zero")
 
         # When
-        other_event.create!(message: "message one")
+        other_event.create(message: "message one")
 
         # Then
         expect(observer.returned_payload.message).to eq("message one")
@@ -56,7 +56,7 @@ module AetherObservatory
 
         # When
         observer.stop
-        event.create!(message: "message")
+        event.create(message: "message")
 
         # Then
         expect(observer.returned_payload).to eq(nil)
@@ -75,7 +75,7 @@ module AetherObservatory
 
         # When
         observer.start
-        event.create!(message: "message")
+        event.create(message: "message")
 
         # Then
         expect(observer.returned_payload.message).to eq("message")
