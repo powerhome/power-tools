@@ -152,8 +152,7 @@ RSpec.describe DataConduit::DataWarehouseRepository do
         include DataConduit::DataWarehouseRepository
 
         # Override initialize to avoid argument errors
-        def initialize
-        end
+        def initialize; end
 
         # Expose protected method for testing
         def test_validate_table_name(table_name)

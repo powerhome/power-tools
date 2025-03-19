@@ -29,13 +29,12 @@ module DataConduit
     protected
 
       def validate_table_name(table_name)
-        if table_name.nil? || table_name.empty?
-          raise ArgumentError, "Table name cannot be blank"
-        end
+        raise ArgumentError, "Table name cannot be blank" if table_name.nil? || table_name.empty?
 
-        unless table_name.to_s.match?(/^[a-zA-Z0-9_\.]+$/)
-          raise ArgumentError, "Invalid table name format. Table name must contain only letters, numbers, underscores, and periods."
-        end
+        return if table_name.to_s.match?(/^[a-zA-Z0-9_\.]+$/)
+
+        raise ArgumentError, "Invalid table name format. Table name must contain only letters, " \
+                             "numbers, underscores, and periods."
       end
 
       def transform_response(result_data, result_columns)
