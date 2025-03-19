@@ -146,4 +146,43 @@ RSpec.describe DataConduit::DataWarehouseRepository do
       end
     end
   end
+  describe "#validate_table_name" do
+    let(:validation_test_class) do
+      Class.new do
+        include DataConduit::DataWarehouseRepository
+
+        # Override initialize to avoid argument errors
+        def initialize
+        end
+
+        # Expose protected method for testing
+        def test_validate_table_name(table_name)
+          validate_table_name(table_name)
+        end
+      end
+    end
+
+    subject(:validator) { validation_test_class.new }
+
+    it "accepts valid table names" do
+      valid_names = ["table", "schema.table", "db_name", "table_name_with_underscores", "t1"]
+
+      valid_names.each do |name|
+        expect { validator.test_validate_table_name(name) }.not_to raise_error
+      end
+    end
+
+    it "rejects nil or empty table names" do
+      expect { validator.test_validate_table_name(nil) }.to raise_error(ArgumentError, /cannot be blank/)
+      expect { validator.test_validate_table_name("") }.to raise_error(ArgumentError, /cannot be blank/)
+    end
+
+    it "rejects invalid table name formats" do
+      invalid_names = ["table-name", "table name", "table;drop", "table*name"]
+
+      invalid_names.each do |name|
+        expect { validator.test_validate_table_name(name) }.to raise_error(ArgumentError, /Invalid table name format/)
+      end
+    end
+  end
 end

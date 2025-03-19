@@ -194,6 +194,21 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
         expect { repository.query }.to raise_error(DataConduit::Error, /Query failed/)
       end
     end
+
+    context "when the response is not valid JSON" do
+      before do
+        stub_request(:post, query_url)
+          .with(body: expected_sql)
+          .to_return(
+            status: 200,
+            body: "This is not valid JSON"
+          )
+      end
+
+      it "raises an error with a helpful message" do
+        expect { repository.query }.to raise_error(DataConduit::Error, /Failed to parse JSON response/)
+      end
+    end
   end
 
   describe "#execute" do

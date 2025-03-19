@@ -14,6 +14,7 @@ module DataConduit
 
     module InstanceMethods
       def initialize(_table_name, _conditions = nil, _config = {})
+        validate_table_name(table_name)
         raise NotImplementedError, "You must implement the initialize method"
       end
 
@@ -26,6 +27,16 @@ module DataConduit
       end
 
     protected
+
+      def validate_table_name(table_name)
+        if table_name.nil? || table_name.empty?
+          raise ArgumentError, "Table name cannot be blank"
+        end
+
+        unless table_name.to_s.match?(/^[a-zA-Z0-9_\.]+$/)
+          raise ArgumentError, "Invalid table name format. Table name must contain only letters, numbers, underscores, and periods."
+        end
+      end
 
       def transform_response(result_data, result_columns)
         return [] if result_data.nil? || result_data.empty?
