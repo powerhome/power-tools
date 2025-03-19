@@ -11,7 +11,7 @@ PATH
 PATH
   remote: ..
   specs:
-    rubocop-cobra (0.4.3)
+    rubocop-cobra (0.4.4)
       rubocop (= 1.74.0)
       rubocop-powerhome
 
