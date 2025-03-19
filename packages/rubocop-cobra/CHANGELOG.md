@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.4.4] - 2023-03-18
+
+- Bump Rubocop version to bring in bugfixes.
+
 ## [0.4.2] - 2023-02-08
 
 - Permit Rubocop upgrades again because bug was fixed.
