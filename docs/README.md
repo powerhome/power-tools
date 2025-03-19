@@ -38,6 +38,10 @@ Delicious and sanitized data samples for development and testing.
 
 Enable alerts about deprecated features & prevent new ones from being introduced.
 
+[data_conduit](https://github.com/powerhome/power-tools/blob/main/packages/data_conduit/docs/README.md) 💎
+
+ Ruby data warehouse connector library that provides a standardized interface for querying different data warehouse engines.
+
 [edgestitch](https://github.com/powerhome/power-tools/blob/main/packages/edgestitch/docs/README.md) 💎
 
 Edgestitch allows engines to define partial structure-self.sql files to be stitched into a single structure.sql file by the umbrella application.
