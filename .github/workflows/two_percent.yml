@@ -14,5 +14,6 @@ jobs:
       exclude: |-
         [
           { 'ruby': '3.3', 'gemfile': 'gemfiles/rails_6_1.gemfile'},
+          { 'ruby': '3.0', 'gemfile': 'gemfiles/rails_7.2.gemfile'},
         ]
     secrets: inherit
