@@ -242,6 +242,12 @@ GEM
       lint_roller (~> 1.1)
       rubocop (>= 1.72.1, < 2.0)
       rubocop-ast (>= 1.38.0, < 2.0)
+    rubocop-powerhome (0.5.0)
+      rubocop
+      rubocop-performance
+      rubocop-rails
+      rubocop-rake
+      rubocop-rspec
     rubocop-rails (2.30.3)
       activesupport (>= 4.2.0)
       lint_roller (~> 1.1)
@@ -252,6 +258,12 @@ GEM
       rubocop (>= 1.72)
       rubocop-performance (>= 1.24)
       rubocop-rails (>= 2.30)
+    rubocop-rake (0.7.1)
+      lint_roller (~> 1.1)
+      rubocop (>= 1.72.1)
+    rubocop-rspec (3.5.0)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.72, >= 1.72.1)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
     stringio (3.1.5)
@@ -283,6 +295,7 @@ DEPENDENCIES
   puma
   rails (= 7.1.5.1)
   rspec-rails (= 7.1.1)
+  rubocop-powerhome (= 0.5.0)
   rubocop-rails-omakase
   two_percent!
 

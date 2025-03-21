@@ -6,9 +6,4 @@ gemspec
 gem "puma"
 gem "appraisal", "~> 2.5.0"
 gem "rspec-rails", ">= 6.1.5"
-
-# Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
-gem "rubocop-rails-omakase", require: false
-
-# Start debugger with binding.b [https://github.com/ruby/debug]
-# gem "debug", ">= 1.0.0"
+gem "rubocop-powerhome", "0.5.0"

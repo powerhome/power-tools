@@ -4,8 +4,8 @@ source "https://rubygems.org"
 
 gem "puma"
 gem "appraisal", "~> 2.5.0"
-gem "rubocop-rails-omakase", require: false
-gem "rails", "7.1.5.1"
 gem "rspec-rails", "7.1.1"
+gem "rubocop-powerhome", "0.5.0"
+gem "rails", "7.1.5.1"
 
 gemspec path: "../"
