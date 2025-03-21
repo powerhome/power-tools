@@ -103,7 +103,7 @@ GEM
     method_source (1.1.0)
     mini_mime (1.1.5)
     minitest (5.25.5)
-    net-imap (0.5.6)
+    net-imap (0.4.19)
       date
       net-protocol
     net-pop (0.1.2)
@@ -243,6 +243,7 @@ PLATFORMS
 
 DEPENDENCIES
   appraisal (~> 2.5.0)
+  net-imap (< 0.5.0)
   nokogiri (< 1.18)
   puma
   rails (= 7.0.8.7)
