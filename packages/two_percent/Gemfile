@@ -5,6 +5,7 @@ gemspec
 
 gem "puma"
 gem "appraisal", "~> 2.5.0"
+gem "rspec-rails", ">= 6.1.5"
 
 # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
 gem "rubocop-rails-omakase", require: false
