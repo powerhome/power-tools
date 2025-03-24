@@ -4,7 +4,6 @@ require "rails_helper"
 
 RSpec.describe "Scim requests", type: :request do
   describe "POST /scim/Users" do
-    let(:headers) { { "Content-Type" => "application/scim+json" } }
     let(:valid_params) do
       {
         userName: "test_user",
@@ -15,16 +14,22 @@ RSpec.describe "Scim requests", type: :request do
         emails: [
           {
             value: "test_user@example.com",
-            primary: true,
+            primary: "true",
           },
         ],
       }
     end
 
     it "accepts the scim+json content type" do
-      post "/scim/Users", headers: headers, params: valid_params.to_json
+      post "/scim/Users", headers: { "Content-Type" => "application/scim+json" }, params: valid_params
 
       expect(response).to have_http_status(:ok)
+    end
+
+    it "creates a TwoPercent::CreateEvent" do
+      expect(TwoPercent::CreateEvent).to receive(:create).with(resource: "Users", params: valid_params)
+
+      post "/scim/Users", params: valid_params
     end
   end
 end
