@@ -21,6 +21,8 @@ Gem::Specification.new do |spec|
     Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
   end
 
-  spec.add_dependency "rails", ">= 6.1"
   spec.metadata["rubygems_mfa_required"] = "true"
+
+  spec.add_dependency "aether_observatory", ">= 1.0"
+  spec.add_dependency "rails", ">= 6.1"
 end

@@ -12,6 +12,7 @@ PATH
   remote: ..
   specs:
     two_percent (0.1.0)
+      aether_observatory (>= 1.0)
       rails (>= 6.1)
 
 GEM
@@ -82,6 +83,9 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
+    aether_observatory (1.0.0)
+      activemodel (>= 6.0.6.1)
+      activesupport (>= 6.0.6.1)
     appraisal (2.5.0)
       bundler
       rake
