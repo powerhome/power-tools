@@ -62,6 +62,10 @@ Rails-like sanitization hooks to be applied to OpenStruct fields.
 
 Shared eslint-config and Prettier formatting from Power Home Remodeling.
 
+[two_percent](https://github.com/powerhome/power-tools/blob/main/packages/two_percent/docs/README.md) 💎
+
+A thin SCIM interface that fire scim write events to observers.
+
 [rabbet](https://github.com/powerhome/power-tools/blob/main/packages/rabbet/docs/README.md) 💎
 
 A shared layout so that your suite of applications can have the same look and feel.

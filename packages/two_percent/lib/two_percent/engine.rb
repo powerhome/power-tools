@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "two_percent"
+
 module TwoPercent
   class Engine < ::Rails::Engine
     isolate_namespace TwoPercent

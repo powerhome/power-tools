@@ -257,7 +257,7 @@ spec:
   system: power-application-framework
   lifecycle: production
   subcomponentOf: power-tools
-  ---
+---
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
@@ -268,6 +268,20 @@ metadata:
 spec:
   type: library
   owner: batmans-oracle
+  system: power-application-framework
+  lifecycle: production
+  subcomponentOf: power-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: two_percent
+  title: TwoPercent
+  description: >-
+    A thin SCIM interface that fire scim write events to observers.
+spec:
+  type: library
+  owner: s-h-i-e-l-d
   system: power-application-framework
   lifecycle: production
   subcomponentOf: power-tools
