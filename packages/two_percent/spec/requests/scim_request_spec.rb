@@ -90,4 +90,48 @@ RSpec.describe "Scim requests", type: :request do
       put "/scim/Users/123", headers: headers, params: valid_params.to_json
     end
   end
+
+  describe "PATCH /scim/Users/:id" do
+    let(:valid_params) do
+      {
+        userName: "test_user",
+        name: {
+          givenName: "Test",
+          familyName: "User",
+        },
+        emails: [
+          {
+            value: "test_user@example.com",
+            primary: "true",
+          },
+        ],
+      }
+    end
+
+    it "accepts the scim+json content type" do
+      patch "/scim/Users/123", headers: headers, params: valid_params.to_json
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "creates a TwoPercent::ReplaceEvent" do
+      expect(TwoPercent::UpdateEvent).to receive(:create).with(resource: "Users", id: "123", params: valid_params)
+
+      patch "/scim/Users/123", headers: headers, params: valid_params.to_json
+    end
+  end
+
+  describe "DELETE /scim/Users/:id" do
+    it "accepts the scim+json content type" do
+      delete "/scim/Users/123", headers: headers
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "creates a TwoPercent::ReplaceEvent" do
+      expect(TwoPercent::DeleteEvent).to receive(:create).with(resource: "Users", id: "123")
+
+      delete "/scim/Users/123", headers: headers
+    end
+  end
 end

@@ -20,6 +20,12 @@ module TwoPercent
       head :ok
     end
 
+    def destroy
+      TwoPercent::DeleteEvent.create(resource: params[:resource_type], id: params[:id])
+
+      head :ok
+    end
+
   private
 
     def scim_params
