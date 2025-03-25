@@ -2,20 +2,20 @@
 
 appraise "rails-6-1" do
   gem "rails", "6.1.7.10"
-  gem "rspec-rails", "6.1.5"
+  gem "rspec-rails", "6.1.5", require: false
 end
 
 appraise "rails-7-0" do
   gem "rails", "7.0.8.7"
-  gem "rspec-rails", "7.1.1"
+  gem "rspec-rails", "7.1.1", require: false
 end
 
 appraise "rails-7-1" do
   gem "rails", "7.1.5.1"
-  gem "rspec-rails", "7.1.1"
+  gem "rspec-rails", "7.1.1", require: false
 end
 
 appraise "rails-7-2" do
   gem "rails", "7.2.2.1"
-  gem "rspec-rails", "7.1.1"
+  gem "rspec-rails", "7.1.1", require: false
 end
