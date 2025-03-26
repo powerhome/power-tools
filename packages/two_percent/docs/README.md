@@ -35,6 +35,22 @@ Use [AetherObservatory](https://github.com/powerhome/power-tools/blob/main/packa
 | `"delete.all"` | Any resource is being deleted | resource: String, params: SCIM hash |
 | `"delete.#{resource}"`, i.e.: `"delete.Users"` | A #{resource} is being deleted | resource: String, id: String |
 
+## Authenticating SCIM requests
+
+Most of the applications will want to secure the requests to SCIM. This can be done using the `authenticate` configuration:
+
+I.e.:
+
+```ruby
+TwoPercent.configure do |config|
+  config.authenticate = ->(*) do
+    authenticate_with_http_token do |token|
+      Token.active.find_by!(token:)
+    end
+  end
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run
