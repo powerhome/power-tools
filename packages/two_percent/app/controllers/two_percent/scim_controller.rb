@@ -2,6 +2,8 @@
 
 module TwoPercent
   class ScimController < ApplicationController
+    before_action :authenticate
+
     def create
       TwoPercent::CreateEvent.create(resource: params[:resource_type], params: scim_params)
 
@@ -30,6 +32,10 @@ module TwoPercent
 
     def scim_params
       params.except(:controller, :action, :resource_type, :id).as_json.deep_symbolize_keys
+    end
+
+    def authenticate
+      instance_exec(&TwoPercent.config.authenticate)
     end
   end
 end

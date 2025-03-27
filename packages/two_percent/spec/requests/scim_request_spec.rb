@@ -2,8 +2,22 @@
 
 require "rails_helper"
 
+RSpec.shared_examples "an authenticated request" do
+  it "will render a 401 status when not authentiated" do
+    expect(TwoPercent.config).to(
+      receive(:authenticate)
+        .and_return(->(*) { head :unauthorized })
+    )
+
+    subject
+
+    expect(response).to have_http_status(:unauthorized)
+  end
+end
+
 RSpec.describe "Scim requests", type: :request do
   let(:headers) { { "Content-Type" => "application/scim+json" } }
+
   describe "POST /scim/Users" do
     let(:valid_params) do
       {
@@ -19,6 +33,10 @@ RSpec.describe "Scim requests", type: :request do
           },
         ],
       }
+    end
+
+    it_behaves_like "an authenticated request" do
+      subject { post "/scim/Users" }
     end
 
     it "accepts the scim+json content type" do
@@ -46,6 +64,10 @@ RSpec.describe "Scim requests", type: :request do
           },
         ],
       }
+    end
+
+    it_behaves_like "an authenticated request" do
+      subject { patch "/scim/Users/123" }
     end
 
     it "accepts the scim+json content type" do
@@ -78,6 +100,10 @@ RSpec.describe "Scim requests", type: :request do
       }
     end
 
+    it_behaves_like "an authenticated request" do
+      subject { put "/scim/Users/123" }
+    end
+
     it "accepts the scim+json content type" do
       put "/scim/Users/123", headers: headers, params: valid_params.to_json
 
@@ -91,37 +117,11 @@ RSpec.describe "Scim requests", type: :request do
     end
   end
 
-  describe "PATCH /scim/Users/:id" do
-    let(:valid_params) do
-      {
-        userName: "test_user",
-        name: {
-          givenName: "Test",
-          familyName: "User",
-        },
-        emails: [
-          {
-            value: "test_user@example.com",
-            primary: "true",
-          },
-        ],
-      }
-    end
-
-    it "accepts the scim+json content type" do
-      patch "/scim/Users/123", headers: headers, params: valid_params.to_json
-
-      expect(response).to have_http_status(:ok)
-    end
-
-    it "creates a TwoPercent::ReplaceEvent" do
-      expect(TwoPercent::UpdateEvent).to receive(:create).with(resource: "Users", id: "123", params: valid_params)
-
-      patch "/scim/Users/123", headers: headers, params: valid_params.to_json
-    end
-  end
-
   describe "DELETE /scim/Users/:id" do
+    it_behaves_like "an authenticated request" do
+      subject { delete "/scim/Users/123" }
+    end
+
     it "accepts the scim+json content type" do
       delete "/scim/Users/123", headers: headers
 
