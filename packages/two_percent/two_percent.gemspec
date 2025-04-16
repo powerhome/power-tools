@@ -5,9 +5,8 @@ require_relative "lib/two_percent/version"
 Gem::Specification.new do |spec|
   spec.name        = "two_percent"
   spec.version     = TwoPercent::VERSION
-  spec.email       = ["carlos.palhares@powerhrg.com", "katie.edgar@powerhrg.com", "dsmith@powerhrg.com",
-                      "denis.zablotskii@powerhrg.com"]
-  spec.authors     = ["Carlos Palhares", "Katie Edgar", "Dan Smith", "Denis Zablotskii"]
+  spec.email       = ["carlos.palhares@powerhrg.com", "katie.weber@powerhrg.com", "dsmith@powerhrg.com"]
+  spec.authors     = ["Carlos Palhares", "Katie Edgar", "Dan Smith"]
   spec.homepage    = "https://github.com/powerhome/power-tools"
   spec.summary     = "Adds a thin SCIM interface, and delegates the actions taken on write calls to observers"
   spec.description = spec.summary
