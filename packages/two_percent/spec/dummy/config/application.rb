@@ -3,7 +3,10 @@
 require_relative "boot"
 require "logger"
 
+require "rails"
 require "action_controller/railtie"
+require "active_record/railtie"
+require "active_model/railtie"
 require "two_percent/engine"
 
 # Require the gems listed in Gemfile, including any gems
