@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_21_170132) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_21_183613) do
   create_table "two_percent_alternate_emails", force: :cascade do |t|
     t.string "email"
     t.integer "user_id", null: false
@@ -24,6 +24,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_21_170132) do
     t.integer "group_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["group_id", "user_id"], name: "index_two_percent_group_memberships_on_group_id_and_user_id", unique: true
     t.index ["group_id"], name: "index_two_percent_group_memberships_on_group_id"
     t.index ["user_id"], name: "index_two_percent_group_memberships_on_user_id"
   end
@@ -65,9 +66,4 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_21_170132) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
-
-  add_foreign_key "two_percent_alternate_emails", "users"
-  add_foreign_key "two_percent_group_memberships", "groups"
-  add_foreign_key "two_percent_group_memberships", "users"
-  add_foreign_key "two_percent_phone_numbers", "users"
 end
