@@ -25,4 +25,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "aether_observatory", ">= 1.0"
   spec.add_dependency "rails", ">= 6.1"
+
+  spec.add_development_dependency "pry", ">= 0.14.2"
+  spec.add_development_dependency "pry-byebug", "3.10.1"
 end
