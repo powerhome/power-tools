@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TwoPercent
   class GroupMembership < TwoPercent::ApplicationRecord
     belongs_to :user

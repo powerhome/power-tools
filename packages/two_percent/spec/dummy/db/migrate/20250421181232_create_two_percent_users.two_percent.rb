@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This migration comes from two_percent (originally 20250417185348)
 class CreateTwoPercentUsers < ActiveRecord::Migration[8.0]
   def change

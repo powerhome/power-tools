@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This migration comes from two_percent (originally 20250418202830)
 class CreateTwoPercentAlternateEmails < ActiveRecord::Migration[8.0]
   def change
