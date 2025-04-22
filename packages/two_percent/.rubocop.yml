@@ -3,14 +3,24 @@ require:
 
 AllCops:
   TargetRubyVersion: 3.0
+  SuggestExtensions: false
 
 Style/FrozenStringLiteralComment:
   Exclude:
-    - 'gemfiles/*'
+    - "gemfiles/*"
 
 Bundler/OrderedGems:
   Exclude:
-    - 'gemfiles/*'
+    - "gemfiles/*"
+
+Metrics/BlockLength:
+  Exclude:
+    - "spec/dummy/db/schema.rb"
+
+Metrics/MethodLength:
+  Exclude:
+    - "db/migrate/*"
+    - "spec/dummy/db/migrate/*"
 
 Rails:
   Enabled: false
