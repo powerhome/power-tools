@@ -3,7 +3,7 @@
 module RuboCop
   module Cop
     module Cobra
-      class DependencyVersion < RuboCop::Cop::Cop
+      class DependencyVersion < RuboCop::Cop::Base
         extend NodePattern::Macros
 
         MSG = "External component dependencies should be declared with a version"
