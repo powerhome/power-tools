@@ -1,6 +1,12 @@
 # TwoPercent [![Build Status](https://travis-ci.org/powerhome/two_percent.svg?branch=master)](https://travis-ci.org/powerhome/two_percent)
 
-## What is TwoPercent
+## What is TwoPercent?
+
+TwoPercent is a lightweight [SCIM](https://scim.cloud/) provisioning interface designed for [Cloud Service Providers (CSPs)](https://datatracker.ietf.org/doc/html/rfc7642#section-2.2.2).
+
+The primary role of TwoPercent is to respond to SCIM resource endpoints and forward those events to configured observer endpoints. This allows CSPs to subscribe to SCIM events and handle them to meet the specific needs of their software.
+
+TwoPercent also maintains a local copy of SCIM resource data, giving CSPs convenient access to current user and group information.
 
 
 ## Installation
