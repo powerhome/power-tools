@@ -1,5 +1,5 @@
 module TwoPercent
-  class PhoneNumber < ApplicationRecord
+  class PhoneNumber < TwoPercent::ApplicationRecord
     belongs_to :user
   end
 end

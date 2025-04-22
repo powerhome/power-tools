@@ -1,5 +1,5 @@
 module TwoPercent
-  class AlternateEmail < ApplicationRecord
+  class AlternateEmail < TwoPercent::ApplicationRecord
     belongs_to :user
   end
 end
