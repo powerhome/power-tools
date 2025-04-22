@@ -1,3 +1,7 @@
+## [Unreleased]
+
+- Fix Rubocop base class inheritance [#323](https://github.com/powerhome/power-tools/pull/323)
+
 ## [0.5.4] - 2025-03-18
 
 - Bump Rubocop version to bring in bugfixes.
