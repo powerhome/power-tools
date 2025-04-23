@@ -275,7 +275,7 @@ DEPENDENCIES
   rspec-rails (= 7.1.1)
   rubocop-powerhome!
   securerandom (< 0.4.0)
-  sqlite3 (~> 1.7.3)
+  sqlite3
   two_percent!
   zeitwerk (< 2.7.0)
 
