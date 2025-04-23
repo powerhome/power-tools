@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateTwoPercentGroups < ActiveRecord::Migration[8.0]
+class CreateTwoPercentGroups < ActiveRecord::Migration[6.0]
   def change
     create_table :two_percent_groups do |t|
       t.string :code

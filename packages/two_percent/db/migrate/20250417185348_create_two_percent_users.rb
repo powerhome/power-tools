@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateTwoPercentUsers < ActiveRecord::Migration[8.0]
+class CreateTwoPercentUsers < ActiveRecord::Migration[6.0]
   def change
     create_table :two_percent_users do |t|
       t.string :login

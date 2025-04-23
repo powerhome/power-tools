@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateTwoPercentPhoneNumbers < ActiveRecord::Migration[8.0]
+class CreateTwoPercentPhoneNumbers < ActiveRecord::Migration[6.0]
   def change
     create_table :two_percent_phone_numbers do |t|
       t.string :number
