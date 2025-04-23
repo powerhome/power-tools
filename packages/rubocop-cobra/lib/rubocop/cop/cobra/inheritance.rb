@@ -3,7 +3,7 @@
 module RuboCop
   module Cop
     module Cobra
-      class Inheritance < RuboCop::Cop::Cop
+      class Inheritance < RuboCop::Cop::Base
         PROTECTED_GLOBAL_CONSTANTS = %w[
           ApplicationController
           ApplicationRecord

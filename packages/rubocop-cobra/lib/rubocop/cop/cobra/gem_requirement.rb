@@ -3,7 +3,7 @@
 module RuboCop
   module Cop
     module Cobra
-      class GemRequirement < RuboCop::Cop::Cop
+      class GemRequirement < RuboCop::Cop::Base
         MSG = "Component Gemfile dependencies must specify " \
               "'require: nil'."
 

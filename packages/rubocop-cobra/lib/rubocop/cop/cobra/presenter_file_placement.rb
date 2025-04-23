@@ -23,7 +23,7 @@ module RuboCop
       #     end
       #   end
       #
-      class PresenterFilePlacement < RuboCop::Cop::Cop
+      class PresenterFilePlacement < RuboCop::Cop::Base
         include FilePlacementHelp
 
         def investigate(processed_source)

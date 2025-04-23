@@ -16,7 +16,7 @@ module RuboCop
       #     # ...
       #   end
       #
-      class ViewComponent < RuboCop::Cop::Cop
+      class ViewComponent < RuboCop::Cop::Base
         def on_class(node)
           inheritance_klass = node.node_parts[1]&.source
           return unless view_component_class?(inheritance_klass)

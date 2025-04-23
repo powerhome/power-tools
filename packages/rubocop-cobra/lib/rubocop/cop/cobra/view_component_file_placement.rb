@@ -45,7 +45,7 @@ module RuboCop
       #     end
       #   end
       #
-      class ViewComponentFilePlacement < RuboCop::Cop::Cop
+      class ViewComponentFilePlacement < RuboCop::Cop::Base
         FILE_PLACEMENT_MSG =
           "Nest ViewComponent definitions in the parent component and resource namespace. " \
           "For example: `%<correct_path>s`"
