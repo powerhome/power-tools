@@ -7,11 +7,11 @@ module RuboCop
       # specifically ViewComponent, create better Object Oriented design.
       # Global helper methods tightly couple templates.
       #
-      class NoHelpers < RuboCop::Cop::Cop
+      class NoHelpers < RuboCop::Cop::Base
         MSG = "Helpers create global view methods. Instead, use view objects to " \
               "encapsulate your display logic."
 
-        def investigate(processed_source)
+        def on_new_investigation
           return if processed_source.blank?
           return unless helper_path?
 
