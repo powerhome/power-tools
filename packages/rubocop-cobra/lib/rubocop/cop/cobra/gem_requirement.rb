@@ -7,7 +7,7 @@ module RuboCop
         MSG = "Component Gemfile dependencies must specify " \
               "'require: nil'."
 
-        def investigate(processed_source)
+        def on_new_investigation
           return if processed_source.blank?
 
           gem_block = component_gem_block(processed_source.ast)&.first
