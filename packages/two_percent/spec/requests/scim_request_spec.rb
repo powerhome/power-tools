@@ -56,6 +56,7 @@ RSpec.describe "Scim requests", type: :request do
     let(:valid_params) do
       {
         schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+        id: "123",
         Operations: [
           {
             op: "replace",
@@ -86,6 +87,7 @@ RSpec.describe "Scim requests", type: :request do
   describe "PUT /scim/Users/:id" do
     let(:valid_params) do
       {
+        id: "123",
         userName: "test_user",
         name: {
           givenName: "Test",
