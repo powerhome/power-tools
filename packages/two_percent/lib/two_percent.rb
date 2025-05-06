@@ -6,5 +6,4 @@ require "two_percent/version"
 require "two_percent/configuration"
 
 module TwoPercent
-  # Your code goes here...
 end
