@@ -7,6 +7,8 @@ module AetherObservatory
     include ActiveModel::AttributeAssignment
     include ActiveModel::Attributes
 
+    class_attribute :backend, default: AetherObservatory::Backend::Notifications
+
     class << self
       def inherited(subclass)
         super
@@ -14,14 +16,7 @@ module AetherObservatory
       end
 
       def create(**attributes)
-        event = new(**attributes)
-        event_names_with_prefix.each do |event_name_parts|
-          event_name = event_name_parts.filter_map do |part|
-            event.instance_exec(&part) unless part.nil?
-          end.join(".")
-          logger.debug("[#{name}] Create event for topic: [#{event_name}]")
-          ActiveSupport::Notifications.instrument(event_name, event)
-        end
+        backend.instrument new(**attributes)
 
         nil
       end
@@ -61,6 +56,13 @@ module AetherObservatory
     def initialize(attributes = {})
       super()
       assign_attributes(attributes) if attributes
+    end
+
+    def names
+      prefix = instance_exec(&self.class.event_prefix) if self.class.event_prefix
+      self.class.event_names.map do |event_name|
+        [prefix, instance_exec(&event_name)].compact.join(".")
+      end
     end
   end
 end

@@ -2,6 +2,8 @@
 
 module AetherObservatory
   class ObserverBase
+    class_attribute :backend, default: AetherObservatory::Backend::Notifications
+
     class << self
       def inherited(subclass)
         super
@@ -74,9 +76,7 @@ module AetherObservatory
 
         logger.debug("[#{name}] Registering subscription to topic: #{topic.inspect}")
 
-        subscriptions[topic] = ActiveSupport::Notifications.subscribe(topic) do |*args|
-          name.constantize.new(ActiveSupport::Notifications::Event.new(*args)).process
-        end
+        subscriptions[topic] = backend.subscribe(topic, self)
       end
 
       def unregister_subscription_to(topic)
@@ -84,7 +84,7 @@ module AetherObservatory
 
         logger.debug("[#{name}] Unregistering subscription to topic: #{topic.inspect}")
 
-        ActiveSupport::Notifications.unsubscribe(subscriptions.delete(topic))
+        backend.unsubscribe(subscriptions.delete(topic))
       end
 
       def logger(value = nil)
