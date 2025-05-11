@@ -12,11 +12,11 @@ RSpec.describe TwoPercent::BulkProcessor do
 
   it "dispatches each operation to the event handler" do
     operations = [
-      bulk_operation(method: "POST", path: "/Users", data: {
+      Factory.bulk_operation(method: "POST", path: "/Users", data: {
                        name: { givenName: "Smith", familyName: "Berry" },
                        userName: "smith",
                      }),
-      bulk_operation(method: "POST", path: "/Users", data: {
+      Factory.bulk_operation(method: "POST", path: "/Users", data: {
                        userName: "Kim",
                        password: "kim123",
                        name: { givenName: "Kim", familyName: "Berry" },
@@ -39,14 +39,5 @@ RSpec.describe TwoPercent::BulkProcessor do
                                       password: "kim123",
                                     })
     )
-  end
-
-  def bulk_operation(method:, path:, data: nil)
-    {
-      method: method,
-      path: path,
-      bulkId: "ytrewq",
-      data: data,
-    }.compact
   end
 end
