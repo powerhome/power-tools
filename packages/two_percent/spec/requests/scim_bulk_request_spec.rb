@@ -19,14 +19,14 @@ RSpec.describe "Scim Bulk requests", type: :request do
       ]
       bulk_request = Factory.bulk_request(operations)
       stub_processor = double("BulkProcessor")
-  
+
       expect(TwoPercent::BulkProcessor).to(
         receive(:new)
           .with(operations)
           .and_return(stub_processor)
       )
       expect(stub_processor).to receive(:dispatch)
-      
+
       post "/scim/Bulk", headers: headers, params: bulk_request.to_json
     end
   end

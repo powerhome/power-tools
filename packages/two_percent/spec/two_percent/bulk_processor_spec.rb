@@ -13,14 +13,14 @@ RSpec.describe TwoPercent::BulkProcessor do
   it "dispatches each operation to the event handler" do
     operations = [
       Factory.bulk_operation(method: "POST", path: "/Users", data: {
-                       name: { givenName: "Smith", familyName: "Berry" },
-                       userName: "smith",
-                     }),
+                               name: { givenName: "Smith", familyName: "Berry" },
+                               userName: "smith",
+                             }),
       Factory.bulk_operation(method: "POST", path: "/Users", data: {
-                       userName: "Kim",
-                       password: "kim123",
-                       name: { givenName: "Kim", familyName: "Berry" },
-                     }),
+                               userName: "Kim",
+                               password: "kim123",
+                               name: { givenName: "Kim", familyName: "Berry" },
+                             }),
     ]
 
     TwoPercent::BulkProcessor.new(operations).dispatch(stub_handler)

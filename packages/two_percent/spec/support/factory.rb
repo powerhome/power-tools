@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 module Factory
-  module_function
+module_function
 
   def bulk_request(operations)
     {
-      "failOnErrors": 1,
-      "schemas": ["urn:ietf:params:scim:api:messages:2.0:BulkRequest"],
-      "Operations": operations,
+      failOnErrors: 1,
+      schemas: ["urn:ietf:params:scim:api:messages:2.0:BulkRequest"],
+      Operations: operations,
     }
   end
 
