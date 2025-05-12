@@ -11,7 +11,7 @@ module TwoPercent
     end
 
     def operations
-      params.require(:Operations).map { _1.permit!.to_h }
+      params.require(:Operations).map { _1.permit(:method, :path, :bulkId, data: {}).to_h }
     end
   end
 end
