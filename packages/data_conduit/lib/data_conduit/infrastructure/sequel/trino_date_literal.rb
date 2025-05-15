@@ -2,6 +2,7 @@
 
 require "sequel"
 require "date"
+require "active_support"
 require "active_support/time"
 
 module TrinoDateLiteral
