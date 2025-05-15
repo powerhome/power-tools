@@ -1,5 +1,7 @@
 ## Unreleased
 
+# [0.4.0] - 2025-05-15
+
 - Add Bulk operations support [#329](https://github.com/powerhome/power-tools/pull/329)
 
 ## [0.3.0] - 2025-05-06
