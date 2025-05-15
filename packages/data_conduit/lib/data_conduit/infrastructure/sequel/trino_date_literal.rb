@@ -2,13 +2,23 @@
 
 require "sequel"
 require "date"
+require "active_support/time"
 
 module TrinoDateLiteral
-  def literal_other(v)
-    return "DATE '#{v.iso8601}'" if v.is_a?(Date)
+  ISO_TS = "%F %T.%6N" # => "YYYY-MM-DD hh:mm:ss.ffffff"
 
-    super
+  def literal_date(v)
+    "DATE '#{v.iso8601}'"
+  end
+
+  def literal_datetime(v) = timestamp_literal(v)
+  def literal_time(v)      = timestamp_literal(v)
+
+private
+
+  def timestamp_literal(v)
+    "TIMESTAMP '#{v.strftime(ISO_TS)}'"
   end
 end
 
-Sequel::Database.extend_datasets(TrinoDateLiteral)
+Sequel::Dataset.prepend(TrinoDateLiteral)
