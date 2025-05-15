@@ -30,6 +30,8 @@ module TwoPercent
   #   end
   #
   config_accessor :authenticate do
-    ->(*) { true }
+    ->(*) do
+      false
+    end
   end
 end
