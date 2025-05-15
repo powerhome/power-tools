@@ -8,17 +8,17 @@ require "active_support/time"
 module TrinoDateLiteral
   ISO_TS = "%F %T.%6N" # => "YYYY-MM-DD hh:mm:ss.ffffff"
 
-  def literal_date(v)
-    "DATE '#{v.iso8601}'"
+  def literal_date(value)
+    "DATE '#{value.iso8601}'"
   end
 
-  def literal_datetime(v) = timestamp_literal(v)
-  def literal_time(v)      = timestamp_literal(v)
+  def literal_datetime(value) = timestamp_literal(value)
+  def literal_time(value) = timestamp_literal(value)
 
 private
 
-  def timestamp_literal(v)
-    "TIMESTAMP '#{v.strftime(ISO_TS)}'"
+  def timestamp_literal(value)
+    "TIMESTAMP '#{value.strftime(ISO_TS)}'"
   end
 end
 
