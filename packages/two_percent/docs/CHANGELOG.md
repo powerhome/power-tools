@@ -1,3 +1,7 @@
+## Unreleased
+
+- Add Bulk operations support [#329](https://github.com/powerhome/power-tools/pull/329)
+
 ## [0.3.0] - 2025-05-06
 
 - Include `id` in SCIM attributes [#326](https://github.com/powerhome/power-tools/pull/326)
