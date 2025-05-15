@@ -11,7 +11,7 @@ PATH
 PATH
   remote: ..
   specs:
-    two_percent (0.3.0)
+    two_percent (0.4.0)
       aether_observatory (>= 1.0)
       rails (>= 6.1)
 
