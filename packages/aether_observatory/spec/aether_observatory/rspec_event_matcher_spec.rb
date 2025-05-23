@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Rails/SaveBang
-
 require "spec_helper"
 require "aether_observatory/rspec/event_helper"
 
