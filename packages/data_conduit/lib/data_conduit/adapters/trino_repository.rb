@@ -87,7 +87,9 @@ module DataConduit
       end
 
       def send_query(sql)
-        JSON.parse(RestClient.post("#{server}/v1/statement", sql, headers).body)
+        base_url = server.end_with?("/") ? server.chop : server
+        endpoint = "#{base_url}/v1/statement"
+        JSON.parse(RestClient.post(endpoint, sql, headers).body)
       rescue JSON::ParserError => e
         raise DataConduit::Error, "Failed to parse JSON response: #{e.message}"
       rescue RestClient::ExceptionWithResponse => e
