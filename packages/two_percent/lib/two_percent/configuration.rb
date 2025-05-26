@@ -34,4 +34,11 @@ module TwoPercent
       false
     end
   end
+
+  #
+  # Configures a logger to be used by TwoPercent modules.
+  # It can be accessed through `TwoPercent.logger`
+  # `TwoPercent.logger` will default to Rails.logger
+  #
+  config_accessor :logger
 end
