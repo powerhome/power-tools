@@ -31,6 +31,17 @@ module TwoPercent
   #
   config_accessor :authenticate do
     ->(*) do
+      TwoPercent.logger.warn(<<~MESSAGE)
+        TwoPercent authenticate is currently configured using a default and is blocking authenticaiton.
+
+        To make this wraning go away provide a configuration for `TwoPercent.config.authenticate`.
+
+        The value should:
+          1. Be callable like a Proc.
+          2. Return true when the request is permitted.
+          3. Return false when the request is not permitted.
+      MESSAGE
+
       false
     end
   end
