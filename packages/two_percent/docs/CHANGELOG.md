@@ -1,3 +1,8 @@
+## Unreleased
+
+- Make two percent authentication safe by default [#331](https://github.com/powerhome/power-tools/pull/331)
+- Add logger and logger config override [#331](https://github.com/powerhome/power-tools/pull/331)
+
 ## [0.3.0] - 2025-05-06
 
 - Include `id` in SCIM attributes [#326](https://github.com/powerhome/power-tools/pull/326)
