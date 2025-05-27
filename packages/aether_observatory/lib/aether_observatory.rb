@@ -2,6 +2,7 @@
 
 require "active_support/all"
 require "aether_observatory/configuration"
+require "aether_observatory/railtie" if defined?(Rails)
 
 module AetherObservatory
   mattr_accessor :configuration, default: Configuration
