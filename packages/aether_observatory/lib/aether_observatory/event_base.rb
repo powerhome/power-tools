@@ -46,7 +46,7 @@ module AetherObservatory
       def logger(value = nil)
         @logger = value if value.present?
 
-        @logger || AetherObservatory.config.logger
+        @logger || AetherObservatory.config.logger || Logger.new(nil)
       end
     end
 

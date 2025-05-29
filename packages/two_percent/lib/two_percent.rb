@@ -8,4 +8,8 @@ require "two_percent/event_handler"
 require "two_percent/bulk_processor"
 
 module TwoPercent
+  # Logger used by TwoPercent. Defaults to Rails.logger
+  def self.logger
+    config.logger || Rails.logger
+  end
 end

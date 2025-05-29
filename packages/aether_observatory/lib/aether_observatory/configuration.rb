@@ -4,8 +4,6 @@ module AetherObservatory
   module Configuration
     include ActiveSupport::Configurable
 
-    config_accessor(:logger) do
-      defined?(Rails) ? Rails.logger : Logger.new($stdout)
-    end
+    config_accessor :logger
   end
 end

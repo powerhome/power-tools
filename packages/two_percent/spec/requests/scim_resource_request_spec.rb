@@ -24,6 +24,10 @@ RSpec.describe "Scim Resource requests", type: :request do
       }
     end
 
+    before do
+      allow(TwoPercent::CreateEvent).to receive(:create)
+    end
+
     it_behaves_like "an authenticated request" do
       subject { post "/scim/Users" }
     end
@@ -35,9 +39,13 @@ RSpec.describe "Scim Resource requests", type: :request do
     end
 
     it "creates a TwoPercent::CreateEvent" do
-      expect(TwoPercent::CreateEvent).to receive(:create).with(resource: "Users", params: valid_params)
-
       post "/scim/Users", headers: headers, params: valid_params.to_json
+
+      expect(TwoPercent::CreateEvent).to have_received(:create) do |resource:, params:|
+        expect(resource).to eql "Users"
+        expect(params).to match valid_params
+        expect(params).to be_a HashWithIndifferentAccess
+      end
     end
   end
 
@@ -56,6 +64,10 @@ RSpec.describe "Scim Resource requests", type: :request do
       }
     end
 
+    before do
+      allow(TwoPercent::UpdateEvent).to receive(:create)
+    end
+
     it_behaves_like "an authenticated request" do
       subject { patch "/scim/Users/123" }
     end
@@ -67,9 +79,14 @@ RSpec.describe "Scim Resource requests", type: :request do
     end
 
     it "creates a TwoPercent::UpdateEvent" do
-      expect(TwoPercent::UpdateEvent).to receive(:create).with(resource: "Users", id: "123", params: valid_params)
-
       patch "/scim/Users/123", headers: headers, params: valid_params.to_json
+
+      expect(TwoPercent::UpdateEvent).to have_received(:create) do |resource:, id:, params:|
+        expect(resource).to eql "Users"
+        expect(id).to eql "123"
+        expect(params).to match valid_params
+        expect(params).to be_a HashWithIndifferentAccess
+      end
     end
   end
 
@@ -91,6 +108,10 @@ RSpec.describe "Scim Resource requests", type: :request do
       }
     end
 
+    before do
+      allow(TwoPercent::ReplaceEvent).to receive(:create)
+    end
+
     it_behaves_like "an authenticated request" do
       subject { put "/scim/Users/123" }
     end
@@ -102,13 +123,22 @@ RSpec.describe "Scim Resource requests", type: :request do
     end
 
     it "creates a TwoPercent::ReplaceEvent" do
-      expect(TwoPercent::ReplaceEvent).to receive(:create).with(resource: "Users", id: "123", params: valid_params)
-
       put "/scim/Users/123", headers: headers, params: valid_params.to_json
+
+      expect(TwoPercent::ReplaceEvent).to have_received(:create) do |resource:, id:, params:|
+        expect(resource).to eql "Users"
+        expect(id).to eql "123"
+        expect(params).to match valid_params
+        expect(params).to be_a HashWithIndifferentAccess
+      end
     end
   end
 
   describe "DELETE /scim/Users/:id" do
+    before do
+      allow(TwoPercent::DeleteEvent).to receive(:create)
+    end
+
     it_behaves_like "an authenticated request" do
       subject { delete "/scim/Users/123" }
     end
@@ -120,9 +150,9 @@ RSpec.describe "Scim Resource requests", type: :request do
     end
 
     it "creates a TwoPercent::ReplaceEvent" do
-      expect(TwoPercent::DeleteEvent).to receive(:create).with(resource: "Users", id: "123")
-
       delete "/scim/Users/123", headers: headers
+
+      expect(TwoPercent::DeleteEvent).to have_received(:create).with(resource: "Users", id: "123")
     end
   end
 end
