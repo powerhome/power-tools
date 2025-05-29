@@ -29,7 +29,7 @@ module TwoPercent
   private
 
     def scim_params
-      params.except(:controller, :action, :resource_type).as_json.deep_symbolize_keys
+      params.except(:controller, :action, :resource_type).as_json.with_indifferent_access
     end
   end
 end
