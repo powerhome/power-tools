@@ -65,10 +65,17 @@ module DataConduit
             raise ArgumentError, "Conditions must be provided as a Hash for safe query building"
           end
 
-          dataset = dataset.where(conditions)
+          converted_conditions = convert_string_keys(conditions)
+          dataset = dataset.where(converted_conditions)
         end
 
         dataset.sql
+      end
+
+      def convert_string_keys(conditions_hash)
+        conditions_hash.transform_keys do |key|
+          key.is_a?(String) || key.is_a?(Symbol) ? Sequel[key.to_sym] : key
+        end
       end
 
       def process_response(initial_response)

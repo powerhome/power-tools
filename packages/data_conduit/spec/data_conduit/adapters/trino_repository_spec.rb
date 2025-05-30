@@ -65,6 +65,17 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
     end
   end
 
+  describe "#build_query" do
+    context "when the condition key is a String" do
+      let(:conditions) { { "status" => "active" } }
+
+      it "converts the key and still builds the correct SQL" do
+        sql = repository.send(:build_query)
+        expect(sql).to eq("SELECT * FROM #{table_name} WHERE (status = 'active')")
+      end
+    end
+  end
+
   describe "#query" do
     let(:query_url) { "#{server}/v1/statement" }
     let(:next_url) { "#{server}/v1/statement/20240101_1" }
