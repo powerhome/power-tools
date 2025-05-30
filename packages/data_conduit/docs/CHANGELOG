@@ -1,3 +1,7 @@
+## [0.1.2] - 2025-05-30
+
+- Improve conditions key handling for the TrinoAdapter [#345](https://github.com/powerhome/power-tools/pull/345)
+
 ## [0.1.1] - 2025-05-13
 
 - Improve config params handling
