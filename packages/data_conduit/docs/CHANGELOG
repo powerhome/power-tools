@@ -1,3 +1,7 @@
+## [0.1.2] - 2025-05-30
+
+- Improve conditions key handling for the TrinoAdapter
+
 ## [0.1.1] - 2025-05-13
 
 - Improve config params handling
