@@ -6,7 +6,7 @@ source "https://rubygems.org"
 gemspec
 
 gem "activesupport", "< 7.2.0"
-gem "rake", "~> 13.0"
-gem "rspec", "~> 3.0"
-gem "rubocop", "~> 1.21"
-gem "securerandom", "< 0.4.0"
+gem "rake", "13.2.1"
+gem "rspec", "3.13.0"
+gem "rubocop", "1.71.0"
+gem "securerandom", "0.3.2"
