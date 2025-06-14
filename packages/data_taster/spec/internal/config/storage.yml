@@ -1,0 +1,3 @@
+test:
+  service: Disk
+  root: /Users/patmccler/Development/power/power-tools/packages/data_taster/tmp/storage
