@@ -256,7 +256,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  activesupport (< 7.2.0)
+  activesupport (< 7.0.8)
   appraisal (= 2.5.0)
   bundler (~> 2.1)
   combustion (~> 1.3)
