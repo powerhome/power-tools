@@ -6,4 +6,4 @@ gemspec
 
 gem "net-imap", "< 0.5.0"
 gem "rubocop-powerhome", path: "../rubocop-powerhome"
-gem "zeitwerk", "< 2.7.0"
+gem "zeitwerk", "2.6.18"
