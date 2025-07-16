@@ -4,6 +4,9 @@ inherit_from:
 require:
   - rubocop-powerhome
 
+Rails/ActionFilter:
+  Enabled: false
+
 Rails/EnvironmentVariableAccess:
   Exclude:
     - 'spec/**/*'
