@@ -7,6 +7,9 @@ require:
 Rails/ActionFilter:
   Enabled: false
 
+Rails/ActionOrder:
+  Enabled: false
+
 Rails/EnvironmentVariableAccess:
   Exclude:
     - 'spec/**/*'
