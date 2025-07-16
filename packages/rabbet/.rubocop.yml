@@ -4,5 +4,9 @@ inherit_from:
 require:
   - rubocop-powerhome
 
+Rails/EnvironmentVariableAccess:
+  Exclude:
+    - 'spec/**/*'
+
 AllCops:
   TargetRubyVersion: 3.0
