@@ -2,6 +2,7 @@
 
 require "active_support/testing/time_helpers"
 require "bundler"
+require "support/database_helper"
 
 Bundler.require(:development)
 
