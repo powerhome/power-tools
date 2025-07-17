@@ -14,7 +14,13 @@ module DataTaster
     end
 
     def db_config
-      ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, name: "primary").configuration_hash
+      ActiveRecord::Base.configurations
+                        .configs_for(env_name: Rails.env, name: "primary")
+                        .configuration_hash
+    rescue ArgumentError
+      ActiveRecord::Base.configurations
+                        .configs_for(env_name: Rails.env, spec_name: "primary")
+                        .config.with_indifferent_access
     end
 
     def logg(message)
