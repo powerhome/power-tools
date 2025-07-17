@@ -53,11 +53,6 @@ RSpec.describe DataTaster::Flavors do
   end
 
   it "exposes the source db name" do
-    if Gem::Version.new(Rails.version) < Gem::Version.new("6.1")
-      pending("Looking up database config changes between rails 6.0 and 6.1, " \
-              "and the current implementation doesn't account for 6.0 version.")
-    end
-
     expect(described_class.new.source_db).to eq("test")
   end
 
@@ -109,10 +104,6 @@ RSpec.describe DataTaster::Flavors do
   describe "#recent_ids" do
     it "generates a sub query for the passed table and column name" do
       stub_config
-      if Gem::Version.new(Rails.version) < Gem::Version.new("6.1")
-        pending("Looking up database config changes between rails 6.0 and 6.1, " \
-                "and the current implementation doesn't account for 6.0 version.")
-      end
 
       one_week_ago = (Date.current - 1.week).beginning_of_day.to_formatted_s(:db)
       expected_query = <<~SQL.squish
