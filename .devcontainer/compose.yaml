@@ -12,7 +12,7 @@ services:
       - ..:/workspaces:cached
 
   mysql:
-    image: mysql:latest
+    image: mysql:latest@sha256:b9d8b7ec6e6aced08b1cfe50776f8e323c0a625adf4e10e69f90fc686ea10807
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
