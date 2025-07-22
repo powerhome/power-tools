@@ -17,6 +17,7 @@ module DataTaster
       ActiveRecord::Base.configurations
                         .configs_for(env_name: Rails.env, name: "primary")
                         .configuration_hash
+    # configs_for signature changes between Rails 6.0 and 6.1
     rescue ArgumentError
       ActiveRecord::Base.configurations
                         .configs_for(env_name: Rails.env, spec_name: "primary")
