@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [1.2.0] - 2025-07-31
+
+- Add support to rails 7.2 [#351](https://github.com/powerhome/power-tools/pull/351)
+
 ## [1.1.0] - 2025-02-18
 
 - Prevents creating records with empty `source_changes` [#307](https://github.com/powerhome/power-tools/pull/307)
