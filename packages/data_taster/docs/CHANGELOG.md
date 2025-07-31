@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [0.4.3] - 2025-07-28
+
+- Lock activesupport requirement to ~> 7.0.8
+- Setup test environment and add simple specs
+- Fix issue reading database config to support Rails 6.0
+
 ## [0.4.2] - 2025-02-27
 
 - Lower nokogiri requirement to 1.14
