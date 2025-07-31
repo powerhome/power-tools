@@ -8,7 +8,7 @@ gemspec
 gem "appraisal", "~> 2.5.0"
 gem "logger", ">= 1.6.6"
 gem "net-imap", "< 0.5.0"
-gem "nokogiri", "< 1.18"
+gem "nokogiri", "< 1.19"
 gem "puma"
 gem "rspec-rails", ">= 7.0", require: false
 gem "rubocop-powerhome", path: "../rubocop-powerhome"
