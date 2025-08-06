@@ -41,6 +41,21 @@ RSpec.describe Edgestitch::Tasks do
       rake_execute "db:stitch"
     end
 
+    it "does not save the structure.sql when the file exists" do
+      structure_sql_file = Rails.root.join("db", "structure.sql").to_s
+
+      allow(File).to receive(:exist?).with(structure_sql_file).and_return(true)
+
+      expect(Edgestitch::Stitcher).to(
+        receive(:to_file) do |file, *engines|
+          expect(file).to eq structure_sql_file
+          expect(File).not_to receive(:write)
+        end
+      )
+
+      rake_execute "db:stitch"
+    end
+
     describe "rails enhancing" do
       it "creates the structure.sql before loading a schema" do
         execution = dry_run("db:schema:load")

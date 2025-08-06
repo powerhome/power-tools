@@ -19,7 +19,7 @@ module Edgestitch
     end
 
     def self.to_file(file, *engines)
-      File.write(file, new(engines).render)
+      File.write(file, new(engines).render) unless File.exist?(file)
     end
   end
 end
