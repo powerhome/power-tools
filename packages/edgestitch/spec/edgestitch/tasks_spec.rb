@@ -47,7 +47,7 @@ RSpec.describe Edgestitch::Tasks do
       allow(File).to receive(:exist?).with(structure_sql_file).and_return(true)
 
       expect(Edgestitch::Stitcher).to(
-        receive(:to_file) do |file, *engines|
+        receive(:to_file) do |file, *_engines|
           expect(file).to eq structure_sql_file
           expect(File).not_to receive(:write)
         end
