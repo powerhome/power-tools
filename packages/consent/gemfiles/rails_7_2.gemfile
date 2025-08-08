@@ -11,5 +11,7 @@ gem "nokogiri", "< 1.18"
 gem "rubocop-powerhome", path: "../../rubocop-powerhome"
 gem "zeitwerk", "< 2.7.0"
 gem "rails", "7.2.2.1"
+gem "securerandom", "< 4.0"
+gem "erb", "< 5.0"
 
 gemspec path: "../"
