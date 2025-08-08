@@ -18,10 +18,7 @@ Consent.define ExampleModel, "My Label" do
   end
 
   view :role, "Same role" do |user|
-    {
-      example_role: { id: user.role_id },
-      additional_role: { id: user.role_id },
-    }
+    { example_role: { id: user.role_id }, additional_role: { id: user.role_id } }
   end
 
   view :role_department, "Same role department" do |user|
