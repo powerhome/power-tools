@@ -288,7 +288,7 @@ GEM
       rubocop (~> 1.72, >= 1.72.1)
     ruby-progressbar (1.13.0)
     rubyzip (2.4.1)
-    securerandom (0.4.1)
+    securerandom (0.3.2)
     sqlite3 (1.7.3-aarch64-linux)
     sqlite3 (1.7.3-arm-linux)
     sqlite3 (1.7.3-arm64-darwin)
@@ -343,7 +343,7 @@ DEPENDENCIES
   rspec (~> 3.0)
   rspec-rails (~> 6.1.5)
   rubocop-powerhome!
-  securerandom (< 4.0)
+  securerandom (< 0.4)
   sqlite3 (~> 1.7.3)
   zeitwerk (< 2.7.0)
 
