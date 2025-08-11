@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
 
   s.homepage = "https://github.com/powerhome/power-tools"
   s.license = "MIT"
-  s.required_ruby_version = ">= 3.1"
+  s.required_ruby_version = ">= 3.0"
 
   s.metadata["rubygems_mfa_required"] = "true"
 
