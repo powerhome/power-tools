@@ -13,6 +13,7 @@ gem "rake", "~> 13"
 gem "rspec", "~> 3.0"
 gem "rspec-rails", "~> 5.1.2"
 gem "rubocop-powerhome", path: "../rubocop-powerhome"
+gem "securerandom", "< 0.4" # For Ruby < 3.1 compatibility
 gem "simplecov", "0.15.1"
 gem "sqlite3", "~> 1.7.3"
 gem "yard", "0.9.21"

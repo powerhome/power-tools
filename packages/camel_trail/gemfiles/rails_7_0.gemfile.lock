@@ -241,6 +241,7 @@ GEM
       rubocop (~> 1.72, >= 1.72.1)
     ruby-progressbar (1.13.0)
     rubyzip (2.4.1)
+    securerandom (0.3.2)
     simplecov (0.15.1)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -282,6 +283,7 @@ DEPENDENCIES
   rspec (~> 3.0)
   rspec-rails (~> 7.1.1)
   rubocop-powerhome!
+  securerandom (< 0.4)
   simplecov (= 0.15.1)
   sqlite3 (~> 1.7.3)
   yard (= 0.9.21)
