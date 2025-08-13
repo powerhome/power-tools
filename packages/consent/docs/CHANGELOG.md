@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [2.2.0] - 2025-08-08
+
+- Add support to Ruby 3.3 and Rails 6.1 [#356](https://github.com/powerhome/power-tools/pull/356)
+
 ## [2.1.0] - 2025-02-19
 
 - Add support to rails 7.1+ [#308](https://github.com/powerhome/power-tools/pull/308)
