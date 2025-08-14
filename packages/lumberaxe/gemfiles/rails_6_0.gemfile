@@ -2,8 +2,18 @@
 
 source "https://rubygems.org"
 
+gem "appraisal", "~> 2.5.0"
+gem "erb", "< 5"
+gem "license_finder", ">= 7.0"
 gem "net-imap", "< 0.5.0"
+gem "rake", "~> 13"
+gem "rspec", "~> 3.0"
+gem "rspec-rails", "~> 5.1.2"
 gem "rubocop-powerhome", path: "../../rubocop-powerhome"
+gem "securerandom", "< 0.4"
+gem "simplecov", "0.15.1"
+gem "sqlite3", "~> 1.7.3"
+gem "yard", "0.9.21"
 gem "zeitwerk", "< 2.7.0"
 gem "rails", "6.0.6.1"
 
