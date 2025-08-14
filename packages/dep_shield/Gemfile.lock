@@ -2,7 +2,7 @@ PATH
   remote: ../nitro_config
   specs:
     nitro_config (0.2.0)
-      activesupport (>= 6.0.6.1)
+      activesupport (>= 6.0.6.1, < 8)
 
 PATH
   remote: ../rubocop-powerhome
@@ -266,6 +266,7 @@ GEM
       concurrent-ruby (~> 1.0, >= 1.0.2)
     sqlite3 (1.7.3)
       mini_portile2 (~> 2.8.0)
+    sqlite3 (1.7.3-arm64-darwin)
     stringio (3.1.2)
     thor (1.3.2)
     timeout (0.4.3)

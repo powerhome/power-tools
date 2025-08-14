@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "logger"
 require "bundler"
 Bundler.require :default, :development
 require "dep_shield/railtie"

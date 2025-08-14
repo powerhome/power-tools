@@ -2,7 +2,7 @@ PATH
   remote: ../../nitro_config
   specs:
     nitro_config (0.2.0)
-      activesupport (>= 6.0.6.1)
+      activesupport (>= 6.0.6.1, < 8)
 
 PATH
   remote: ../../rubocop-powerhome
