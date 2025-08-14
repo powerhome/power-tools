@@ -28,10 +28,10 @@ Gem::Specification.new do |spec|
   end
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "activemodel", ">= 6.0.6.1"
-  spec.add_dependency "activesupport", ">= 6.0.6.1"
-  spec.add_development_dependency "appraisal", "~> 2.5.0"
+  spec.add_dependency "activemodel", ">= 6.1"
+  spec.add_dependency "activesupport", ">= 6.1"
 
+  spec.add_development_dependency "appraisal", "~> 2.5.0"
   spec.add_development_dependency "bundler", "~> 2.1"
   spec.add_development_dependency "license_finder", "~> 7.0"
   spec.add_development_dependency "pry", ">= 0.14"

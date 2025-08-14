@@ -1,3 +1,7 @@
+## [Unreleased]
+
+- Standardize all libs to support ruby 3.0, ruby 3.3 x rails 6.1 through rails 7.2 [#359](https://github.com/powerhome/power-tools/pull/359)
+
 ## [0.5.0] - 2025-08-14
 
 - Add enhance configuration for Edgestitch railtie [#355](https://github.com/powerhome/power-tools/pull/355)
