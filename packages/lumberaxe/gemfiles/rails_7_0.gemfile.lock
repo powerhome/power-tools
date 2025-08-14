@@ -11,8 +11,8 @@ PATH
 PATH
   remote: ..
   specs:
-    lumberaxe (0.1.5)
-      activesupport (>= 6.0.6.1, < 7.2)
+    lumberaxe (0.2.0)
+      activesupport (>= 6.0.6.1, < 8.0)
       lograge (= 0.10.0)
 
 GEM
