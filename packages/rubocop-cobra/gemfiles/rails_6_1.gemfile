@@ -4,6 +4,7 @@
 
 source "https://rubygems.org"
 
+gem "erb", "< 5"
 gem "net-imap", "< 0.5.0"
 gem "nokogiri", "< 1.18.0"
 gem "rails", "6.1.7.7"
