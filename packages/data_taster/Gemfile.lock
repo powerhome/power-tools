@@ -273,6 +273,7 @@ DEPENDENCIES
   license_finder (~> 7.0)
   mysql2 (= 0.5.5)
   net-imap (< 0.5.0)
+  nokogiri (< 1.18.0)
   parser (>= 2.5, != 2.5.1.1)
   rainbow (= 2.2.2)
   rake (~> 13.0)
