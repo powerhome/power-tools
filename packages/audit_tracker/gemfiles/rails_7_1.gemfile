@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-gem "byebug"
+gem "byebug", "< 12"
 gem "license_finder", ">= 7.0"
 gem "net-imap", "< 0.5.0"
 gem "nokogiri", "< 1.18"
