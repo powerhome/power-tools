@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "active_support/testing/time_helpers"
 require "bundler"
 require "support/database_helper"
+require "active_support/testing/time_helpers"
 
 Bundler.require(:development)
 
