@@ -13,7 +13,7 @@ PATH
   specs:
     data_taster (0.4.3)
       nokogiri (> 1.14.0)
-      rails (>= 6.0)
+      rails (>= 6.0, < 8)
 
 GEM
   remote: https://rubygems.org/
