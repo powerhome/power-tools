@@ -140,12 +140,12 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.4)
-    nokogiri (1.18.9)
+    nokogiri (1.17.2)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.18.9-arm64-darwin)
+    nokogiri (1.17.2-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.9-x86_64-linux-gnu)
+    nokogiri (1.17.2-x86_64-linux)
       racc (~> 1.4)
     parallel (1.27.0)
     parser (3.3.9.0)
@@ -277,6 +277,7 @@ DEPENDENCIES
   license_finder (>= 7.0)
   net-imap (< 0.5.0)
   nitro_config!
+  nokogiri (< 1.18)
   rails (= 6.1.7.7)
   rake (~> 13.0)
   rspec (~> 3.0)
