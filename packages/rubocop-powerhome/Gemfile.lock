@@ -248,7 +248,7 @@ DEPENDENCIES
   net-imap (< 0.5.0)
   pry (>= 0.14.2)
   pry-byebug (= 3.10.1)
-  rails (>= 6.0.6.1, < 7.1)
+  rails (>= 6.0.6.1, < 8)
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop-powerhome!
