@@ -2,9 +2,10 @@
 
 source "https://rubygems.org"
 
-gem "securerandom", "< 0.4.0"
-gem "nokogiri", "< 1.18.0"
+gem "erb", "< 5"
 gem "net-imap", "< 0.5.0"
+gem "nokogiri", "< 1.18.0"
+gem "securerandom", "< 0.4.0"
 gem "zeitwerk", "< 2.7.0"
 gem "rails", "7.0.8.1"
 
