@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Standardize all libs to support ruby 3.0, ruby 3.3 x rails 6.1 through rails 7.2 [#359](https://github.com/powerhome/power-tools/pull/359)
+
 ## [2.2.0] - 2025-08-08
 
 - Add support to Ruby 3.3 and Rails 6.1 [#356](https://github.com/powerhome/power-tools/pull/356)
