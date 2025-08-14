@@ -129,9 +129,9 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.4)
-    nokogiri (1.18.9-arm64-darwin)
+    nokogiri (1.17.2-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.9-x86_64-linux-gnu)
+    nokogiri (1.17.2-x86_64-linux)
       racc (~> 1.4)
     parallel (1.27.0)
     parser (3.3.9.0)
@@ -227,6 +227,7 @@ GEM
       rubocop (~> 1.72, >= 1.72.1)
     ruby-progressbar (1.13.0)
     rubyzip (2.4.1)
+    securerandom (0.3.2)
     simplecov (0.15.1)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -271,6 +272,7 @@ DEPENDENCIES
   cygnet!
   license_finder (~> 7.0)
   net-imap (< 0.5.0)
+  nokogiri (< 1.18)
   pry (>= 0.14)
   pry-byebug (= 3.10.1)
   rails (= 6.1.7.7)
@@ -278,6 +280,7 @@ DEPENDENCIES
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop-powerhome!
+  securerandom (< 0.4)
   simplecov (= 0.15.1)
   test-unit (= 3.1.5)
   yard (= 0.9.21)

@@ -6,3 +6,17 @@ require:
 
 AllCops:
   TargetRubyVersion: 3.0
+
+Rails/ActionFilter:
+  Enabled: false
+
+Rails/ActionOrder:
+  Enabled: false
+
+Rails/HelperInstanceVariable:
+  Exclude:
+    - 'lib/cygnet/collections.rb'
+
+Rails/EnvironmentVariableAccess:
+  Exclude:
+    - 'spec/spec_helper.rb'
