@@ -14,3 +14,12 @@ Style/StringLiteralsInInterpolation:
 
 Layout/LineLength:
   Max: 120
+
+Rails/HelperInstanceVariable:
+  Exclude:
+    - 'lib/dep_shield/todos.rb'
+    - 'lib/dep_shield/deprecation.rb'
+
+Rails/EnvironmentVariableAccess:
+  Exclude:
+    - 'lib/dep_shield/deprecation.rb'
