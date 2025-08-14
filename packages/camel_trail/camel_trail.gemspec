@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
 
   s.homepage = "https://github.com/powerhome/power-tools"
   s.license = "MIT"
-  s.required_ruby_version = ">= 2.7"
+  s.required_ruby_version = ">= 3.0"
 
   s.metadata["rubygems_mfa_required"] = "true"
 
@@ -21,15 +21,5 @@ Gem::Specification.new do |s|
   s.add_dependency "attr_encrypted", "4.0.0"
   s.add_dependency "nitro_config"
 
-  s.add_dependency "rails", ">= 6.0.6.1", "< 7.2"
-
-  s.add_development_dependency "appraisal", "~> 2.5.0"
-  s.add_development_dependency "license_finder", ">= 7.0"
-  s.add_development_dependency "rake", "~> 13"
-  s.add_development_dependency "rspec", "~> 3.0"
-  s.add_development_dependency "rspec-rails", "~> 5.1.2"
-  s.add_development_dependency "rubocop-powerhome", "0.5.0"
-  s.add_development_dependency "simplecov", "0.15.1"
-  s.add_development_dependency "sqlite3", "~> 1.7.3"
-  s.add_development_dependency "yard", "0.9.21"
+  s.add_dependency "rails", ">= 6.0.6.1", "< 8"
 end
