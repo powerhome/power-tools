@@ -273,7 +273,7 @@ GEM
       rubocop (~> 1.72, >= 1.72.1)
     ruby-progressbar (1.13.0)
     rubyzip (2.4.1)
-    securerandom (0.4.1)
+    securerandom (0.3.2)
     sentry-ruby (5.26.0)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
@@ -313,6 +313,7 @@ DEPENDENCIES
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop-powerhome!
+  securerandom (< 0.4)
   sqlite3 (~> 1.7.3)
   zeitwerk (< 2.7.0)
 
