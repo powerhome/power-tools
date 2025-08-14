@@ -4,6 +4,7 @@
 
 source "https://rubygems.org"
 
+gem "erb", "< 5"
 gem "net-imap", "< 0.5.0"
 gem "nitro_config", path: "../../nitro_config"
 gem "nokogiri", "< 1.18"

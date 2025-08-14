@@ -110,6 +110,7 @@ GEM
     benchmark (0.4.1)
     bigdecimal (3.2.2)
     builder (3.3.0)
+    cgi (0.5.0)
     combustion (1.5.0)
       activesupport (>= 3.0.0)
       railties (>= 3.0.0)
@@ -121,7 +122,8 @@ GEM
     date (3.4.1)
     diff-lcs (1.6.2)
     drb (2.2.3)
-    erb (5.0.2)
+    erb (4.0.4)
+      cgi (>= 0.3.3)
     erubi (1.13.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
@@ -305,6 +307,7 @@ DEPENDENCIES
   appraisal (~> 2.5.0)
   combustion (~> 1.4)
   dep_shield!
+  erb (< 5)
   license_finder (>= 7.0)
   net-imap (< 0.5.0)
   nitro_config!
