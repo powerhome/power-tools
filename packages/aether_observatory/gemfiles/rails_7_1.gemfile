@@ -7,5 +7,7 @@ source "https://rubygems.org"
 gem "activemodel", "~> 7.1.5.2"
 gem "activesupport", "~> 7.1.5.2"
 gem "rubocop-powerhome", path: "../../rubocop-powerhome"
+gem "securerandom", "< 0.4.0"
+gem "zeitwerk", "< 2.7"
 
 gemspec path: "../"

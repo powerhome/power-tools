@@ -10,5 +10,14 @@ Metrics/MethodLength:
   Exclude:
     - spec/**/*_spec.rb
 
+Rails/ActionFilter:
+  Enabled: false
+
+Rails/ActionOrder:
+  Enabled: false
+
+Rails/FilePath:
+  Enabled: false
+
 Rails/SaveBang:
   Enabled: false
