@@ -12,8 +12,8 @@ PATH
   remote: .
   specs:
     aether_observatory (1.0.1)
-      activemodel (>= 6.0.6.1)
-      activesupport (>= 6.0.6.1)
+      activemodel (>= 6.1)
+      activesupport (>= 6.1)
 
 GEM
   remote: https://rubygems.org/

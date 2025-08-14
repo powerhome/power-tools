@@ -4,8 +4,8 @@
 
 source "https://rubygems.org"
 
-gem "activemodel", "~> 7.0.8"
-gem "activesupport", "~> 7.0.8"
+gem "activemodel", "~> 7.0.8.7"
+gem "activesupport", "~> 7.0.8.7"
 gem "rubocop-powerhome", path: "../../rubocop-powerhome"
 
 gemspec path: "../"
