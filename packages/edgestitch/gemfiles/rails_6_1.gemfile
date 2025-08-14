@@ -7,5 +7,6 @@ gem "nokogiri", "< 1.18.0"
 gem "rubocop-powerhome", path: "../../rubocop-powerhome"
 gem "zeitwerk", "< 2.7.0"
 gem "rails", "6.1.7.7"
+gem "rspec-rails", "~> 6.1.5"
 
 gemspec path: "../"
