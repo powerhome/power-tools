@@ -8,3 +8,31 @@ Style/FrozenStringLiteralComment:
 Bundler/OrderedGems:
   Exclude:
     - 'gemfiles/*'
+
+Rails/ActionFilter:
+  Enabled: false
+
+Rails/ActionOrder:
+  Enabled: false
+
+Rails/CreateTableWithTimestamps:
+  Exclude:
+    - 'spec/internal/db/schema.rb'
+
+Rails/SchemaComment:
+  Exclude:
+    - 'spec/internal/db/schema.rb'
+
+Rails/HelperInstanceVariable:
+  Exclude:
+    - 'lib/audit_tracker/tracker.rb'
+    - 'lib/audit_tracker/dsl.rb'
+    - 'lib/audit_tracker.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/internal/db/schema.rb'
+    - 'audit_tracker.gemspec'
+
+Rails/EnvironmentVariableAccess:
+  Enabled: false

@@ -31,12 +31,14 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "nokogiri", "> 1.14.0" # can be removed after we remove support for Rails 6.0.1
-  spec.add_dependency "rails", ">= 6.0"
+  spec.add_dependency "rails", ">= 6.0", "< 8"
 
   spec.add_development_dependency "license_finder", "~> 7.0"
 
   spec.add_development_dependency "appraisal", "2.5.0"
   spec.add_development_dependency "bundler", "~> 2.1"
+  spec.add_development_dependency "combustion", "~> 1.3"
+  spec.add_development_dependency "mysql2", "0.5.5"
   spec.add_development_dependency "parser", ">= 2.5", "!= 2.5.1.1"
   spec.add_development_dependency "rainbow", "2.2.2"
   spec.add_development_dependency "rake", "~> 13.0"
