@@ -79,6 +79,9 @@ RSpec.describe DataTaster::Sanitizer do
 
         # Should have SQL for compensation (matches compensation pattern)
         expect(sql_statements).to include("SET compensation = 999999")
+
+        # Should have SQL for date_of_birth (matches dob pattern)
+        expect(sql_statements).to include("SET date_of_birth = '#{Date.current - 29.years}'")
       end
 
       it "processes custom selections that override defaults" do
