@@ -14,6 +14,11 @@ ActiveRecord::Schema.define do
     t.string :email2
     t.string :address
     t.string :address2
+    t.string :passport_number
+    t.string :license_number
+    t.date :dob
+    t.text :body
+    t.decimal :income, precision: 10, scale: 2
 
     t.timestamps
   end

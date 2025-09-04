@@ -82,6 +82,21 @@ RSpec.describe DataTaster::Sanitizer do
 
         # Should have SQL for date_of_birth (matches dob pattern)
         expect(sql_statements).to include("SET date_of_birth = '#{Date.current - 29.years}'")
+
+        # Should have SQL for passport_number (matches passport pattern)
+        expect(sql_statements).to include("SET passport_number = '111111111'")
+
+        # Should have SQL for license_number (matches license pattern)
+        expect(sql_statements).to include("SET license_number = '111111111'")
+
+        # Should have SQL for dob (matches dob pattern)
+        expect(sql_statements).to include("SET dob = '#{Date.current - 29.years}'")
+
+        # Should have SQL for body (matches body pattern)
+        expect(sql_statements).to include("SET body = 'Redacted for privacy'")
+
+        # Should have SQL for income (matches income pattern)
+        expect(sql_statements).to include("SET income = 999999")
       end
 
       it "processes custom selections that override defaults" do
