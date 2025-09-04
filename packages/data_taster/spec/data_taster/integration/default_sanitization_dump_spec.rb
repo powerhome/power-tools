@@ -5,26 +5,21 @@ require "spec_helper"
 RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integration do
   include DatabaseHelper
 
-  let(:test_client) do
-    client = Mysql2::Client.new(test_database_config)
-    # Mock the table discovery to only process users table
-    allow(client).to receive(:query).with("SHOW tables").and_return([
-                                                                      { "Tables_in_test" => "users" },
-                                                                    ])
-    # Allow other queries to pass through
-    allow(client).to receive(:query).and_call_original
-    client
-  end
   let(:test_dump_client) { Mysql2::Client.new(test_dump_database_config) }
   let(:test_dump_db_config) { test_dump_database_config }
+  let(:yaml_path) { File.join(__dir__, "..", "..", "fixtures", "full_dump_export_tables.yml") }
 
   before do
+    # Create and configure the test client
+    test_client = Mysql2::Client.new(test_database_config)
+
     DataTaster.config(
       source_client: test_client,
       working_client: test_dump_client,
-      include_insert: true
+      include_insert: true,
+      list: [yaml_path]
     )
-    create_dump_table
+    create_dump_tables
     setup_source_data
   end
 
@@ -34,13 +29,8 @@ RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integr
 
   describe "complete data dump workflow" do
     it "creates users and verifies they are properly sanitized" do
-      # Mock the confection to return our test table configuration (just selection, no custom sanitization)
-      allow(DataTaster).to receive(:confection).and_return({
-                                                             "users" => "id > 0", # Only selection, let defaults handle sanitization
-                                                           })
-
-      # Run the sample process directly for the users table
-      DataTaster::Sample.new("users").serve!
+      # Run the full sample process using the YAML configuration
+      DataTaster.sample!
 
       # Verify data was copied and sanitized in the dump database
       result = test_dump_client.query("SELECT * FROM users WHERE id = 1").first
@@ -75,8 +65,11 @@ RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integr
 
 private
 
-  def create_dump_table
-    # Create the users table in the dump database with the same structure as the source
+  def create_dump_tables
+    # Create tables in the dump database to match the source database schema
+    # The source database tables are created by the schema, but we need to create them in the dump database too
+
+    # Create users table
     test_dump_client.query("CREATE TABLE IF NOT EXISTS users (
       id INT PRIMARY KEY,
       encrypted_password VARCHAR(255),
@@ -96,16 +89,33 @@ private
       created_at DATETIME,
       updated_at DATETIME
     )")
+
+    # Create ar_internal_metadata table (Rails creates with id as primary key)
+    test_dump_client.query("CREATE TABLE IF NOT EXISTS ar_internal_metadata (
+      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+      `key` VARCHAR(255) NOT NULL,
+      value TEXT,
+      created_at DATETIME,
+      updated_at DATETIME
+    )")
+
+    # Create schema_migrations table (Rails creates with id as primary key)
+    test_dump_client.query("CREATE TABLE IF NOT EXISTS schema_migrations (
+      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+      version VARCHAR(255) NOT NULL
+    )")
   end
 
   def setup_source_data
     # Insert test data into source database
     now = Time.current.strftime("%Y-%m-%d %H:%M:%S")
+    test_client = Mysql2::Client.new(test_database_config)
     test_client.query("INSERT INTO users (id, encrypted_password, ssn, passport_number, license_number, date_of_birth, dob, notes, body, compensation, income, email, email2, address, address2, created_at, updated_at) VALUES (1, 'encrypted123', '123-45-6789', 'P123456789', 'L123456789', '1990-01-01', '1990-01-01', 'Private notes', 'Body text', 50000.00, 60000.00, 'test@example.com', 'test2@example.com', '123 Main St', 'Apt 1', '#{now}', '#{now}')")
   end
 
   def cleanup_test_data
     # Clean up test data from both databases
+    test_client = Mysql2::Client.new(test_database_config)
     test_client.query("DELETE FROM users WHERE id = 1")
     test_dump_client.query("DELETE FROM users WHERE id = 1")
   rescue Mysql2::Error
