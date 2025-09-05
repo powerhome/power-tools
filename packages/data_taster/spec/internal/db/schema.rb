@@ -27,4 +27,10 @@ ActiveRecord::Schema.define do
   create_table :schema_migrations, force: true do |t|
     t.string :version, null: false
   end
+
+  create_table "ar_internal_metadata", force: true, id: false do |t|
+    t.string :key, null: false
+    t.text :value
+    t.timestamps
+  end
 end
