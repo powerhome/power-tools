@@ -5,10 +5,10 @@ source "https://rubygems.org"
 gemspec
 
 gem "activesupport", "< 7.2.0"
-gem "bundler", "~> 2.5.0"
+gem "bundler", "2.5.23"
 gem "byebug"
-gem "license_finder", "~> 7.0"
+gem "license_finder", "7.2.1"
 gem "rake", "13.2.1"
 gem "rspec", "3.13.0"
 gem "rubocop-powerhome", "0.5.3"
-gem "securerandom", "< 0.4.0"
+gem "securerandom", "0.3.2"
