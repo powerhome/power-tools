@@ -4,17 +4,15 @@ require "spec_helper"
 require "data_taster/sanitizer"
 
 RSpec.describe DataTaster::Sanitizer do
-  let(:test_db_config) { test_database_config }
-  let(:test_client) { Mysql2::Client.new(test_db_config) }
-  let(:test_dump_db_config) { test_dump_database_config }
-  let(:test_dump_client) { Mysql2::Client.new(test_dump_db_config) }
+  include DatabaseHelper
+
   let(:confection_stub) { double("confection") }
 
-  def stub_config(include_insert: false)
+  def stub_config
     DataTaster.config(
-      source_client: test_client,
-      working_client: test_dump_client,
-      include_insert: include_insert
+      source_client: source_db_client,
+      working_client: dump_db_client,
+      include_insert: false
     )
   end
 

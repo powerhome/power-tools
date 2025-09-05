@@ -5,26 +5,16 @@ require "spec_helper"
 RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integration do
   include DatabaseHelper
 
-  let(:test_dump_client) { Mysql2::Client.new(test_dump_database_config) }
-  let(:test_dump_db_config) { test_dump_database_config }
   let(:yaml_path) { File.join(__dir__, "..", "..", "fixtures", "full_dump_export_tables.yml") }
 
   before do
-    # Create and configure the test client
-    test_client = Mysql2::Client.new(test_database_config)
-
     DataTaster.config(
-      source_client: test_client,
-      working_client: test_dump_client,
+      source_client: source_db_client,
+      working_client: dump_db_client,
       include_insert: true,
       list: [yaml_path]
     )
-    create_dump_tables
     setup_source_data
-  end
-
-  after do
-    cleanup_test_data
   end
 
   describe "complete data dump workflow" do
@@ -33,7 +23,7 @@ RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integr
       DataTaster.sample!
 
       # Verify data was copied and sanitized in the dump database
-      result = test_dump_client.query("SELECT * FROM users WHERE id = 1").first
+      result = dump_db_client.query("SELECT * FROM users WHERE id = 1").first
 
       expect(result).not_to be_nil
       expect(result["id"]).to eq(1)
@@ -65,60 +55,16 @@ RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integr
 
 private
 
-  def create_dump_tables
-    # Create tables in the dump database to match the source database schema
-    # The source database tables are created by the schema, but we need to create them in the dump database too
-
-    # Create users table
-    test_dump_client.query("CREATE TABLE IF NOT EXISTS users (
-      id INT PRIMARY KEY,
-      encrypted_password VARCHAR(255),
-      ssn VARCHAR(255),
-      passport_number VARCHAR(255),
-      license_number VARCHAR(255),
-      date_of_birth DATE,
-      dob DATE,
-      notes TEXT,
-      body TEXT,
-      compensation DECIMAL(10,2),
-      income DECIMAL(10,2),
-      email VARCHAR(255),
-      email2 VARCHAR(255),
-      address VARCHAR(255),
-      address2 VARCHAR(255),
-      created_at DATETIME,
-      updated_at DATETIME
-    )")
-
-    # Create ar_internal_metadata table (Rails creates with id as primary key)
-    test_dump_client.query("CREATE TABLE IF NOT EXISTS ar_internal_metadata (
-      id BIGINT AUTO_INCREMENT PRIMARY KEY,
-      `key` VARCHAR(255) NOT NULL,
-      value TEXT,
-      created_at DATETIME,
-      updated_at DATETIME
-    )")
-
-    # Create schema_migrations table (Rails creates with id as primary key)
-    test_dump_client.query("CREATE TABLE IF NOT EXISTS schema_migrations (
-      id BIGINT AUTO_INCREMENT PRIMARY KEY,
-      version VARCHAR(255) NOT NULL
-    )")
-  end
-
   def setup_source_data
     # Insert test data into source database
     now = Time.current.strftime("%Y-%m-%d %H:%M:%S")
-    test_client = Mysql2::Client.new(test_database_config)
-    test_client.query("INSERT INTO users (id, encrypted_password, ssn, passport_number, license_number, date_of_birth, dob, notes, body, compensation, income, email, email2, address, address2, created_at, updated_at) VALUES (1, 'encrypted123', '123-45-6789', 'P123456789', 'L123456789', '1990-01-01', '1990-01-01', 'Private notes', 'Body text', 50000.00, 60000.00, 'test@example.com', 'test2@example.com', '123 Main St', 'Apt 1', '#{now}', '#{now}')")
-  end
-
-  def cleanup_test_data
-    # Clean up test data from both databases
-    test_client = Mysql2::Client.new(test_database_config)
-    test_client.query("DELETE FROM users WHERE id = 1")
-    test_dump_client.query("DELETE FROM users WHERE id = 1")
-  rescue Mysql2::Error
-    # Ignore errors during cleanup
+    insert_user_sql = <<-SQL.squish
+      INSERT INTO users (id, encrypted_password, ssn, passport_number, license_number, date_of_birth, dob, notes, body,
+       compensation, income, email, email2, address, address2, created_at, updated_at)
+      VALUES (1, 'encrypted123', '123-45-6789', 'P123456789', 'L123456789', '1990-01-01', '1990-01-01',
+        'Private notes', 'Body text', 50000.00, 60000.00, 'test@example.com', 'test2@example.com', '123 Main St',
+        'Apt 1', '#{now}', '#{now}')
+    SQL
+    source_db_client.query(insert_user_sql)
   end
 end
