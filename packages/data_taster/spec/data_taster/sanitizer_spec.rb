@@ -8,11 +8,11 @@ RSpec.describe DataTaster::Sanitizer do
 
   let(:confection_stub) { double("confection") }
 
-  def stub_config
+  def stub_config(include_insert: false)
     DataTaster.config(
       source_client: source_db_client,
       working_client: dump_db_client,
-      include_insert: false
+      include_insert: include_insert
     )
   end
 
@@ -49,11 +49,11 @@ RSpec.describe DataTaster::Sanitizer do
 
     context "when table is not skippable" do
       before do
-        stub_config
         allow(confection_stub).to receive(:[]).with("users").and_return("some_config")
       end
 
       it "processes default selections when include_insert is false" do
+        stub_config
         allow(DataTaster).to receive(:safe_execute).and_return(true)
         sanitizer = described_class.new("users", {})
 
@@ -88,6 +88,7 @@ RSpec.describe DataTaster::Sanitizer do
       end
 
       it "processes custom selections that override defaults" do
+        stub_config
         allow(DataTaster).to receive(:safe_execute).and_return(true)
         custom_selections = { "ssn" => "custom_ssn_value" }
         sanitizer = described_class.new("users", custom_selections)
@@ -106,32 +107,31 @@ RSpec.describe DataTaster::Sanitizer do
         expect(sql_statements).to include("SET notes = 'Redacted for privacy'")
       end
 
-      # TODO: Fix this test - the include_insert flag isn't working as expected
-      # it "executes SQL when include_insert is true" do
-      #   stub_config(include_insert: true)
-      #   # Override the context-level stub with an expectation
-      #   expect(DataTaster).to receive(:safe_execute).with(include("UPDATE")).at_least(:once).and_return(true)
-      #   sanitizer = described_class.new("users", {})
+      it "executes SQL when include_insert is true" do
+        stub_config(include_insert: true)
+        # Override the context-level stub with an expectation
+        expect(DataTaster).to receive(:safe_execute).with(include("UPDATE")).at_least(:once).and_return(true)
+        sanitizer = described_class.new("users", {})
 
-      #   sanitizer.clean!
-      # end
+        sanitizer.clean!
+      end
 
-      # TODO: Fix this test - the include_insert flag isn't working as expected
-      # it "handles errors and adds context warning" do
-      #   stub_config(include_insert: true)
-      #   # Override the before block stub to raise an error
-      #   allow(DataTaster).to receive(:safe_execute).and_raise(StandardError.new("Database error"))
+      it "handles errors and adds context warning" do
+        stub_config(include_insert: true)
+        # Override the before block stub to raise an error
+        allow(DataTaster).to receive(:safe_execute).and_raise(StandardError.new("Database error"))
 
-      #   sanitizer = described_class.new("users", {})
+        sanitizer = described_class.new("users", {})
 
-      #   # The sanitizer now properly concatenates the error message with the context warning
-      #   expect { sanitizer.clean! }.to raise_error(StandardError) do |raised_error|
-      #     expect(raised_error.message).to include("Database error")
-      #     expect(raised_error.message).to include("DATA TASTER WARNING")
-      #   end
-      # end
+        # The sanitizer now properly concatenates the error message with the context warning
+        expect { sanitizer.clean! }.to raise_error(StandardError) do |raised_error|
+          expect(raised_error.message).to include("Database error")
+          expect(raised_error.message).to include("DATA TASTER WARNING")
+        end
+      end
 
       it "skips processing when SQL is skip code" do
+        stub_config
         allow(DataTaster).to receive(:safe_execute).and_return(true)
         # Use custom selection with skip code to test skip behavior
         custom_selections = { "ssn" => DataTaster::SKIP_CODE }
