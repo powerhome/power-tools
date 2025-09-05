@@ -5,7 +5,7 @@ require "spec_helper"
 RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integration do
   include DatabaseHelper
 
-  let(:yaml_path) { File.join(__dir__, "..", "..", "fixtures", "full_dump_export_tables.yml") }
+  let(:yaml_path) { File.join(__dir__, "..", "..", "fixtures", "full_users_dump_tables.yml") }
 
   before do
     DataTaster.config(
