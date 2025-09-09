@@ -7,7 +7,7 @@ module DataTaster
       @reviews = []
     end
 
-    def track_dump(&block)
+    def criticize_dump(&block)
       bm = Benchmark.measure(&block)
 
       log_info("Dump completed in #{bm.real.round(4)} seconds")
@@ -15,7 +15,7 @@ module DataTaster
       report_exceptional_tables
     end
 
-    def track_table(table_name, &block)
+    def criticize_sample(table_name, &block)
       bm = Benchmark.measure(&block)
 
       review = {

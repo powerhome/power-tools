@@ -30,7 +30,7 @@ module DataTaster
     attr_reader :table_name, :include_insert, :collection
 
     def criticize_sample(&block)
-      DataTaster.critic.track_table(table_name, &block)
+      DataTaster.critic.criticize_sample(table_name, &block)
     end
 
     def ensure_empty_table

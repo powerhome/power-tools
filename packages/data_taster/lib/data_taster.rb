@@ -40,7 +40,7 @@ module DataTaster
   end
 
   def self.sample!
-    critic.track_dump do
+    critic.criticize_dump do
       DataTaster
         .config
         .source_client
