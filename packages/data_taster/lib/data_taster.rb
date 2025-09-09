@@ -9,6 +9,7 @@ module DataTaster
   autoload :Helper, "data_taster/helper"
   autoload :Sample, "data_taster/sample"
   autoload :Sanitizer, "data_taster/sanitizer"
+  autoload :Critic, "data_taster/critic"
 
   SKIP_CODE = "skip_processing"
 
@@ -35,13 +36,15 @@ module DataTaster
   end
 
   def self.sample!
-    DataTaster
-      .config
-      .source_client
-      .query("SHOW tables").collect { |t| t[t.keys.first] }
-      .each do |table_name|
-        DataTaster::Sample.new(table_name).serve!
-      end
+    Critic.track_sampling do
+      DataTaster
+        .config
+        .source_client
+        .query("SHOW tables").collect { |t| t[t.keys.first] }
+        .each do |table_name|
+          DataTaster::Sample.new(table_name).serve!
+        end
+    end
   end
 
   def self.safe_execute(sql, client = DataTaster.config.working_client)
