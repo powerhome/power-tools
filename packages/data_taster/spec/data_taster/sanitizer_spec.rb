@@ -98,18 +98,16 @@ RSpec.describe DataTaster::Sanitizer do
         expect(result).to be_an(Array)
         expect(result).not_to be_empty
 
-        # Check that custom selection overrides the default
         sql_statements = result.join(" ")
         expect(sql_statements).to include("SET ssn = 'custom_ssn_value'")
 
-        # Should still have other default patterns
         expect(sql_statements).to include("SET encrypted_password = NULL")
         expect(sql_statements).to include("SET notes = 'Redacted for privacy'")
       end
 
       it "executes SQL when include_insert is true" do
         stub_config(include_insert: true)
-        # Override the context-level stub with an expectation
+
         expect(DataTaster).to receive(:safe_execute).with(include("UPDATE")).at_least(:once).and_return(true)
         sanitizer = described_class.new("users", {})
 
@@ -118,12 +116,10 @@ RSpec.describe DataTaster::Sanitizer do
 
       it "handles errors and adds context warning" do
         stub_config(include_insert: true)
-        # Override the before block stub to raise an error
         allow(DataTaster).to receive(:safe_execute).and_raise(StandardError.new("Database error"))
 
         sanitizer = described_class.new("users", {})
 
-        # The sanitizer now properly concatenates the error message with the context warning
         expect { sanitizer.clean! }.to raise_error(StandardError) do |raised_error|
           expect(raised_error.message).to include("Database error")
           expect(raised_error.message).to include("DATA TASTER WARNING")
@@ -133,14 +129,12 @@ RSpec.describe DataTaster::Sanitizer do
       it "skips processing when SQL is skip code" do
         stub_config
         allow(DataTaster).to receive(:safe_execute).and_return(true)
-        # Use custom selection with skip code to test skip behavior
         custom_selections = { "ssn" => DataTaster::SKIP_CODE }
         sanitizer = described_class.new("users", custom_selections)
 
         result = sanitizer.clean!
 
         expect(result).to be_an(Array)
-        # Should have other default patterns but not the skipped one
         sql_statements = result.join(" ")
         expect(sql_statements).to include("SET encrypted_password = NULL")
         expect(sql_statements).to include("SET notes = 'Redacted for privacy'")
@@ -177,7 +171,6 @@ RSpec.describe DataTaster::Sanitizer do
       sanitizer = described_class.new("users", {})
       defaults = sanitizer.send(:defaults)
 
-      # Look for email-related patterns
       email_keys = defaults.keys.select { |k| k.source.include?("email") }
       expect(email_keys).not_to be_empty
     end

@@ -19,16 +19,13 @@ RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integr
 
   describe "complete data dump workflow" do
     it "creates users and verifies they are properly sanitized" do
-      # Run the full sample process using the YAML configuration
       DataTaster.sample!
 
-      # Verify data was copied and sanitized in the dump database
-      result = dump_db_client.query("SELECT * FROM users WHERE id = 1").first
+      result = dump_db_client.query("SELECT * FROM users").first
 
       expect(result).not_to be_nil
       expect(result["id"]).to eq(1)
 
-      # Verify default sanitization patterns were applied
       expect(result["encrypted_password"]).to be_nil
       expect(result["ssn"]).to eq("111111111")
       expect(result["passport_number"]).to eq("111111111")
@@ -37,16 +34,10 @@ RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integr
       expect(result["body"]).to eq("Redacted for privacy")
       expect(result["compensation"]).to eq(999_999)
       expect(result["income"]).to eq(999_999)
-
-      # Verify email sanitization
       expect(result["email"]).to eq("users_1@nitrophrg.com")
       expect(result["email2"]).to eq("users_1_2@nitrophrg.com")
-
-      # Verify address sanitization
       expect(result["address"]).to eq("1 Disneyland Dr")
       expect(result["address2"]).to eq("Unit M")
-
-      # Verify date sanitization (should be 29 years ago from current date)
       expected_date = Date.current - 29.years
       expect(result["date_of_birth"]).to eq(expected_date)
       expect(result["dob"]).to eq(expected_date)
@@ -56,7 +47,6 @@ RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integr
 private
 
   def setup_source_data
-    # Insert test data into source database
     now = Time.current.strftime("%Y-%m-%d %H:%M:%S")
     insert_user_sql = <<-SQL.squish
       INSERT INTO users (id, encrypted_password, ssn, passport_number, license_number, date_of_birth, dob, notes, body,
