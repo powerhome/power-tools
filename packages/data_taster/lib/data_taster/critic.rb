@@ -20,14 +20,7 @@ module DataTaster
     def criticize_sample(table_name, &block)
       bm = Benchmark.measure(&block)
 
-      review = {
-        table_name: table_name,
-        time: bm.real.round(4),
-        rows:  DataTaster.safe_execute("SELECT COUNT(*) FROM #{table_name}").first["COUNT(*)"],
-        size: DataTaster.safe_execute(table_size_sql(table_name)).first["size_mb"],
-      }
-
-      reviews << review
+      review = record_review(table_name, bm)
 
       log_horizontal_rule
       publish(review)
@@ -35,6 +28,19 @@ module DataTaster
     end
 
   private
+
+    def record_review(table_name, benchmark)
+      review = {
+        table_name: table_name,
+        time: benchmark.real.round(4),
+        rows: DataTaster.safe_execute("SELECT COUNT(*) FROM #{table_name}").first["COUNT(*)"],
+        size: DataTaster.safe_execute(table_size_sql(table_name)).first["size_mb"],
+      }
+
+      reviews << review
+
+      review
+    end
 
     def table_size_sql(table_name)
       <<-SQL.squish
@@ -48,8 +54,8 @@ module DataTaster
       rows = review[:rows]
       duration = review[:time]
 
-      log_info("Table #{review[:table_name]} completed in #{duration} seconds," \
-               " dumped #{rows} #{"row".pluralize(rows)} and #{size} MB of data")
+      log_info("Table #{review[:table_name]} completed in #{duration} seconds, " \
+               "dumped #{rows} #{'row'.pluralize(rows)} and #{size} MB of data")
     end
 
     def log_horizontal_rule

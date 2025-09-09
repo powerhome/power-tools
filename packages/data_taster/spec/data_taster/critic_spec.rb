@@ -51,17 +51,22 @@ RSpec.describe DataTaster::Critic do
 
   describe "#criticize_sample" do
     let(:table_name) { "users" }
-    let(:mock_count_result) { [{ "COUNT(*)" => 150 }] }
-    let(:mock_size_result) { [{ "size_mb" => 2.5 }] }
+    let(:mock_count) { [{ "COUNT(*)" => 150 }] }
+    let(:mock_size) { [{ "size_mb" => 2.5 }] }
 
     before do
-      allow(DataTaster).to receive(:safe_execute).with("SELECT COUNT(*) FROM #{table_name}").and_return(mock_count_result)
-      allow(DataTaster).to receive(:safe_execute).with(include("information_schema.tables")).and_return(mock_size_result)
+      allow(DataTaster).to receive(:safe_execute).with("SELECT COUNT(*) FROM #{table_name}").and_return(mock_count)
+      allow(DataTaster).to receive(:safe_execute).with(include("information_schema.tables")).and_return(mock_size)
     end
 
     it "measures execution time and creates a review" do
       expect(logger).to receive(:info).with("--------------------------------").twice
-      expect(logger).to receive(:info).with(/Table #{table_name} completed in \d+\.\d+ seconds, dumped 150 rows and 2.5 MB of data/)
+      expect(logger).to receive(:info).with(/
+        #{table_name}.*      # includes table name
+        \d+\.\d+\sseconds.*  # includes execution time
+        dumped\s150\srows.*  # includes row count
+        2.5\sMB.*            # includes size
+      /x)
 
       critic.criticize_sample(table_name) do
         # Simulate some work
@@ -92,16 +97,16 @@ RSpec.describe DataTaster::Critic do
     end
 
     it "handles different table sizes and row counts" do
-      large_count_result = [{ "COUNT(*)" => 10000 }]
-      large_size_result = [{ "size_mb" => 50.75 }]
+      large_count = [{ "COUNT(*)" => 10_000 }]
+      large_size = [{ "size_mb" => 50.75 }]
 
-      allow(DataTaster).to receive(:safe_execute).with("SELECT COUNT(*) FROM #{table_name}").and_return(large_count_result)
-      allow(DataTaster).to receive(:safe_execute).with(include("information_schema.tables")).and_return(large_size_result)
+      allow(DataTaster).to receive(:safe_execute).with("SELECT COUNT(*) FROM #{table_name}").and_return(large_count)
+      allow(DataTaster).to receive(:safe_execute).with(include("information_schema.tables")).and_return(large_size)
 
       critic.criticize_sample(table_name) { "test" }
 
       review = critic.reviews.first
-      expect(review[:rows]).to eq(10000)
+      expect(review[:rows]).to eq(10_000)
       expect(review[:size]).to eq(50.75)
     end
   end
@@ -124,12 +129,13 @@ RSpec.describe DataTaster::Critic do
         table_name: "users",
         time: 1.2345,
         rows: 100,
-        size: 2.5
+        size: 2.5,
       }
     end
 
     it "logs table information with correct formatting" do
-      expect(logger).to receive(:info).with("Table users completed in 1.2345 seconds, dumped 100 rows and 2.5 MB of data")
+      expect(logger).to receive(:info).with("Table users completed in 1.2345 seconds, " \
+                                            "dumped 100 rows and 2.5 MB of data")
 
       critic.send(:publish, review)
     end
@@ -358,12 +364,13 @@ RSpec.describe DataTaster::Critic do
     it "handles very large numbers in reviews" do
       large_review = {
         table_name: "huge_table",
-        time: 999999.9999,
-        rows: 999999999,
-        size: 999999.99
+        time: 999_999.9999,
+        rows: 999_999_999,
+        size: 999_999.99,
       }
 
-      expect(logger).to receive(:info).with(/Table huge_table completed in 999999\.9999 seconds, dumped 999999999 rows and 999999\.99 MB of data/)
+      expect(logger).to receive(:info).with("Table huge_table completed in 999999.9999 seconds, " \
+                                            "dumped 999999999 rows and 999999.99 MB of data")
 
       critic.send(:publish, large_review)
     end
