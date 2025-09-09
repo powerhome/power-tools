@@ -3,6 +3,8 @@
 module DataTaster
   # Tracks the time, row count, and total size by table
   class Critic
+    attr_reader :reviews
+
     def initialize
       @reviews = []
     end
@@ -25,7 +27,7 @@ module DataTaster
         size: DataTaster.safe_execute(table_size_sql(table_name)).first["size_mb"],
       }
 
-      @reviews << review
+      reviews << review
 
       log_horizontal_rule
       publish(review)
@@ -65,7 +67,7 @@ module DataTaster
       log_info("Slowest tables:")
 
       log_horizontal_rule
-      @reviews.sort_by { |review| review[:time] }.reverse.last(5).each { |review| publish(review) }
+      @reviews.sort_by { |review| -(review[:time] || 0) }.first(5).each { |review| publish(review) }
       log_horizontal_rule
     end
 
@@ -73,7 +75,7 @@ module DataTaster
       log_info("Largest tables by size:")
 
       log_horizontal_rule
-      @reviews.sort_by { |review| review[:size] }.reverse.last(5).each { |review| publish(review) }
+      @reviews.sort_by { |review| -(review[:size] || 0) }.first(5).each { |review| publish(review) }
       log_horizontal_rule
     end
 
@@ -81,7 +83,7 @@ module DataTaster
       log_info("Largest tables by rows:")
 
       log_horizontal_rule
-      @reviews.sort_by { |review| review[:rows] }.reverse.last(5).each { |review| publish(review) }
+      @reviews.sort_by { |review| -(review[:rows] || 0) }.first(5).each { |review| publish(review) }
       log_horizontal_rule
     end
 
