@@ -2,6 +2,10 @@
 
 - Standardize all libs to support ruby 3.0, ruby 3.3 x rails 6.1 through rails 7.2 [#359](https://github.com/powerhome/power-tools/pull/359)
 
+## [0.4.6] - 2025-09-09
+
+- Bump Rubocop version to unblock dependabot in repos
+
 ## [0.4.5] - 2025-04-22
 
 - Fix Rubocop base class inheritance [#323](https://github.com/powerhome/power-tools/pull/323)
