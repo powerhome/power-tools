@@ -21,6 +21,10 @@ module DataTaster
     @logger ||= Logger.new($stdout)
   end
 
+  def self.critic
+    @critic ||= Critic.new
+  end
+
   def self.config(**args)
     @config ||= Config.new(
       args[:months],
@@ -36,7 +40,7 @@ module DataTaster
   end
 
   def self.sample!
-    Critic.track_sampling do
+    critic.track_dump do
       DataTaster
         .config
         .source_client
