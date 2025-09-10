@@ -12,6 +12,11 @@ RSpec.describe DataTaster::Critic do
   before do
     allow(DataTaster).to receive(:logger).and_return(logger)
     allow(logger).to receive(:info)
+    DataTaster.config(
+      source_client: source_db_client,
+      working_client: dump_db_client,
+      include_insert: false
+    )
   end
 
   describe "#initialize" do
@@ -53,19 +58,25 @@ RSpec.describe DataTaster::Critic do
     let(:table_name) { "users" }
     let(:mock_count) { [{ "COUNT(*)" => 150 }] }
     let(:mock_size) { [{ "size_mb" => 2.5 }] }
+    let(:mock_source_count) { [{ "COUNT(*)" => 300 }] }
+    let(:mock_source_size) { [{ "size_mb" => 5.0 }] }
 
     before do
       allow(DataTaster).to receive(:safe_execute).with("SELECT COUNT(*) FROM #{table_name}").and_return(mock_count)
       allow(DataTaster).to receive(:safe_execute).with(include("information_schema.tables")).and_return(mock_size)
+      allow(DataTaster).to receive(:safe_execute).with("SELECT COUNT(*) FROM #{table_name}",
+                                                       DataTaster.config.source_client).and_return(mock_source_count)
+      allow(DataTaster).to receive(:safe_execute).with(include("information_schema.tables"),
+                                                       DataTaster.config.source_client).and_return(mock_source_size)
     end
 
     it "measures execution time and creates a review" do
       expect(logger).to receive(:info).with("--------------------------------").twice
       expect(logger).to receive(:info).with(/
         #{table_name}.*      # includes table name
-        \d+\.\d+\sseconds.*  # includes execution time
-        dumped\s150\srows.*  # includes row count
-        2.5\sMB.*            # includes size
+        dumped\s150\sof\s300\srows.*  # includes row count with source
+        and\s2\.5\sof\s5\.0\sMB.*     # includes size with source
+        in\s\d+\.\d+\sseconds.*      # includes execution time
       /x)
 
       critic.criticize_sample(table_name) do
@@ -79,12 +90,18 @@ RSpec.describe DataTaster::Critic do
       expect(review[:table_name]).to eq(table_name)
       expect(review[:rows]).to eq(150)
       expect(review[:size]).to eq(2.5)
+      expect(review[:source_rows]).to eq(300)
+      expect(review[:source_size]).to eq(5.0)
       expect(review[:time]).to be_a(Float)
     end
 
     it "calls safe_execute for row count and table size" do
       expect(DataTaster).to receive(:safe_execute).with("SELECT COUNT(*) FROM #{table_name}")
       expect(DataTaster).to receive(:safe_execute).with(include("information_schema.tables"))
+      expect(DataTaster).to receive(:safe_execute).with("SELECT COUNT(*) FROM #{table_name}",
+                                                        DataTaster.config.source_client)
+      expect(DataTaster).to receive(:safe_execute).with(include("information_schema.tables"),
+                                                        DataTaster.config.source_client)
 
       critic.criticize_sample(table_name) { "test" }
     end
@@ -99,15 +116,23 @@ RSpec.describe DataTaster::Critic do
     it "handles different table sizes and row counts" do
       large_count = [{ "COUNT(*)" => 10_000 }]
       large_size = [{ "size_mb" => 50.75 }]
+      large_source_count = [{ "COUNT(*)" => 20_000 }]
+      large_source_size = [{ "size_mb" => 100.5 }]
 
       allow(DataTaster).to receive(:safe_execute).with("SELECT COUNT(*) FROM #{table_name}").and_return(large_count)
       allow(DataTaster).to receive(:safe_execute).with(include("information_schema.tables")).and_return(large_size)
+      allow(DataTaster).to receive(:safe_execute).with("SELECT COUNT(*) FROM #{table_name}",
+                                                       DataTaster.config.source_client).and_return(large_source_count)
+      allow(DataTaster).to receive(:safe_execute).with(include("information_schema.tables"),
+                                                       DataTaster.config.source_client).and_return(large_source_size)
 
       critic.criticize_sample(table_name) { "test" }
 
       review = critic.reviews.first
       expect(review[:rows]).to eq(10_000)
       expect(review[:size]).to eq(50.75)
+      expect(review[:source_rows]).to eq(20_000)
+      expect(review[:source_size]).to eq(100.5)
     end
   end
 
@@ -130,26 +155,28 @@ RSpec.describe DataTaster::Critic do
         time: 1.2345,
         rows: 100,
         size: 2.5,
+        source_rows: 200,
+        source_size: 5.0,
       }
     end
 
     it "logs table information with correct formatting" do
-      expect(logger).to receive(:info).with("Table users completed in 1.2345 seconds, " \
-                                            "dumped 100 rows and 2.5 MB of data")
+      expect(logger).to receive(:info).with("users - dumped 100 of 200 rows " \
+                                            "and 2.5 of 5.0 MB of data in 1.2345 seconds,")
 
       critic.send(:publish, review)
     end
 
     it "handles singular row count" do
-      singular_review = review.merge(rows: 1)
-      expect(logger).to receive(:info).with(/dumped 1 row/)
+      singular_review = review.merge(rows: 1, source_rows: 1)
+      expect(logger).to receive(:info).with(/dumped 1 of 1 row/)
 
       critic.send(:publish, singular_review)
     end
 
     it "handles plural row count" do
-      plural_review = review.merge(rows: 2)
-      expect(logger).to receive(:info).with(/dumped 2 rows/)
+      plural_review = review.merge(rows: 2, source_rows: 2)
+      expect(logger).to receive(:info).with(/dumped 2 of 2 rows/)
 
       critic.send(:publish, plural_review)
     end
@@ -164,10 +191,12 @@ RSpec.describe DataTaster::Critic do
 
   describe "#report_exceptional_tables" do
     before do
-      critic.reviews << { table_name: "slow_table", time: 5.0, rows: 100, size: 1.0 }
-      critic.reviews << { table_name: "fast_table", time: 0.5, rows: 50, size: 0.5 }
-      critic.reviews << { table_name: "large_table", time: 2.0, rows: 1000, size: 10.0 }
-      critic.reviews << { table_name: "small_table", time: 1.0, rows: 10, size: 0.1 }
+      critic.reviews << { table_name: "slow_table", time: 5.0, rows: 100, size: 1.0, source_rows: 200,
+                          source_size: 2.0 }
+      critic.reviews << { table_name: "fast_table", time: 0.5, rows: 50, size: 0.5, source_rows: 100, source_size: 1.0 }
+      critic.reviews << { table_name: "large_table", time: 2.0, rows: 1000, size: 10.0, source_rows: 2000,
+                          source_size: 20.0 }
+      critic.reviews << { table_name: "small_table", time: 1.0, rows: 10, size: 0.1, source_rows: 20, source_size: 0.2 }
     end
 
     it "calls all reporting methods" do
@@ -183,12 +212,12 @@ RSpec.describe DataTaster::Critic do
   describe "#report_slowest_tables" do
     before(:each) do
       critic.reviews.clear
-      critic.reviews << { table_name: "table1", time: 1.0, rows: 100, size: 1.0 }
-      critic.reviews << { table_name: "table2", time: 3.0, rows: 200, size: 2.0 }
-      critic.reviews << { table_name: "table3", time: 2.0, rows: 150, size: 1.5 }
-      critic.reviews << { table_name: "table4", time: 4.0, rows: 300, size: 3.0 }
-      critic.reviews << { table_name: "table5", time: 0.5, rows: 50, size: 0.5 }
-      critic.reviews << { table_name: "table6", time: 5.0, rows: 400, size: 4.0 }
+      critic.reviews << { table_name: "table1", time: 1.0, rows: 100, size: 1.0, source_rows: 200, source_size: 2.0 }
+      critic.reviews << { table_name: "table2", time: 3.0, rows: 200, size: 2.0, source_rows: 400, source_size: 4.0 }
+      critic.reviews << { table_name: "table3", time: 2.0, rows: 150, size: 1.5, source_rows: 300, source_size: 3.0 }
+      critic.reviews << { table_name: "table4", time: 4.0, rows: 300, size: 3.0, source_rows: 600, source_size: 6.0 }
+      critic.reviews << { table_name: "table5", time: 0.5, rows: 50, size: 0.5, source_rows: 100, source_size: 1.0 }
+      critic.reviews << { table_name: "table6", time: 5.0, rows: 400, size: 4.0, source_rows: 800, source_size: 8.0 }
     end
 
     it "logs slowest tables header and horizontal rules" do
@@ -236,12 +265,12 @@ RSpec.describe DataTaster::Critic do
   describe "#report_largest_tables_by_size" do
     before(:each) do
       critic.reviews.clear
-      critic.reviews << { table_name: "table1", time: 1.0, rows: 100, size: 1.0 }
-      critic.reviews << { table_name: "table2", time: 2.0, rows: 200, size: 5.0 }
-      critic.reviews << { table_name: "table3", time: 3.0, rows: 150, size: 2.0 }
-      critic.reviews << { table_name: "table4", time: 4.0, rows: 300, size: 8.0 }
-      critic.reviews << { table_name: "table5", time: 5.0, rows: 50, size: 0.5 }
-      critic.reviews << { table_name: "table6", time: 6.0, rows: 400, size: 10.0 }
+      critic.reviews << { table_name: "table1", time: 1.0, rows: 100, size: 1.0, source_rows: 200, source_size: 2.0 }
+      critic.reviews << { table_name: "table2", time: 2.0, rows: 200, size: 5.0, source_rows: 400, source_size: 10.0 }
+      critic.reviews << { table_name: "table3", time: 3.0, rows: 150, size: 2.0, source_rows: 300, source_size: 4.0 }
+      critic.reviews << { table_name: "table4", time: 4.0, rows: 300, size: 8.0, source_rows: 600, source_size: 16.0 }
+      critic.reviews << { table_name: "table5", time: 5.0, rows: 50, size: 0.5, source_rows: 100, source_size: 1.0 }
+      critic.reviews << { table_name: "table6", time: 6.0, rows: 400, size: 10.0, source_rows: 800, source_size: 20.0 }
     end
 
     it "logs largest tables by size header and horizontal rules" do
@@ -278,12 +307,12 @@ RSpec.describe DataTaster::Critic do
   describe "#report_largest_tables_by_rows" do
     before(:each) do
       critic.reviews.clear
-      critic.reviews << { table_name: "table1", time: 1.0, rows: 100, size: 1.0 }
-      critic.reviews << { table_name: "table2", time: 2.0, rows: 500, size: 2.0 }
-      critic.reviews << { table_name: "table3", time: 3.0, rows: 200, size: 1.5 }
-      critic.reviews << { table_name: "table4", time: 4.0, rows: 800, size: 3.0 }
-      critic.reviews << { table_name: "table5", time: 5.0, rows: 50, size: 0.5 }
-      critic.reviews << { table_name: "table6", time: 6.0, rows: 1000, size: 4.0 }
+      critic.reviews << { table_name: "table1", time: 1.0, rows: 100, size: 1.0, source_rows: 200, source_size: 2.0 }
+      critic.reviews << { table_name: "table2", time: 2.0, rows: 500, size: 2.0, source_rows: 1000, source_size: 4.0 }
+      critic.reviews << { table_name: "table3", time: 3.0, rows: 200, size: 1.5, source_rows: 400, source_size: 3.0 }
+      critic.reviews << { table_name: "table4", time: 4.0, rows: 800, size: 3.0, source_rows: 1600, source_size: 6.0 }
+      critic.reviews << { table_name: "table5", time: 5.0, rows: 50, size: 0.5, source_rows: 100, source_size: 1.0 }
+      critic.reviews << { table_name: "table6", time: 6.0, rows: 1000, size: 4.0, source_rows: 2000, source_size: 8.0 }
     end
 
     it "logs largest tables by rows header and horizontal rules" do
@@ -356,7 +385,7 @@ RSpec.describe DataTaster::Critic do
     end
 
     it "handles reviews with nil values" do
-      critic.reviews << { table_name: "table1", time: nil, rows: nil, size: nil }
+      critic.reviews << { table_name: "table1", time: nil, rows: nil, size: nil, source_rows: nil, source_size: nil }
 
       expect { critic.send(:report_slowest_tables) }.not_to raise_error
     end
@@ -367,10 +396,12 @@ RSpec.describe DataTaster::Critic do
         time: 999_999.9999,
         rows: 999_999_999,
         size: 999_999.99,
+        source_rows: 1_999_999_998,
+        source_size: 1_999_999.98,
       }
 
-      expect(logger).to receive(:info).with("Table huge_table completed in 999999.9999 seconds, " \
-                                            "dumped 999999999 rows and 999999.99 MB of data")
+      expect(logger).to receive(:info).with("huge_table - dumped 999999999 of 1999999998 rows " \
+                                            "and 999999.99 of 1999999.98 MB of data in 999999.9999 seconds,")
 
       critic.send(:publish, large_review)
     end
