@@ -1,8 +1,8 @@
 PATH
   remote: ../../rubocop-powerhome
   specs:
-    rubocop-powerhome (0.5.5)
-      rubocop (= 1.74.0)
+    rubocop-powerhome (0.5.6)
+      rubocop (= 1.75.0)
       rubocop-performance
       rubocop-rails
       rubocop-rake
@@ -134,7 +134,15 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.4)
+    nokogiri (1.17.2-aarch64-linux)
+      racc (~> 1.4)
+    nokogiri (1.17.2-arm-linux)
+      racc (~> 1.4)
     nokogiri (1.17.2-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.17.2-x86-linux)
+      racc (~> 1.4)
+    nokogiri (1.17.2-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.17.2-x86_64-linux)
       racc (~> 1.4)
@@ -178,7 +186,7 @@ GEM
     rainbow (3.1.1)
     rake (13.3.0)
     regexp_parser (2.11.2)
-    rexml (3.4.1)
+    rexml (3.4.4)
     rspec (3.13.1)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -199,8 +207,8 @@ GEM
       rspec-expectations (~> 3.13)
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
-    rspec-support (3.13.4)
-    rubocop (1.74.0)
+    rspec-support (3.13.5)
+    rubocop (1.75.0)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -208,26 +216,26 @@ GEM
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.9.3, < 3.0)
-      rubocop-ast (>= 1.38.0, < 2.0)
+      rubocop-ast (>= 1.43.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
     rubocop-ast (1.46.0)
       parser (>= 3.3.7.2)
       prism (~> 1.4)
-    rubocop-performance (1.24.0)
+    rubocop-performance (1.26.0)
       lint_roller (~> 1.1)
-      rubocop (>= 1.72.1, < 2.0)
-      rubocop-ast (>= 1.38.0, < 2.0)
-    rubocop-rails (2.30.3)
+      rubocop (>= 1.75.0, < 2.0)
+      rubocop-ast (>= 1.44.0, < 2.0)
+    rubocop-rails (2.33.3)
       activesupport (>= 4.2.0)
       lint_roller (~> 1.1)
       rack (>= 1.1)
-      rubocop (>= 1.72.1, < 2.0)
-      rubocop-ast (>= 1.38.0, < 2.0)
+      rubocop (>= 1.75.0, < 2.0)
+      rubocop-ast (>= 1.44.0, < 2.0)
     rubocop-rake (0.7.1)
       lint_roller (~> 1.1)
       rubocop (>= 1.72.1)
-    rubocop-rspec (3.6.0)
+    rubocop-rspec (3.7.0)
       lint_roller (~> 1.1)
       rubocop (~> 1.72, >= 1.72.1)
     ruby-progressbar (1.13.0)
@@ -243,16 +251,20 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
+    sqlite3 (1.7.3-aarch64-linux)
+    sqlite3 (1.7.3-arm-linux)
     sqlite3 (1.7.3-arm64-darwin)
+    sqlite3 (1.7.3-x86-linux)
+    sqlite3 (1.7.3-x86_64-darwin)
     sqlite3 (1.7.3-x86_64-linux)
     thor (1.4.0)
     timeout (0.4.3)
     tomlrb (2.0.3)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    unicode-display_width (3.1.4)
-      unicode-emoji (~> 4.0, >= 4.0.4)
-    unicode-emoji (4.0.4)
+    unicode-display_width (3.2.0)
+      unicode-emoji (~> 4.1)
+    unicode-emoji (4.1.0)
     websocket-driver (0.8.0)
       base64
       websocket-extensions (>= 0.1.0)
@@ -263,7 +275,11 @@ GEM
     zeitwerk (2.6.18)
 
 PLATFORMS
+  aarch64-linux
+  arm-linux
   arm64-darwin
+  x86-linux
+  x86_64-darwin
   x86_64-linux
 
 DEPENDENCIES
