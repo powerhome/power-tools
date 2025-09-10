@@ -24,6 +24,14 @@ ActiveRecord::Schema.define do
     t.timestamps
   end
 
+  create_table :legacy_users, force: true do |t|
+    t.string :name
+    t.string :email
+    t.string :phone
+    t.string :address
+    t.string :city
+  end
+
   create_table :schema_migrations, force: true do |t|
     t.string :version, null: false
   end

@@ -3,3 +3,4 @@
 
 ---
 users: "<%= full_table_dump %>"
+legacy_users: "<%= deprecated_table %>"

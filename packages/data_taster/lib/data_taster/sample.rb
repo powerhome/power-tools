@@ -13,11 +13,11 @@ module DataTaster
     end
 
     def serve!
-      criticize_sample do
-        # Any table that does not return SQL is considered deprecated and we should fully skip it
-        if collection.empty? && include_insert
-          DataTaster.safe_execute("DROP TABLE IF EXISTS #{table_name}")
-        else
+      # Any table that does not return SQL is considered deprecated and we should fully skip it
+      if collection.empty? && include_insert
+        DataTaster.safe_execute("DROP TABLE IF EXISTS #{table_name}")
+      else
+        criticize_sample do
           ensure_empty_table
           process_select(collection[:select])
           DataTaster::Sanitizer.new(table_name, collection[:sanitize]).clean!
