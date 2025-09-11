@@ -22,8 +22,31 @@ module DataTaster
         duration = review[:duration]
         table_name = review[:table_name]
 
+        log_info("#{table_name} - sanitized #{selections&.count || 0} columns in #{duration} seconds")
+      end
+
+      def report_exceptional_sanitizations
+        report_slowest_sanitizations
+        report_most_columns_sanitized
+      end
+
+      def report_slowest_sanitizations
+        log_info("Slowest sanitizations:")
+
         log_horizontal_rule
-        log_info("#{table_name} - sanitized #{selections.count} columns in #{duration} seconds")
+        sanitization_reviews.sort_by { |review| -(review[:duration] || 0) }.first(5).each do |review|
+          publish_sanitization_review(review)
+        end
+        log_horizontal_rule
+      end
+
+      def report_most_columns_sanitized
+        log_info("Most columns sanitized:")
+
+        log_horizontal_rule
+        sanitization_reviews.sort_by { |review| -(review[:selections]&.count || 0) }.first(5).each do |review|
+          publish_sanitization_review(review)
+        end
         log_horizontal_rule
       end
     end

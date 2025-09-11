@@ -19,19 +19,21 @@ module DataTaster
     def criticize_dump(&block)
       bm, val = measure_block(&block)
 
+      log_horizontal_rule
       log_info("Dump completed in #{bm.real.round(4)} seconds")
 
       report_exceptional_samples
+      report_exceptional_sanitizations
 
       val
     end
 
     def criticize_sample(table_name, &block)
+      log_horizontal_rule
       bm, val = measure_block(&block)
 
       review = record_sample_review(table_name, bm)
 
-      log_horizontal_rule
       publish_sample_review(review)
       log_horizontal_rule
 
@@ -43,6 +45,7 @@ module DataTaster
 
       review = record_sanitization_review(table_name, selections, bm)
 
+      log_horizontal_rule
       publish_sanitization_review(review)
 
       val

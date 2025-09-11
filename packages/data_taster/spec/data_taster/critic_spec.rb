@@ -374,6 +374,159 @@ RSpec.describe DataTaster::Critic do
     end
   end
 
+  describe "#publish_sanitization_review" do
+    let(:review) do
+      {
+        table_name: "users",
+        selections: %w[email ssn phone],
+        duration: 1.2345,
+      }
+    end
+
+    it "logs sanitization information with correct formatting" do
+      expect(logger).to receive(:info).with("users - sanitized 3 columns in 1.2345 seconds")
+
+      critic.send(:publish_sanitization_review, review)
+    end
+
+    it "handles singular column count" do
+      singular_review = review.merge(selections: ["email"])
+      expect(logger).to receive(:info).with(/sanitized 1 column/)
+
+      critic.send(:publish_sanitization_review, singular_review)
+    end
+
+    it "handles plural column count" do
+      plural_review = review.merge(selections: %w[email ssn])
+      expect(logger).to receive(:info).with(/sanitized 2 columns/)
+
+      critic.send(:publish_sanitization_review, plural_review)
+    end
+  end
+
+  describe "#report_slowest_sanitizations" do
+    before(:each) do
+      critic.sanitization_reviews.clear
+      critic.sanitization_reviews << { table_name: "table1", selections: %w[email], duration: 1.0 }
+      critic.sanitization_reviews << { table_name: "table2", selections: %w[email ssn], duration: 3.0 }
+      critic.sanitization_reviews << { table_name: "table3", selections: %w[email phone], duration: 2.0 }
+      critic.sanitization_reviews << { table_name: "table4", selections: %w[email ssn phone], duration: 4.0 }
+      critic.sanitization_reviews << { table_name: "table5", selections: %w[email], duration: 0.5 }
+      critic.sanitization_reviews << { table_name: "table6", selections: %w[email ssn phone address], duration: 5.0 }
+    end
+
+    it "logs slowest sanitizations header and horizontal rules" do
+      expect(logger).to receive(:info).with("Slowest sanitizations:")
+      expect(logger).to receive(:info).with("--------------------------------").twice
+
+      critic.send(:report_slowest_sanitizations)
+    end
+
+    it "publishes the 5 slowest sanitizations in descending order (largest times first)" do
+      # Collect all publish_sanitization_review calls to verify order
+      published_reviews = []
+      allow(critic).to receive(:publish_sanitization_review) do |review|
+        published_reviews << review
+      end
+
+      critic.send(:report_slowest_sanitizations)
+
+      # Verify the order and content (largest times first)
+      expect(published_reviews.length).to eq(5)
+      expect(published_reviews[0][:table_name]).to eq("table6")
+      expect(published_reviews[0][:duration]).to eq(5.0)
+      expect(published_reviews[1][:table_name]).to eq("table4")
+      expect(published_reviews[1][:duration]).to eq(4.0)
+      expect(published_reviews[2][:table_name]).to eq("table2")
+      expect(published_reviews[2][:duration]).to eq(3.0)
+      expect(published_reviews[3][:table_name]).to eq("table3")
+      expect(published_reviews[3][:duration]).to eq(2.0)
+      expect(published_reviews[4][:table_name]).to eq("table1")
+      expect(published_reviews[4][:duration]).to eq(1.0)
+    end
+
+    it "publishes sanitizations in the correct order" do
+      # Alternative approach using RSpec's ordered matcher
+      expect(critic).to receive(:publish_sanitization_review)
+        .with(hash_including(table_name: "table6",
+                             duration: 5.0)).ordered
+      expect(critic).to receive(:publish_sanitization_review)
+        .with(hash_including(table_name: "table4",
+                             duration: 4.0)).ordered
+      expect(critic).to receive(:publish_sanitization_review)
+        .with(hash_including(table_name: "table2",
+                             duration: 3.0)).ordered
+      expect(critic).to receive(:publish_sanitization_review)
+        .with(hash_including(table_name: "table3",
+                             duration: 2.0)).ordered
+      expect(critic).to receive(:publish_sanitization_review)
+        .with(hash_including(table_name: "table1",
+                             duration: 1.0)).ordered
+
+      critic.send(:report_slowest_sanitizations)
+    end
+  end
+
+  describe "#report_most_columns_sanitized" do
+    before(:each) do
+      critic.sanitization_reviews.clear
+      critic.sanitization_reviews << { table_name: "table1", selections: %w[email], duration: 1.0 }
+      critic.sanitization_reviews << { table_name: "table2", selections: %w[email ssn], duration: 2.0 }
+      critic.sanitization_reviews << { table_name: "table3", selections: %w[email phone], duration: 3.0 }
+      critic.sanitization_reviews << { table_name: "table4", selections: %w[email ssn phone address], duration: 4.0 }
+      critic.sanitization_reviews << { table_name: "table5", selections: %w[email], duration: 5.0 }
+      critic.sanitization_reviews << { table_name: "table6", selections: %w[email ssn phone address notes],
+                                       duration: 6.0 }
+    end
+
+    it "logs most columns sanitized header and horizontal rules" do
+      expect(logger).to receive(:info).with("Most columns sanitized:")
+      expect(logger).to receive(:info).with("--------------------------------").twice
+
+      critic.send(:report_most_columns_sanitized)
+    end
+
+    it "publishes the 5 tables with most columns sanitized in descending order (largest counts first)" do
+      # Collect all publish_sanitization_review calls to verify order
+      published_reviews = []
+      allow(critic).to receive(:publish_sanitization_review) do |review|
+        published_reviews << review
+      end
+
+      critic.send(:report_most_columns_sanitized)
+
+      # Verify the order and content (largest column counts first)
+      expect(published_reviews.length).to eq(5)
+      expect(published_reviews[0][:table_name]).to eq("table6")
+      expect(published_reviews[0][:selections].count).to eq(5)
+      expect(published_reviews[1][:table_name]).to eq("table4")
+      expect(published_reviews[1][:selections].count).to eq(4)
+      expect(published_reviews[2][:table_name]).to eq("table2")
+      expect(published_reviews[2][:selections].count).to eq(2)
+      expect(published_reviews[3][:table_name]).to eq("table3")
+      expect(published_reviews[3][:selections].count).to eq(2)
+      expect(published_reviews[4][:table_name]).to eq("table1")
+      expect(published_reviews[4][:selections].count).to eq(1)
+    end
+  end
+
+  describe "#report_exceptional_sanitizations" do
+    before do
+      critic.sanitization_reviews << { table_name: "slow_sanitization", selections: %w[email ssn], duration: 5.0 }
+      critic.sanitization_reviews << { table_name: "fast_sanitization", selections: %w[email], duration: 0.5 }
+      critic.sanitization_reviews << { table_name: "many_columns", selections: %w[email ssn phone address notes],
+                                       duration: 2.0 }
+      critic.sanitization_reviews << { table_name: "few_columns", selections: %w[email], duration: 1.0 }
+    end
+
+    it "calls both sanitization reporting methods" do
+      expect(critic).to receive(:report_slowest_sanitizations)
+      expect(critic).to receive(:report_most_columns_sanitized)
+
+      critic.send(:report_exceptional_sanitizations)
+    end
+  end
+
   describe "edge cases" do
     it "handles empty reviews array in reporting methods" do
       critic.reviews.clear
@@ -404,6 +557,33 @@ RSpec.describe DataTaster::Critic do
                                             "and 999999.99 of 1999999.98 MB of data in 999999.9999 seconds,")
 
       critic.send(:publish_sample_review, large_review)
+    end
+
+    it "handles empty sanitization reviews array in reporting methods" do
+      critic.sanitization_reviews.clear
+
+      expect(logger).to receive(:info).with("Slowest sanitizations:")
+      expect(logger).to receive(:info).with("--------------------------------").twice
+
+      expect { critic.send(:report_slowest_sanitizations) }.not_to raise_error
+    end
+
+    it "handles sanitization reviews with nil values" do
+      critic.sanitization_reviews << { table_name: "table1", selections: nil, duration: nil }
+
+      expect { critic.send(:report_slowest_sanitizations) }.not_to raise_error
+    end
+
+    it "handles very large numbers in sanitization reviews" do
+      large_sanitization_review = {
+        table_name: "huge_table",
+        selections: %w[email ssn phone address notes],
+        duration: 999_999.9999,
+      }
+
+      expect(logger).to receive(:info).with("huge_table - sanitized 5 columns in 999999.9999 seconds")
+
+      critic.send(:publish_sanitization_review, large_sanitization_review)
     end
   end
 end
