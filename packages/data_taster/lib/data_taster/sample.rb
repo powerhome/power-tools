@@ -20,8 +20,9 @@ module DataTaster
         criticize_sample do
           ensure_empty_table
           process_select(collection[:select])
-          DataTaster::Sanitizer.new(table_name, collection[:sanitize]).clean!
         end
+
+        DataTaster::Sanitizer.new(table_name, collection[:sanitize]).clean!
       end
     end
 

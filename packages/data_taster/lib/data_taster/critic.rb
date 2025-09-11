@@ -1,121 +1,67 @@
 # frozen_string_literal: true
 
+require "data_taster/critics/sanitizer_criticism"
+require "data_taster/critics/sample_criticism"
+
 module DataTaster
   # Tracks the time, row count, and total size by table
   class Critic
-    attr_reader :reviews
+    include DataTaster::Critics::SanitizerCriticism
+    include DataTaster::Critics::SampleCriticism
+
+    attr_reader :reviews, :sanitization_reviews, :sample_reviews
 
     def initialize
       @reviews = []
+      @sanitization_reviews = []
     end
 
     def criticize_dump(&block)
-      bm = Benchmark.measure(&block)
+      bm, val = measure_block(&block)
 
       log_info("Dump completed in #{bm.real.round(4)} seconds")
 
-      report_exceptional_tables
+      report_exceptional_samples
+
+      val
     end
 
     def criticize_sample(table_name, &block)
-      bm = Benchmark.measure(&block)
+      bm, val = measure_block(&block)
 
-      review = record_review(table_name, bm)
+      review = record_sample_review(table_name, bm)
 
       log_horizontal_rule
-      publish(review)
+      publish_sample_review(review)
       log_horizontal_rule
+
+      val
+    end
+
+    def criticize_sanitization(table_name, selections, &block)
+      bm, val = measure_block(&block)
+
+      review = record_sanitization_review(table_name, selections, bm)
+
+      publish_sanitization_review(review)
+
+      val
     end
 
   private
 
-    def record_review(table_name, benchmark)
-      review = {
-        table_name: table_name,
-        time: benchmark.real.round(4),
-        rows: dump_table_rows(table_name),
-        size: dump_table_size(table_name),
-        source_rows: source_table_rows(table_name),
-        source_size: source_table_size(table_name),
-      }
+    # Returns both the benchmark and the value of the block measured
+    def measure_block
+      val = nil
+      bm = Benchmark.measure do
+        val = yield
+      end
 
-      reviews << review
-
-      review
-    end
-
-    def dump_table_size(table_name)
-      DataTaster.safe_execute(table_size_sql(table_name)).first["size_mb"]
-    end
-
-    def source_table_size(table_name)
-      DataTaster.safe_execute(table_size_sql(table_name), DataTaster.config.source_client).first["size_mb"]
-    end
-
-    def dump_table_rows(table_name)
-      DataTaster.safe_execute(count_sql(table_name)).first["COUNT(*)"]
-    end
-
-    def source_table_rows(table_name)
-      DataTaster.safe_execute(count_sql(table_name), DataTaster.config.source_client).first["COUNT(*)"]
-    end
-
-    def count_sql(table_name)
-      "SELECT COUNT(*) FROM #{table_name}"
-    end
-
-    def table_size_sql(table_name)
-      <<-SQL.squish
-        SELECT ROUND(((DATA_LENGTH + INDEX_LENGTH) / 1024 / 1024), 2) as size_mb
-        FROM information_schema.tables WHERE table_name = '#{table_name}'
-      SQL
-    end
-
-    def publish(review)
-      table_name = review[:table_name]
-      dump_size = review[:size]
-      dump_rows = review[:rows]
-      source_size = review[:source_size]
-      source_rows = review[:source_rows]
-      duration = review[:time]
-
-      log_info("#{table_name} - dumped #{dump_rows} of #{source_rows} #{'row'.pluralize(source_rows)} " \
-               "and #{dump_size} of #{source_size} MB of data in #{duration} seconds,")
+      [bm, val]
     end
 
     def log_horizontal_rule
       log_info("--------------------------------")
-    end
-
-    def report_exceptional_tables
-      log_horizontal_rule
-      report_slowest_tables
-      report_largest_tables_by_size
-      report_largest_tables_by_rows
-    end
-
-    def report_slowest_tables
-      log_info("Slowest tables:")
-
-      log_horizontal_rule
-      @reviews.sort_by { |review| -(review[:time] || 0) }.first(5).each { |review| publish(review) }
-      log_horizontal_rule
-    end
-
-    def report_largest_tables_by_size
-      log_info("Largest tables by size:")
-
-      log_horizontal_rule
-      @reviews.sort_by { |review| -(review[:size] || 0) }.first(5).each { |review| publish(review) }
-      log_horizontal_rule
-    end
-
-    def report_largest_tables_by_rows
-      log_info("Largest tables by rows:")
-
-      log_horizontal_rule
-      @reviews.sort_by { |review| -(review[:rows] || 0) }.first(5).each { |review| publish(review) }
-      log_horizontal_rule
     end
 
     def log_info(message)

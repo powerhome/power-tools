@@ -13,19 +13,26 @@ module DataTaster
     def clean!
       return if skippable_table?
 
+      selections = default_selections.merge(custom_selections)
       # custom selections should ALWAYS override defaults
-      default_selections.merge(custom_selections).filter_map do |column_name, sanitized_value|
-        sql = DataTaster::Detergent.new(
-          table_name, column_name, sanitized_value
-        ).deliver
+      criticize_sanitization(selections) do
+        selections.filter_map do |column_name, sanitized_value|
+          sql = DataTaster::Detergent.new(
+            table_name, column_name, sanitized_value
+          ).deliver
 
-        process(sql)
+          process(sql)
+        end
       end
     end
 
   private
 
     attr_reader :table_name, :custom_selections, :include_insert
+
+    def criticize_sanitization(selections, &block)
+      DataTaster.critic.criticize_sanitization(table_name, selections, &block)
+    end
 
     def process(sql)
       return if sql == DataTaster::SKIP_CODE

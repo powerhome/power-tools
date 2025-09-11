@@ -48,8 +48,8 @@ RSpec.describe DataTaster::Critic do
       expect(block_executed).to be true
     end
 
-    it "calls report_exceptional_tables after execution" do
-      expect(critic).to receive(:report_exceptional_tables)
+    it "calls report_exceptional_samples after execution" do
+      expect(critic).to receive(:report_exceptional_samples)
       critic.criticize_dump { "test" }
     end
   end
@@ -92,7 +92,7 @@ RSpec.describe DataTaster::Critic do
       expect(review[:size]).to eq(2.5)
       expect(review[:source_rows]).to eq(300)
       expect(review[:source_size]).to eq(5.0)
-      expect(review[:time]).to be_a(Float)
+      expect(review[:duration]).to be_a(Float)
     end
 
     it "calls safe_execute for row count and table size" do
@@ -108,7 +108,7 @@ RSpec.describe DataTaster::Critic do
 
     it "logs horizontal rules and publishes review" do
       expect(critic).to receive(:log_horizontal_rule).twice
-      expect(critic).to receive(:publish).with(hash_including(table_name: table_name))
+      expect(critic).to receive(:publish_sample_review).with(hash_including(table_name: table_name))
 
       critic.criticize_sample(table_name) { "test" }
     end
@@ -148,11 +148,11 @@ RSpec.describe DataTaster::Critic do
     end
   end
 
-  describe "#publish" do
+  describe "#publish_sample_review" do
     let(:review) do
       {
         table_name: "users",
-        time: 1.2345,
+        duration: 1.2345,
         rows: 100,
         size: 2.5,
         source_rows: 200,
@@ -164,21 +164,21 @@ RSpec.describe DataTaster::Critic do
       expect(logger).to receive(:info).with("users - dumped 100 of 200 rows " \
                                             "and 2.5 of 5.0 MB of data in 1.2345 seconds,")
 
-      critic.send(:publish, review)
+      critic.send(:publish_sample_review, review)
     end
 
     it "handles singular row count" do
       singular_review = review.merge(rows: 1, source_rows: 1)
       expect(logger).to receive(:info).with(/dumped 1 of 1 row/)
 
-      critic.send(:publish, singular_review)
+      critic.send(:publish_sample_review, singular_review)
     end
 
     it "handles plural row count" do
       plural_review = review.merge(rows: 2, source_rows: 2)
       expect(logger).to receive(:info).with(/dumped 2 of 2 rows/)
 
-      critic.send(:publish, plural_review)
+      critic.send(:publish_sample_review, plural_review)
     end
   end
 
@@ -189,7 +189,7 @@ RSpec.describe DataTaster::Critic do
     end
   end
 
-  describe "#report_exceptional_tables" do
+  describe "#report_exceptional_samples" do
     before do
       critic.reviews << { table_name: "slow_table", time: 5.0, rows: 100, size: 1.0, source_rows: 200,
                           source_size: 2.0 }
@@ -205,7 +205,7 @@ RSpec.describe DataTaster::Critic do
       expect(critic).to receive(:report_largest_tables_by_size)
       expect(critic).to receive(:report_largest_tables_by_rows)
 
-      critic.send(:report_exceptional_tables)
+      critic.send(:report_exceptional_samples)
     end
   end
 
@@ -228,9 +228,9 @@ RSpec.describe DataTaster::Critic do
     end
 
     it "publishes the 5 slowest tables in descending order (largest times first)" do
-      # Collect all publish calls to verify order
+      # Collect all publish_sample_review calls to verify order
       published_reviews = []
-      allow(critic).to receive(:publish) do |review|
+      allow(critic).to receive(:publish_sample_review) do |review|
         published_reviews << review
       end
 
@@ -252,11 +252,11 @@ RSpec.describe DataTaster::Critic do
 
     it "publishes tables in the correct order" do
       # Alternative approach using RSpec's ordered matcher
-      expect(critic).to receive(:publish).with(hash_including(table_name: "table6", time: 5.0)).ordered
-      expect(critic).to receive(:publish).with(hash_including(table_name: "table4", time: 4.0)).ordered
-      expect(critic).to receive(:publish).with(hash_including(table_name: "table2", time: 3.0)).ordered
-      expect(critic).to receive(:publish).with(hash_including(table_name: "table3", time: 2.0)).ordered
-      expect(critic).to receive(:publish).with(hash_including(table_name: "table1", time: 1.0)).ordered
+      expect(critic).to receive(:publish_sample_review).with(hash_including(table_name: "table6", time: 5.0)).ordered
+      expect(critic).to receive(:publish_sample_review).with(hash_including(table_name: "table4", time: 4.0)).ordered
+      expect(critic).to receive(:publish_sample_review).with(hash_including(table_name: "table2", time: 3.0)).ordered
+      expect(critic).to receive(:publish_sample_review).with(hash_including(table_name: "table3", time: 2.0)).ordered
+      expect(critic).to receive(:publish_sample_review).with(hash_including(table_name: "table1", time: 1.0)).ordered
 
       critic.send(:report_slowest_tables)
     end
@@ -281,9 +281,9 @@ RSpec.describe DataTaster::Critic do
     end
 
     it "publishes the 5 largest tables by size in descending order (largest first)" do
-      # Collect all publish calls to verify order
+      # Collect all publish_sample_review calls to verify order
       published_reviews = []
-      allow(critic).to receive(:publish) do |review|
+      allow(critic).to receive(:publish_sample_review) do |review|
         published_reviews << review
       end
 
@@ -323,9 +323,9 @@ RSpec.describe DataTaster::Critic do
     end
 
     it "publishes the 5 largest tables by rows in descending order (largest first)" do
-      # Collect all publish calls to verify order
+      # Collect all publish_sample_review calls to verify order
       published_reviews = []
-      allow(critic).to receive(:publish) do |review|
+      allow(critic).to receive(:publish_sample_review) do |review|
         published_reviews << review
       end
 
@@ -393,7 +393,7 @@ RSpec.describe DataTaster::Critic do
     it "handles very large numbers in reviews" do
       large_review = {
         table_name: "huge_table",
-        time: 999_999.9999,
+        duration: 999_999.9999,
         rows: 999_999_999,
         size: 999_999.99,
         source_rows: 1_999_999_998,
@@ -403,7 +403,7 @@ RSpec.describe DataTaster::Critic do
       expect(logger).to receive(:info).with("huge_table - dumped 999999999 of 1999999998 rows " \
                                             "and 999999.99 of 1999999.98 MB of data in 999999.9999 seconds,")
 
-      critic.send(:publish, large_review)
+      critic.send(:publish_sample_review, large_review)
     end
   end
 end
