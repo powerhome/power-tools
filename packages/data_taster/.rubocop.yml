@@ -12,5 +12,11 @@ Bundler/OrderedGems:
   Exclude:
     - 'gemfiles/*'
 
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/internal/db/schema.rb'
+    - 'spec/internal/db/test_dump_schema.rb'
+    - 'data_taster.gemspec'
+
 Rails:
   Enabled: false
