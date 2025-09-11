@@ -3,8 +3,6 @@
 require "spec_helper"
 
 RSpec.describe DataTaster::Collection do
-  include DatabaseHelper
-
   let(:test_yaml_path) { File.join(__dir__, "..", "fixtures", "data_taster_export_tables.yml") }
 
   def stub_config(

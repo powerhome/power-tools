@@ -4,8 +4,6 @@ require "spec_helper"
 require "data_taster/critic"
 
 RSpec.describe DataTaster::Critic do
-  include DatabaseHelper
-
   let(:critic) { described_class.new }
   let(:logger) { instance_double(Logger) }
 

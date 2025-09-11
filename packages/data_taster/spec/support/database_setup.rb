@@ -3,6 +3,8 @@
 require "rake"
 
 RSpec.configure do |config|
+  include DatabaseHelper
+
   config.before(:suite) do
     # Create the databases
     Rails.application.load_tasks
@@ -15,8 +17,6 @@ RSpec.configure do |config|
   end
 
   config.after(:each) do
-    include DatabaseHelper
-
     source_db_client.query("TRUNCATE TABLE users")
     dump_db_client.query("TRUNCATE TABLE users")
   end

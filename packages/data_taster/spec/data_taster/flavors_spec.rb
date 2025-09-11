@@ -5,8 +5,6 @@ require "data_taster/flavors"
 require "active_support/testing/time_helpers"
 
 RSpec.describe DataTaster::Flavors do
-  include DatabaseHelper
-
   let(:source_client_stub) { double("client") }
   let(:working_client_stub) { double("client") }
 
