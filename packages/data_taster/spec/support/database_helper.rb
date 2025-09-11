@@ -37,13 +37,13 @@ module DatabaseHelper
   def test_source_database_config
     ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, name: source_db_config_key).configuration_hash
   rescue ArgumentError
-    ActiveRecord::Base.configurations.configs_for(env_name: "test", spec_name: source_db_config_key).config
+    ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, spec_name: source_db_config_key).config
   end
 
   def test_dump_database_config
-    ActiveRecord::Base.configurations.configs_for(env_name: "test", name: dump_db_config_key).configuration_hash
+    ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, name: dump_db_config_key).configuration_hash
   rescue ArgumentError
-    ActiveRecord::Base.configurations.configs_for(env_name: "test_dump", spec_name: dump_db_config_key).config
+    ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, spec_name: dump_db_config_key).config
   end
 end
 
