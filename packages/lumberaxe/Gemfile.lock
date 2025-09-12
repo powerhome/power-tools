@@ -315,7 +315,7 @@ GEM
     with_env (1.1.0)
     xml-simple (1.1.9)
       rexml
-    yard (0.9.21)
+    yard (0.9.36)
     zeitwerk (2.6.18)
 
 PLATFORMS
@@ -344,7 +344,7 @@ DEPENDENCIES
   simplecov (= 0.15.1)
   sqlite3 (~> 1.7.3)
   test-unit (= 3.1.5)
-  yard (= 0.9.21)
+  yard (= 0.9.36)
   zeitwerk (< 2.7.0)
 
 BUNDLED WITH
