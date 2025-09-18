@@ -5,6 +5,8 @@ require "data_taster/flavors"
 require "active_support/testing/time_helpers"
 
 RSpec.describe DataTaster::Flavors do
+  include DatabaseHelper
+
   let(:source_client_stub) { double("client") }
   let(:working_client_stub) { double("client") }
 
@@ -53,7 +55,7 @@ RSpec.describe DataTaster::Flavors do
   end
 
   it "exposes the source db name" do
-    expect(described_class.new.source_db).to eq("test")
+    expect(described_class.new.source_db).to eq(source_db_name)
   end
 
   describe "#default_value_for" do
@@ -108,7 +110,7 @@ RSpec.describe DataTaster::Flavors do
       one_week_ago = (Date.current - 1.week).beginning_of_day.to_formatted_s(:db)
       expected_query = <<~SQL.squish
         (SELECT DISTINCT(author_id)
-        FROM test.comments
+        FROM #{source_db_name}.comments
         WHERE
         created_at >= '#{one_week_ago}'
         OR
