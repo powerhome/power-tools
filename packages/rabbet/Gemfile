@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "activesupport", "< 7.2.0"
+gem "activesupport", "7.1.5.1"
 gem "ffi", "< 1.17"
 gem "net-imap", "< 0.5.0"
 gem "rubocop-powerhome", path: "../rubocop-powerhome"
