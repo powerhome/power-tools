@@ -6,7 +6,7 @@ gemspec
 
 gem "appraisal", "~> 2.5.0"
 gem "bundler", "~> 2.1"
-gem "erb", "< 5"
+gem "erb", "< 6"
 gem "license_finder", ">= 7.0"
 gem "mysql2", "0.5.5"
 gem "net-imap", "< 0.5.0"
