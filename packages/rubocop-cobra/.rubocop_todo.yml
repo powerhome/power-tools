@@ -6,11 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 2
-# Configuration parameters: IgnoredMethods, CountRepeatedAttributes.
-Metrics/AbcSize:
-  Max: 19
-
 # Offense count: 14
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
 # IgnoredMethods: refine
@@ -21,3 +16,8 @@ Metrics/BlockLength:
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
 Metrics/MethodLength:
   Max: 11
+
+Metrics/AbcSize:
+  Exclude:
+  - lib/rubocop/cop/cobra/model_file_placement.rb
+  - lib/rubocop/cop/cobra/controller_file_placement.rb

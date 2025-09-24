@@ -1,5 +1,15 @@
 # frozen_string_literal: true
 
+require "logger"
+require "bundler"
+require "support/database_helper"
+require "active_support"
+require "active_support/testing/time_helpers"
+
+Bundler.require(:development)
+
+Combustion.initialize! :active_record
+
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "data_taster"
 
@@ -53,4 +63,6 @@ RSpec.configure do |config|
     # a real object. This is generally recommended.
     mocks.verify_partial_doubles = false
   end
+
+  config.include ActiveSupport::Testing::TimeHelpers
 end

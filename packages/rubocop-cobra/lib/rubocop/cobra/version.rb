@@ -2,6 +2,6 @@
 
 module RuboCop
   module Cobra
-    VERSION = "0.4.3"
+    VERSION = "0.4.6"
   end
 end

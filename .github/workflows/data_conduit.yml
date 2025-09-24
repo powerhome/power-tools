@@ -1,0 +1,13 @@
+name: data_conduit
+
+on:
+  push:
+
+jobs:
+  ruby:
+    uses: powerhome/github-actions-workflows/.github/workflows/ruby-gem.yml@main
+    with:
+      package: ${{ github.workflow }}
+      workdir: "packages/${{ github.workflow }}"
+      ruby: '["3.0","3.3"]'
+    secrets: inherit

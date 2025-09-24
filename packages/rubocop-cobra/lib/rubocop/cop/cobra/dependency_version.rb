@@ -3,12 +3,12 @@
 module RuboCop
   module Cop
     module Cobra
-      class DependencyVersion < RuboCop::Cop::Cop
+      class DependencyVersion < RuboCop::Cop::Base
         extend NodePattern::Macros
 
         MSG = "External component dependencies should be declared with a version"
 
-        def investigate(processed_source)
+        def on_new_investigation
           return if processed_source.blank?
 
           path = processed_source.file_path

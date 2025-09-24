@@ -5,5 +5,8 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in rubocop-powerhome.gemspec
 gemspec
 
+gem "erb", "< 5"
 gem "net-imap", "< 0.5.0"
+gem "nokogiri", "< 1.18.10"
+gem "securerandom", "< 0.4.0"
 gem "zeitwerk", "< 2.7.0"

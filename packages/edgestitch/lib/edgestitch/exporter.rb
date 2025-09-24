@@ -52,7 +52,7 @@ module Edgestitch
     attr_reader :database_directory_path, :extra_tables_path, :structure_file_path
 
     def extra_tables
-      @extra_tables ||= extra_tables_path.exist? ? extra_tables_path.readlines.map(&:strip) : []
+      @extra_tables ||= extra_tables_path.exist? ? extra_tables_path.each_line.map(&:strip) : []
     end
 
     def component_tables

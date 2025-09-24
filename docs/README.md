@@ -6,6 +6,10 @@ At [Power Home Remodeling](https://powerhrg.com/), we have created foundational 
 
 power-tools currently contains the following packages (marked for release to rubygems 💎 or npm ☕️):
 
+[aether_observatory](https://github.com/powerhome/power-tools/blob/main/packages/aether_observatory/docs/README.md) 💎
+
+AetherObservatory provides an event broadcast and subscription system based around ActiveSupport::Notifications.
+
 [api_chai](https://github.com/powerhome/power-tools/blob/main/packages/api_chai/docs/README.md) 💎
 
 ApiChai provides a simple integration with net-http around a lightweight layer for reporting and graceful error handling.
@@ -34,6 +38,10 @@ Delicious and sanitized data samples for development and testing.
 
 Enable alerts about deprecated features & prevent new ones from being introduced.
 
+[data_conduit](https://github.com/powerhome/power-tools/blob/main/packages/data_conduit/docs/README.md) 💎
+
+ Ruby data warehouse connector library that provides a standardized interface for querying different data warehouse engines.
+
 [edgestitch](https://github.com/powerhome/power-tools/blob/main/packages/edgestitch/docs/README.md) 💎
 
 Edgestitch allows engines to define partial structure-self.sql files to be stitched into a single structure.sql file by the umbrella application.
@@ -53,6 +61,10 @@ Rails-like sanitization hooks to be applied to OpenStruct fields.
 [@powerhome/eslint-config](https://github.com/powerhome/power-tools/blob/main/packages/eslint-config/docs/README.md) ☕️
 
 Shared eslint-config and Prettier formatting from Power Home Remodeling.
+
+[two_percent](https://github.com/powerhome/power-tools/blob/main/packages/two_percent/docs/README.md) 💎
+
+A thin SCIM interface that fire scim write events to observers.
 
 [rabbet](https://github.com/powerhome/power-tools/blob/main/packages/rabbet/docs/README.md) 💎
 
@@ -128,6 +140,10 @@ For JS modules you will need to use gitpkg.now.sh to point to a subfolder within
 
 Releases will be published according to [Semantic Versioning](https://semver.org/) and it is the responsibility of the consumers to keep their application dependencies up to date. We recommend leveraging [renovatebot](https://github.com/renovatebot/renovate) 🤖
 
+To release a new version of a package, [create a new release](https://github.com/powerhome/power-tools/releases/new) and a tag in the format of `v<new-version>-<package-name>`, where `new-version` matches the new version of your package and the `package-name` matches the github workflow name (which should match the package name).
+
+When releasing different packages, please create different releases.
+
 ## Supporting multiple gem versions
 
 To support multiple versions of a gem, and add a build to the pipeline, we use [Appraisal](https://github.com/thoughtbot/appraisal). The installation is simple, add `appraisal` to your gemspec as a development dependency and install it, then create an Appraisals file like the following to support multiple versions of rails:
@@ -162,4 +178,4 @@ These packages are maintained by [Power's](https://github.com/powerhome) Heroes 
 
 ## Contributing 💙
 
-Contributions are welcome! Feel free to [open a ticket](https://github.com/powerhome/power-tools/issues/new) or a [PR](https://github.com/powerhome/power-tools/pulls).
+Contributions are welcome! Feel free to [open a ticket](https://github.com/powerhome/power-tools/issues/new) or a [PR](https://github.com/powerhome/power-tools/pulls). For new packages, we have set up [a checklist/guide](./CONTRIBUTING.md) to ensure it fits into this repo.

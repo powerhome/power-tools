@@ -1,0 +1,16 @@
+require:
+  - rubocop-powerhome
+
+AllCops:
+  TargetRubyVersion: 3.0
+
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - 'gemfiles/*'
+
+Bundler/OrderedGems:
+  Exclude:
+    - 'gemfiles/*'
+
+Rails:
+  Enabled: false

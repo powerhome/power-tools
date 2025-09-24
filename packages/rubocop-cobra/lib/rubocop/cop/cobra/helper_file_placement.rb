@@ -23,10 +23,10 @@ module RuboCop
       #     end
       #   end
       #
-      class HelperFilePlacement < RuboCop::Cop::Cop
+      class HelperFilePlacement < RuboCop::Cop::Base
         include FilePlacementHelp
 
-        def investigate(processed_source)
+        def on_new_investigation
           return if processed_source.blank?
 
           path = processed_source.file_path

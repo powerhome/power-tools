@@ -4,11 +4,14 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "byebug"
+gem "byebug", "< 12"
+gem "erb", "< 5"
 gem "license_finder", ">= 7.0"
 gem "net-imap", "< 0.5.0"
+gem "nokogiri", "< 1.19"
 gem "rake", ">= 13.0"
 gem "rspec", ">= 3.0"
 gem "rubocop", ">= 1.32"
 gem "rubocop-powerhome", path: "../rubocop-powerhome"
+gem "securerandom", "< 0.4"
 gem "zeitwerk", "< 2.7.0"

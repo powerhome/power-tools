@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
 
-  spec.add_dependency "rubocop", "1.66.1"
+  spec.add_dependency "rubocop", "1.75.0"
   spec.add_dependency "rubocop-performance"
   spec.add_dependency "rubocop-rails"
   spec.add_dependency "rubocop-rake"
@@ -46,7 +46,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "license_finder", "~> 7.0"
   spec.add_development_dependency "pry", ">= 0.14.2"
   spec.add_development_dependency "pry-byebug", "3.10.1"
-  spec.add_development_dependency "rails", ">= 6.0.6.1", "< 7.1"
+  spec.add_development_dependency "rails", ">= 6.0.6.1", "< 8"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.0"
 end

@@ -12,9 +12,9 @@ module DataTaster
 
     def date
       @date ||= if DataTaster.config.months
-                  (current_date - DataTaster.config.months.to_i.months).beginning_of_day.to_s(:db)
+                  (current_date - DataTaster.config.months.to_i.months).beginning_of_day.to_formatted_s(:db)
                 else
-                  (current_date - 1.week).beginning_of_day.to_s(:db)
+                  (current_date - 1.week).beginning_of_day.to_formatted_s(:db)
                 end
     end
 

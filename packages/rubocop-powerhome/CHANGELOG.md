@@ -1,3 +1,19 @@
+## [Unreleased]
+
+- Standardize all libs to support ruby 3.0, ruby 3.3 x rails 6.1 through rails 7.2 [#359](https://github.com/powerhome/power-tools/pull/359)
+
+## [0.5.6] - 2025-09-09
+
+- Bump Rubocop version to unblock dependabot in repos
+
+## [0.5.5] - 2025-04-22
+
+- Fix Rubocop base class inheritance [#323](https://github.com/powerhome/power-tools/pull/323)
+
+## [0.5.4] - 2025-03-18
+
+- Bump Rubocop version to bring in bugfixes.
+
 ## [0.5.2] - 2023-02-08
 
 - Permit Rubocop upgrades again because bug was fixed.
@@ -14,10 +30,12 @@
 - Ignore Metrics/BlockLength on Rspec's context and describe (#43)
 
 ### Documentation
+
 - Fix rel links in README (#37)
 - Initial portal setup (#34)
 
 ### Updates
+
 - Lock file maintenance
 - Update tj-actions/changed-files action to v24 (#47)
 - Update dependency rubocop to ~> 1.32.0 (#46)

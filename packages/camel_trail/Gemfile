@@ -4,6 +4,17 @@ source "https://rubygems.org"
 
 gemspec
 
+gem "appraisal", "~> 2.5.0"
+gem "erb", "< 5" # For Ruby < 3.2 compatibility
+gem "license_finder", ">= 7.0"
 gem "net-imap", "< 0.5.0"
+gem "nokogiri", "< 1.19"
+gem "rake", "~> 13"
+gem "rspec", "~> 3.0"
+gem "rspec-rails", "~> 5.1.2"
 gem "rubocop-powerhome", path: "../rubocop-powerhome"
+gem "securerandom", "< 0.4" # For Ruby < 3.1 compatibility
+gem "simplecov", "0.15.1"
+gem "sqlite3", "~> 1.7.3"
+gem "yard", "0.9.36"
 gem "zeitwerk", "< 2.7.0"
