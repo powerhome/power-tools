@@ -5,7 +5,7 @@ source "https://rubygems.org"
 gemspec
 
 gem "byebug", "< 12"
-gem "erb", "< 5"
+gem "erb", "< 6"
 gem "license_finder", ">= 7.0"
 gem "net-imap", "< 0.5.0"
 gem "nokogiri", "< 1.19"
