@@ -50,10 +50,12 @@ module DatabaseHelper
 private
 
   def db_config
-    @db_config ||= DBConfig.new
+    DatabaseHelper.db_config_instance
   end
-end
 
-RSpec.configure do |config|
-  config.include DatabaseHelper
+module_function
+
+  def db_config_instance
+    @db_config_instance ||= DBConfig.new
+  end
 end
