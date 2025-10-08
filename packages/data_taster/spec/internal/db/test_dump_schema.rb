@@ -4,7 +4,7 @@ ActiveRecord::Schema.define do
   # Set up any tables you need to exist for your test suite that don't belong
   # in migrations.
 
-  create_table :users, force: true do |t|
+  create_table "test_dump.users", force: true do |t|
     # include columns sanitized by default
     t.string :encrypted_password
     t.string :ssn
@@ -24,11 +24,11 @@ ActiveRecord::Schema.define do
     t.timestamps
   end
 
-  create_table :schema_migrations, force: true do |t|
+  create_table "test_dump.schema_migrations", force: true do |t|
     t.string :version, null: false
   end
 
-  create_table "ar_internal_metadata", force: true, id: false do |t|
+  create_table "test_dump.ar_internal_metadata", force: true, id: false do |t|
     t.string :key, null: false
     t.text :value
     t.timestamps

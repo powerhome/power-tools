@@ -1,12 +1,12 @@
 ## [Unreleased]
 - Remove more Rails 6.0 config handling
 - Standardize all libs to support ruby 3.0, ruby 3.3 x rails 6.1 through rails 7.2 [#359](https://github.com/powerhome/power-tools/pull/359)
-
-## [0.4.3] - 2025-07-28
-
 - Lock activesupport requirement to ~> 7.0.8
 - Setup test environment and add simple specs
 - Fix issue reading database config to support Rails 6.0
+- Add more specs, including actual run of a dump for default sanitization
+
+## [0.4.3] - 2025-07-28 [Unreleased]
 
 ## [0.4.2] - 2025-02-27
 
