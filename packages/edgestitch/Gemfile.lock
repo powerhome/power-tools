@@ -88,15 +88,13 @@ GEM
     ast (2.4.2)
     base64 (0.2.0)
     builder (3.3.0)
-    cgi (0.5.0)
     concurrent-ruby (1.3.5)
     crass (1.0.6)
     csv (3.3.2)
     date (3.4.1)
     diff-lcs (1.5.1)
     docile (1.1.5)
-    erb (4.0.4)
-      cgi (>= 0.3.3)
+    erb (5.0.2)
     erubi (1.13.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
@@ -127,7 +125,7 @@ GEM
     mini_portile2 (2.8.9)
     minitest (5.25.4)
     mysql2 (0.5.5)
-    net-imap (0.4.18)
+    net-imap (0.4.22)
       date
       net-protocol
     net-pop (0.1.2)
@@ -137,12 +135,12 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.4)
-    nokogiri (1.17.2)
+    nokogiri (1.18.9)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.17.2-arm64-darwin)
+    nokogiri (1.18.9-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.17.2-x86_64-linux)
+    nokogiri (1.18.9-x86_64-linux-gnu)
       racc (~> 1.4)
     parallel (1.26.3)
     parser (3.3.9.0)
@@ -252,7 +250,7 @@ GEM
     with_env (1.1.0)
     xml-simple (1.1.9)
       rexml
-    yard (0.9.21)
+    yard (0.9.36)
     zeitwerk (2.6.18)
 
 PLATFORMS
@@ -264,18 +262,18 @@ DEPENDENCIES
   appraisal (~> 2.5.0)
   bundler (~> 2.1)
   edgestitch!
-  erb (< 5)
+  erb (< 6)
   license_finder (>= 7.0)
   mysql2 (= 0.5.5)
   net-imap (< 0.5.0)
-  nokogiri (< 1.18.0)
+  nokogiri (< 1.18.10)
   rails (>= 6.0.6.1, < 8)
   rake (~> 13.0)
   rspec (~> 3.0)
   rspec-rails (~> 5.1.2)
   rubocop-powerhome!
   simplecov (= 0.15.1)
-  yard (= 0.9.21)
+  yard (= 0.9.36)
   zeitwerk (< 2.7.0)
 
 BUNDLED WITH
