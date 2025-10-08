@@ -3,6 +3,8 @@
 require "rake"
 
 RSpec.configure do |config|
+  config.include DatabaseHelper
+
   config.before(:suite) do
     # Create the databases
     Rails.application.load_tasks
