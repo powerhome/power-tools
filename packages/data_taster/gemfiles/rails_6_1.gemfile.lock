@@ -12,7 +12,6 @@ PATH
   remote: ..
   specs:
     data_taster (0.4.3)
-      nokogiri (> 1.14.0)
       rails (>= 6.1, < 8)
 
 GEM
