@@ -30,8 +30,7 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "nokogiri", "> 1.14.0" # can be removed after we remove support for Rails 6.0.1
-  spec.add_dependency "rails", ">= 6.0", "< 8"
+  spec.add_dependency "rails", ">= 6.1", "< 8"
 
   spec.add_development_dependency "license_finder", "~> 7.0"
 
