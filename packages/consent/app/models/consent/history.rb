@@ -4,7 +4,7 @@ module Consent
   class History < ::Consent::ApplicationRecord
     include Consent::SubjectCoder::Model
 
-    enum command: { grant: "grant", revoke: "revoke" }
+    enum :command, { grant: "grant", revoke: "revoke" }
 
     validates :subject, presence: true
     validates :action, presence: true
