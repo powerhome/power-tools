@@ -4,7 +4,11 @@ module Consent
   class History < ::Consent::ApplicationRecord
     include Consent::SubjectCoder::Model
 
-    enum :command, { grant: "grant", revoke: "revoke" }
+    if Rails::VERSION::MAJOR >= 7
+      enum :command, { grant: "grant", revoke: "revoke" }
+    else
+      enum command: { grant: "grant", revoke: "revoke" }
+    end
 
     validates :subject, presence: true
     validates :action, presence: true
