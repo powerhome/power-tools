@@ -1,6 +1,9 @@
 ## [Unreleased]
 
+## [2.3.0] - 2025-10-29
+
 - Standardize all libs to support ruby 3.0, ruby 3.3 x rails 6.1 through rails 7.2 [#359](https://github.com/powerhome/power-tools/pull/359)
+- Support rails 8 enums [#373](https://github.com/powerhome/power-tools/pull/373)
 
 ## [2.2.0] - 2025-08-08
 
@@ -30,9 +33,15 @@
 - Consent released with DSL to design permissions and convenient CanCan::Ability implementation.
 
 ## [0.6.0] - 2020-12-22
+
 ## [0.5.2] - 2019-11-28
+
 ## [0.5.0] - 2019-11-25
+
 ## [0.4.3] - 2019-04-02
+
 ## [0.4.2] - 2019-03-28
+
 ## [0.4] - 2019-03-27
+
 ## [0.3.1] - 2016-11-08
