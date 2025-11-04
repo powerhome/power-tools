@@ -17,7 +17,7 @@ A flexible Ruby data warehouse connector library that provides a standardized in
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'data_conduit'
+gem "data_conduit"
 ```
 
 Or install it directly:
@@ -29,19 +29,19 @@ gem install data_conduit
 ## Basic Usage
 
 ```ruby
-require 'data_conduit'
+require "data_conduit"
 
 # Create a repository using defaults (reads from environment variables)
 # and providing conditions as a Hash (this is the Ruby-friendly and safe API)
 repository = DataConduit::RepositoryFactory.create(
   type: :trino,
   table_name: "sales",
-  conditions: { status: 'completed' }
+  conditions: { status: "completed" }
 )
 
 # Query using the repository's conditions.
 # This will internally build a query like:
-#   SELECT * FROM sales WHERE (status = 'completed')
+#   SELECT * FROM sales WHERE (status = "completed")
 results = repository.query
 
 # Execute custom SQL
@@ -56,10 +56,10 @@ You can configure the connector through environment variables or by passing a co
 
 ```ruby
 # Using environment variables
-ENV['TRINO_SERVER'] = 'http://trino.company.com:8080'
-ENV['TRINO_USER'] = 'analyst'
-ENV['TRINO_CATALOG'] = 'prod'
-ENV['TRINO_SCHEMA'] = 'sales'
+ENV["TRINO_SERVER"] = "http://trino.company.com:8080"
+ENV["TRINO_USER"] = "analyst"
+ENV["TRINO_CATALOG"] = "prod"
+ENV["TRINO_SCHEMA"] = "sales"
 
 # Or passing configuration directly
 repository = DataConduit::RepositoryFactory.create(
