@@ -105,10 +105,10 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
         .to_return(status: 200, body: response.to_json)
     end
 
-    it "returns array of table names" do
+    it "returns alphabetized array of table names" do
       result = described_class.tables(config)
 
-      expect(result).to eq(["foo", "bar", "qux"])
+      expect(result).to eq(["bar", "foo", "qux"])
 
       expect(WebMock).to have_requested(:post, query_url)
         .with(body: "SHOW tables")

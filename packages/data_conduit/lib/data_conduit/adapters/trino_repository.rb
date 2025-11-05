@@ -28,7 +28,7 @@ module DataConduit
       def self.tables(config)
         repo = new(nil, nil, config)
         response_data = repo.send(:response_to, "SHOW tables")
-        response_data[:result_data]&.flatten
+        response_data[:result_data]&.flatten&.sort
       end
 
       def query(sql_query = nil)
