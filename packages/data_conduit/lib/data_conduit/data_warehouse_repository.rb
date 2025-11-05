@@ -18,6 +18,10 @@ module DataConduit
         raise NotImplementedError, "You must implement the initialize method"
       end
 
+      def self.tables(_config = {})
+        raise NotImplementedError, "You must implement the tables method"
+      end
+
       def query(_sql_query = nil)
         raise NotImplementedError, "You must implement the query method"
       end

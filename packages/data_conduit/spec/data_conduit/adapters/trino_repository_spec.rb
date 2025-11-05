@@ -76,6 +76,45 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
     end
   end
 
+  describe ".tables(config)" do
+    let(:query_url) { "#{server}/v1/statement" }
+
+    let(:response) do
+      {
+        "columns" => [
+          {
+            "name"=>"Table",
+            "type"=>"varchar",
+            "typeSignature"=> {
+              "rawType" => "varchar",
+              "arguments"=> [
+                { "kind" => "LONG", "value" => 2147483647 }
+              ]
+            }
+          }
+        ],
+        "data" => [
+          [["foo"], ["bar"], ["qux"]],
+        ],
+      }
+    end
+
+    before do
+      stub_request(:post, query_url)
+        .with(body: "SHOW tables")
+        .to_return(status: 200, body: response.to_json)
+    end
+
+    it "returns array of table names" do
+      result = described_class.tables(config)
+
+      expect(result).to eq(["foo", "bar", "qux"])
+
+      expect(WebMock).to have_requested(:post, query_url)
+        .with(body: "SHOW tables")
+    end
+  end
+
   describe "#query" do
     let(:query_url) { "#{server}/v1/statement" }
     let(:next_url) { "#{server}/v1/statement/20240101_1" }
