@@ -30,6 +30,10 @@ module DataConduit
         raise NotImplementedError, "You must implement the execute method"
       end
 
+      def last_updated
+        raise NotImplementedError, "You must implement the last_updated method"
+      end
+
     protected
 
       def validate_table_name(table_name)

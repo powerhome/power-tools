@@ -41,6 +41,13 @@ module DataConduit
         transform_response(response_data[:result_data], response_data[:result_columns])
       end
 
+      def last_updated
+        response_data = response_to("SELECT made_current_at FROM \"#{table_name}$history\" " \
+                                    "ORDER BY made_current_at DESC LIMIT 1")
+        datetime_string = response_data[:result_data]&.flatten&.first
+        datetime_string.nil? ? nil : DateTime.parse(datetime_string)
+      end
+
     private
 
       def default_config
