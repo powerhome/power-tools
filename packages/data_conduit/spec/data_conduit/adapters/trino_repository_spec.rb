@@ -83,15 +83,15 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
       {
         "columns" => [
           {
-            "name"=>"Table",
-            "type"=>"varchar",
-            "typeSignature"=> {
+            "name" => "Table",
+            "type" => "varchar",
+            "typeSignature" => {
               "rawType" => "varchar",
-              "arguments"=> [
-                { "kind" => "LONG", "value" => 2147483647 }
-              ]
-            }
-          }
+              "arguments" => [
+                { "kind" => "LONG", "value" => 2_147_483_647 },
+              ],
+            },
+          },
         ],
         "data" => [
           [["foo"], ["bar"], ["qux"]],
@@ -106,7 +106,7 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
 
       result = described_class.tables(config)
 
-      expect(result).to eq(["bar", "foo", "qux"])
+      expect(result).to eq(%w[bar foo qux])
 
       expect(WebMock).to have_requested(:post, query_url)
         .with(body: "SHOW tables")
@@ -321,14 +321,14 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
             "type" => "timestamp(3) with time zone",
             "typeSignature" => {
               "rawType" => "timestamp with time zone",
-              "arguments"=> [
+              "arguments" => [
                 {
                   "kind" => "LONG",
-                  "value" => 3
-                }
-              ]
-            }
-          }
+                  "value" => 3,
+                },
+              ],
+            },
+          },
         ],
         "data" => [[datetime_string]],
       }
