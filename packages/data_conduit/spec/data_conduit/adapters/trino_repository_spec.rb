@@ -76,6 +76,43 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
     end
   end
 
+  describe ".tables(config)" do
+    let(:query_url) { "#{server}/v1/statement" }
+
+    let(:response) do
+      {
+        "columns" => [
+          {
+            "name" => "Table",
+            "type" => "varchar",
+            "typeSignature" => {
+              "rawType" => "varchar",
+              "arguments" => [
+                { "kind" => "LONG", "value" => 2_147_483_647 },
+              ],
+            },
+          },
+        ],
+        "data" => [
+          [["foo"], ["bar"], ["qux"]],
+        ],
+      }
+    end
+
+    it "returns alphabetized array of table names" do
+      stub_request(:post, query_url)
+        .with(body: "SHOW tables")
+        .to_return(status: 200, body: response.to_json)
+
+      result = described_class.tables(config)
+
+      expect(result).to eq(%w[bar foo qux])
+
+      expect(WebMock).to have_requested(:post, query_url)
+        .with(body: "SHOW tables")
+    end
+  end
+
   describe "#query" do
     let(:query_url) { "#{server}/v1/statement" }
     let(:next_url) { "#{server}/v1/statement/20240101_1" }
@@ -266,6 +303,48 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
       it "raises an error with the error message" do
         expect { repository.execute(sql_query) }.to raise_error(DataConduit::Error, /Query failed/)
       end
+    end
+  end
+
+  describe "#last_updated" do
+    let(:query_url) { "#{server}/v1/statement" }
+    let(:last_updated_query) do
+      "SELECT made_current_at FROM \"#{table_name}$history\" ORDER BY made_current_at DESC LIMIT 1"
+    end
+    let(:datetime_string) { "2025-11-05 02:01:24.660 UTC" }
+
+    let(:response) do
+      {
+        "columns" => [
+          {
+            "name" => "made_current_at",
+            "type" => "timestamp(3) with time zone",
+            "typeSignature" => {
+              "rawType" => "timestamp with time zone",
+              "arguments" => [
+                {
+                  "kind" => "LONG",
+                  "value" => 3,
+                },
+              ],
+            },
+          },
+        ],
+        "data" => [[datetime_string]],
+      }
+    end
+
+    it "returns DateTime of last time table was updated" do
+      stub_request(:post, query_url)
+        .with(body: last_updated_query)
+        .to_return(status: 200, body: response.to_json)
+
+      result = described_class.new(table_name, nil, config).last_updated
+
+      expect(result).to eq(DateTime.parse(datetime_string))
+
+      expect(WebMock).to have_requested(:post, query_url)
+        .with(body: last_updated_query)
     end
   end
 end

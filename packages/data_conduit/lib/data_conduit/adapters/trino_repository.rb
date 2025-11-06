@@ -25,14 +25,27 @@ module DataConduit
         validate_config!
       end
 
+      def self.tables(config)
+        repo = new(nil, nil, config)
+        response_data = repo.send(:response_to, "SHOW tables")
+        response_data[:result_data]&.flatten&.sort
+      end
+
       def query(sql_query = nil)
         sql_query ||= build_query
         execute(sql_query)
       end
 
       def execute(sql_query)
-        response_data = process_response(send_query(sql_query))
+        response_data = response_to(sql_query)
         transform_response(response_data[:result_data], response_data[:result_columns])
+      end
+
+      def last_updated
+        response_data = response_to("SELECT made_current_at FROM \"#{table_name}$history\" " \
+                                    "ORDER BY made_current_at DESC LIMIT 1")
+        datetime_string = response_data[:result_data]&.flatten&.first
+        datetime_string.nil? ? nil : DateTime.parse(datetime_string)
       end
 
     private
@@ -76,6 +89,10 @@ module DataConduit
         conditions_hash.transform_keys do |key|
           key.is_a?(String) || key.is_a?(Symbol) ? Sequel[key.to_sym] : key
         end
+      end
+
+      def response_to(sql)
+        process_response(send_query(sql))
       end
 
       def process_response(initial_response)
