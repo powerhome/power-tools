@@ -47,6 +47,7 @@ module DataConduit
 
       def transform_response(result_data, result_columns)
         return [] if result_data.nil? || result_data.empty?
+        return [result_data] if result_data.is_a?(Hash) && result_data["error"]
 
         columns = extract_column_names(result_columns)
         result_data.map do |row|

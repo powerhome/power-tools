@@ -229,17 +229,30 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
     end
 
     context "when the query fails" do
-      before do
+      let(:error_body) { { "error" => { "message" => "SQL syntax error" } } }
+
+      it "raises an error with a canned error message when 400 status" do
         stub_request(:post, query_url)
           .with(body: expected_sql)
           .to_return(
             status: 400,
-            body: { "error" => { "message" => "SQL syntax error" } }.to_json
+            body: error_body.to_json
           )
+
+        expect { repository.query }.to raise_error(DataConduit::Error, /Query failed/)
       end
 
-      it "raises an error with the error message" do
-        expect { repository.query }.to raise_error(DataConduit::Error, /Query failed/)
+      it "responds with error message given by Trino when 200 status" do
+        stub_request(:post, query_url)
+          .with(body: expected_sql)
+          .to_return(
+            status: 200,
+            body: error_body.to_json
+          )
+
+        result = repository.query
+
+        expect(result).to eq([error_body])
       end
     end
 
@@ -291,17 +304,30 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
     end
 
     context "when the query fails" do
-      before do
+      let(:error_body) { { "error" => { "message" => "SQL syntax error" } } }
+
+      it "raises an error with a canned error message when 400 status" do
         stub_request(:post, query_url)
           .with(body: sql_query)
           .to_return(
             status: 400,
-            body: { "error" => { "message" => "SQL syntax error" } }.to_json
+            body: error_body.to_json
           )
+
+        expect { repository.execute(sql_query) }.to raise_error(DataConduit::Error, /Query failed/)
       end
 
-      it "raises an error with the error message" do
-        expect { repository.execute(sql_query) }.to raise_error(DataConduit::Error, /Query failed/)
+      it "responds with error message given by Trino when 200 status" do
+        stub_request(:post, query_url)
+          .with(body: sql_query)
+          .to_return(
+            status: 200,
+            body: error_body.to_json
+          )
+
+        result = repository.execute(sql_query)
+
+        expect(result).to eq([error_body])
       end
     end
   end
