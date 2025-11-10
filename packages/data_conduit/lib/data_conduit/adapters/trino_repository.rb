@@ -101,10 +101,16 @@ module DataConduit
         response_data = initial_response
 
         while response_data
-          result_data.concat(response_data["data"]) if response_data["data"]
-          result_columns ||= response_data["columns"]
-          next_uri = response_data["nextUri"]
-          response_data = next_uri ? fetch_next(next_uri) : nil
+          if response_data["error"]
+            result_data = { "error" => response_data["error"] }
+            result_columns = nil
+            response_data = nil
+          else
+            result_data.concat(response_data["data"]) if response_data["data"]
+            result_columns ||= response_data["columns"]
+            next_uri = response_data["nextUri"]
+            response_data = next_uri ? fetch_next(next_uri) : nil
+          end
         end
 
         { result_data: result_data, result_columns: result_columns }
