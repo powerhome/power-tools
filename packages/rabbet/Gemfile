@@ -5,8 +5,8 @@ source "https://rubygems.org"
 gemspec
 
 gem "activesupport", "< 7.2.0"
-gem "ffi", "< 1.17"
-gem "net-imap", "< 0.5.0"
+gem "ffi", "1.16.3"
+gem "net-imap", "0.4.22"
 gem "rubocop-powerhome", path: "../rubocop-powerhome"
-gem "securerandom", "< 0.4.0"
-gem "zeitwerk", "< 2.7.0"
+gem "securerandom", "0.3.2"
+gem "zeitwerk", "2.6.18"
