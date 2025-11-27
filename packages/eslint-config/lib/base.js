@@ -1,9 +1,8 @@
 module.exports = {
   root: true,
-  plugins: ["jsx-control-statements", "react", "react-hooks"],
+  plugins: ["react", "react-hooks"],
   extends: [
     "eslint:recommended",
-    "plugin:jsx-control-statements/recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "prettier",
@@ -20,12 +19,10 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    "jsx-control-statements/jsx-control-statements": true,
     node: true,
     mocha: true,
   },
   rules: {
-    "jsx-control-statements/jsx-jcs-no-undef": 1,
     "no-console": 1,
     "no-restricted-globals": [1, { name: "moment" }],
     "no-use-before-define": [2, { functions: true, classes: true }],
