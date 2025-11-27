@@ -8,7 +8,6 @@ module.exports = {
       plugins: ["@typescript-eslint"],
       rules: {
         "flowtype/no-types-missing-file-annotation": 0,
-        "jsx-control-statements/jsx-use-if-tag": 0,
         "no-use-before-define": 0,
         "@typescript-eslint/no-array-constructor": 0,
         "@typescript-eslint/explicit-module-boundary-types": 0,
