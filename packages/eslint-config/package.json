@@ -39,8 +39,8 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "8.18.0",
     "@typescript-eslint/parser": "8.18.0",
-    "@babel/core": "7.26.0",
-    "@babel/eslint-parser": "7.25.9",
+    "@babel/core": "7.28.5",
+    "@babel/eslint-parser": "7.28.5",
     "eslint": "8.57.1",
     "eslint-plugin-flowtype": "8.0.3",
     "eslint-plugin-jsx-control-statements": "3.0.0",
