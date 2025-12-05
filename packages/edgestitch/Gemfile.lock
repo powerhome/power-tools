@@ -259,22 +259,22 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  appraisal (~> 2.5.0)
-  bundler (~> 2.1)
+  appraisal (= 2.5.0)
+  bundler (= 2.7.2)
   edgestitch!
-  erb (< 6)
-  license_finder (>= 7.0)
+  erb (= 5.0.2)
+  license_finder (= 7.2.1)
   mysql2 (= 0.5.5)
-  net-imap (< 0.5.0)
-  nokogiri (< 1.18.10)
+  net-imap (= 0.4.22)
+  nokogiri (= 1.18.9)
   rails (>= 6.0.6.1, < 8)
-  rake (~> 13.0)
-  rspec (~> 3.0)
-  rspec-rails (~> 5.1.2)
+  rake (= 13.2.1)
+  rspec (= 3.13.0)
+  rspec-rails (= 5.1.2)
   rubocop-powerhome!
   simplecov (= 0.15.1)
   yard (= 0.9.36)
-  zeitwerk (< 2.7.0)
+  zeitwerk (= 2.6.18)
 
 BUNDLED WITH
-   2.5.23
+   2.7.2
