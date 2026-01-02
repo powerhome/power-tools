@@ -15,7 +15,7 @@ module RuboCop
           return if processed_source.blank?
           return unless helper_path?
 
-          add_offense(processed_source.ast, message: MSG)
+          add_offense(processed_source.ast)
         end
 
       private
