@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Adds Migration/AcknowledgeIgnoredColumn cop [#382](https://github.com/powerhome/power-tools/pull/382)
 - Extends Migration/RenameColumn to cover uses in a change_table [#381](https://github.com/powerhome/power-tools/pull/381)
 - Adds Migration/RenameColumn and Migration/RenameTable cops [#380](https://github.com/powerhome/power-tools/pull/380)
 - Standardize all libs to support ruby 3.0, ruby 3.3 x rails 6.1 through rails 7.2 [#359](https://github.com/powerhome/power-tools/pull/359)

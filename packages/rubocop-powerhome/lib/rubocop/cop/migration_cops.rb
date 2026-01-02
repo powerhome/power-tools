@@ -3,6 +3,7 @@
 module RuboCop
   module Cop
     module Migration
+      require_relative "migration/acknowledge_ignored_column"
       require_relative "migration/rename_column"
       require_relative "migration/rename_table"
     end
