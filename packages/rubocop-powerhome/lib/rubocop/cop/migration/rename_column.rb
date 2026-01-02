@@ -51,6 +51,35 @@ module RuboCop
         end
         alias on_csend on_send
 
+        def on_block(node)
+          return unless change_table_block?(node)
+
+          block_arg = node.arguments.first
+          return unless block_arg
+
+          rename_calls(node, block_arg.name) do |rename_node|
+            add_offense(rename_node)
+          end
+        end
+
+        private
+
+        def_node_matcher :change_table_block?, <<~PATTERN
+          (block
+            (send nil? :change_table ...)
+            (args (arg _))
+            _
+          )
+        PATTERN
+
+        def_node_search :rename_calls, <<~PATTERN
+          (send
+            (lvar %1)
+            :rename
+            ...
+          )
+        PATTERN
+
         def_node_matcher :rename_column?, <<~PATTERN
           (send
             nil?
