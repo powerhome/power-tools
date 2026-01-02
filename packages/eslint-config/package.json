@@ -27,7 +27,7 @@
   "peerDependencies": {
     "@typescript-eslint/eslint-plugin": "8.18.0",
     "@typescript-eslint/parser": "8.18.0",
-    "@babel/eslint-parser": "8 || 10 || 7",
+    "@babel/eslint-parser": "7.28.5",
     "eslint": "8.57.1",
     "eslint-plugin-flowtype": "8.0.3",
     "eslint-plugin-jsx-control-statements": "3.0.0",
@@ -52,6 +52,6 @@
     "typescript": "5.7.2"
   },
   "dependencies": {
-    "eslint-config-prettier": "^10.0.0"
+    "eslint-config-prettier": "10.0.1"
   }
 }

@@ -115,14 +115,14 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport (< 7.2.0)
-  bundler (~> 2.5.0)
+  bundler (= 2.5.23)
   byebug
-  license_finder (~> 7.0)
+  license_finder (= 7.2.1)
   ostruct-sanitizer!
   rake (= 13.2.1)
   rspec (= 3.13.0)
   rubocop-powerhome (= 0.5.3)
-  securerandom (< 0.4.0)
+  securerandom (= 0.3.2)
 
 BUNDLED WITH
    2.5.23
