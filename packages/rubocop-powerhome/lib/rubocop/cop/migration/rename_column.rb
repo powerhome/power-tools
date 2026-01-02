@@ -3,9 +3,8 @@
 module RuboCop
   module Cop
     module Migration
-      # Do not rename columns that are in use.
-      #
-      # It will cause down time in your application.
+      # Do not rename columns that are in use. It will cause down time in your application
+      # and is unsafe for pt-online-schema-change.
       # Instead:
       #
       # 1. Create a new column
@@ -13,10 +12,9 @@ module RuboCop
       # 3. Add old column to `ignored_columns` in model
       # 4. Drop the old column
       #
-      # @safety
-      #   Only meaningful if the table has records in it.
-      #   But even if the column is not in use, you can not rename it.
-      #   ActiveRecord accesses the old column unless queries explicitly SELECT other columns.
+      # This is meaningful if the table has records in it.
+      # But even if the column is not in use, one can not rename it.
+      # ActiveRecord accesses old columns unless all queries explicitly SELECT other columns.
       #
       # @example
       #   # bad
@@ -43,7 +41,8 @@ module RuboCop
       #     end
       #   end
       class RenameColumn < RuboCop::Cop::Base
-        MSG = "Do not rename columns that are in use. It will cause down time in your application."
+        MSG = "Do not rename columns that are in use. It will cause down time in your application " \
+              "and is unsafe for pt-online-schema-change."
 
         def on_send(node)
           return unless rename_column?(node)
