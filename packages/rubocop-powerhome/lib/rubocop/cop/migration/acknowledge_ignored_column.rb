@@ -26,9 +26,9 @@ module RuboCop
       #     end
       #   end
       class AcknowledgeIgnoredColumn < RuboCop::Cop::Base
-        MSG = "Do not remove columns until they are first ignored in production. " \
-              "Verify you have deleted the 'ignored_columns' from the Model and " \
-              "then disable this cop to acknowledge."
+        MSG = "Do not remove a column until it is already ignored in production and " \
+              "all references to it are removed. Once done, remove the 'ignored_columns' " \
+              "from the Model and disable this cop to acknowledge this is safe."
 
         def on_send(node)
           return unless remove_column?(node)

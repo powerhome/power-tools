@@ -9,7 +9,7 @@ RSpec.describe RuboCop::Cop::Migration::AcknowledgeIgnoredColumn, :config do
         class RemoveUsersSettings < ActiveRecord::Migration[7.0]
           def change
             remove_column :users, :settings
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Do not remove columns until they are first ignored in production. Verify you have deleted the 'ignored_columns' from the Model and then disable this cop to acknowledge.
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Do not remove a column until it is already ignored in production and all references to it are removed. Once done, remove the 'ignored_columns' from the Model and disable this cop to acknowledge this is safe.
           end
         end
       RUBY
@@ -21,7 +21,7 @@ RSpec.describe RuboCop::Cop::Migration::AcknowledgeIgnoredColumn, :config do
           def change
             change_table :users do |t|
               t.remove :settings
-              ^^^^^^^^^^^^^^^^^^ Do not remove columns until they are first ignored in production. Verify you have deleted the 'ignored_columns' from the Model and then disable this cop to acknowledge.
+              ^^^^^^^^^^^^^^^^^^ Do not remove a column until it is already ignored in production and all references to it are removed. Once done, remove the 'ignored_columns' from the Model and disable this cop to acknowledge this is safe.
             end
           end
         end
