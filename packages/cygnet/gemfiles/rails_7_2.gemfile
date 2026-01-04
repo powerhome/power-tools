@@ -4,9 +4,9 @@
 
 source "https://rubygems.org"
 
-gem "erb", "< 5"
+gem "erb", "< 6"
 gem "net-imap", "< 0.5.0"
-gem "nokogiri", "< 1.18"
+gem "nokogiri", "< 1.19"
 gem "rails", "7.2.2.2"
 gem "rubocop-powerhome", path: "../../rubocop-powerhome"
 gem "securerandom", "< 0.4"
