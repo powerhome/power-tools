@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+## [0.6.0] - 2026-01-05
+
+- Bump rubocop version with release of new cops
 - Adds Migration/AcknowledgeIgnoredColumn cop [#382](https://github.com/powerhome/power-tools/pull/382)
 - Extends Migration/RenameColumn to cover uses in a change_table [#381](https://github.com/powerhome/power-tools/pull/381)
 - Adds Migration/RenameColumn and Migration/RenameTable cops [#380](https://github.com/powerhome/power-tools/pull/380)
