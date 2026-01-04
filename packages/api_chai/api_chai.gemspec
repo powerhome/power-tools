@@ -33,5 +33,4 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "appraisal", "~> 2.5.0"
   spec.add_development_dependency "license_finder", "~> 7.0"
-  spec.add_development_dependency "rubocop-powerhome", "~> 0.5.0"
 end
