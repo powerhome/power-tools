@@ -25,11 +25,3 @@ Performance/ChainArrayAllocation:
   Exclude:
     - 'lib/edgestitch/exporter.rb'
     - 'lib/edgestitch/mysql/dump.rb'
-
-Style/FrozenStringLiteralComment:
-  Exclude:
-    - 'gemfiles/*'
-
-Bundler/OrderedGems:
-  Exclude:
-    - 'gemfiles/*'

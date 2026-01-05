@@ -5,18 +5,5 @@ Naming/FileName:
   Exclude:
     - lib/rubocop-powerhome.rb
 
-Metrics/BlockLength:
-  Exclude:
-    - 'spec/**/*'
-    - 'rubocop-powerhome.gemspec'
-
-Style/FrozenStringLiteralComment:
-  Exclude:
-    - 'gemfiles/*'
-
-Bundler/OrderedGems:
-  Exclude:
-    - 'gemfiles/*'
-
 Rails:
   Enabled: false

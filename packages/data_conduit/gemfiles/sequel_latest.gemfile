@@ -7,6 +7,7 @@ source "https://rubygems.org"
 gem "sequel", "~> 5.90"
 
 group :development, :test do
+  gem "pry-byebug", "3.10.1"
   gem "rake", "~> 13.0"
   gem "rest-client", "~> 2.1"
   gem "rspec", "~> 3.0"

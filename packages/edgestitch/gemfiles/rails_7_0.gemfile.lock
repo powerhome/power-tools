@@ -1,8 +1,8 @@
 PATH
   remote: ../../rubocop-powerhome
   specs:
-    rubocop-powerhome (0.5.6)
-      rubocop (= 1.75.0)
+    rubocop-powerhome (0.6.0)
+      rubocop (= 1.82.1)
       rubocop-performance
       rubocop-rails
       rubocop-rake
@@ -206,7 +206,7 @@ GEM
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
     rspec-support (3.13.4)
-    rubocop (1.75.0)
+    rubocop (1.82.1)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -214,10 +214,10 @@ GEM
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.9.3, < 3.0)
-      rubocop-ast (>= 1.43.0, < 2.0)
+      rubocop-ast (>= 1.48.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.46.0)
+    rubocop-ast (1.48.0)
       parser (>= 3.3.7.2)
       prism (~> 1.4)
     rubocop-performance (1.24.0)
@@ -258,7 +258,7 @@ GEM
     with_env (1.1.0)
     xml-simple (1.1.9)
       rexml
-    yard (0.9.21)
+    yard (0.9.36)
     zeitwerk (2.6.18)
 
 PLATFORMS
@@ -270,18 +270,18 @@ DEPENDENCIES
   appraisal (~> 2.5.0)
   bundler (~> 2.1)
   edgestitch!
-  erb (< 5)
+  erb (< 6)
   license_finder (>= 7.0)
   mysql2 (= 0.5.5)
   net-imap (< 0.5.0)
-  nokogiri (< 1.18.0)
+  nokogiri (< 1.18.10)
   rails (= 7.0.8.7)
   rake (~> 13.0)
   rspec (~> 3.0)
   rspec-rails (~> 7.1.1)
   rubocop-powerhome!
   simplecov (= 0.15.1)
-  yard (= 0.9.21)
+  yard (= 0.9.36)
   zeitwerk (< 2.7.0)
 
 BUNDLED WITH
