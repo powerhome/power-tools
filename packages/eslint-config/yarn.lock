@@ -153,14 +153,26 @@
     "@babel/helper-string-parser" "^7.25.9"
     "@babel/helper-validator-identifier" "^7.25.9"
 
-"@eslint-community/eslint-utils@^4.2.0", "@eslint-community/eslint-utils@^4.4.0":
+"@eslint-community/eslint-utils@^4.2.0":
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/@eslint-community/eslint-utils/-/eslint-utils-4.4.1.tgz#d1145bf2c20132d6400495d6df4bf59362fd9d56"
   integrity sha512-s3O3waFUrMV8P/XaF/+ZTp1X9XBZW1a4B97ZnjQF2KYWaFD2A8KyFBsrsfSjEmjn3RGWAIuvlneuZm3CUK3jbA==
   dependencies:
     eslint-visitor-keys "^3.4.3"
 
-"@eslint-community/regexpp@^4.10.0", "@eslint-community/regexpp@^4.6.1":
+"@eslint-community/eslint-utils@^4.9.1":
+  version "4.9.1"
+  resolved "https://npm.powerapp.cloud/@eslint-community/eslint-utils/-/eslint-utils-4.9.1.tgz#4e90af67bc51ddee6cdef5284edf572ec376b595"
+  integrity sha512-phrYmNiYppR7znFEdqgfWHXR6NCkZEK7hwWDHZUjit/2/U0r6XvkDl0SYnoM51Hq7FhCGdLDT6zxCCOY1hexsQ==
+  dependencies:
+    eslint-visitor-keys "^3.4.3"
+
+"@eslint-community/regexpp@^4.12.2":
+  version "4.12.2"
+  resolved "https://npm.powerapp.cloud/@eslint-community/regexpp/-/regexpp-4.12.2.tgz#bccdf615bcf7b6e8db830ec0b8d21c9a25de597b"
+  integrity sha512-EriSTlt5OC9/7SXkRSCAhfSxxoSUgBm33OH+IkwbdpgoqsSsUg7y3uh+IICI/Qg4BBWr3U2i39RpmycbxMq4ew==
+
+"@eslint-community/regexpp@^4.6.1":
   version "4.12.1"
   resolved "https://registry.yarnpkg.com/@eslint-community/regexpp/-/regexpp-4.12.1.tgz#cfc6cffe39df390a3841cde2abccf92eaa7ae0e0"
   integrity sha512-CCZCDJuduB9OUkFkY2IgppNZMi2lBQgD2qzwXkEia16cge2pijY/aXi96CJMquDMn3nJdlPV1A5KrJEXwfLNzQ==
@@ -270,12 +282,12 @@
     "@nodelib/fs.stat" "2.0.5"
     run-parallel "^1.1.9"
 
-"@nodelib/fs.stat@2.0.5", "@nodelib/fs.stat@^2.0.2":
+"@nodelib/fs.stat@2.0.5":
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-2.0.5.tgz#5bd262af94e9d25bd1e71b05deed44876a222e8b"
   integrity sha512-RkhPPp2zrqDAQA/2jNhnztcPAlv64XdhIp7a7454A5ovI7Bukxgt7MX7udwAu3zg1DcpPU0rz3VV1SeaqvY4+A==
 
-"@nodelib/fs.walk@^1.2.3", "@nodelib/fs.walk@^1.2.8":
+"@nodelib/fs.walk@^1.2.8":
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.walk/-/fs.walk-1.2.8.tgz#e95737e8bb6746ddedf69c556953494f196fe69a"
   integrity sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==
@@ -344,86 +356,101 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@typescript-eslint/eslint-plugin@8.18.0":
-  version "8.18.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.18.0.tgz#0901933326aea4443b81df3f740ca7dfc45c7bea"
-  integrity sha512-NR2yS7qUqCL7AIxdJUQf2MKKNDVNaig/dEB0GBLU7D+ZdHgK1NoH/3wsgO3OnPVipn51tG3MAwaODEGil70WEw==
+"@typescript-eslint/eslint-plugin@8.52.0":
+  version "8.52.0"
+  resolved "https://npm.powerapp.cloud/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.52.0.tgz#9a9f1d2ee974ed77a8b1bda94e77123f697ee8b4"
+  integrity sha512-okqtOgqu2qmZJ5iN4TWlgfF171dZmx2FzdOv2K/ixL2LZWDStL8+JgQerI2sa8eAEfoydG9+0V96m7V+P8yE1Q==
   dependencies:
-    "@eslint-community/regexpp" "^4.10.0"
-    "@typescript-eslint/scope-manager" "8.18.0"
-    "@typescript-eslint/type-utils" "8.18.0"
-    "@typescript-eslint/utils" "8.18.0"
-    "@typescript-eslint/visitor-keys" "8.18.0"
-    graphemer "^1.4.0"
-    ignore "^5.3.1"
+    "@eslint-community/regexpp" "^4.12.2"
+    "@typescript-eslint/scope-manager" "8.52.0"
+    "@typescript-eslint/type-utils" "8.52.0"
+    "@typescript-eslint/utils" "8.52.0"
+    "@typescript-eslint/visitor-keys" "8.52.0"
+    ignore "^7.0.5"
     natural-compare "^1.4.0"
-    ts-api-utils "^1.3.0"
+    ts-api-utils "^2.4.0"
 
-"@typescript-eslint/parser@8.18.0":
-  version "8.18.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-8.18.0.tgz#a1c9456cbb6a089730bf1d3fc47946c5fb5fe67b"
-  integrity sha512-hgUZ3kTEpVzKaK3uNibExUYm6SKKOmTU2BOxBSvOYwtJEPdVQ70kZJpPjstlnhCHcuc2WGfSbpKlb/69ttyN5Q==
+"@typescript-eslint/parser@8.52.0":
+  version "8.52.0"
+  resolved "https://npm.powerapp.cloud/@typescript-eslint/parser/-/parser-8.52.0.tgz#9fae9f5f13ebb1c8f31a50c34381bfd6bf96a05f"
+  integrity sha512-iIACsx8pxRnguSYhHiMn2PvhvfpopO9FXHyn1mG5txZIsAaB6F0KwbFnUQN3KCiG3Jcuad/Cao2FAs1Wp7vAyg==
   dependencies:
-    "@typescript-eslint/scope-manager" "8.18.0"
-    "@typescript-eslint/types" "8.18.0"
-    "@typescript-eslint/typescript-estree" "8.18.0"
-    "@typescript-eslint/visitor-keys" "8.18.0"
-    debug "^4.3.4"
+    "@typescript-eslint/scope-manager" "8.52.0"
+    "@typescript-eslint/types" "8.52.0"
+    "@typescript-eslint/typescript-estree" "8.52.0"
+    "@typescript-eslint/visitor-keys" "8.52.0"
+    debug "^4.4.3"
 
-"@typescript-eslint/scope-manager@8.18.0":
-  version "8.18.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/scope-manager/-/scope-manager-8.18.0.tgz#30b040cb4557804a7e2bcc65cf8fdb630c96546f"
-  integrity sha512-PNGcHop0jkK2WVYGotk/hxj+UFLhXtGPiGtiaWgVBVP1jhMoMCHlTyJA+hEj4rszoSdLTK3fN4oOatrL0Cp+Xw==
+"@typescript-eslint/project-service@8.52.0":
+  version "8.52.0"
+  resolved "https://npm.powerapp.cloud/@typescript-eslint/project-service/-/project-service-8.52.0.tgz#5fb4c16af4eda6d74c70cbc62f5d3f77b96e4cbe"
+  integrity sha512-xD0MfdSdEmeFa3OmVqonHi+Cciab96ls1UhIF/qX/O/gPu5KXD0bY9lu33jj04fjzrXHcuvjBcBC+D3SNSadaw==
   dependencies:
-    "@typescript-eslint/types" "8.18.0"
-    "@typescript-eslint/visitor-keys" "8.18.0"
+    "@typescript-eslint/tsconfig-utils" "^8.52.0"
+    "@typescript-eslint/types" "^8.52.0"
+    debug "^4.4.3"
 
-"@typescript-eslint/type-utils@8.18.0":
-  version "8.18.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/type-utils/-/type-utils-8.18.0.tgz#6f0d12cf923b6fd95ae4d877708c0adaad93c471"
-  integrity sha512-er224jRepVAVLnMF2Q7MZJCq5CsdH2oqjP4dT7K6ij09Kyd+R21r7UVJrF0buMVdZS5QRhDzpvzAxHxabQadow==
+"@typescript-eslint/scope-manager@8.52.0":
+  version "8.52.0"
+  resolved "https://npm.powerapp.cloud/@typescript-eslint/scope-manager/-/scope-manager-8.52.0.tgz#9884ff690fad30380ccabfb08af1ac200af6b4e5"
+  integrity sha512-ixxqmmCcc1Nf8S0mS0TkJ/3LKcC8mruYJPOU6Ia2F/zUUR4pApW7LzrpU3JmtePbRUTes9bEqRc1Gg4iyRnDzA==
   dependencies:
-    "@typescript-eslint/typescript-estree" "8.18.0"
-    "@typescript-eslint/utils" "8.18.0"
-    debug "^4.3.4"
-    ts-api-utils "^1.3.0"
+    "@typescript-eslint/types" "8.52.0"
+    "@typescript-eslint/visitor-keys" "8.52.0"
 
-"@typescript-eslint/types@8.18.0":
-  version "8.18.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-8.18.0.tgz#3afcd30def8756bc78541268ea819a043221d5f3"
-  integrity sha512-FNYxgyTCAnFwTrzpBGq+zrnoTO4x0c1CKYY5MuUTzpScqmY5fmsh2o3+57lqdI3NZucBDCzDgdEbIaNfAjAHQA==
+"@typescript-eslint/tsconfig-utils@8.52.0", "@typescript-eslint/tsconfig-utils@^8.52.0":
+  version "8.52.0"
+  resolved "https://npm.powerapp.cloud/@typescript-eslint/tsconfig-utils/-/tsconfig-utils-8.52.0.tgz#0296751c22ed05c83787a6eaec65ae221bd8b8ed"
+  integrity sha512-jl+8fzr/SdzdxWJznq5nvoI7qn2tNYV/ZBAEcaFMVXf+K6jmXvAFrgo/+5rxgnL152f//pDEAYAhhBAZGrVfwg==
 
-"@typescript-eslint/typescript-estree@8.18.0":
-  version "8.18.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/typescript-estree/-/typescript-estree-8.18.0.tgz#d8ca785799fbb9c700cdff1a79c046c3e633c7f9"
-  integrity sha512-rqQgFRu6yPkauz+ms3nQpohwejS8bvgbPyIDq13cgEDbkXt4LH4OkDMT0/fN1RUtzG8e8AKJyDBoocuQh8qNeg==
+"@typescript-eslint/type-utils@8.52.0":
+  version "8.52.0"
+  resolved "https://npm.powerapp.cloud/@typescript-eslint/type-utils/-/type-utils-8.52.0.tgz#6e554113f8a074cf9b2faa818d2ebfccb867d6c5"
+  integrity sha512-JD3wKBRWglYRQkAtsyGz1AewDu3mTc7NtRjR/ceTyGoPqmdS5oCdx/oZMWD5Zuqmo6/MpsYs0wp6axNt88/2EQ==
   dependencies:
-    "@typescript-eslint/types" "8.18.0"
-    "@typescript-eslint/visitor-keys" "8.18.0"
-    debug "^4.3.4"
-    fast-glob "^3.3.2"
-    is-glob "^4.0.3"
-    minimatch "^9.0.4"
-    semver "^7.6.0"
-    ts-api-utils "^1.3.0"
+    "@typescript-eslint/types" "8.52.0"
+    "@typescript-eslint/typescript-estree" "8.52.0"
+    "@typescript-eslint/utils" "8.52.0"
+    debug "^4.4.3"
+    ts-api-utils "^2.4.0"
 
-"@typescript-eslint/utils@8.18.0":
-  version "8.18.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/utils/-/utils-8.18.0.tgz#48f67205d42b65d895797bb7349d1be5c39a62f7"
-  integrity sha512-p6GLdY383i7h5b0Qrfbix3Vc3+J2k6QWw6UMUeY5JGfm3C5LbZ4QIZzJNoNOfgyRe0uuYKjvVOsO/jD4SJO+xg==
-  dependencies:
-    "@eslint-community/eslint-utils" "^4.4.0"
-    "@typescript-eslint/scope-manager" "8.18.0"
-    "@typescript-eslint/types" "8.18.0"
-    "@typescript-eslint/typescript-estree" "8.18.0"
+"@typescript-eslint/types@8.52.0", "@typescript-eslint/types@^8.52.0":
+  version "8.52.0"
+  resolved "https://npm.powerapp.cloud/@typescript-eslint/types/-/types-8.52.0.tgz#1eb0a16b324824bc23b89d109a267c38c9213c4a"
+  integrity sha512-LWQV1V4q9V4cT4H5JCIx3481iIFxH1UkVk+ZkGGAV1ZGcjGI9IoFOfg3O6ywz8QqCDEp7Inlg6kovMofsNRaGg==
 
-"@typescript-eslint/visitor-keys@8.18.0":
-  version "8.18.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-8.18.0.tgz#7b6d33534fa808e33a19951907231ad2ea5c36dd"
-  integrity sha512-pCh/qEA8Lb1wVIqNvBke8UaRjJ6wrAWkJO5yyIbs8Yx6TNGYyfNjOo61tLv+WwLvoLPp4BQ8B7AHKijl8NGUfw==
+"@typescript-eslint/typescript-estree@8.52.0":
+  version "8.52.0"
+  resolved "https://npm.powerapp.cloud/@typescript-eslint/typescript-estree/-/typescript-estree-8.52.0.tgz#2ad7721c671be2127951286cb7f44c4ce55b0591"
+  integrity sha512-XP3LClsCc0FsTK5/frGjolyADTh3QmsLp6nKd476xNI9CsSsLnmn4f0jrzNoAulmxlmNIpeXuHYeEQv61Q6qeQ==
   dependencies:
-    "@typescript-eslint/types" "8.18.0"
-    eslint-visitor-keys "^4.2.0"
+    "@typescript-eslint/project-service" "8.52.0"
+    "@typescript-eslint/tsconfig-utils" "8.52.0"
+    "@typescript-eslint/types" "8.52.0"
+    "@typescript-eslint/visitor-keys" "8.52.0"
+    debug "^4.4.3"
+    minimatch "^9.0.5"
+    semver "^7.7.3"
+    tinyglobby "^0.2.15"
+    ts-api-utils "^2.4.0"
+
+"@typescript-eslint/utils@8.52.0":
+  version "8.52.0"
+  resolved "https://npm.powerapp.cloud/@typescript-eslint/utils/-/utils-8.52.0.tgz#b249be8264899b80d996fa353b4b84da4662f962"
+  integrity sha512-wYndVMWkweqHpEpwPhwqE2lnD2DxC6WVLupU/DOt/0/v+/+iQbbzO3jOHjmBMnhu0DgLULvOaU4h4pwHYi2oRQ==
+  dependencies:
+    "@eslint-community/eslint-utils" "^4.9.1"
+    "@typescript-eslint/scope-manager" "8.52.0"
+    "@typescript-eslint/types" "8.52.0"
+    "@typescript-eslint/typescript-estree" "8.52.0"
+
+"@typescript-eslint/visitor-keys@8.52.0":
+  version "8.52.0"
+  resolved "https://npm.powerapp.cloud/@typescript-eslint/visitor-keys/-/visitor-keys-8.52.0.tgz#50361c48a6302676230fe498f80f6decce4bf673"
+  integrity sha512-ink3/Zofus34nmBsPjow63FP5M7IGff0RKAgqR6+CFpdk22M7aLwC9gOcLGYqr7MczLPzZVERW9hRog3O4n1sQ==
+  dependencies:
+    "@typescript-eslint/types" "8.52.0"
+    eslint-visitor-keys "^4.2.1"
 
 "@ungap/structured-clone@^1.2.0":
   version "1.3.0"
@@ -723,10 +750,17 @@ data-view-byte-offset@^1.0.1:
     es-errors "^1.3.0"
     is-data-view "^1.0.1"
 
-debug@^4.1.0, debug@^4.3.1, debug@^4.3.2, debug@^4.3.4:
+debug@^4.1.0, debug@^4.3.1, debug@^4.3.2:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.4.0.tgz#2b3f2aea2ffeb776477460267377dc8710faba8a"
   integrity sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA==
+  dependencies:
+    ms "^2.1.3"
+
+debug@^4.4.3:
+  version "4.4.3"
+  resolved "https://npm.powerapp.cloud/debug/-/debug-4.4.3.tgz#c6ae432d9bd9662582fce08709b038c58e9e3d6a"
+  integrity sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==
   dependencies:
     ms "^2.1.3"
 
@@ -986,10 +1020,10 @@ eslint-visitor-keys@^3.4.1, eslint-visitor-keys@^3.4.3:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-3.4.3.tgz#0cd72fe8550e3c2eae156a96a4dddcd1c8ac5800"
   integrity sha512-wpc+LXeiyiisxPlEkUzU6svyS1frIO3Mgxj1fdy7Pm8Ygzguax2N3Fa/D/ag1WqbOprdI+uY6wMUl8/a2G+iag==
 
-eslint-visitor-keys@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-4.2.0.tgz#687bacb2af884fcdda8a6e7d65c606f46a14cd45"
-  integrity sha512-UyLnSehNt62FFhSwjZlHmeokpRK59rcz29j+F1/aDgbkbRTk7wIc9XzdoasMUbRNKDM0qQt/+BJ4BrpFeABemw==
+eslint-visitor-keys@^4.2.1:
+  version "4.2.1"
+  resolved "https://npm.powerapp.cloud/eslint-visitor-keys/-/eslint-visitor-keys-4.2.1.tgz#4cfea60fe7dd0ad8e816e1ed026c1d5251b512c1"
+  integrity sha512-Uhdk5sfqcee/9H/rCOJikYz67o0a2Tw2hGRPOG2Y1R2dg7brRe1uG0yaNQDHu+TO/uQPF/5eCapvYSmHUjt7JQ==
 
 eslint-webpack-plugin@4.2.0:
   version "4.2.0"
@@ -1089,17 +1123,6 @@ fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
 
-fast-glob@^3.3.2:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.3.3.tgz#d06d585ce8dba90a16b0505c543c3ccfb3aeb818"
-  integrity sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==
-  dependencies:
-    "@nodelib/fs.stat" "^2.0.2"
-    "@nodelib/fs.walk" "^1.2.3"
-    glob-parent "^5.1.2"
-    merge2 "^1.3.0"
-    micromatch "^4.0.8"
-
 fast-json-stable-stringify@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/fast-json-stable-stringify/-/fast-json-stable-stringify-2.1.0.tgz#874bf69c6f404c2b5d99c481341399fd55892633"
@@ -1121,6 +1144,11 @@ fastq@^1.6.0:
   integrity sha512-QKHXPW0hD8g4UET03SdOdunzSouc9N4AuHdsX8XNcTsuz+yYFILVNIX4l9yHABMhiEI9Db0JTTIpu0wB+Y1QQw==
   dependencies:
     reusify "^1.0.4"
+
+fdir@^6.5.0:
+  version "6.5.0"
+  resolved "https://npm.powerapp.cloud/fdir/-/fdir-6.5.0.tgz#ed2ab967a331ade62f18d077dae192684d50d350"
+  integrity sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==
 
 file-entry-cache@^6.0.1:
   version "6.0.1"
@@ -1230,13 +1258,6 @@ get-symbol-description@^1.1.0:
     es-errors "^1.3.0"
     get-intrinsic "^1.2.6"
 
-glob-parent@^5.1.2:
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.2.tgz#869832c58034fe68a4093c17dc15e8340d8401c4"
-  integrity sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==
-  dependencies:
-    is-glob "^4.0.1"
-
 glob-parent@^6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-6.0.2.tgz#6d237d99083950c79290f24c7642a3de9a28f9e3"
@@ -1334,10 +1355,15 @@ hasown@^2.0.0, hasown@^2.0.2:
   dependencies:
     function-bind "^1.1.2"
 
-ignore@^5.2.0, ignore@^5.3.1:
+ignore@^5.2.0:
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.3.2.tgz#3cd40e729f3643fd87cb04e50bf0eb722bc596f5"
   integrity sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==
+
+ignore@^7.0.5:
+  version "7.0.5"
+  resolved "https://npm.powerapp.cloud/ignore/-/ignore-7.0.5.tgz#4cb5f6cd7d4c7ab0365738c7aea888baa6d7efd9"
+  integrity sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==
 
 import-fresh@^3.2.1:
   version "3.3.0"
@@ -1460,7 +1486,7 @@ is-generator-function@^1.0.10:
     has-tostringtag "^1.0.2"
     safe-regex-test "^1.1.0"
 
-is-glob@^4.0.0, is-glob@^4.0.1, is-glob@^4.0.3:
+is-glob@^4.0.0, is-glob@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/is-glob/-/is-glob-4.0.3.tgz#64f61e42cbbb2eec2071a9dac0b28ba1e65d5084"
   integrity sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==
@@ -1708,12 +1734,7 @@ merge-stream@^2.0.0:
   resolved "https://registry.yarnpkg.com/merge-stream/-/merge-stream-2.0.0.tgz#52823629a14dd00c9770fb6ad47dc6310f2c1f60"
   integrity sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==
 
-merge2@^1.3.0:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
-  integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
-
-micromatch@^4.0.5, micromatch@^4.0.8:
+micromatch@^4.0.5:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-4.0.8.tgz#d66fa18f3a47076789320b9b1af32bd86d9fa202"
   integrity sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==
@@ -1728,9 +1749,9 @@ minimatch@^3.0.5, minimatch@^3.1.1, minimatch@^3.1.2:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimatch@^9.0.4:
+minimatch@^9.0.5:
   version "9.0.5"
-  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-9.0.5.tgz#d74f9dd6b57d83d8e98cfb82133b03978bc929e5"
+  resolved "https://npm.powerapp.cloud/minimatch/-/minimatch-9.0.5.tgz#d74f9dd6b57d83d8e98cfb82133b03978bc929e5"
   integrity sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==
   dependencies:
     brace-expansion "^2.0.1"
@@ -1890,6 +1911,11 @@ picomatch@^2.2.3, picomatch@^2.3.1:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.1.tgz#3ba3833733646d9d3e4995946c1365a67fb07a42"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
 
+picomatch@^4.0.3:
+  version "4.0.3"
+  resolved "https://npm.powerapp.cloud/picomatch/-/picomatch-4.0.3.tgz#796c76136d1eead715db1e7bad785dedd695a042"
+  integrity sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==
+
 possible-typed-array-names@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/possible-typed-array-names/-/possible-typed-array-names-1.0.0.tgz#89bb63c6fada2c3e90adc4a647beeeb39cc7bf8f"
@@ -2031,7 +2057,7 @@ schema-utils@^4.2.0:
     ajv-formats "^2.1.1"
     ajv-keywords "^5.1.0"
 
-semver@7.6.3, semver@^7.6.0:
+semver@7.6.3:
   version "7.6.3"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.3.tgz#980f7b5550bc175fb4dc09403085627f9eb33143"
   integrity sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==
@@ -2040,6 +2066,11 @@ semver@^6.3.1:
   version "6.3.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
   integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
+
+semver@^7.7.3:
+  version "7.7.3"
+  resolved "https://npm.powerapp.cloud/semver/-/semver-7.7.3.tgz#4b5f4143d007633a8dc671cd0a6ef9147b8bb946"
+  integrity sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==
 
 set-function-length@^1.2.2:
   version "1.2.2"
@@ -2224,6 +2255,14 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==
 
+tinyglobby@^0.2.15:
+  version "0.2.15"
+  resolved "https://npm.powerapp.cloud/tinyglobby/-/tinyglobby-0.2.15.tgz#e228dd1e638cea993d2fdb4fcd2d4602a79951c2"
+  integrity sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==
+  dependencies:
+    fdir "^6.5.0"
+    picomatch "^4.0.3"
+
 to-regex-range@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/to-regex-range/-/to-regex-range-5.0.1.tgz#1648c44aae7c8d988a326018ed72f5b4dd0392e4"
@@ -2231,10 +2270,10 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-ts-api-utils@^1.3.0:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/ts-api-utils/-/ts-api-utils-1.4.3.tgz#bfc2215fe6528fecab2b0fba570a2e8a4263b064"
-  integrity sha512-i3eMG77UTMD0hZhgRS562pv83RC6ukSAC2GMNWc+9dieh/+jDM5u5YG+NHX6VNDRHQcHwmsTHctP9LhbC3WxVw==
+ts-api-utils@^2.4.0:
+  version "2.4.0"
+  resolved "https://npm.powerapp.cloud/ts-api-utils/-/ts-api-utils-2.4.0.tgz#2690579f96d2790253bdcf1ca35d569ad78f9ad8"
+  integrity sha512-3TaVTaAv2gTiMB35i3FiGJaRfwb3Pyn/j3m/bfAvGe8FB7CF6u+LMYqYlDh7reQf7UNvoTvdfAqHGmPGOSsPmA==
 
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"
