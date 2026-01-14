@@ -1,5 +1,9 @@
 ## Unreleased
 
+## [0.2.2] - 2026-01-14
+
+- Bump many dependencies
+
 ## [0.2.2] - 2023-01-31
 
 - NPM doesn't allow symlinks [#92](https://github.com/powerhome/power-tools/pull/92) let's see if it will copy a file to the root while publishing
