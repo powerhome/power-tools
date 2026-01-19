@@ -111,6 +111,30 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
       expect(WebMock).to have_requested(:post, query_url)
         .with(body: "SHOW tables")
     end
+
+    context "when Trino returns an error" do
+      let(:error_response) do
+        {
+          "error" => {
+            "message" => "Schema 'test_schema' does not exist",
+            "errorCode" => 1,
+            "errorName" => "SCHEMA_NOT_FOUND",
+            "errorType" => "USER_ERROR",
+          },
+        }
+      end
+
+      it "raises a TrinoException with the error message" do
+        stub_request(:post, query_url)
+          .with(body: "SHOW tables")
+          .to_return(status: 200, body: error_response.to_json)
+
+        expect { described_class.tables(config) }.to raise_error(
+          DataConduit::TrinoException,
+          /Schema 'test_schema' does not exist/
+        )
+      end
+    end
   end
 
   describe "#query" do

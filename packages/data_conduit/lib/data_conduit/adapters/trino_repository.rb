@@ -28,7 +28,11 @@ module DataConduit
       def self.tables(config)
         repo = new(nil, nil, config)
         response_data = repo.send(:response_to, "SHOW tables")
-        response_data[:result_data]&.flatten&.sort
+        if response_data[:result_data].is_a?(Hash) && response_data[:result_data]["error"]
+          raise DataConduit::TrinoException, response_data[:result_data]["error"].to_s
+        else
+          response_data[:result_data]&.flatten&.sort
+        end
       end
 
       def query(sql_query = nil)
