@@ -1,5 +1,9 @@
 ## Unreleased
 
+## [0.2.1] - 2026-01-19
+
+- Raise custom error when TrinoRepository.tables is unable to connect [#386](https://github.com/powerhome/power-tools/pull/386)
+
 ## [0.2.0] - 2025-11-10
 
 - Improve surfacing error data to better analyze SQL passed to #query and #execute [#377](https://github.com/powerhome/power-tools/pull/377)

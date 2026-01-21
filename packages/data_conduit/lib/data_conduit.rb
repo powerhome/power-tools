@@ -11,4 +11,5 @@ DataConduit::RepositoryFactory.register(:trino, DataConduit::Adapters::TrinoRepo
 
 module DataConduit
   class Error < StandardError; end
+  class TrinoException < Error; end
 end
