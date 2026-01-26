@@ -150,7 +150,7 @@ These methods are useful for:
 - Detecting when permission definitions have changed
 - Synchronizing permissions between systems
 
-The checksum is deterministic - the same permission file contents will always produce the same MD5 hash.
+The checksum is deterministic - the same permission file contents will always produce the same SHA256 hash.
 
 ### Subject
 

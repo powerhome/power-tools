@@ -96,9 +96,9 @@ module Consent
   # Calculates a deterministic checksum of all permission files
   #
   # @param paths [Array<String,#to_s>] paths where the ruby files are located
-  # @return [String] MD5 hexdigest of all permission file contents
+  # @return [String] SHA256 hexdigest of all permission file contents
   def self.subjects_checksum(paths)
-    require "digest/md5"
+    require "digest/sha256"
 
     Digest::SHA256.hexdigest(subjects_content(paths))
   end
