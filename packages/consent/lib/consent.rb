@@ -89,7 +89,8 @@ module Consent
   # @return [String] concatenated file contents
   def self.subjects_content(paths)
     permission_files = paths.map { |dir| File.join(dir, "*.rb") }
-    Dir[*permission_files].sort.map { |file| File.read(file) }.join
+    files = Dir[*permission_files].sort!
+    files.map { |file| File.read(file) }.join
   end
 
   # Calculates a deterministic checksum of all permission files
