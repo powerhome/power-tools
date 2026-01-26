@@ -73,13 +73,13 @@ describe Consent do
   end
 
   describe ".subjects_checksum" do
-    it "returns MD5 hexdigest of permission file contents" do
+    it "returns SHA256 hexdigest of permission file contents" do
       dir = Dir.mktmpdir
       File.write(File.join(dir, "test.rb"), "test content")
 
       checksum = Consent.subjects_checksum([dir])
 
-      expect(checksum).to eq(Digest::MD5.hexdigest("test content"))
+      expect(checksum).to eq(Digest::SHA256.hexdigest("test content"))
 
       FileUtils.rm_rf(dir)
     end
