@@ -100,7 +100,7 @@ module Consent
   def self.subjects_checksum(paths)
     require "digest/md5"
 
-    Digest::MD5.hexdigest(subjects_content(paths))
+    Digest::SHA256.hexdigest(subjects_content(paths))
   end
 
   # Defines a subject with the given key, label and options
