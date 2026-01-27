@@ -9,6 +9,7 @@ gem "base64"
 gem "bigdecimal"
 gem "erb", "< 5.1" # Hold erb to support Ruby < 3.2
 gem "logger"
+gem "minitest", "< 6.0" # Hold minitest to support Ruby < 3.2
 gem "mutex_m"
 gem "net-imap", "< 0.5.0"
 gem "nokogiri", "< 1.19"
