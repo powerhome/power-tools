@@ -98,7 +98,7 @@ module Consent
   # @param paths [Array<String,#to_s>] paths where the ruby files are located
   # @return [String] SHA256 hexdigest of all permission file contents
   def self.subjects_checksum(paths)
-    require "digest/sha256"
+    require "digest/sha2"
 
     Digest::SHA256.hexdigest(subjects_content(paths))
   end
