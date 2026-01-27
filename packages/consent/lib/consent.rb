@@ -89,7 +89,7 @@ module Consent
   # @return [String] concatenated file contents
   def self.subjects_content(paths)
     permission_files = paths.map { |dir| File.join(dir, "*.rb") }
-    files = Dir[*permission_files].sort!
+    files = Dir[*permission_files].sort
     files.map { |file| File.read(file) }.join
   end
 
