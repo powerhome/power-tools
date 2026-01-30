@@ -83,6 +83,26 @@ module Consent
     Dir[*permission_files].each { |file| Kernel.load(file) }
   end
 
+  # Returns the concatenated contents of all permission files
+  #
+  # @param paths [Array<String,#to_s>] paths where the ruby files are located
+  # @return [String] concatenated file contents
+  def self.subjects_content(paths)
+    permission_files = paths.map { |dir| File.join(dir, "*.rb") }
+    files = Dir[*permission_files].sort
+    files.map { |file| File.read(file) }.join
+  end
+
+  # Calculates a deterministic checksum of all permission files
+  #
+  # @param paths [Array<String,#to_s>] paths where the ruby files are located
+  # @return [String] SHA256 hexdigest of all permission file contents
+  def self.subjects_checksum(paths)
+    require "digest/sha2"
+
+    Digest::SHA256.hexdigest(subjects_content(paths))
+  end
+
   # Defines a subject with the given key, label and options
   #
   # i.e:
