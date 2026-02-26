@@ -6,8 +6,10 @@ RSpec.describe RuboCop::Cop::GraphQL::FieldTypeInBlock, :config do
   context "when field type is given inline (custom type)" do
     it "registers an offense" do
       expect_offense(<<~RUBY)
-        field :thing, Types::Thing
-                      ^^^^^^^^^^^ type configuration can be moved to a block to defer loading the type's file
+        class ThingType < Types::BaseObject
+          field :thing, Types::Thing
+                        ^^^^^^^^^^^^ type configuration can be moved to a block to defer loading the type's file
+        end
       RUBY
     end
   end

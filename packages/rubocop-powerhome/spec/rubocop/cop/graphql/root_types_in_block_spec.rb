@@ -14,14 +14,14 @@ RSpec.describe RuboCop::Cop::GraphQL::RootTypesInBlock, :config do
     it "registers an offense for mutation" do
       expect_offense(<<~RUBY)
         mutation Types::Mutation
-        ^^^^^^^^^^^^^^^^^^^^^^^ type configuration can be moved to a block to defer loading the type's file
+        ^^^^^^^^^^^^^^^^^^^^^^^^ type configuration can be moved to a block to defer loading the type's file
       RUBY
     end
 
     it "registers an offense for subscription" do
       expect_offense(<<~RUBY)
         subscription Types::Subscription
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ type configuration can be moved to a block to defer loading the type's file
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ type configuration can be moved to a block to defer loading the type's file
       RUBY
     end
   end

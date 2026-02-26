@@ -7,7 +7,7 @@ RSpec.describe RuboCop::Cop::GraphQL::DefaultRequiredTrue, :config do
     it "registers an offense" do
       expect_offense(<<~RUBY)
         argument :id, ID, required: true
-                           ^^^^^^^^^^^^^^^ `required: true` is the default and can be removed.
+                          ^^^^^^^^^^^^^^ `required: true` is the default and can be removed.
       RUBY
     end
 

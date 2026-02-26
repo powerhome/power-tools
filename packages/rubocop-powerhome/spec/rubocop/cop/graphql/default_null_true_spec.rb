@@ -7,7 +7,7 @@ RSpec.describe RuboCop::Cop::GraphQL::DefaultNullTrue, :config do
     it "registers an offense" do
       expect_offense(<<~RUBY)
         field :name, String, null: true
-                              ^^^^^^^^^^ `null: true` is the default and can be removed.
+                             ^^^^^^^^^^ `null: true` is the default and can be removed.
       RUBY
     end
 
