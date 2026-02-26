@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [0.6.1] - 2026-02-26
+
+- Adds Graphql/DefaultNullTrue cop
+- Adds Graphql/DefaultRequiredTrue cop
+- Adds Graphql/FieldTypeInBlock cop
+- Adds Graphql/RootTypesInBlock cop
+
 ## [0.6.0] - 2026-01-05
 
 - Bump rubocop version with release of new cops

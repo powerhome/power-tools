@@ -6,6 +6,7 @@ require_relative "rubocop/powerhome"
 require_relative "rubocop/cop/migration_cops"
 require_relative "rubocop/cop/naming_cops"
 require_relative "rubocop/cop/style_cops"
+require_relative "rubocop/cop/graphql_cops"
 
 def load_rubocop_extension(extension)
   RuboCop::ConfigLoader.add_loaded_features(extension)
