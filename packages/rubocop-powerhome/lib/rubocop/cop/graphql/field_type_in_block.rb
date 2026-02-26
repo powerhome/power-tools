@@ -15,17 +15,17 @@ module RuboCop
       #     type(Types::Thing)
       #   end
       #
-      class FieldTypeInBlock < BaseCop
+      class FieldTypeInBlock < BaseCop # rubocop:disable Metrics/ClassLength
         MSG = "type configuration can be moved to a block to defer loading the type's file"
 
-        BUILT_IN_SCALAR_NAMES = ["Float", "Int", "Integer", "String", "ID", "Boolean"]
-        def_node_matcher :field_config_with_inline_type, <<-Pattern
+        BUILT_IN_SCALAR_NAMES = %w[Float Int Integer String ID Boolean].freeze
+        def_node_matcher :field_config_with_inline_type, <<-PATTERN
         (
           send {nil? _} :field sym ${const array} ...
         )
-        Pattern
+        PATTERN
 
-        def_node_matcher :field_config_with_inline_type_and_block, <<-Pattern
+        def_node_matcher :field_config_with_inline_type_and_block, <<-PATTERN
         (
           block
             (send {nil? _} :field sym ${const array} ...) ...
@@ -33,9 +33,9 @@ module RuboCop
             _
 
         )
-        Pattern
+        PATTERN
 
-        def on_block(node)
+        def on_block(node) # rubocop:disable Metrics/MethodLength
           ignore_node(node)
           field_config_with_inline_type_and_block(node) do |type_const|
             type_const_str = get_type_argument_str(node, type_const)
@@ -52,8 +52,9 @@ module RuboCop
           end
         end
 
-        def on_send(node)
+        def on_send(node) # rubocop:disable Metrics/MethodLength
           return if part_of_ignored_node?(node)
+
           field_config_with_inline_type(node) do |type_const|
             type_const_str = get_type_argument_str(node, type_const)
             if ignore_inline_type_str?(type_const_str)
@@ -69,17 +70,13 @@ module RuboCop
           end
         end
 
-
-        private
+      private
 
         def ignore_inline_type_str?(type_str)
-          if BUILT_IN_SCALAR_NAMES.include?(type_str)
-            true
-          elsif (inner_type_str = type_str.sub(/\[([A-Za-z]+)(, null: (true|false))?\]/, '\1')) && BUILT_IN_SCALAR_NAMES.include?(inner_type_str)
-            true
-          else
-            false
-          end
+          BUILT_IN_SCALAR_NAMES.include?(type_str) ||
+            ((inner_type_str = type_str.sub(
+              /\[([A-Za-z]+)(, null: (true|false))?\]/, '\1'
+            )) && BUILT_IN_SCALAR_NAMES.include?(inner_type_str))
         end
 
         def get_type_argument_str(send_node, type_const)
@@ -94,7 +91,7 @@ module RuboCop
           node_source[relative_first_pos...end_removal_pos]
         end
 
-        def delete_type_argument(send_node, type_const)
+        def delete_type_argument(send_node, type_const) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
           first_pos = type_const.location.expression.begin_pos
           end_pos = type_const.location.expression.end_pos
           node_source = send_node.source_range.source
@@ -107,32 +104,37 @@ module RuboCop
           while node_source[begin_removal_pos] != ","
             begin_removal_pos -= 1
             if begin_removal_pos < 1
-              raise "Invariant: somehow backtracked to beginning of node looking for a comma (node source: #{node_source.inspect})"
+              raise "Invariant: somehow backtracked to beginning of node " \
+                    "looking for a comma (node source: #{node_source.inspect})"
             end
           end
 
-          node_source[0...begin_removal_pos] + node_source[end_removal_pos..-1]
+          node_source[0...begin_removal_pos] + node_source[end_removal_pos..]
         end
 
-        def determine_field_indent(send_node)
+        def determine_field_indent(send_node) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
           type_defn_node = send_node
 
-          while (type_defn_node && !(type_defn_node.class_definition? || type_defn_node.module_definition?))
+          while type_defn_node && !(type_defn_node.class_definition? || type_defn_node.module_definition?)
             type_defn_node = type_defn_node.parent
           end
 
           if type_defn_node.nil?
-            raise "Invariant: Something went wrong in GraphQL-Ruby, couldn't find surrounding class definition for field (#{send_node}).\n\nPlease report this error on GitHub."
+            raise "Invariant: Something went wrong in GraphQL-Ruby, " \
+                  "couldn't find surrounding class definition for field " \
+                  "(#{send_node}).\n\nPlease report this error on GitHub."
           end
 
           type_defn_source = type_defn_node.source
           indent_test_idx = send_node.location.expression.begin_pos - type_defn_node.source_range.begin_pos - 1
-          field_indent = "".dup
+          field_indent = +""
           while type_defn_source[indent_test_idx] == " "
             field_indent << " "
             indent_test_idx -= 1
-            if indent_test_idx == 0
-              raise "Invariant: somehow backtracted to beginning of class when looking for field indent (source: #{node_source.inspect})"
+            if indent_test_idx == 0 # rubocop:disable Style/Next
+              raise "Invariant: somehow backtracted to beginning of class " \
+                    "when looking for field indent " \
+                    "(source: #{node_source.inspect})"
             end
           end
           field_indent

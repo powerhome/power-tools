@@ -15,11 +15,11 @@ module RuboCop
       class RootTypesInBlock < BaseCop
         MSG = "type configuration can be moved to a block to defer loading the type's file"
 
-        def_node_matcher :root_type_config_without_block, <<-Pattern
+        def_node_matcher :root_type_config_without_block, <<-PATTERN
         (
           send nil? {:query :mutation :subscription} const
         )
-        Pattern
+        PATTERN
 
         def on_send(node)
           root_type_config_without_block(node) do

@@ -7,7 +7,7 @@ module RuboCop
         extend RuboCop::Cop::AutoCorrector
 
         # Return the source of `send_node`, but without the keyword argument represented by `pair_node`
-        def source_without_keyword_argument(send_node, pair_node)
+        def source_without_keyword_argument(send_node, pair_node) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
           # work back to the preceding comma
           first_pos = pair_node.location.expression.begin_pos
           end_pos = pair_node.location.expression.end_pos
