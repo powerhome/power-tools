@@ -15,10 +15,18 @@ RSpec.describe RuboCop::Cop::GraphQL::FieldTypeInBlock, :config do
   end
 
   context "when field type is in a block with type()" do
-    it "does not register an offense" do
+    it "does not register an offense with do/end block" do
       expect_no_offenses(<<~RUBY)
         field :thing do
           type(Types::Thing)
+        end
+      RUBY
+    end
+
+    it "does not register an offense with brace block" do
+      expect_no_offenses(<<~RUBY)
+        class ThingType < Types::BaseObject
+          field(:thing) { type(Types::Thing) }
         end
       RUBY
     end

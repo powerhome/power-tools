@@ -9,11 +9,13 @@ module RuboCop
       # @example
       #   # bad, immediately causes Rails to load `app/graphql/types/thing.rb`
       #   field :thing, Types::Thing
+      #   field :thing, Types::Thing { description "A thing" }
       #
       #   # good, defers loading until the file is needed
       #   field :thing do
       #     type(Types::Thing)
       #   end
+      #   field :thing { type(Types::Thing) }
       #
       class FieldTypeInBlock < BaseCop # rubocop:disable Metrics/ClassLength
         MSG = "type configuration can be moved to a block to defer loading the type's file"
