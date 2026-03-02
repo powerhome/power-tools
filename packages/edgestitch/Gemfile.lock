@@ -260,7 +260,7 @@ PLATFORMS
 
 DEPENDENCIES
   appraisal (~> 2.5.0)
-  bundler (~> 2.1)
+  bundler (~> 4.0)
   edgestitch!
   erb (< 6)
   license_finder (>= 7.0)
@@ -277,4 +277,4 @@ DEPENDENCIES
   zeitwerk (< 2.7.0)
 
 BUNDLED WITH
-   2.5.23
+   4.0.7
