@@ -22,6 +22,7 @@ jobs:
           diff: true
           format: rdjson
           output: rd.json
+          config-file: bearer.yml
       - name: Run reviewdog
         if: always()
         env:
