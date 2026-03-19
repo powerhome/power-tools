@@ -18,6 +18,7 @@ module AetherObservatory
         logger.debug("[#{name}] Starting")
 
         subscribed_to.each do |topic|
+          backend.unsubscribe(topic)
           next if subscriptions.include?(topic)
 
           register_subscription_to(topic)
