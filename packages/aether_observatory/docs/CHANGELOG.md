@@ -1,4 +1,4 @@
-## Unreleased
+## [1.1.0] - 2026-03-23
 
 - Standardize all libs to support ruby 3.0, ruby 3.3 x rails 6.1 through rails 7.2 [#359](https://github.com/powerhome/power-tools/pull/359)
 - Fix duplicate observer subscriptions on Rails code reload by stopping all observers before class unload via `ActiveSupport::Reloader.before_class_unload` [#392](https://github.com/powerhome/power-tools/pull/392)
