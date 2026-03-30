@@ -13,7 +13,7 @@ gem "logger", "~> 1.7.0" # Hold logger to support Ruby 3.0
 gem "minitest", "~> 5.25.5" # Hold minitest to support Ruby 3.0
 gem "mutex_m", "~> 0.3.0" # Hold mutex_m to support Ruby 3.0
 gem "net-imap", "< 0.5.0"
-gem "nokogiri", "~> 1.17.0", "< 1.18" # Hold nokogiri to support Ruby 3.0
+gem "nokogiri", "~> 1.18.0", "< 1.19" # Hold nokogiri to support Ruby 3.0
 gem "rubocop-powerhome", path: "../rubocop-powerhome"
 gem "securerandom", "< 0.4" # Hold securerandom to support Ruby 3.0
 gem "zeitwerk", "< 2.7.0"
