@@ -23,7 +23,7 @@ gem "rubocop-powerhome", path: "../../rubocop-powerhome"
 gem "simplecov", "0.15.1"
 gem "sqlite3", "~> 1.7.3"
 gem "test-unit", "3.1.5"
-gem "yard", "0.9.36"
+gem "yard", "0.9.38"
 gem "zeitwerk", "< 2.7.0"
 
 gemspec path: "../"

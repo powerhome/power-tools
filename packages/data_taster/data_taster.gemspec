@@ -44,5 +44,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "simplecov", "0.15.1"
   spec.add_development_dependency "test-unit", "3.1.5"
-  spec.add_development_dependency "yard", "0.9.34"
+  spec.add_development_dependency "yard", "0.9.38"
 end
