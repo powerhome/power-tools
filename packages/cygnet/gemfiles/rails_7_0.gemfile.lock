@@ -258,7 +258,7 @@ GEM
     with_env (1.1.0)
     xml-simple (1.1.9)
       rexml
-    yard (0.9.21)
+    yard (0.9.38)
     zeitwerk (2.6.18)
 
 PLATFORMS
@@ -285,7 +285,7 @@ DEPENDENCIES
   securerandom (< 0.4)
   simplecov (= 0.15.1)
   test-unit (= 3.1.5)
-  yard (= 0.9.21)
+  yard (= 0.9.38)
   zeitwerk (< 2.7.0)
 
 BUNDLED WITH
