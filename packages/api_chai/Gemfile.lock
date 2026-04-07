@@ -142,7 +142,6 @@ DEPENDENCIES
   rspec (~> 3.0)
   rubocop (~> 1.21)
   rubocop-powerhome!
-  securerandom (< 0.4.0)
 
 BUNDLED WITH
    2.4.22

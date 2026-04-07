@@ -90,7 +90,6 @@ GEM
     csv (3.3.2)
     date (3.4.1)
     diff-lcs (1.5.1)
-    erb (5.0.2)
     erubi (1.13.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
@@ -225,7 +224,6 @@ GEM
       rubocop (~> 1.61)
     ruby-progressbar (1.13.0)
     rubyzip (2.4.1)
-    securerandom (0.3.2)
     thor (1.3.2)
     timeout (0.4.3)
     tomlrb (2.0.3)
@@ -248,18 +246,13 @@ PLATFORMS
 
 DEPENDENCIES
   appraisal (~> 2.5.0)
-  erb (< 6)
   license_finder (~> 7.0)
-  net-imap (< 0.5.0)
-  nokogiri (< 1.18.10)
   pry (>= 0.14.2)
   pry-byebug (= 3.10.1)
   rails (>= 6.0.6.1, < 8)
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop-powerhome!
-  securerandom (< 0.4.0)
-  zeitwerk (< 2.7.0)
 
 BUNDLED WITH
    2.5.23

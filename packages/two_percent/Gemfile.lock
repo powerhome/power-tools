@@ -107,7 +107,6 @@ GEM
     date (3.4.1)
     diff-lcs (1.6.1)
     drb (2.2.1)
-    erb (5.0.2)
     erubi (1.13.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
@@ -294,16 +293,11 @@ PLATFORMS
 
 DEPENDENCIES
   appraisal (~> 2.5.0)
-  erb (< 6)
   logger (>= 1.6.6)
-  net-imap (< 0.5.0)
-  nokogiri (< 1.19)
   puma
   rspec-rails (>= 7.0)
   rubocop-powerhome!
-  securerandom (< 0.4.0)
   two_percent!
-  zeitwerk (< 2.7.0)
 
 BUNDLED WITH
    2.5.22
