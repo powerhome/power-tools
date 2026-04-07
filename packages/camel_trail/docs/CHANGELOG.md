@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
+
 ## [1.2.0] - 2025-07-31
 
 - Add support to rails 7.2 [#351](https://github.com/powerhome/power-tools/pull/351)

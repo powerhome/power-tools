@@ -1,4 +1,5 @@
 ## [Unreleased]
+- Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
 - Remove more Rails 6.0 config handling
 - Standardize all libs to support ruby 3.0, ruby 3.3 x rails 6.1 through rails 7.2 [#359](https://github.com/powerhome/power-tools/pull/359)
 - Lock activesupport requirement to ~> 7.0.8
