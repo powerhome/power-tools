@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
+
 ## [0.4.7] - 2026-01-05
 
 - Bump Rubocop version to keep in parallel with rubocop-powerhome.
