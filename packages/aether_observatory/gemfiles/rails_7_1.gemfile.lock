@@ -146,7 +146,7 @@ GEM
     with_env (1.1.0)
     xml-simple (1.1.9)
       rexml
-    yard (0.9.36)
+    yard (0.9.38)
 
 PLATFORMS
   aarch64-linux
@@ -169,7 +169,7 @@ DEPENDENCIES
   rspec (~> 3.0)
   rubocop-powerhome!
   simplecov (= 0.15.1)
-  yard (= 0.9.36)
+  yard (= 0.9.38)
 
 BUNDLED WITH
    2.5.23
