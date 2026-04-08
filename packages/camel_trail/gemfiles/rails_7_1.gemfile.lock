@@ -303,7 +303,7 @@ GEM
     with_env (1.1.0)
     xml-simple (1.1.9)
       rexml
-    yard (0.9.36)
+    yard (0.9.38)
     zeitwerk (2.7.5)
 
 PLATFORMS
@@ -323,7 +323,7 @@ DEPENDENCIES
   rubocop-powerhome!
   simplecov (= 0.15.1)
   sqlite3 (~> 1.7.3)
-  yard (= 0.9.36)
+  yard (= 0.9.38)
 
 BUNDLED WITH
    2.4.22
