@@ -24,6 +24,24 @@ ActiveRecord::Schema.define do
     t.timestamps
   end
 
+  # Mirror test_dump_schema extras so source (test_source) has the same tables sample! can copy from.
+  create_table :cars, force: true do |t|
+    t.string :make
+    t.string :model
+    t.integer :year
+    t.string :color
+
+    t.timestamps
+  end
+
+  create_table :dogs, force: true do |t|
+    t.string :name
+    t.string :breed
+    t.integer :age
+
+    t.timestamps
+  end
+
   create_table :schema_migrations, force: true do |t|
     t.string :version, null: false
   end

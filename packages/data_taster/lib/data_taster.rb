@@ -12,6 +12,7 @@ module DataTaster
 
   SKIP_CODE = "skip_processing"
 
+  # TODO: Remove testing logs
   def self.logger=(logger)
     @logger = logger
   end
@@ -35,13 +36,35 @@ module DataTaster
   end
 
   def self.sample!
-    DataTaster
-      .config
-      .source_client
-      .query("SHOW tables").collect { |t| t[t.keys.first] }
-      .each do |table_name|
-        DataTaster::Sample.new(table_name).serve!
-      end
+    all_tables_names.each do |table_name|
+      DataTaster::Sample.new(table_name).serve!
+    end
+
+    logger.info("DataTaster: sample! finished (#{all_tables_names.size} tables)")
+  end
+
+  def self.sample_selected_tables!
+    selected_tables_names.each do |table_name|
+      Rails.logger.info("DataTaster: sampling table: #{table_name}")
+      DataTaster::Sample.new(table_name).serve!
+    end
+
+    logger.info("DataTaster: sample_configured_tables! finished (#{selected_tables_names.size} tables)")
+  end
+
+  def self.sanitize_selected_tables!
+    selected_tables_names.each do |table_name|
+      log_msg = "DataTaster: sanitizing table: #{table_name}"
+      logger.info(log_msg)
+      Rails.logger.info(log_msg) if defined?(Rails) && Rails.respond_to?(:logger) && Rails.logger
+
+      collection = DataTaster::Collection.new(table_name).assemble
+      next if collection.empty?
+
+      DataTaster::Sanitizer.new(table_name, collection[:sanitize]).clean!
+    end
+
+    logger.info("DataTaster: sanitize_configured_tables! finished (#{selected_tables_names.size} tables)")
   end
 
   def self.safe_execute(sql, client = DataTaster.config.working_client)
@@ -50,9 +73,18 @@ module DataTaster
     begin
       client.query("SET FOREIGN_KEY_CHECKS=0")
       client.query(sql)
+      client.affected_rows
     ensure
       client.query("SET FOREIGN_KEY_CHECKS=#{foreign_key_check};")
     end
+  end
+
+  def self.all_tables_names
+    config.source_client.query("SHOW TABLES").map { |t| t[t.keys.first] }
+  end
+
+  def self.selected_tables_names
+    DataTaster.confection.keys
   end
 
   Config = Struct.new(:months, :list, :source_client, :working_client, :include_insert)

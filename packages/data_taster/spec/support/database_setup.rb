@@ -18,6 +18,10 @@ RSpec.configure do |config|
     include DatabaseHelper
 
     source_db_client.query("TRUNCATE TABLE users")
+    source_db_client.query("TRUNCATE TABLE cars")
+    source_db_client.query("TRUNCATE TABLE dogs")
     dump_db_client.query("TRUNCATE TABLE users")
+    dump_db_client.query("TRUNCATE TABLE cars")
+    dump_db_client.query("TRUNCATE TABLE dogs")
   end
 end
