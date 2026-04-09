@@ -5,8 +5,6 @@ require "data_taster/flavors"
 require "active_support/testing/time_helpers"
 
 RSpec.describe DataTaster::Flavors do
-  include DatabaseHelper
-
   let(:source_client_stub) { double("client") }
   let(:working_client_stub) { double("client") }
 
@@ -73,6 +71,69 @@ RSpec.describe DataTaster::Flavors do
       expect(described_class.new.default_value_for("drivers_license_numver")).to eq(ones)
       expect(described_class.new.default_value_for("ssn")).to eq(ones)
       expect(described_class.new.default_value_for("first_ssn")).to eq(ones)
+    end
+
+    it "returns integer 1 for compensation-like column names" do
+      expect(described_class.new.default_value_for("compensation")).to eq(1)
+      expect(described_class.new.default_value_for("annual_compensation")).to eq(1)
+    end
+
+    it "returns the string '1' for other column names" do
+      expect(described_class.new.default_value_for("favorite_color")).to eq("1")
+    end
+  end
+
+  describe "#deprecated_table and #skip_sanitization" do
+    it "return the global skip code" do
+      flavors = described_class.new
+      expect(flavors.deprecated_table).to eq(DataTaster::SKIP_CODE)
+      expect(flavors.skip_sanitization).to eq(DataTaster::SKIP_CODE)
+    end
+  end
+
+  describe "#encryption_error_message" do
+    it "mentions attr_encrypted and documentation" do
+      msg = described_class.new.encryption_error_message
+      expect(msg).to include("attr_encrypted")
+      expect(msg).to include("https://github.com/attr-encrypted/attr_encrypted")
+    end
+  end
+
+  describe "#encrypt" do
+    it "calls attr_encrypted_encrypt when the model implements it" do
+      model_class = Class.new do
+        def attr_encrypted_encrypt(column, value)
+          "enc:#{column}:#{value}"
+        end
+      end
+
+      expect(described_class.new.encrypt(model_class, :token)).to eq("enc:token:1")
+    end
+
+    it "calls encrypt when attr_encrypted_encrypt is absent" do
+      model_class = Class.new do
+        def encrypt(column, value)
+          "#{column}=#{value}"
+        end
+      end
+
+      expect(described_class.new.encrypt(model_class, "ssn")).to eq("ssn=111111111")
+    end
+
+    it "raises a helpful error when neither API exists" do
+      model_class = Class.new
+      expect { described_class.new.encrypt(model_class, :anything) }
+        .to raise_error(RuntimeError, /attr_encrypted/)
+    end
+
+    it "uses the provided value instead of default_value_for when given" do
+      model_class = Class.new do
+        def attr_encrypted_encrypt(_column, value)
+          value
+        end
+      end
+
+      expect(described_class.new.encrypt(model_class, :token, "explicit")).to eq("explicit")
     end
   end
 

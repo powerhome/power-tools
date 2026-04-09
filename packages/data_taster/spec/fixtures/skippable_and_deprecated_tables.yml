@@ -1,0 +1,6 @@
+---
+# underscore-prefixed names skip via Collection#skippable?
+_ignored_by_prefix:
+  select: "1 = 1"
+
+deprecated_via_erb: "<%= deprecated_table %>"

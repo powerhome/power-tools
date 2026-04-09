@@ -4,8 +4,6 @@ require "spec_helper"
 require "data_taster/sanitizer"
 
 RSpec.describe DataTaster::Sanitizer do
-  include DatabaseHelper
-
   let(:confection_stub) { double("confection") }
 
   def stub_config(include_insert: false)
