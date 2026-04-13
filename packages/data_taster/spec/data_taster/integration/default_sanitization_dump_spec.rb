@@ -17,7 +17,7 @@ RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integr
 
   context "when all tables are sampled from the source database" do
     it "creates all tables and verifies they are properly sanitized in the working database" do
-      DataTaster.sample!
+      DataTaster.sample_all_tables!
 
       result = dump_db_client.query("SELECT * FROM users").first
 
@@ -43,7 +43,7 @@ RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integr
   context "when only selected tables are sampled" do
     describe "complete data dump workflow" do
       it "creates users and verifies they are properly sanitized" do
-        DataTaster.sample!
+        DataTaster.sample_all_tables!
 
         result = dump_db_client.query("SELECT * FROM users").first
 

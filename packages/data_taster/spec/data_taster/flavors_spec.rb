@@ -52,10 +52,84 @@ RSpec.describe DataTaster::Flavors do
 
       expect(described_class.new.date).to eq((now - 1.week).beginning_of_day.to_formatted_s(:db))
     end
+
+    it "memoizes the computed date string per instance" do
+      stub_config(months: 3)
+      travel_to Date.current
+      flavors = described_class.new
+      expect(flavors.date).to eq(flavors.date)
+    end
   end
 
   it "exposes the source db name" do
     expect(described_class.new.source_db).to eq(source_db_name)
+  end
+
+  it "memoizes the source db name per instance" do
+    flavors = described_class.new
+    expect(flavors.source_db).to eq(flavors.source_db)
+  end
+
+  it "memoizes current_date per instance" do
+    travel_to Date.current
+    flavors = described_class.new
+    expect(flavors.current_date).to eq(flavors.current_date)
+  end
+
+  describe "#deprecated_table and #skip_sanitization" do
+    it "returns the skip code so exporters can omit schema and data" do
+      flavors = described_class.new
+      expect(flavors.deprecated_table).to eq(DataTaster::SKIP_CODE)
+      expect(flavors.skip_sanitization).to eq(DataTaster::SKIP_CODE)
+    end
+  end
+
+  describe "#encrypt" do
+    let(:flavors) { described_class.new }
+
+    it "uses attr_encrypted_encrypt when the model supports it" do
+      klass = Class.new do
+        def attr_encrypted_encrypt(column, value)
+          "enc:#{column}:#{value}"
+        end
+      end
+
+      expect(flavors.encrypt(klass, :secret, "plain")).to eq("enc:secret:plain")
+    end
+
+    it "falls back to encrypt when attr_encrypted_encrypt is absent" do
+      klass = Class.new do
+        def encrypt(column, value)
+          "legacy:#{column}:#{value}"
+        end
+      end
+
+      expect(flavors.encrypt(klass, :token, "x")).to eq("legacy:token:x")
+    end
+
+    it "uses default_value_for when no explicit value is given" do
+      klass = Class.new do
+        def attr_encrypted_encrypt(_column, value)
+          value
+        end
+      end
+
+      expect(flavors.encrypt(klass, "user_ssn")).to eq("111111111")
+    end
+
+    it "raises a helpful error when the model has no supported encryption API" do
+      klass = Class.new
+      expect { flavors.encrypt(klass, :anything, "v") }
+        .to raise_error(RuntimeError, flavors.encryption_error_message)
+    end
+  end
+
+  describe "#encryption_error_message" do
+    it "mentions attr_encrypted and the upstream project" do
+      msg = described_class.new.encryption_error_message
+      expect(msg).to include("attr_encrypted")
+      expect(msg).to include("https://github.com/attr-encrypted/attr_encrypted")
+    end
   end
 
   describe "#default_value_for" do
@@ -73,6 +147,19 @@ RSpec.describe DataTaster::Flavors do
       expect(described_class.new.default_value_for("drivers_license_numver")).to eq(ones)
       expect(described_class.new.default_value_for("ssn")).to eq(ones)
       expect(described_class.new.default_value_for("first_ssn")).to eq(ones)
+    end
+
+    it "matches dob in the column name like date_of_birth" do
+      twenty_five_years_ago_string = (Date.current - 25.years).strftime("%m/%d/%Y")
+      expect(described_class.new.default_value_for("applicant_dob")).to eq(twenty_five_years_ago_string)
+    end
+
+    it "uses 1 for compensation columns" do
+      expect(described_class.new.default_value_for("annual_compensation")).to eq(1)
+    end
+
+    it "defaults other columns to the string '1'" do
+      expect(described_class.new.default_value_for("email")).to eq("1")
     end
   end
 
