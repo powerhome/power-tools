@@ -7,8 +7,7 @@ RSpec.describe DataTaster::Sample do
   let(:broken_where_yaml) { File.join(__dir__, "..", "fixtures", "broken_where_clause.yml") }
 
   def reset_taster!
-    DataTaster.instance_variable_set(:@config, nil)
-    DataTaster.instance_variable_set(:@confection, nil)
+    DataTaster.reset!
   end
 
   describe "#serve!" do

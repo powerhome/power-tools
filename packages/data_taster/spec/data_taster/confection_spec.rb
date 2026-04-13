@@ -7,6 +7,7 @@ RSpec.describe DataTaster::Confection do
   let(:missing_yml) { File.join(File.join(__dir__, "..", "fixtures"), "does_not_exist_export_tables.yml") }
 
   before do
+    DataTaster.reset!
     DataTaster.config(
       months: nil,
       list: [missing_yml, existing_yml],
@@ -18,8 +19,7 @@ RSpec.describe DataTaster::Confection do
   end
 
   after do
-    DataTaster.instance_variable_set(:@confection, nil)
-    DataTaster.instance_variable_set(:@config, nil)
+    DataTaster.reset!
   end
 
   it "merges YAML from existing paths and ignores missing files" do

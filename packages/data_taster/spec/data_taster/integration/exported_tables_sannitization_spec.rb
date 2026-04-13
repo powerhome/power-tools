@@ -2,13 +2,13 @@
 
 require "spec_helper"
 
-RSpec.describe "DataTaster Sanitize Selected Tables Integration", type: :integration do
+RSpec.describe "DataTaster Sanitize Exported Tables Integration", type: :integration do
   let(:yaml_path) { File.join(__dir__, "..", "..", "fixtures", "full_users_dump_tables.yml") }
 
   before do
+    DataTaster.reset!
     DataTaster.config(
       source_client: dump_db_client,
-      working_client: dump_db_client,
       include_insert: true,
       list: [yaml_path]
     )
@@ -16,23 +16,23 @@ RSpec.describe "DataTaster Sanitize Selected Tables Integration", type: :integra
     insert_user
   end
 
-  it "sanitizes existing rows without TRUNCATE/INSERT copy" do
-    DataTaster.sanitize_selected_tables!
+  it "sanitizes exported tables" do
+    DataTaster.sanitize_exported_tables!
 
-    result = dump_db_client.query("SELECT * FROM users").first
+    restored_user = dump_db_client.query("SELECT * FROM users").first
 
-    expect(result).not_to be_nil
-    expect(result["id"]).to eq(1)
-    expect(result["encrypted_password"]).to be_nil
-    expect(result["ssn"]).to eq("111111111")
-    expect(result["email"]).to eq("users_1@nitrophrg.com")
+    expect(restored_user).not_to be_nil
+    expect(restored_user["id"]).to eq(1)
+    expect(restored_user["encrypted_password"]).to be_nil
+    expect(restored_user["ssn"]).to eq("111111111")
+    expect(restored_user["email"]).to eq("users_1@nitrophrg.com")
   end
 
 private
 
   def insert_user
     now = Time.current.strftime("%Y-%m-%d %H:%M:%S")
-    dump_db_client.query(<<-SQL.squish)
+    dump_db_client.query <<-SQL.squish
       INSERT INTO users (id, encrypted_password, ssn, passport_number, license_number, date_of_birth, dob, notes, body,
        compensation, income, email, email2, address, address2, created_at, updated_at)
       VALUES (1, 'encrypted123', '123-45-6789', 'P123456789', 'L123456789', '1990-01-01', '1990-01-01',

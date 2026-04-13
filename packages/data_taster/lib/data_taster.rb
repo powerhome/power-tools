@@ -21,13 +21,26 @@ module DataTaster
     @logger ||= Logger.new($stdout)
   end
 
+  def self.reset!
+    @config = nil
+    @confection = nil
+  end
+
   def self.config(**args)
+    source_client = args[:source_client]
+    working_client = args[:working_client]
+
+    # if no working client is provided, it means we should perform the operations in the source client itself
+    working_client ||= source_client
+
+    exports_list = Array.wrap(args[:list] || Rails.root.glob("**/data_taster_export_tables.yml"))
+
     @config ||= Config.new(
-      args[:months],
-      Array.wrap(args[:list] || Rails.root.glob("**/data_taster_export_tables.yml")),
-      args[:source_client] || raise(ArgumentError, "DataTaster.config missing source_client"),
-      args[:working_client] || raise(ArgumentError, "DataTaster.config missing working_client"),
-      args[:include_insert] || false
+      months: args[:months] || nil,
+      list: exports_list,
+      source_client: source_client || raise(ArgumentError, "DataTaster.config missing source_client"),
+      working_client: working_client,
+      include_insert: args[:include_insert] || false
     )
   end
 
@@ -35,7 +48,7 @@ module DataTaster
     @confection ||= DataTaster::Confection.new.assemble
   end
 
-  def self.sample!
+  def self.sample_all_tables!
     all_tables_names.each do |table_name|
       DataTaster::Sample.new(table_name).serve!
     end
@@ -43,28 +56,26 @@ module DataTaster
     logger.info("DataTaster: sample! finished (#{all_tables_names.size} tables)")
   end
 
-  def self.sample_selected_tables!
-    selected_tables_names.each do |table_name|
-      Rails.logger.info("DataTaster: sampling table: #{table_name}")
+  def self.sample_exported_tables!
+    exported_tables_names.each do |table_name|
+      logger.info("DataTaster: sampling table: #{table_name}")
       DataTaster::Sample.new(table_name).serve!
     end
 
-    logger.info("DataTaster: sample_configured_tables! finished (#{selected_tables_names.size} tables)")
+    logger.info("DataTaster: sample_exported_tables! finished (#{exported_tables_names.size} tables)")
   end
 
-  def self.sanitize_selected_tables!
-    selected_tables_names.each do |table_name|
-      log_msg = "DataTaster: sanitizing table: #{table_name}"
-      logger.info(log_msg)
-      Rails.logger.info(log_msg) if defined?(Rails) && Rails.respond_to?(:logger) && Rails.logger
-
+  def self.sanitize_exported_tables!
+    exported_tables_names.each do |table_name|
+      logger.info("DataTaster: sanitizing table: #{table_name}")
+      
       collection = DataTaster::Collection.new(table_name).assemble
       next if collection.empty?
 
       DataTaster::Sanitizer.new(table_name, collection[:sanitize]).clean!
     end
 
-    logger.info("DataTaster: sanitize_configured_tables! finished (#{selected_tables_names.size} tables)")
+    logger.info("DataTaster: Sanitization finished for #{exported_tables_names.size} tables")
   end
 
   def self.safe_execute(sql, client = DataTaster.config.working_client)
@@ -83,7 +94,7 @@ module DataTaster
     config.source_client.query("SHOW TABLES").map { |t| t[t.keys.first] }
   end
 
-  def self.selected_tables_names
+  def self.exported_tables_names
     DataTaster.confection.keys
   end
 
