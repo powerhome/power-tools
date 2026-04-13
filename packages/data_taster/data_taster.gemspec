@@ -39,7 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "combustion", "~> 1.3"
   spec.add_development_dependency "mysql2", "0.5.5"
   spec.add_development_dependency "parser", ">= 2.5", "!= 2.5.1.1"
-  spec.add_development_dependency "rainbow", "2.2.2"
+  spec.add_development_dependency "rainbow", "3.1.1"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "simplecov", "0.15.1"
