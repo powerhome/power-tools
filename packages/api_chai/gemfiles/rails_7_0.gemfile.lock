@@ -243,9 +243,10 @@ GEM
 
 PLATFORMS
   arm64-darwin-24
+  arm64-darwin-25
 
 DEPENDENCIES
-  activesupport (< 7.2.0)
+  activesupport (< 7.2.3.1)
   api_chai!
   appraisal (~> 2.5.0)
   license_finder (~> 7.0)
