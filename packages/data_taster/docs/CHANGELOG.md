@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Update rainbow to v3.x [#372](https://github.com/powerhome/power-tools/pull/372)
 - Update yard to 0.9.38 to address [Cross-site Scripting vulnerability](https://github.com/powerhome/power-tools/security/dependabot/544) [#394](https://github.com/powerhome/power-tools/pull/394)
 - Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
 - Remove more Rails 6.0 config handling
