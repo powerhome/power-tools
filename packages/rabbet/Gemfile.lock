@@ -237,8 +237,7 @@ GEM
       thor (~> 1.0, >= 1.2.2)
       tsort (>= 0.2)
       zeitwerk (~> 2.6)
-    rainbow (2.2.2)
-      rake
+    rainbow (3.1.1)
     rake (13.3.1)
     rdoc (7.2.0)
       erb
@@ -362,7 +361,7 @@ DEPENDENCIES
   pry (>= 0.14)
   pry-byebug (= 3.10.1)
   rabbet!
-  rainbow (= 2.2.2)
+  rainbow (= 3.1.1)
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop-powerhome!
