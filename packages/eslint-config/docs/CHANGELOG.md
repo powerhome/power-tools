@@ -1,6 +1,14 @@
 ## Unreleased
 
-- Add Yarn resolutions for patched `minimatch` and `brace-expansion` to address [Dependabot #864](https://github.com/powerhome/power-tools/security/dependabot/864).
+- Add Yarn resolutions for various eslint dependencies to address CVEs
+  - [Dependabot #864](https://github.com/powerhome/power-tools/security/dependabot/864)
+  - [Dependabot #1169](https://github.com/powerhome/power-tools/security/dependabot/1169)
+  - [Dependabot #862](https://github.com/powerhome/power-tools/security/dependabot/862)
+  - [Dependabot #861](https://github.com/powerhome/power-tools/security/dependabot/861)
+  - [Dependabot #803](https://github.com/powerhome/power-tools/security/dependabot/803)
+  - [Dependabot #1168](https://github.com/powerhome/power-tools/security/dependabot/1168)
+  - [Dependabot #971](https://github.com/powerhome/power-tools/security/dependabot/971)
+  - [Dependabot #797](https://github.com/powerhome/power-tools/security/dependabot/797)
 
 ## [0.2.2] - 2026-01-14
 
