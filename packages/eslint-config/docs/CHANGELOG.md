@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Upgrade eslint (10.2.0) and related packages to latest releases.
+
 ## [0.2.2] - 2026-01-14
 
 - Bump many dependencies
