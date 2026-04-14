@@ -1,6 +1,6 @@
 ## Unreleased
 
-- Upgrade eslint (10.2.0) and related packages to latest releases.
+- Add Yarn resolutions for patched `minimatch` and `brace-expansion` to address [Dependabot #864](https://github.com/powerhome/power-tools/security/dependabot/864).
 
 ## [0.2.2] - 2026-01-14
 
