@@ -1,6 +1,8 @@
 ## [Unreleased]
 
 - Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
+- Update yard to 0.9.38 to address [Cross-site Scripting vulnerability](https://github.com/powerhome/power-tools/security/dependabot/544) [#394](https://github.com/powerhome/power-tools/pull/394)
+- Update Rails version to 7.2.3.1 for Active Storage CVE [#402](https://github.com/powerhome/power-tools/pull/402)
 
 ## [1.2.0] - 2025-07-31
 
