@@ -16,16 +16,34 @@ module CamelTrail
       end
     end
 
+  protected
+
+    def camel_trail_activity_for_save(default_activity)
+      default_activity
+    end
+
+    def camel_trail_note_for_save
+      nil
+    end
+
+    def skip_camel_trail_auto_record?
+      false
+    end
+
   private
 
     def __record_changes
-      activity = new_record? ? :created : :updated
+      default_activity = new_record? ? :created : :updated
       yield
 
       return if saved_changes.blank?
+      return if skip_camel_trail_auto_record?
+
+      activity = camel_trail_activity_for_save(default_activity)
+      note = camel_trail_note_for_save
 
       CamelTrail.record!(self, activity, __camel_trail_source_changes,
-                         CamelTrail::Config.current_session_user_id&.call)
+                         CamelTrail::Config.current_session_user_id&.call, note)
     end
 
     def __camel_trail_source_changes
