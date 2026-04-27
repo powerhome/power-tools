@@ -21,7 +21,7 @@ module DataTaster
   def self.logger
     @logger ||= Logger.new($stdout)
   end
-  
+
   def self.reset!
     @config = nil
     @confection = nil
