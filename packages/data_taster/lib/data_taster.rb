@@ -8,7 +8,9 @@ module DataTaster
   autoload :Detergent, "data_taster/detergent"
   autoload :Helper, "data_taster/helper"
   autoload :Sample, "data_taster/sample"
+  autoload :SampleToSql, "data_taster/sample_to_sql"
   autoload :Sanitizer, "data_taster/sanitizer"
+  autoload :SqlLiteral, "data_taster/sql_literal"
 
   SKIP_CODE = "skip_processing"
 
@@ -19,14 +21,21 @@ module DataTaster
   def self.logger
     @logger ||= Logger.new($stdout)
   end
+  
+  def self.reset!
+    @config = nil
+    @confection = nil
+  end
 
   def self.config(**args)
+    exports_list = Array.wrap(args[:list] || Rails.root.glob("**/data_taster_export_tables.yml"))
+
     @config ||= Config.new(
-      args[:months],
-      Array.wrap(args[:list] || Rails.root.glob("**/data_taster_export_tables.yml")),
-      args[:source_client] || raise(ArgumentError, "DataTaster.config missing source_client"),
-      args[:working_client] || raise(ArgumentError, "DataTaster.config missing working_client"),
-      args[:include_insert] || false
+      months: args[:months] || nil,
+      list: exports_list,
+      source_client: args[:source_client] || raise(ArgumentError, "DataTaster.config missing source_client"),
+      working_client: args[:working_client],
+      include_insert: args[:include_insert] || false
     )
   end
 
@@ -42,6 +51,10 @@ module DataTaster
       .each do |table_name|
         DataTaster::Sample.new(table_name).serve!
       end
+  end
+
+  def self.sample_to_sql_file!
+    DataTaster::SampleToSql.new.serve!
   end
 
   def self.safe_execute(sql, client = DataTaster.config.working_client)

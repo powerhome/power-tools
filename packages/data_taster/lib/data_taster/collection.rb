@@ -26,6 +26,13 @@ module DataTaster
       end
     end
 
+    def export_select_sql
+      <<-SQL.squish
+        SELECT * FROM #{source_db}.#{table_name}
+        WHERE #{where_clause}
+      SQL
+    end
+
   private
 
     attr_reader :table_name, :ingredients, :include_insert
