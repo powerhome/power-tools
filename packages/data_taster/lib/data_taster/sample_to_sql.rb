@@ -10,7 +10,8 @@ module DataTaster
     end
 
     def serve!
-      File.open(temp_file_path, "w") do |io|
+      path = temp_file_path
+      File.open(path, "w") do |io|
         io.puts "SET FOREIGN_KEY_CHECKS=0;"
         DataTaster
           .confection.keys
@@ -19,7 +20,7 @@ module DataTaster
           end
         io.puts "SET FOREIGN_KEY_CHECKS=1;"
       end
-      temp_file_path
+      path
     end
 
   private
@@ -51,7 +52,6 @@ module DataTaster
       return if columns.empty?
 
       process_export_in_batches(io, columns, result, safe_db_name, safe_table_name)
-      append_sanitizer_statements(io, table_name, payload[:sanitize])
     end
 
     def process_export_in_batches(io, columns, result, safe_db_name, safe_table_name)
@@ -63,6 +63,7 @@ module DataTaster
           batch.clear
         end
       end
+      write_export_batch(io, columns, batch, safe_db_name, safe_table_name) if batch.any?
     end
 
     def sanitize_data(io, table_name, sanitize)
