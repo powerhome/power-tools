@@ -92,7 +92,7 @@ module DataTaster
     end
 
     def target_database
-      DataTaster.config.working_client.query_options[:database]
+      DataTaster.target_database
     end
   end
 end

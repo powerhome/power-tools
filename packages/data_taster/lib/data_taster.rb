@@ -57,6 +57,13 @@ module DataTaster
     DataTaster::SampleToSql.new.serve!
   end
 
+  def self.target_database
+    # when working_client is not set it means all operations should be performed on the source_client.
+    # Be careful with this, as this will mutate the source_client database.
+    client = config.working_client || config.source_client
+    client.query_options[:database]
+  end
+
   def self.safe_execute(sql, client = DataTaster.config.working_client)
     foreign_key_check = client.query("SELECT @@FOREIGN_KEY_CHECKS").first["@@FOREIGN_KEY_CHECKS"]
 

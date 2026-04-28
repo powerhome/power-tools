@@ -28,8 +28,10 @@ module DataTaster
     attr_reader :source_client
 
     def write_to_sql_file(io, table_name)
-      safe_db_name = quote_ident(source_db)
+      safe_db_name = quote_ident(DataTaster.target_database)
       safe_table_name = quote_ident(table_name)
+
+      binding.pry
 
       collection = DataTaster::Collection.new(table_name)
       payload = collection.assemble
@@ -90,10 +92,6 @@ module DataTaster
     def temp_file_path
       filename = "data_taster_#{Time.now.utc.strftime('%Y%m%d%H%M%S')}.sql"
       File.join(Rails.root, "tmp", filename).to_s
-    end
-
-    def source_db
-      @source_db ||= source_client.query_options[:database]
     end
   end
 end
