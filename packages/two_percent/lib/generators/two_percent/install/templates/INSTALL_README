@@ -5,50 +5,50 @@
 Next Steps:
 
 1. Run migrations to create SCIM tables:
-   
+
    rails db:migrate
 
 2. Configure authentication in config/initializers/two_percent.rb:
-   
+
    Replace the NotImplementedError with your authentication logic
    (bearer token, BasicAuth, API key, etc.)
 
 3. Mount SCIM routes in config/routes.rb:
-   
+
    mount TwoPercent::Engine => "/scim"
 
    Or mount at a custom path:
    mount TwoPercent::Engine => "/api/scim/v2"
 
 4. (Optional) Customize attribute mapping in the initializer:
-   
+
    Configure user_mapper and group_mapper to extract the exact
    attributes you need for your domain events
 
 5. Subscribe to domain events:
-   
+
    TwoPercent publishes the following events via AetherObservatory:
-   
+
    - TwoPercent::Domain::Events::UserCreated
-   - TwoPercent::Domain::Events::UserUpdated  
+   - TwoPercent::Domain::Events::UserUpdated
    - TwoPercent::Domain::Events::UserDeleted
    - TwoPercent::Domain::Events::GroupCreated
    - TwoPercent::Domain::Events::GroupUpdated
    - TwoPercent::Domain::Events::GroupDeleted
-   
+
    Subscribe to these events to sync SCIM data with your domain models
 
 6. (Optional) Add Syncable concern to your models:
-   
+
    class User < ApplicationRecord
      include TwoPercent::Syncable
-     
+
      syncable_as :user  # Links to ScimUser
    end
-   
+
    class Group < ApplicationRecord
      include TwoPercent::Syncable
-     
+
      syncable_as :group  # Links to ScimGroup
    end
 

@@ -3,14 +3,6 @@
 Rails.application.config.to_prepare do
   TwoPercent.configure do |config|
     # ============================================================
-    # Repository Configuration (Required)
-    # ============================================================
-    # Specify which ActiveRecord models to use for SCIM resources
-    # These models are provided by the gem but can be customized
-    config.user_repository_class = ScimUser
-    config.group_repository_class = ScimGroup
-
-    # ============================================================
     # Authentication (Required)
     # ============================================================
     # Define how to authenticate SCIM requests
@@ -82,5 +74,24 @@ Rails.application.config.to_prepare do
     # - TwoPercent::Domain::Events::GroupCreated
     # - TwoPercent::Domain::Events::GroupUpdated
     # - TwoPercent::Domain::Events::GroupDeleted
+    #
+    # To integrate TwoPercent with your application:
+    #   1. Subscribe to domain events using AetherObservatory observers
+    #   2. Query ScimUser/ScimGroup models directly from your code
+    #   3. Use the Syncable concern to link your models to SCIM resources
+    #
+    # Example event subscription:
+    #   class UserSyncObserver
+    #     include AetherObservatory::Observer
+    #     
+    #     observe "TwoPercent::Domain::Events::UserUpdated" do |event|
+    #       user = User.find_by(scim_id: event.data[:scim_id])
+    #       user.update!(event.data.slice(:email, :display_name))
+    #     end
+    #   end
+    #
+    # Example direct model access:
+    #   scim_user = ScimUser.find_by(scim_id: "abc123")
+    #   email = scim_user.scim_attribute("emails", 0, "value")
   end
 end

@@ -46,27 +46,27 @@ module TwoPercent
 
     def persist_create(resource_type, data)
       if resource_type == "Users"
-        TwoPercent.user_repository.upsert_from_scim(data, correlation_id: @correlation_id)
+        TwoPercent::ScimUser.upsert_from_scim(data, correlation_id: @correlation_id)
       else
-        TwoPercent.group_repository.upsert_from_scim(resource_type, data, correlation_id: @correlation_id)
+        TwoPercent::ScimGroup.upsert_from_scim(resource_type, data, correlation_id: @correlation_id)
       end
     end
 
     def persist_update(resource_type, id, data)
-      # PATCH/PUT - merge with id and let repository handle
+      # PATCH/PUT - merge with id and let model handle
       data_with_id = data.merge("id" => id)
       if resource_type == "Users"
-        TwoPercent.user_repository.upsert_from_scim(data_with_id, correlation_id: @correlation_id)
+        TwoPercent::ScimUser.upsert_from_scim(data_with_id, correlation_id: @correlation_id)
       else
-        TwoPercent.group_repository.upsert_from_scim(resource_type, data_with_id, correlation_id: @correlation_id)
+        TwoPercent::ScimGroup.upsert_from_scim(resource_type, data_with_id, correlation_id: @correlation_id)
       end
     end
 
     def persist_delete(resource_type, id)
       if resource_type == "Users"
-        TwoPercent.user_repository.destroy_by_scim_id(id)
+        TwoPercent::ScimUser.destroy_by_scim_id(id)
       else
-        TwoPercent.group_repository.destroy_by_scim_id(id)
+        TwoPercent::ScimGroup.destroy_by_scim_id(id)
       end
     end
 

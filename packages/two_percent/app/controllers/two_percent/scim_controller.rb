@@ -50,9 +50,9 @@ module TwoPercent
       # Upsert record (create or replace)
       was_new = 
         if user_resource?
-          !TwoPercent.user_repository.exists_by_scim_id?(params[:id])
+          !TwoPercent::ScimUser.exists_by_scim_id?(params[:id])
         else
-          !TwoPercent.group_repository.exists_by_scim_id?(params[:id])
+          !TwoPercent::ScimGroup.exists_by_scim_id?(params[:id])
         end
       
       record = upsert_scim_record(params[:id], scim_params)
@@ -82,11 +82,11 @@ module TwoPercent
       record = find_scim_record(params[:id])
       scim_id = record.scim_id
       
-      # Destroy using repository method
+      # Destroy record
       if user_resource?
-        TwoPercent.user_repository.destroy_by_scim_id(scim_id)
+        TwoPercent::ScimUser.destroy_by_scim_id(scim_id)
       else
-        TwoPercent.group_repository.destroy_by_scim_id(scim_id)
+        TwoPercent::ScimGroup.destroy_by_scim_id(scim_id)
       end
 
       # Publish domain delete event
@@ -118,9 +118,9 @@ module TwoPercent
 
     def persist_scim_record(scim_hash)
       if user_resource?
-        TwoPercent.user_repository.upsert_from_scim(scim_hash, correlation_id: @correlation_id)
+        TwoPercent::ScimUser.upsert_from_scim(scim_hash, correlation_id: @correlation_id)
       elsif group_resource?
-        TwoPercent.group_repository.upsert_from_scim(params[:resource_type], scim_hash, correlation_id: @correlation_id)
+        TwoPercent::ScimGroup.upsert_from_scim(params[:resource_type], scim_hash, correlation_id: @correlation_id)
       else
         raise ArgumentError, "Unknown resource type: #{params[:resource_type]}"
       end
@@ -129,9 +129,9 @@ module TwoPercent
     def find_scim_record(scim_id)
       record = 
         if user_resource?
-          TwoPercent.user_repository.find_by_scim_id(scim_id)
+          TwoPercent::ScimUser.find_by_scim_id(scim_id)
         elsif group_resource?
-          TwoPercent.group_repository.find_by_scim_id(scim_id)
+          TwoPercent::ScimGroup.find_by_scim_id(scim_id)
         else
           raise ArgumentError, "Unknown resource type: #{params[:resource_type]}"
         end

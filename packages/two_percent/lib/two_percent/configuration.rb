@@ -54,20 +54,6 @@ module TwoPercent
   config_accessor :logger
 
   #
-  # Repository configuration for domain models
-  # Apps must provide their own User and Group repository classes
-  #
-  # I.e.:
-  #
-  #   TwoPercent.configure do |config|
-  #     config.user_repository_class = ScimUser
-  #     config.group_repository_class = ScimGroup
-  #   end
-  #
-  config_accessor :user_repository_class
-  config_accessor :group_repository_class
-
-  #
   # Attribute mapping configuration
   # Maps SCIM attributes to model attributes
   #
@@ -114,23 +100,6 @@ module TwoPercent
   #
   config_accessor :scim_data_column do
     :scim_data
-  end
-
-  # Helper methods to access repositories
-  def self.user_repository
-    config.user_repository_class || raise(
-      ConfigurationError,
-      "TwoPercent.config.user_repository_class must be set. " \
-      "See: https://github.com/powerhome/two_percent#configuration"
-    )
-  end
-
-  def self.group_repository
-    config.group_repository_class || raise(
-      ConfigurationError,
-      "TwoPercent.config.group_repository_class must be set. " \
-      "See: https://github.com/powerhome/two_percent#configuration"
-    )
   end
 
   class ConfigurationError < StandardError; end
