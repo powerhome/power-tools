@@ -2,6 +2,46 @@
 
 ## What is TwoPercent
 
+TwoPercent is a SCIM 2.0 (System for Cross-domain Identity Management) Rails Engine that handles identity provisioning from external Identity Providers (IdPs). It provides endpoints for creating, updating, and deleting Users and Groups, and publishes domain events when resources change.
+
+## SCIM 2.0 Compliance
+
+**Implemented (Partial RFC 7644 Protocol Compliance):**
+- ✅ POST (Create) for Users and Groups
+- ✅ PUT (Replace) for Users and Groups
+- ✅ PATCH (Partial Update) with Operations array
+- ✅ DELETE for Users and Groups
+- ✅ Bulk operations (bulkId references, continue-on-error)
+- ✅ RFC 7644 Section 3.12 error responses with scimType
+- ✅ Extension schema support
+
+**Not Yet Implemented:**
+- ❌ GET (Single resource retrieval)
+- ❌ GET with filtering, pagination, sorting (List operations)
+- ❌ ETag support for concurrency control
+- ❌ Discovery endpoints (RFC 7642): /ServiceProviderConfig, /ResourceTypes, /Schemas
+- ❌ Full RFC 7643 schema validation
+
+**Note:** The current release prioritizes write operations required for IdP provisioning. Read operations, filtering, and discovery endpoints are not yet implemented but are on the roadmap for future releases.
+
+## Architecture
+
+TwoPercent is designed as a standalone gem that can be mounted in a parent Rails application:
+
+```
+Parent Rails Application
+├── Mounts TwoPercent::Engine → /scim
+├── Mounts other engines as needed
+└── Subscribes to TwoPercent domain events
+
+    ↓ TwoPercent publishes domain events
+
+    → Your application subscribes to events
+    → Your application queries ScimUser/ScimGroup models
+    → Integration via events or direct model access
+```
+
+**Key Principle**: Mount TwoPercent in your parent application and integrate via domain events or direct model queries.
 
 ## Installation
 
@@ -11,14 +51,20 @@ Add to your application with bundle
 bundle add two_percent
 ```
 
-Then, if your project is the host application, require the engine in your `application.rb`:
+Run the install generator:
 
-```ruby
-require "active_record/railtie"
-require "two_percent/engine"
+```bash
+rails generate two_percent:install
+rails db:migrate
 ```
 
-If your project will just subscribe to events, then you don't need the engine.
+Mount the engine in your parent application's `config/routes.rb`:
+
+```ruby
+mount TwoPercent::Engine => "/scim"
+```
+
+Configure authentication in `config/initializers/two_percent.rb`.
 
 ## Event subscription
 
