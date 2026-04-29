@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "fileutils"
-
 module DataTaster
   # Selects and sanitizes tables from the source_db to write to a SQL file on disk.
   class SampleToSql
@@ -13,7 +11,6 @@ module DataTaster
 
     def serve!
       path = temp_file_path
-      FileUtils.mkdir_p(File.dirname(path))
       File.open(path, "w") do |io|
         io.puts "SET FOREIGN_KEY_CHECKS=0;"
         DataTaster
@@ -37,9 +34,10 @@ module DataTaster
       collection = DataTaster::Collection.new(table_name)
       payload = collection.assemble
 
-      # Any table that does not return SQL is considered deprecated and we should fully skip it
+      # Deprecated tables (skip in YAML): emit DROP for the restore target only — never execute
+      # DDL against the source. Live sampling uses +working_client+ via +safe_execute+.
       if payload.empty? && DataTaster.config.include_insert
-        DataTaster.safe_execute("DROP TABLE IF EXISTS #{table_name}", source_client)
+        io.puts "DROP TABLE IF EXISTS #{safe_db_name}.#{safe_table_name};"
         return
       end
 
