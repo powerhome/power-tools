@@ -28,11 +28,9 @@ module DataTaster
   end
 
   def self.config(**args)
-    exports_list = Array.wrap(args[:list] || Rails.root.glob("**/data_taster_export_tables.yml"))
-
     @config ||= Config.new(
       months: args[:months] || nil,
-      list: exports_list,
+      list: Array.wrap(args[:list] || Rails.root.glob("**/data_taster_export_tables.yml")),
       source_client: args[:source_client] || raise(ArgumentError, "DataTaster.config missing source_client"),
       working_client: args[:working_client],
       include_insert: args[:include_insert] || false
