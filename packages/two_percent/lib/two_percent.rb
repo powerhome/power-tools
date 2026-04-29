@@ -9,6 +9,7 @@ require "two_percent/repositories"
 require "two_percent/domain"
 require "two_percent/bulk_processor"
 require "two_percent/scim"
+require "two_percent/syncable"
 
 module TwoPercent
   # Logger used by TwoPercent. Defaults to Rails.logger

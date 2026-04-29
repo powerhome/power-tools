@@ -16,7 +16,8 @@ module TwoPercent
           record = persist_bulk_operation(operation[:method], resource_type, id, operation[:data])
           
           # Publish domain events based on operation
-          publish_domain_event(operation[:method], resource_type, record, id) if record
+          # Note: DELETE operations don't return a record, but still need to publish events
+          publish_domain_event(operation[:method], resource_type, record, id) if record || operation[:method] == "DELETE"
         end
       end
     end

@@ -1,0 +1,86 @@
+# frozen_string_literal: true
+
+Rails.application.config.to_prepare do
+  TwoPercent.configure do |config|
+    # ============================================================
+    # Repository Configuration (Required)
+    # ============================================================
+    # Specify which ActiveRecord models to use for SCIM resources
+    # These models are provided by the gem but can be customized
+    config.user_repository_class = ScimUser
+    config.group_repository_class = ScimGroup
+
+    # ============================================================
+    # Authentication (Required)
+    # ============================================================
+    # Define how to authenticate SCIM requests
+    # This should return truthy value for authenticated requests
+    # 
+    # Example with bearer token:
+    #   config.authenticate = ->(request) do
+    #     token = request.headers["Authorization"]&.remove("Bearer ")
+    #     token == Rails.application.credentials.scim_token
+    #   end
+    #
+    # Example with BasicAuth:
+    #   config.authenticate = ->(request) do
+    #     ActionController::HttpAuthentication::Basic.authenticate(request) do |username, password|
+    #       username == "scim_user" && password == Rails.application.credentials.scim_password
+    #     end
+    #   end
+    #
+    config.authenticate = ->(request) do
+      # TODO: Implement your authentication logic here
+      # Return true for authenticated requests, false otherwise
+      raise NotImplementedError, "TwoPercent authentication not configured"
+    end
+
+    # ============================================================
+    # Attribute Mapping (Optional)
+    # ============================================================
+    # Map SCIM attributes to your domain model attributes
+    # This determines what data is extracted and published in domain events
+    #
+    # User attribute mapper:
+    # config.user_mapper.map do |scim_user|
+    #   {
+    #     scim_id: scim_user.scim_id,
+    #     external_id: scim_user.external_id,
+    #     username: scim_user.user_name,
+    #     email: scim_user.email,
+    #     display_name: scim_user.display_name,
+    #     active: scim_user.active,
+    #     # Extract from scim_data JSON:
+    #     first_name: scim_user.scim_attribute("name", "givenName"),
+    #     last_name: scim_user.scim_attribute("name", "familyName"),
+    #     department: scim_user.extension_attributes["department"],
+    #     role: scim_user.extension_attributes["role"]
+    #   }
+    # end
+    #
+    # Group attribute mapper:
+    # config.group_mapper.map do |scim_group|
+    #   {
+    #     scim_id: scim_group.scim_id,
+    #     external_id: scim_group.external_id,
+    #     display_name: scim_group.display_name,
+    #     resource_type: scim_group.resource_type,
+    #     active: scim_group.active
+    #   }
+    # end
+
+    # ============================================================
+    # Event Publishing (Optional)
+    # ============================================================
+    # Domain events are published automatically using AetherObservatory
+    # No additional configuration needed unless you want custom event handling
+    #
+    # Events published:
+    # - TwoPercent::Domain::Events::UserCreated
+    # - TwoPercent::Domain::Events::UserUpdated
+    # - TwoPercent::Domain::Events::UserDeleted
+    # - TwoPercent::Domain::Events::GroupCreated
+    # - TwoPercent::Domain::Events::GroupUpdated
+    # - TwoPercent::Domain::Events::GroupDeleted
+  end
+end

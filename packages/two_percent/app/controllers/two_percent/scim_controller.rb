@@ -209,7 +209,7 @@ module TwoPercent
     # Generate SCIM resource URL for Location header (RFC 7644)
     def scim_resource_url(record)
       resource_type = user_resource? ? "Users" : params[:resource_type]
-      "#{request.base_url}#{request.path.split('/')[0..-2].join('/')}/#{resource_type}/#{record.scim_id}"
+      "#{request.base_url}/scim/#{resource_type}/#{record.scim_id}"
     end
   end
 end

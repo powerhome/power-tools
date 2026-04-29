@@ -36,7 +36,7 @@ module TwoPercent
       # RFC 7644: 400 Bad Request for malformed requests
       render json: {
         schemas: ["urn:ietf:params:scim:api:messages:2.0:Error"],
-        detail: "Request is malformed or contains invalid syntax",
+        detail: exception.message,
         status: "400"
       }, status: :bad_request
     end
