@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "fileutils"
+
 module DataTaster
   # Selects and sanitizes tables from the source_db to write to a SQL file on disk.
   class SampleToSql
@@ -11,6 +13,7 @@ module DataTaster
 
     def serve!
       path = temp_file_path
+      FileUtils.mkdir_p(File.dirname(path))
       File.open(path, "w") do |io|
         io.puts "SET FOREIGN_KEY_CHECKS=0;"
         DataTaster
@@ -30,8 +33,6 @@ module DataTaster
     def write_to_sql_file(io, table_name)
       safe_db_name = quote_ident(DataTaster.target_database)
       safe_table_name = quote_ident(table_name)
-
-      binding.pry
 
       collection = DataTaster::Collection.new(table_name)
       payload = collection.assemble
@@ -91,7 +92,7 @@ module DataTaster
 
     def temp_file_path
       filename = "data_taster_#{Time.now.utc.strftime('%Y%m%d%H%M%S')}.sql"
-      File.join(Rails.root, "tmp", filename).to_s
+      File.join(Dir.tmpdir, filename).to_s
     end
   end
 end
