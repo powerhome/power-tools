@@ -14,7 +14,5 @@ class CreateTwoPercentScimGroupMemberships < ActiveRecord::Migration[7.0]
       t.index [:scim_user_id, :scim_group_id], unique: true, name: "index_scim_memberships_on_user_and_group"
       t.index :correlation_id
     end
-
-    # Note: No explicit foreign keys for Percona/MySQL compatibility
   end
 end

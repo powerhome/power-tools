@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ScimGroupMembership, type: :model do
+RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
   describe "table name" do
     it "uses two_percent_scim_group_memberships table" do
       expect(described_class.table_name).to eq("two_percent_scim_group_memberships")
@@ -204,7 +204,7 @@ RSpec.describe ScimGroupMembership, type: :model do
         "active" => true
       }
     }
-    ScimUser.create!(default_attributes.merge(attributes))
+    TwoPercent::ScimUser.create!(default_attributes.merge(attributes))
   end
 
   def create_scim_group(attributes = {})
@@ -221,6 +221,6 @@ RSpec.describe ScimGroupMembership, type: :model do
         "members" => []
       }
     }
-    ScimGroup.create!(default_attributes.merge(attributes))
+    TwoPercent::ScimGroup.create!(default_attributes.merge(attributes))
   end
 end

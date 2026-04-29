@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ScimUser, type: :model do
+RSpec.describe TwoPercent::ScimUser, type: :model do
   describe "table name" do
     it "uses two_percent_scim_users table" do
       expect(described_class.table_name).to eq("two_percent_scim_users")
@@ -40,10 +40,10 @@ RSpec.describe ScimUser, type: :model do
     it "destroys memberships when user is destroyed" do
       user = create_scim_user
       group = create_scim_group
-      membership = ScimGroupMembership.create!(scim_user: user, scim_group: group)
+      membership = TwoPercent::ScimGroupMembership.create!(scim_user: user, scim_group: group)
 
-      expect { user.destroy }.to change { ScimGroupMembership.count }.by(-1)
-      expect(ScimGroupMembership.exists?(membership.id)).to be false
+      expect { user.destroy }.to change { TwoPercent::ScimGroupMembership.count }.by(-1)
+      expect(TwoPercent::ScimGroupMembership.exists?(membership.id)).to be false
     end
   end
 
@@ -415,7 +415,7 @@ RSpec.describe ScimUser, type: :model do
   end
 
   def create_scim_group(attributes = {})
-    ScimGroup.create!({
+    TwoPercent::ScimGroup.create!({
       scim_id: "group-#{SecureRandom.hex(4)}",
       external_id: "ext-#{SecureRandom.hex(4)}",
       display_name: "Test Group",
@@ -429,8 +429,8 @@ RSpec.describe ScimUser, type: :model do
     group1 = create_scim_group(display_name: "Developers", resource_type: "Departments")
     group2 = create_scim_group(display_name: "Managers", resource_type: "Roles")
     
-    ScimGroupMembership.create!(scim_user: user, scim_group: group1)
-    ScimGroupMembership.create!(scim_user: user, scim_group: group2)
+    TwoPercent::ScimGroupMembership.create!(scim_user: user, scim_group: group1)
+    TwoPercent::ScimGroupMembership.create!(scim_user: user, scim_group: group2)
     
     user.reload
   end

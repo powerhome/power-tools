@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ScimGroup, type: :model do
+RSpec.describe TwoPercent::ScimGroup, type: :model do
   describe "table name" do
     it "uses two_percent_scim_groups table" do
       expect(described_class.table_name).to eq("two_percent_scim_groups")
@@ -28,10 +28,10 @@ RSpec.describe ScimGroup, type: :model do
     it "destroys memberships when group is destroyed" do
       group = create_scim_group
       user = create_scim_user
-      membership = ScimGroupMembership.create!(scim_user: user, scim_group: group)
+      membership = TwoPercent::ScimGroupMembership.create!(scim_user: user, scim_group: group)
 
-      expect { group.destroy }.to change { ScimGroupMembership.count }.by(-1)
-      expect(ScimGroupMembership.exists?(membership.id)).to be false
+      expect { group.destroy }.to change { TwoPercent::ScimGroupMembership.count }.by(-1)
+      expect(TwoPercent::ScimGroupMembership.exists?(membership.id)).to be false
     end
   end
 
@@ -317,9 +317,9 @@ RSpec.describe ScimGroup, type: :model do
 
     context "when removing members" do
       before do
-        ScimGroupMembership.create!(scim_user: user1, scim_group: group)
-        ScimGroupMembership.create!(scim_user: user2, scim_group: group)
-        ScimGroupMembership.create!(scim_user: user3, scim_group: group)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user1, scim_group: group)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user2, scim_group: group)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user3, scim_group: group)
       end
 
       let(:members_array) do
@@ -339,7 +339,7 @@ RSpec.describe ScimGroup, type: :model do
 
     context "when members already exist" do
       before do
-        ScimGroupMembership.create!(scim_user: user1, scim_group: group)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user1, scim_group: group)
       end
 
       let(:members_array) do
@@ -360,8 +360,8 @@ RSpec.describe ScimGroup, type: :model do
 
     context "with empty members array" do
       before do
-        ScimGroupMembership.create!(scim_user: user1, scim_group: group)
-        ScimGroupMembership.create!(scim_user: user2, scim_group: group)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user1, scim_group: group)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user2, scim_group: group)
       end
 
       it "removes all memberships" do
@@ -440,8 +440,8 @@ RSpec.describe ScimGroup, type: :model do
     it "includes members array" do
       user1 = create_scim_user(scim_id: "user-1", display_name: "User One")
       user2 = create_scim_user(scim_id: "user-2", display_name: "User Two")
-      ScimGroupMembership.create!(scim_user: user1, scim_group: group)
-      ScimGroupMembership.create!(scim_user: user2, scim_group: group)
+      TwoPercent::ScimGroupMembership.create!(scim_user: user1, scim_group: group)
+      TwoPercent::ScimGroupMembership.create!(scim_user: user2, scim_group: group)
       
       scim_repr = group.to_scim_representation
 
@@ -527,6 +527,6 @@ RSpec.describe ScimGroup, type: :model do
         "active" => true
       }
     }
-    ScimUser.create!(default_attributes.merge(attributes))
+    TwoPercent::ScimUser.create!(default_attributes.merge(attributes))
   end
 end

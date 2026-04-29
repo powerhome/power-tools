@@ -8,8 +8,8 @@ RSpec.describe TwoPercent::BulkProcessor do
 
     before do
       # Clear any existing test data
-      ScimUser.destroy_all
-      ScimGroup.destroy_all
+      TwoPercent::ScimUser.destroy_all
+      TwoPercent::ScimGroup.destroy_all
     end
 
     describe "POST operations" do
@@ -33,7 +33,7 @@ RSpec.describe TwoPercent::BulkProcessor do
         processor = described_class.new(operations, correlation_id: correlation_id)
         processor.dispatch
 
-        user = ScimUser.find_by(user_name: "bulk.user@example.com")
+        user = TwoPercent::ScimUser.find_by(user_name: "bulk.user@example.com")
         expect(user).to be_present
         expect(user.display_name).to eq("Bulk User")
         expect(user.correlation_id).to eq(correlation_id)
@@ -65,7 +65,7 @@ RSpec.describe TwoPercent::BulkProcessor do
         processor = described_class.new(operations, correlation_id: correlation_id)
         processor.dispatch
 
-        group = ScimGroup.find_by(display_name: "Bulk Group")
+        group = TwoPercent::ScimGroup.find_by(display_name: "Bulk Group")
         expect(group).to be_present
         expect(group.resource_type).to eq("Groups")
         expect(group.correlation_id).to eq(correlation_id)
@@ -98,7 +98,7 @@ RSpec.describe TwoPercent::BulkProcessor do
         processor = described_class.new(operations, correlation_id: correlation_id)
         processor.dispatch
 
-        dept = ScimGroup.find_by(display_name: "Engineering Department", resource_type: "Departments")
+        dept = TwoPercent::ScimGroup.find_by(display_name: "Engineering Department", resource_type: "Departments")
         expect(dept).to be_present
         expect(dept.resource_type).to eq("Departments")
       end
@@ -106,7 +106,7 @@ RSpec.describe TwoPercent::BulkProcessor do
 
     describe "PUT operations" do
       it "updates existing User via bulk operation" do
-        user = ScimUser.upsert_from_scim({
+        user = TwoPercent::ScimUser.upsert_from_scim({
           "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
           "externalId" => "bulk-ext-#{SecureRandom.hex(4)}",
           "userName" => "existing.user@example.com",
@@ -167,7 +167,7 @@ RSpec.describe TwoPercent::BulkProcessor do
         processor = described_class.new(operations, correlation_id: correlation_id)
         processor.dispatch
 
-        user = ScimUser.find_by(scim_id: non_existent_id)
+        user = TwoPercent::ScimUser.find_by(scim_id: non_existent_id)
         expect(user).to be_present
         expect(user.display_name).to eq("New User via PUT")
       end
@@ -175,7 +175,7 @@ RSpec.describe TwoPercent::BulkProcessor do
 
     describe "PATCH operations" do
       it "patches existing User via bulk operation" do
-        user = ScimUser.upsert_from_scim({
+        user = TwoPercent::ScimUser.upsert_from_scim({
           "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
           "externalId" => "bulk-patch-#{SecureRandom.hex(4)}",
           "userName" => "patch.user@example.com",
@@ -208,7 +208,7 @@ RSpec.describe TwoPercent::BulkProcessor do
 
     describe "DELETE operations" do
       it "deletes User via bulk operation" do
-        user = ScimUser.upsert_from_scim({
+        user = TwoPercent::ScimUser.upsert_from_scim({
           "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
           "externalId" => "bulk-delete-#{SecureRandom.hex(4)}",
           "userName" => "delete.user@example.com",
@@ -231,7 +231,7 @@ RSpec.describe TwoPercent::BulkProcessor do
         processor = described_class.new(operations, correlation_id: correlation_id)
         processor.dispatch
 
-        expect(ScimUser.exists_by_scim_id?(user_id)).to be false
+        expect(TwoPercent::ScimUser.exists_by_scim_id?(user_id)).to be false
 
         expect(TwoPercent::Domain::Events::UserDeleted).to have_received(:create).with(
           hash_including(
@@ -242,7 +242,7 @@ RSpec.describe TwoPercent::BulkProcessor do
       end
 
       it "deletes Group and cascades to memberships" do
-        user = ScimUser.upsert_from_scim({
+        user = TwoPercent::ScimUser.upsert_from_scim({
           "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
           "externalId" => "member-#{SecureRandom.hex(4)}",
           "userName" => "member@example.com",
@@ -250,7 +250,7 @@ RSpec.describe TwoPercent::BulkProcessor do
           "active" => true
         })
 
-        group = ScimGroup.upsert_from_scim("Groups", {
+        group = TwoPercent::ScimGroup.upsert_from_scim("Groups", {
           "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
           "externalId" => "bulk-delete-group-#{SecureRandom.hex(4)}",
           "displayName" => "To Be Deleted Group",
@@ -273,8 +273,8 @@ RSpec.describe TwoPercent::BulkProcessor do
         processor = described_class.new(operations, correlation_id: correlation_id)
         processor.dispatch
 
-        expect(ScimGroup.exists_by_scim_id?(group_id)).to be false
-        expect(ScimGroupMembership.where(scim_group_id: group.id).count).to eq(0) # Cascaded
+        expect(TwoPercent::ScimGroup.exists_by_scim_id?(group_id)).to be false
+        expect(TwoPercent::ScimGroupMembership.where(scim_group_id: group.id).count).to eq(0) # Cascaded
 
         expect(TwoPercent::Domain::Events::GroupDeleted).to have_received(:create).with(
           hash_including(
@@ -329,8 +329,8 @@ RSpec.describe TwoPercent::BulkProcessor do
         processor = described_class.new(operations, correlation_id: correlation_id)
         processor.dispatch
 
-        expect(ScimUser.where(user_name: ["user1@example.com", "user2@example.com"]).count).to eq(2)
-        expect(ScimGroup.where(display_name: "Multi Group").count).to eq(1)
+        expect(TwoPercent::ScimUser.where(user_name: ["user1@example.com", "user2@example.com"]).count).to eq(2)
+        expect(TwoPercent::ScimGroup.where(display_name: "Multi Group").count).to eq(1)
 
         expect(TwoPercent::Domain::Events::UserCreated).to have_received(:create).twice
         expect(TwoPercent::Domain::Events::GroupCreated).to have_received(:create).once
@@ -371,7 +371,7 @@ RSpec.describe TwoPercent::BulkProcessor do
         processor = described_class.new(operations, correlation_id: correlation_id)
         processor.dispatch
 
-        user = ScimUser.find_by(scim_id: new_user_id)
+        user = TwoPercent::ScimUser.find_by(scim_id: new_user_id)
         expect(user.display_name).to eq("Updated Sequential User")
       end
     end
@@ -401,7 +401,7 @@ RSpec.describe TwoPercent::BulkProcessor do
         }.to raise_error(StandardError, "Event system down")
 
         # Verify rollback - user should not exist
-        expect(ScimUser.find_by(user_name: "rollback@example.com")).to be_nil
+        expect(TwoPercent::ScimUser.find_by(user_name: "rollback@example.com")).to be_nil
       end
     end
 
@@ -443,12 +443,12 @@ RSpec.describe TwoPercent::BulkProcessor do
         processor = described_class.new(operations, correlation_id: correlation_id)
         processor.dispatch
 
-        territory = ScimGroup.find_by(display_name: "North Region", resource_type: "Territories")
+        territory = TwoPercent::ScimGroup.find_by(display_name: "North Region", resource_type: "Territories")
         expect(territory).to be_present
       end
 
       it "parses resource ID from path for updates" do
-        user = ScimUser.upsert_from_scim({
+        user = TwoPercent::ScimUser.upsert_from_scim({
           "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
           "externalId" => "path-parse-#{SecureRandom.hex(4)}",
           "userName" => "pathparse@example.com",
@@ -502,7 +502,7 @@ RSpec.describe TwoPercent::BulkProcessor do
         processor = described_class.new(operations, correlation_id: custom_correlation)
         processor.dispatch
 
-        user = ScimUser.find_by(user_name: "correlation@example.com")
+        user = TwoPercent::ScimUser.find_by(user_name: "correlation@example.com")
         expect(user.correlation_id).to eq(custom_correlation)
       end
 

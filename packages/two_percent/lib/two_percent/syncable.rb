@@ -77,7 +77,7 @@ module TwoPercent
       def setup_user_syncable
         # Association to ScimUser
         belongs_to :scim_user, 
-                   class_name: "ScimUser",
+                   class_name: "TwoPercent::ScimUser",
                    foreign_key: syncable_scim_id_column,
                    primary_key: "scim_id",
                    optional: true
@@ -89,7 +89,7 @@ module TwoPercent
       def setup_group_syncable
         # Association to ScimGroup
         belongs_to :scim_group,
-                   class_name: "ScimGroup",
+                   class_name: "TwoPercent::ScimGroup",
                    foreign_key: syncable_scim_id_column,
                    primary_key: "scim_id",
                    optional: true
@@ -193,7 +193,7 @@ module TwoPercent
         scim_user
       else
         # Create new
-        scim_user = ScimUser.upsert_from_scim(scim_data, correlation_id: correlation_id)
+        scim_user = TwoPercent::ScimUser.upsert_from_scim(scim_data, correlation_id: correlation_id)
         update_column(syncable_scim_id_column, scim_user.scim_id)
         scim_user
       end
@@ -209,7 +209,7 @@ module TwoPercent
       else
         # Create new (assuming Groups resource type)
         resource_type = syncable_options[:resource_type] || "Groups"
-        scim_group = ScimGroup.upsert_from_scim(resource_type, scim_data, correlation_id: correlation_id)
+        scim_group = TwoPercent::ScimGroup.upsert_from_scim(resource_type, scim_data, correlation_id: correlation_id)
         update_column(syncable_scim_id_column, scim_group.scim_id)
         scim_group
       end

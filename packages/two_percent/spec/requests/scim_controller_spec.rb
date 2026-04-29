@@ -81,9 +81,9 @@ RSpec.describe "SCIM API", type: :request do
       it "persists user to database" do
         expect {
           post "/scim/Users", params: scim_user_payload.to_json, headers: headers
-        }.to change { ScimUser.count }.by(1)
+        }.to change { TwoPercent::ScimUser.count }.by(1)
 
-        user = ScimUser.last
+        user = TwoPercent::ScimUser.last
         expect(user.user_name).to eq("john.doe@example.com")
         expect(user.display_name).to eq("John Doe")
         expect(user.email).to eq("john.doe@example.com")
@@ -93,7 +93,7 @@ RSpec.describe "SCIM API", type: :request do
       it "stores correlation_id from header" do
         post "/scim/Users", params: scim_user_payload.to_json, headers: headers
 
-        user = ScimUser.last
+        user = TwoPercent::ScimUser.last
         expect(user.correlation_id).to eq(correlation_id)
       end
 
@@ -130,7 +130,7 @@ RSpec.describe "SCIM API", type: :request do
       it "uses the provided id instead of generating one" do
         post "/scim/Users", params: scim_user_with_id.to_json, headers: headers
 
-        user = ScimUser.last
+        user = TwoPercent::ScimUser.last
         expect(user.scim_id).to eq("explicit-id-from-idp")
       end
 
@@ -156,7 +156,7 @@ RSpec.describe "SCIM API", type: :request do
       it "generates correlation_id automatically" do
         post "/scim/Users", params: scim_user_payload.to_json, headers: headers_without_correlation
 
-        user = ScimUser.last
+        user = TwoPercent::ScimUser.last
         expect(user.correlation_id).to be_present
         expect(user.correlation_id).to match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
       end
@@ -170,7 +170,7 @@ RSpec.describe "SCIM API", type: :request do
       it "returns 400 Bad Request" do
         expect {
           post "/scim/Users", params: invalid_payload.to_json, headers: headers
-        }.not_to change { ScimUser.count }
+        }.not_to change { TwoPercent::ScimUser.count }
 
         expect(response).to have_http_status(:bad_request)
       end
@@ -210,9 +210,9 @@ RSpec.describe "SCIM API", type: :request do
       it "persists group to database" do
         expect {
           post "/scim/Groups", params: scim_group_payload.to_json, headers: headers
-        }.to change { ScimGroup.count }.by(1)
+        }.to change { TwoPercent::ScimGroup.count }.by(1)
 
-        group = ScimGroup.last
+        group = TwoPercent::ScimGroup.last
         expect(group.display_name).to eq("Engineering Team")
         expect(group.resource_type).to eq("Groups")
         expect(group.active).to be true
@@ -237,7 +237,7 @@ RSpec.describe "SCIM API", type: :request do
       it "uses the provided id instead of generating one" do
         post "/scim/Groups", params: scim_group_with_id.to_json, headers: headers
 
-        group = ScimGroup.last
+        group = TwoPercent::ScimGroup.last
         expect(group.scim_id).to eq("group-from-idp-123")
       end
 
@@ -265,7 +265,7 @@ RSpec.describe "SCIM API", type: :request do
       it "creates group memberships" do
         post "/scim/Groups", params: group_with_members.to_json, headers: headers
 
-        group = ScimGroup.last
+        group = TwoPercent::ScimGroup.last
         expect(group.scim_users.count).to eq(2)
         expect(group.scim_users).to include(user1, user2)
       end
@@ -294,7 +294,7 @@ RSpec.describe "SCIM API", type: :request do
     it "creates group with resource_type=Departments" do
       post "/scim/Departments", params: scim_department_payload.to_json, headers: headers
 
-      group = ScimGroup.last
+      group = TwoPercent::ScimGroup.last
       expect(group.resource_type).to eq("Departments")
       expect(group.display_name).to eq("Sales Department")
     end
@@ -415,9 +415,9 @@ RSpec.describe "SCIM API", type: :request do
       it "creates user in database" do
         expect {
           put "/scim/Users/new-user-789", headers: headers, params: full_user_payload.to_json
-        }.to change { ScimUser.count }.by(1)
+        }.to change { TwoPercent::ScimUser.count }.by(1)
 
-        user = ScimUser.find_by(scim_id: "new-user-789")
+        user = TwoPercent::ScimUser.find_by(scim_id: "new-user-789")
         expect(user.display_name).to eq("Replaced User")
       end
 
@@ -489,9 +489,9 @@ RSpec.describe "SCIM API", type: :request do
       it "deletes user from database" do
         expect {
           delete "/scim/Users/delete-me-123", headers: headers
-        }.to change { ScimUser.count }.by(-1)
+        }.to change { TwoPercent::ScimUser.count }.by(-1)
 
-        expect(ScimUser.exists_by_scim_id?("delete-me-123")).to be false
+        expect(TwoPercent::ScimUser.exists_by_scim_id?("delete-me-123")).to be false
       end
 
       it "publishes UserDeleted domain event" do
@@ -529,13 +529,13 @@ RSpec.describe "SCIM API", type: :request do
       let!(:group) { create_scim_group }
       
       before do
-        ScimGroupMembership.create!(scim_user: user_to_delete, scim_group: group)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user_to_delete, scim_group: group)
       end
 
       it "cascades delete to memberships" do
         expect {
           delete "/scim/Users/delete-me-123", headers: headers
-        }.to change { ScimGroupMembership.count }.by(-1)
+        }.to change { TwoPercent::ScimGroupMembership.count }.by(-1)
       end
     end
   end
@@ -556,7 +556,7 @@ RSpec.describe "SCIM API", type: :request do
       it "deletes group from database" do
         expect {
           delete "/scim/Departments/group-delete-456", headers: headers
-        }.to change { ScimGroup.count }.by(-1)
+        }.to change { TwoPercent::ScimGroup.count }.by(-1)
       end
 
       it "publishes GroupDeleted domain event" do
@@ -573,19 +573,19 @@ RSpec.describe "SCIM API", type: :request do
       let!(:user) { create_scim_user }
       
       before do
-        ScimGroupMembership.create!(scim_user: user, scim_group: group_to_delete)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user, scim_group: group_to_delete)
       end
 
       it "cascades delete to memberships" do
         expect {
           delete "/scim/Departments/group-delete-456", headers: headers
-        }.to change { ScimGroupMembership.count }.by(-1)
+        }.to change { TwoPercent::ScimGroupMembership.count }.by(-1)
       end
 
       it "does not delete users" do
         expect {
           delete "/scim/Departments/group-delete-456", headers: headers
-        }.not_to change { ScimUser.count }
+        }.not_to change { TwoPercent::ScimUser.count }
       end
     end
   end
@@ -637,25 +637,25 @@ RSpec.describe "SCIM API", type: :request do
     it "supports Departments resource type" do
       post "/scim/Departments", params: valid_payload.to_json, headers: headers
       expect(response).to have_http_status(:created)
-      expect(ScimGroup.last.resource_type).to eq("Departments")
+      expect(TwoPercent::ScimGroup.last.resource_type).to eq("Departments")
     end
 
     it "supports Territories resource type" do
       post "/scim/Territories", params: valid_payload.to_json, headers: headers
       expect(response).to have_http_status(:created)
-      expect(ScimGroup.last.resource_type).to eq("Territories")
+      expect(TwoPercent::ScimGroup.last.resource_type).to eq("Territories")
     end
 
     it "supports Roles resource type" do
       post "/scim/Roles", params: valid_payload.to_json, headers: headers
       expect(response).to have_http_status(:created)
-      expect(ScimGroup.last.resource_type).to eq("Roles")
+      expect(TwoPercent::ScimGroup.last.resource_type).to eq("Roles")
     end
 
     it "supports Titles resource type" do
       post "/scim/Titles", params: valid_payload.to_json, headers: headers
       expect(response).to have_http_status(:created)
-      expect(ScimGroup.last.resource_type).to eq("Titles")
+      expect(TwoPercent::ScimGroup.last.resource_type).to eq("Titles")
     end
   end
 
@@ -678,7 +678,7 @@ RSpec.describe "SCIM API", type: :request do
         "active" => true
       }
     }
-    ScimUser.create!(default_attributes.merge(attributes))
+    TwoPercent::ScimUser.create!(default_attributes.merge(attributes))
   end
 
   def create_scim_group(attributes = {})
@@ -695,6 +695,6 @@ RSpec.describe "SCIM API", type: :request do
         "members" => []
       }
     }
-    ScimGroup.create!(default_attributes.merge(attributes))
+    TwoPercent::ScimGroup.create!(default_attributes.merge(attributes))
   end
 end
