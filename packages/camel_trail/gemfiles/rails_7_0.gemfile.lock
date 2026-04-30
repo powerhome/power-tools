@@ -14,7 +14,7 @@ PATH
     camel_trail (1.2.0)
       attr_encrypted (= 4.0.0)
       nitro_config
-      rails (>= 6.0.6.1, < 8)
+      rails (>= 6.0.6.1, <= 8.0.5)
 
 GEM
   remote: https://rubygems.org/

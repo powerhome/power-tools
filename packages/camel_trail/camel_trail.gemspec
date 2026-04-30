@@ -21,5 +21,5 @@ Gem::Specification.new do |s|
   s.add_dependency "attr_encrypted", "4.0.0"
   s.add_dependency "nitro_config"
 
-  s.add_dependency "rails", ">= 6.0.6.1", "< 8"
+  s.add_dependency "rails", ">= 6.0.6.1", "<= 8.0.5"
 end
