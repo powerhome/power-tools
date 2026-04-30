@@ -43,18 +43,4 @@ RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integr
       expect(result["dob"]).to eq(expected_date)
     end
   end
-
-private
-
-  def setup_source_data
-    now = Time.current.strftime("%Y-%m-%d %H:%M:%S")
-    insert_user_sql = <<-SQL.squish
-      INSERT INTO users (id, encrypted_password, ssn, passport_number, license_number, date_of_birth, dob, notes, body,
-       compensation, income, email, email2, address, address2, created_at, updated_at)
-      VALUES (1, 'encrypted123', '123-45-6789', 'P123456789', 'L123456789', '1990-01-01', '1990-01-01',
-        'Private notes', 'Body text', 50000.00, 60000.00, 'test@example.com', 'test2@example.com', '123 Main St',
-        'Apt 1', '#{now}', '#{now}')
-    SQL
-    source_db_client.query(insert_user_sql)
-  end
 end

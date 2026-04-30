@@ -10,7 +10,7 @@ module DataTaster
     end
 
     def serve!
-      Rails.logger.info("Writing SQL file to #{DataTaster.config.filename}")
+      DataTaster.logger.info("Writing SQL file to #{DataTaster.config.filename}")
       File.open(DataTaster.config.filename, "w") do |io|
         io.puts "SET FOREIGN_KEY_CHECKS=0;"
         DataTaster

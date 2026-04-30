@@ -25,4 +25,14 @@ RSpec.describe DataTaster::Collection do
 
     expect(result[:select]).to eq("SELECT * FROM #{source_db_name}.projects WHERE 1 = 1")
   end
+
+  describe "#export_select_sql" do
+    it "returns a plain SELECT from source_db with the confection WHERE clause" do
+      stub_config
+
+      sql = DataTaster::Collection.new("projects").export_select_sql
+
+      expect(sql).to eq("SELECT * FROM #{source_db_name}.projects WHERE 1 = 1")
+    end
+  end
 end
