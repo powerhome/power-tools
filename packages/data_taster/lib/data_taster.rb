@@ -33,7 +33,8 @@ module DataTaster
       list: Array.wrap(args[:list] || Rails.root.glob("**/data_taster_export_tables.yml")),
       source_client: args[:source_client] || raise(ArgumentError, "DataTaster.config missing source_client"),
       working_client: args[:working_client],
-      include_insert: args[:include_insert] || false
+      include_insert: args[:include_insert] || false,
+      filename: args[:filename] || nil
     )
   end
 
@@ -73,5 +74,5 @@ module DataTaster
     end
   end
 
-  Config = Struct.new(:months, :list, :source_client, :working_client, :include_insert)
+  Config = Struct.new(:months, :list, :source_client, :working_client, :include_insert, :filename)
 end

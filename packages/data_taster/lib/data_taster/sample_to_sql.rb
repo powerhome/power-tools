@@ -10,8 +10,7 @@ module DataTaster
     end
 
     def serve!
-      path = temp_file_path
-      File.open(path, "w") do |io|
+      File.open(DataTaster.config.filename, "w") do |io|
         io.puts "SET FOREIGN_KEY_CHECKS=0;"
         DataTaster
           .confection.keys
@@ -20,7 +19,6 @@ module DataTaster
           end
         io.puts "SET FOREIGN_KEY_CHECKS=1;"
       end
-      path
     end
 
   private
@@ -86,11 +84,6 @@ module DataTaster
       end
       io.puts "INSERT INTO #{safe_db_name}.#{safe_table_name} (#{col_list}) VALUES"
       io.puts "#{tuples.join(",\n")};"
-    end
-
-    def temp_file_path
-      filename = "data_taster_#{Time.now.utc.strftime('%Y%m%d%H%M%S')}.sql"
-      File.join(Dir.tmpdir, filename).to_s
     end
   end
 end
