@@ -8,7 +8,9 @@ module DataTaster
   autoload :Detergent, "data_taster/detergent"
   autoload :Helper, "data_taster/helper"
   autoload :Sample, "data_taster/sample"
+  autoload :SampleToSql, "data_taster/sample_to_sql"
   autoload :Sanitizer, "data_taster/sanitizer"
+  autoload :SqlLiteral, "data_taster/sql_literal"
 
   SKIP_CODE = "skip_processing"
 
@@ -20,13 +22,19 @@ module DataTaster
     @logger ||= Logger.new($stdout)
   end
 
+  def self.reset!
+    @config = nil
+    @confection = nil
+  end
+
   def self.config(**args)
     @config ||= Config.new(
-      args[:months],
-      Array.wrap(args[:list] || Rails.root.glob("**/data_taster_export_tables.yml")),
-      args[:source_client] || raise(ArgumentError, "DataTaster.config missing source_client"),
-      args[:working_client] || raise(ArgumentError, "DataTaster.config missing working_client"),
-      args[:include_insert] || false
+      months: args[:months] || nil,
+      list: Array.wrap(args[:list] || Rails.root.glob("**/data_taster_export_tables.yml")),
+      source_client: args[:source_client] || raise(ArgumentError, "DataTaster.config missing source_client"),
+      working_client: args[:working_client],
+      include_insert: args[:include_insert] || false,
+      filename: args[:filename] || nil
     )
   end
 
@@ -44,6 +52,17 @@ module DataTaster
       end
   end
 
+  def self.sample_to_sql_file!
+    DataTaster::SampleToSql.new.serve!
+  end
+
+  def self.target_database
+    # when working_client is not set it means all operations should be performed on the source_client.
+    # Be careful with this, as this will mutate the source_client database.
+    client = config.working_client || config.source_client
+    client.query_options[:database]
+  end
+
   def self.safe_execute(sql, client = DataTaster.config.working_client)
     foreign_key_check = client.query("SELECT @@FOREIGN_KEY_CHECKS").first["@@FOREIGN_KEY_CHECKS"]
 
@@ -55,5 +74,5 @@ module DataTaster
     end
   end
 
-  Config = Struct.new(:months, :list, :source_client, :working_client, :include_insert)
+  Config = Struct.new(:months, :list, :source_client, :working_client, :include_insert, :filename)
 end

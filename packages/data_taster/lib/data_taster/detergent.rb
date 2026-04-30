@@ -59,7 +59,7 @@ module DataTaster
 
     def sql_for_uncast_value
       <<-SQL.squish
-        UPDATE #{working_db}.#{table_name}
+        UPDATE #{target_database}.#{table_name}
         SET #{column_name} = #{value}
         WHERE #{column_name} IS NOT NULL
         AND #{column_name} <> #{value}
@@ -68,7 +68,7 @@ module DataTaster
 
     def sql_for_date_value
       <<-SQL.squish
-        UPDATE #{working_db}.#{table_name}
+        UPDATE #{target_database}.#{table_name}
         SET #{column_name} = '#{value}'
         WHERE #{column_name} IS NOT NULL
       SQL
@@ -76,7 +76,7 @@ module DataTaster
 
     def sql_for_nil_value
       <<-SQL.squish
-        UPDATE #{working_db}.#{table_name}
+        UPDATE #{target_database}.#{table_name}
         SET #{column_name} = NULL
         WHERE #{column_name} IS NOT NULL
       SQL
@@ -84,15 +84,15 @@ module DataTaster
 
     def sql_for_cast_value
       <<-SQL.squish
-        UPDATE #{working_db}.#{table_name}
+        UPDATE #{target_database}.#{table_name}
         SET #{column_name} = '#{value}'
         WHERE #{column_name} IS NOT NULL
         AND #{column_name} <> ''
       SQL
     end
 
-    def working_db
-      DataTaster.config.working_client.query_options[:database]
+    def target_database
+      DataTaster.target_database
     end
   end
 end

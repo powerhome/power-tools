@@ -39,7 +39,7 @@ module DataTaster
     end
 
     def working_db
-      @working_db ||= DataTaster.config.working_client.query_options[:database]
+      @working_db ||= DataTaster.target_database
     end
   end
 end
