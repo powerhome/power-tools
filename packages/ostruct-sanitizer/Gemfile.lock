@@ -121,7 +121,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 2.5.0)
+  bundler (~> 4.0.0)
   byebug
   license_finder (~> 7.0)
   ostruct-sanitizer!
@@ -130,4 +130,4 @@ DEPENDENCIES
   rubocop-powerhome (= 0.5.3)
 
 BUNDLED WITH
-   2.5.23
+   4.0.11
