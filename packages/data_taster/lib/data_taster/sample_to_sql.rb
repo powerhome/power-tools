@@ -10,6 +10,7 @@ module DataTaster
     end
 
     def serve!
+      Rails.logger.info("Writing SQL file to #{DataTaster.config.filename}")
       File.open(DataTaster.config.filename, "w") do |io|
         io.puts "SET FOREIGN_KEY_CHECKS=0;"
         DataTaster
@@ -32,8 +33,6 @@ module DataTaster
       collection = DataTaster::Collection.new(table_name)
       payload = collection.assemble
 
-      # Deprecated tables (skip in YAML): emit DROP for the restore target only — never execute
-      # DDL against the source. Live sampling uses +working_client+ via +safe_execute+.
       if payload.empty? && DataTaster.config.include_insert
         io.puts "DROP TABLE IF EXISTS #{safe_db_name}.#{safe_table_name};"
         return

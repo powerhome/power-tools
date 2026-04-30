@@ -23,7 +23,6 @@ module DataTaster
       end
     end
 
-    # UPDATE statements that mirror +clean!+ without executing SQL (for SQL file export).
     def update_sql_statements
       return [] if skippable_table?
 
