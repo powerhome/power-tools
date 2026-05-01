@@ -14,6 +14,8 @@ Metrics/ClassLength:
   Max: 150
   Exclude:
     - 'spec/**/*'
+    # SCIM controller implements full CRUD + PATCH operations
+    - 'app/controllers/two_percent/scim_controller.rb'
 
 Metrics/ModuleLength:
   Max: 150
@@ -25,6 +27,10 @@ Metrics/MethodLength:
   Exclude:
     - 'spec/**/*'
     - 'db/migrate/**/*'
+    # SCIM controller implements complex RFC 7644 operations (PUT/PATCH)
+    - 'app/controllers/two_percent/scim_controller.rb'
+    # RFC 7644 PATCH operation parsing requires complex recursive logic
+    - 'lib/two_percent/scim/patch_processor.rb'
 
 Metrics/BlockLength:
   Exclude:
@@ -33,6 +39,25 @@ Metrics/BlockLength:
 
 Metrics/AbcSize:
   Max: 20
+  Exclude:
+    # SCIM controllers and processors implement complex RFC operations
+    - 'app/controllers/two_percent/scim_controller.rb'
+    - 'app/models/two_percent/scim_user.rb'
+    - 'lib/two_percent/scim/patch_processor.rb'
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    # Domain attribute mapping handles multiple strategies
+    - 'lib/two_percent/attribute_mapper.rb'
+    # RFC 7644 PATCH operation parsing requires conditional branching
+    - 'lib/two_percent/scim/patch_processor.rb'
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    # Domain attribute mapping handles multiple strategies
+    - 'lib/two_percent/attribute_mapper.rb'
+    # RFC 7644 PATCH operation parsing requires conditional branching
+    - 'lib/two_percent/scim/patch_processor.rb'
 
 Layout/LineLength:
   Max: 120

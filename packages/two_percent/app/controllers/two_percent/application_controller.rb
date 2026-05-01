@@ -33,14 +33,7 @@ module TwoPercent
 
     def handle_validation_error(exception)
       # RFC 7644: 400 Bad Request for invalid data
-      # Determine scimType based on validation error
-      scim_type = if exception.message.match?(/uniqueness|unique/i)
-                    "uniqueness"
-                  elsif exception.message.match?(/blank|can't be blank/i)
-                    "invalidValue"
-                  else
-                    "invalidValue"
-                  end
+      scim_type = exception.message.match?(/uniqueness|unique/i) ? "uniqueness" : "invalidValue"
 
       render_scim_error(
         status: :bad_request,
@@ -51,14 +44,7 @@ module TwoPercent
 
     def handle_bad_request(exception)
       # RFC 7644: 400 Bad Request for malformed requests
-      # Determine scimType based on error message
-      scim_type = if exception.message.match?(/PATCH|operation/i)
-                    "invalidSyntax"
-                  elsif exception.message.match?(/schemas/i)
-                    "invalidValue"
-                  else
-                    "invalidSyntax"
-                  end
+      scim_type = exception.message.match?(/schemas/i) ? "invalidValue" : "invalidSyntax"
 
       render_scim_error(
         status: :bad_request,
