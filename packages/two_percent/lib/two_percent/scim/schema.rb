@@ -49,12 +49,12 @@ module TwoPercent
       def self.validate_user(scim_hash, require_id: true)
         # Accept either core schema or extension schemas
         validate_schemas_present(scim_hash)
-        
+
         # Only require id for updates, not creation
         required_attrs = require_id ? %w[id externalId] : %w[externalId]
         validate_required_attributes(scim_hash, required_attrs)
         validate_attribute_types(scim_hash)
-        
+
         # Return validated data with schemas normalized
         normalize_user(scim_hash)
       end
@@ -62,25 +62,25 @@ module TwoPercent
       def self.validate_group(scim_hash, require_id: true)
         # Accept either core schema or extension schemas
         validate_schemas_present(scim_hash)
-        
+
         # Only require id for updates, not creation
         required_attrs = require_id ? %w[id displayName] : %w[displayName]
         validate_required_attributes(scim_hash, required_attrs)
-        
+
         normalize_group(scim_hash)
       end
 
       def self.normalize_user(scim_hash)
         {
           core: extract_core_attributes(scim_hash, CORE_USER_ATTRIBUTES),
-          extensions: extract_extensions(scim_hash)
+          extensions: extract_extensions(scim_hash),
         }
       end
 
       def self.normalize_group(scim_hash)
         {
           core: extract_core_attributes(scim_hash, CORE_GROUP_ATTRIBUTES),
-          extensions: extract_extensions(scim_hash)
+          extensions: extract_extensions(scim_hash),
         }
       end
 
@@ -95,26 +95,26 @@ module TwoPercent
       def self.validate_schemas(scim_hash, required_schemas)
         schemas = scim_hash["schemas"] || []
         missing = required_schemas - schemas
-        
-        if missing.any?
-          raise ArgumentError, "Missing required schemas: #{missing.join(', ')}"
-        end
+
+        return unless missing.any?
+
+        raise ArgumentError, "Missing required schemas: #{missing.join(', ')}"
       end
 
       def self.validate_schemas_present(scim_hash)
         schemas = scim_hash["schemas"] || []
-        
-        if schemas.empty?
-          raise ArgumentError, "schemas attribute is required"
-        end
+
+        return unless schemas.empty?
+
+        raise ArgumentError, "schemas attribute is required"
       end
 
       def self.validate_required_attributes(scim_hash, required_attrs)
         missing = required_attrs.select { |attr| scim_hash[attr].nil? }
-        
-        if missing.any?
-          raise ArgumentError, "Missing required attributes: #{missing.join(', ')}"
-        end
+
+        return unless missing.any?
+
+        raise ArgumentError, "Missing required attributes: #{missing.join(', ')}"
       end
 
       def self.validate_attribute_types(scim_hash)
@@ -128,27 +128,23 @@ module TwoPercent
 
       def self.validate_name_structure(name)
         return unless name.is_a?(Hash)
-        
+
         valid_keys = %w[formatted familyName givenName middleName honorificPrefix honorificSuffix]
         invalid = name.keys - valid_keys
-        
-        if invalid.any?
-          raise ArgumentError, "Invalid name attributes: #{invalid.join(', ')}"
-        end
+
+        return unless invalid.any?
+
+        raise ArgumentError, "Invalid name attributes: #{invalid.join(', ')}"
       end
 
       def self.validate_multi_valued(array, required_keys)
         return unless array.is_a?(Array)
-        
+
         array.each_with_index do |item, idx|
-          unless item.is_a?(Hash)
-            raise ArgumentError, "Multi-valued attribute item #{idx} must be an object"
-          end
-          
+          raise ArgumentError, "Multi-valued attribute item #{idx} must be an object" unless item.is_a?(Hash)
+
           missing = required_keys - item.keys
-          if missing.any?
-            raise ArgumentError, "Multi-valued attribute item #{idx} missing: #{missing.join(', ')}"
-          end
+          raise ArgumentError, "Multi-valued attribute item #{idx} missing: #{missing.join(', ')}" if missing.any?
         end
       end
     end

@@ -15,7 +15,7 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
     it { is_expected.to validate_presence_of(:scim_id) }
     it { is_expected.to validate_presence_of(:external_id) }
     it { is_expected.to validate_presence_of(:scim_data) }
-    
+
     it { is_expected.to validate_uniqueness_of(:scim_id) }
 
     describe "scim_id data type" do
@@ -28,7 +28,7 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
       it "handles numeric-looking scim_ids correctly" do
         user = create_scim_user(scim_id: "999999")
         expect(user.reload.scim_id).to eq("999999")
-        expect(user.scim_id).not_to eq(999999)
+        expect(user.scim_id).not_to eq(999_999)
       end
     end
   end
@@ -68,17 +68,17 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
         "userName" => "john.doe",
         "displayName" => "John Doe",
         "emails" => [
-          { "value" => "john@example.com", "type" => "work", "primary" => true }
+          { "value" => "john@example.com", "type" => "work", "primary" => true },
         ],
-        "active" => true
+        "active" => true,
       }
     end
 
     context "when user does not exist" do
       it "creates a new user" do
-        expect {
+        expect do
           described_class.upsert_from_scim(scim_hash)
-        }.to change { described_class.count }.by(1)
+        end.to change { described_class.count }.by(1)
       end
 
       it "sets all attributes correctly" do
@@ -102,7 +102,7 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
 
       it "persists to database" do
         user = described_class.upsert_from_scim(scim_hash)
-        
+
         expect(user).to be_persisted
         expect(user.id).not_to be_nil
       end
@@ -112,9 +112,9 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
       let!(:existing_user) { create_scim_user(scim_id: "user-123", display_name: "Old Name") }
 
       it "does not create a new user" do
-        expect {
+        expect do
           described_class.upsert_from_scim(scim_hash)
-        }.not_to change { described_class.count }
+        end.not_to(change { described_class.count })
       end
 
       it "updates existing user attributes" do
@@ -150,7 +150,7 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
       let(:scim_hash_with_extension) do
         scim_hash.merge(
           "urn:ietf:params:scim:schemas:extension:authservice:2.0:User" => {
-            "customAttribute" => "customValue"
+            "customAttribute" => "customValue",
           }
         )
       end
@@ -168,9 +168,9 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
       it "validates SCIM schema before persisting" do
         invalid_hash = { "id" => "user-123" } # Missing required fields
 
-        expect {
+        expect do
           described_class.upsert_from_scim(invalid_hash)
-        }.to raise_error(ArgumentError, /schemas attribute is required/)
+        end.to raise_error(ArgumentError, /schemas attribute is required/)
       end
     end
   end
@@ -205,9 +205,9 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
       let!(:user) { create_scim_user(scim_id: "user-999") }
 
       it "destroys the user" do
-        expect {
+        expect do
           described_class.destroy_by_scim_id("user-999")
-        }.to change { described_class.count }.by(-1)
+        end.to change { described_class.count }.by(-1)
       end
 
       it "returns the destroyed user" do
@@ -225,9 +225,9 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
       end
 
       it "does not raise an error" do
-        expect {
+        expect do
           described_class.destroy_by_scim_id("nonexistent")
-        }.not_to raise_error
+        end.not_to raise_error
       end
     end
   end
@@ -307,11 +307,11 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
         "userName" => "john.doe",
         "name" => {
           "givenName" => "John",
-          "familyName" => "Doe"
+          "familyName" => "Doe",
         },
         "emails" => [
-          { "value" => "john@example.com", "type" => "work" }
-        ]
+          { "value" => "john@example.com", "type" => "work" },
+        ],
       }
     end
     let(:user) { create_scim_user(scim_data: scim_data) }
@@ -339,11 +339,11 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
       {
         "userName" => "john.doe",
         "urn:ietf:params:scim:schemas:extension:authservice:2.0:User" => {
-          "department" => "Engineering"
+          "department" => "Engineering",
         },
         "urn:ietf:params:scim:schemas:extension:custom:1.0:User" => {
-          "badge" => "12345"
-        }
+          "badge" => "12345",
+        },
       }
     end
     let(:user) { create_scim_user(scim_data: scim_data) }
@@ -404,8 +404,8 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
         "userName" => "test.user",
         "displayName" => "Test User",
         "emails" => [{ "value" => "test@example.com", "type" => "work", "primary" => true }],
-        "active" => true
-      }
+        "active" => true,
+      },
     }
     described_class.new(default_attributes.merge(attributes))
   end
@@ -420,7 +420,7 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
       external_id: "ext-#{SecureRandom.hex(4)}",
       display_name: "Test Group",
       resource_type: "Groups",
-      scim_data: { "id" => "test" }
+      scim_data: { "id" => "test" },
     }.merge(attributes))
   end
 
@@ -428,10 +428,10 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
     user = create_scim_user
     group1 = create_scim_group(display_name: "Developers", resource_type: "Departments")
     group2 = create_scim_group(display_name: "Managers", resource_type: "Roles")
-    
+
     TwoPercent::ScimGroupMembership.create!(scim_user: user, scim_group: group1)
     TwoPercent::ScimGroupMembership.create!(scim_user: user, scim_group: group2)
-    
+
     user.reload
   end
 
@@ -439,15 +439,15 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
     scim_data_with_ext = {
       "schemas" => [
         "urn:ietf:params:scim:schemas:core:2.0:User",
-        "urn:ietf:params:scim:schemas:extension:authservice:2.0:User"
+        "urn:ietf:params:scim:schemas:extension:authservice:2.0:User",
       ],
       "id" => "user-ext",
       "userName" => "john",
       "displayName" => "John Ext",
       "emails" => [{ "value" => "john@example.com", "primary" => true }],
       "urn:ietf:params:scim:schemas:extension:authservice:2.0:User" => {
-        "customField" => "customValue"
-      }
+        "customField" => "customValue",
+      },
     }
     create_scim_user(
       user_name: "john",

@@ -7,7 +7,7 @@ module TwoPercent
       # These are domain-focused, not SCIM-specific
       class BaseEvent < AetherObservatory::EventBase
         event_prefix "two_percent.domain"
-        
+
         attribute :correlation_id
       end
     end

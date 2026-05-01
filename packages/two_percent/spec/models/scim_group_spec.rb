@@ -17,7 +17,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
     it { is_expected.to validate_presence_of(:display_name) }
     it { is_expected.to validate_presence_of(:resource_type) }
     it { is_expected.to validate_presence_of(:scim_data) }
-    
+
     it { is_expected.to validate_uniqueness_of(:scim_id) }
   end
 
@@ -66,15 +66,15 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         "id" => "group-123",
         "externalId" => "ext-123",
         "displayName" => "Engineering",
-        "members" => []
+        "members" => [],
       }
     end
 
     context "when group does not exist" do
       it "creates a new group" do
-        expect {
+        expect do
           described_class.upsert_from_scim(resource_type, scim_hash)
-        }.to change { described_class.count }.by(1)
+        end.to change { described_class.count }.by(1)
       end
 
       it "sets all attributes correctly" do
@@ -97,7 +97,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
 
       it "persists to database" do
         group = described_class.upsert_from_scim(resource_type, scim_hash)
-        
+
         expect(group).to be_persisted
         expect(group.id).not_to be_nil
       end
@@ -107,9 +107,9 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       let!(:existing_group) { create_scim_group(scim_id: "group-123", display_name: "Old Name") }
 
       it "does not create a new group" do
-        expect {
+        expect do
           described_class.upsert_from_scim(resource_type, scim_hash)
-        }.not_to change { described_class.count }
+        end.not_to(change { described_class.count })
       end
 
       it "updates existing group attributes" do
@@ -130,12 +130,12 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
     context "with members array" do
       let!(:user1) { create_scim_user(scim_id: "user-1") }
       let!(:user2) { create_scim_user(scim_id: "user-2") }
-      
+
       let(:scim_hash_with_members) do
         scim_hash.merge(
           "members" => [
             { "value" => "user-1", "display" => "User One" },
-            { "value" => "user-2", "display" => "User Two" }
+            { "value" => "user-2", "display" => "User Two" },
           ]
         )
       end
@@ -172,7 +172,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       let(:scim_hash_with_active_false) do
         scim_hash.merge(
           "urn:ietf:params:scim:schemas:extension:authservice:2.0:Group" => {
-            "active" => false
+            "active" => false,
           }
         )
       end
@@ -221,9 +221,9 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       it "validates SCIM schema before persisting" do
         invalid_hash = { "id" => "group-123" } # Missing required fields
 
-        expect {
+        expect do
           described_class.upsert_from_scim(resource_type, invalid_hash)
-        }.to raise_error(ArgumentError, /schemas attribute is required/)
+        end.to raise_error(ArgumentError, /schemas attribute is required/)
       end
     end
   end
@@ -258,9 +258,9 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       let!(:group) { create_scim_group(scim_id: "group-999") }
 
       it "destroys the group" do
-        expect {
+        expect do
           described_class.destroy_by_scim_id("group-999")
-        }.to change { described_class.count }.by(-1)
+        end.to change { described_class.count }.by(-1)
       end
 
       it "returns the destroyed group" do
@@ -278,9 +278,9 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       end
 
       it "does not raise an error" do
-        expect {
+        expect do
           described_class.destroy_by_scim_id("nonexistent")
-        }.not_to raise_error
+        end.not_to raise_error
       end
     end
   end
@@ -295,14 +295,14 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       let(:members_array) do
         [
           { "value" => "user-1" },
-          { "value" => "user-2" }
+          { "value" => "user-2" },
         ]
       end
 
       it "creates memberships for new members" do
-        expect {
+        expect do
           group.sync_members(members_array, "corr-123")
-        }.to change { group.scim_group_memberships.count }.by(2)
+        end.to change { group.scim_group_memberships.count }.by(2)
 
         expect(group.scim_users).to include(user1, user2)
       end
@@ -327,9 +327,9 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       end
 
       it "removes memberships not in the array" do
-        expect {
+        expect do
           group.sync_members(members_array, "corr-456")
-        }.to change { group.scim_group_memberships.count }.by(-2)
+        end.to change { group.scim_group_memberships.count }.by(-2)
 
         group.reload
         expect(group.scim_users).to eq([user1])
@@ -345,15 +345,15 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       let(:members_array) do
         [
           { "value" => "user-1" },
-          { "value" => "user-2" }
+          { "value" => "user-2" },
         ]
       end
 
       it "does not duplicate existing memberships" do
-        expect {
+        # Only adds user2
+        expect do
           group.sync_members(members_array, "corr-789")
-        }.to change { group.scim_group_memberships.count }.by(1) # Only adds user2
-
+        end.to change { group.scim_group_memberships.count }.by(1)
         expect(group.scim_users).to include(user1, user2)
       end
     end
@@ -365,9 +365,9 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       end
 
       it "removes all memberships" do
-        expect {
+        expect do
           group.sync_members([], "corr-empty")
-        }.to change { group.scim_group_memberships.count }.from(2).to(0)
+        end.to change { group.scim_group_memberships.count }.from(2).to(0)
       end
     end
 
@@ -377,9 +377,9 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       end
 
       it "does not create memberships for non-existent users" do
-        expect {
+        expect do
           group.sync_members(members_array, "corr-404")
-        }.not_to change { group.scim_group_memberships.count }
+        end.not_to(change { group.scim_group_memberships.count })
       end
     end
   end
@@ -442,7 +442,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       user2 = create_scim_user(scim_id: "user-2", display_name: "User Two")
       TwoPercent::ScimGroupMembership.create!(scim_user: user1, scim_group: group)
       TwoPercent::ScimGroupMembership.create!(scim_user: user2, scim_group: group)
-      
+
       scim_repr = group.to_scim_representation
 
       expect(scim_repr["members"]).to be_an(Array)
@@ -462,11 +462,11 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       {
         "displayName" => "Engineering",
         "meta" => {
-          "resourceType" => "Departments"
+          "resourceType" => "Departments",
         },
         "members" => [
-          { "value" => "user-1", "display" => "User One" }
-        ]
+          { "value" => "user-1", "display" => "User One" },
+        ],
       }
     end
     let(:group) { create_scim_group(scim_data: scim_data) }
@@ -500,8 +500,8 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
         "id" => "test",
         "displayName" => "Test Group",
-        "members" => []
-      }
+        "members" => [],
+      },
     }
     described_class.new(default_attributes.merge(attributes))
   end
@@ -524,8 +524,8 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         "userName" => "test.user",
         "displayName" => "Test User",
         "emails" => [{ "value" => "test@example.com", "type" => "work", "primary" => true }],
-        "active" => true
-      }
+        "active" => true,
+      },
     }
     TwoPercent::ScimUser.create!(default_attributes.merge(attributes))
   end

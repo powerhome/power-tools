@@ -54,6 +54,19 @@ module TwoPercent
   config_accessor :logger
 
   #
+  # HTTP header name for correlation ID tracking
+  # Defaults to "X-Correlation-Id" (common microservices pattern)
+  # Set to your IdP's correlation header (e.g., "SCIM-Request-ID")
+  #
+  # I.e.:
+  #
+  #   TwoPercent.configure do |config|
+  #     config.correlation_id_header = "SCIM-Request-ID"
+  #   end
+  #
+  config_accessor :correlation_id_header, default: "X-Correlation-Id"
+
+  #
   # Attribute mapping configuration
   # Maps SCIM attributes to model attributes
   #
@@ -80,7 +93,7 @@ module TwoPercent
       user_name: :user_name,
       display_name: :display_name,
       email: :email,
-      active: :active
+      active: :active,
     }
   end
 
@@ -90,7 +103,7 @@ module TwoPercent
       external_id: :external_id,
       display_name: :display_name,
       resource_type: :resource_type,
-      active: :active
+      active: :active,
     }
   end
 

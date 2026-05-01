@@ -9,7 +9,7 @@ class CreateTwoPercentScimUsers < ActiveRecord::Migration[7.0]
       t.string :display_name
       t.string :email
       t.boolean :active, default: true
-      t.text :scim_data, limit: 16_777_215  # MEDIUMTEXT for MySQL
+      t.text :scim_data, limit: 16_777_215 # MEDIUMTEXT for MySQL
       t.string :correlation_id
 
       t.timestamps

@@ -14,7 +14,7 @@ module TwoPercent
       publish_created_event(record)
 
       log_scim_operation("create", "complete", record.scim_id)
-      
+
       # RFC 7644: 201 Created with Location header and resource body
       response.headers["Location"] = scim_resource_url(record)
       render json: record.to_scim_representation, status: :created
@@ -25,21 +25,21 @@ module TwoPercent
 
       # Find existing record
       record = find_scim_record(params[:id])
-      
+
       # Apply SCIM PATCH operations (RFC 7644 compliance)
       processor = TwoPercent::Scim::PatchProcessor.new(scim_params)
       current_scim_data = record.scim_data || {}
       patched_data = processor.apply_to_hash(current_scim_data)
-      
+
       # Persist patched data
-      patched_data["id"] = params[:id]  # Ensure ID is present
+      patched_data["id"] = params[:id] # Ensure ID is present
       updated_record = persist_scim_record(patched_data)
 
       # Publish domain event with final state
       publish_updated_event(updated_record)
 
       log_scim_operation("update", "complete", record.scim_id)
-      
+
       # RFC 7644: 200 OK with updated resource body
       render json: updated_record.to_scim_representation, status: :ok
     end
@@ -48,13 +48,13 @@ module TwoPercent
       log_scim_operation("replace", "start")
 
       # Upsert record (create or replace)
-      was_new = 
+      was_new =
         if user_resource?
           !TwoPercent::ScimUser.exists_by_scim_id?(params[:id])
         else
           !TwoPercent::ScimGroup.exists_by_scim_id?(params[:id])
         end
-      
+
       record = upsert_scim_record(params[:id], scim_params)
 
       # Publish appropriate domain event
@@ -65,7 +65,7 @@ module TwoPercent
       end
 
       log_scim_operation("replace", "complete", record.scim_id)
-      
+
       # RFC 7644: 201 Created (if new) or 200 OK (if replaced)
       if was_new
         response.headers["Location"] = scim_resource_url(record)
@@ -81,7 +81,7 @@ module TwoPercent
       # Find and destroy record
       record = find_scim_record(params[:id])
       scim_id = record.scim_id
-      
+
       # Destroy record
       if user_resource?
         TwoPercent::ScimUser.destroy_by_scim_id(scim_id)
@@ -93,7 +93,7 @@ module TwoPercent
       publish_deleted_event(scim_id)
 
       log_scim_operation("delete", "complete", scim_id)
-      
+
       # RFC 7644: 204 No Content
       head :no_content
     end
@@ -101,7 +101,8 @@ module TwoPercent
   private
 
     def extract_correlation_id
-      @correlation_id = request.headers["X-Correlation-Id"] || SecureRandom.uuid
+      header_name = TwoPercent.config.correlation_id_header
+      @correlation_id = request.headers[header_name] || SecureRandom.uuid
     end
 
     def scim_params
@@ -127,7 +128,7 @@ module TwoPercent
     end
 
     def find_scim_record(scim_id)
-      record = 
+      record =
         if user_resource?
           TwoPercent::ScimUser.find_by_scim_id(scim_id)
         elsif group_resource?
@@ -153,11 +154,11 @@ module TwoPercent
         operation: operation,
         resource_type: params[:resource_type],
         stage: stage,
-        service: "two_percent"
+        service: "two_percent",
       }
       log_data[:scim_id] = scim_id if scim_id
 
-      Rails.logger.info(log_data.to_json) if defined?(Rails)
+      Rails.logger.info(log_data.to_json)
     end
 
     # Domain event publishers

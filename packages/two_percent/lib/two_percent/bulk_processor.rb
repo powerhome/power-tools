@@ -10,14 +10,17 @@ module TwoPercent
     def dispatch
       @operations.each do |operation|
         resource_type, id = parse_path(operation[:path])
-        
+
         # Persist data to two_percent tables first (wrapped in transaction for bulk integrity)
         ActiveRecord::Base.transaction do
           record = persist_bulk_operation(operation[:method], resource_type, id, operation[:data])
-          
+
           # Publish domain events based on operation
           # Note: DELETE operations don't return a record, but still need to publish events
-          publish_domain_event(operation[:method], resource_type, record, id) if record || operation[:method] == "DELETE"
+          if record || operation[:method] == "DELETE"
+            publish_domain_event(operation[:method], resource_type, record,
+                                 id)
+          end
         end
       end
     end
@@ -38,7 +41,7 @@ module TwoPercent
         persist_update(resource_type, id, data)
       when "DELETE"
         persist_delete(resource_type, id)
-        nil  # No record to return for deletes
+        nil # No record to return for deletes
       else
         raise ArgumentError, "Unknown HTTP method: #{method}"
       end

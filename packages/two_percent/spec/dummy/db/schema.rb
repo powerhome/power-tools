@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_28_000003) do
+ActiveRecord::Schema[8.1].define(version: 20_260_428_000_003) do
   create_table "two_percent_scim_group_memberships", force: :cascade do |t|
     t.string "correlation_id"
     t.datetime "created_at", null: false
@@ -19,7 +21,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_000003) do
     t.datetime "updated_at", null: false
     t.index ["correlation_id"], name: "index_two_percent_scim_group_memberships_on_correlation_id"
     t.index ["scim_group_id"], name: "index_two_percent_scim_group_memberships_on_scim_group_id"
-    t.index ["scim_user_id", "scim_group_id"], name: "index_scim_memberships_on_user_and_group", unique: true
+    t.index %w[scim_user_id scim_group_id], name: "index_scim_memberships_on_user_and_group", unique: true
     t.index ["scim_user_id"], name: "index_two_percent_scim_group_memberships_on_scim_user_id"
   end
 
@@ -30,13 +32,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_000003) do
     t.string "display_name", null: false
     t.string "external_id", null: false
     t.string "resource_type", null: false
-    t.text "scim_data", limit: 16777215
+    t.text "scim_data", limit: 16_777_215
     t.string "scim_id", null: false
     t.datetime "updated_at", null: false
     t.index ["active"], name: "index_two_percent_scim_groups_on_active"
     t.index ["correlation_id"], name: "index_two_percent_scim_groups_on_correlation_id"
     t.index ["external_id"], name: "index_two_percent_scim_groups_on_external_id"
-    t.index ["resource_type", "external_id"], name: "index_scim_groups_on_resource_and_external_id"
+    t.index %w[resource_type external_id], name: "index_scim_groups_on_resource_and_external_id"
     t.index ["resource_type"], name: "index_two_percent_scim_groups_on_resource_type"
     t.index ["scim_id"], name: "index_two_percent_scim_groups_on_scim_id", unique: true
   end
@@ -48,7 +50,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_000003) do
     t.string "display_name"
     t.string "email"
     t.string "external_id", null: false
-    t.text "scim_data", limit: 16777215
+    t.text "scim_data", limit: 16_777_215
     t.string "scim_id", null: false
     t.datetime "updated_at", null: false
     t.string "user_name"

@@ -6,7 +6,7 @@ module TwoPercent
     serialize :scim_data, coder: JSON
 
     has_many :scim_group_memberships, class_name: "TwoPercent::ScimGroupMembership",
-             foreign_key: :scim_group_id, dependent: :destroy
+                                      foreign_key: :scim_group_id, dependent: :destroy
     has_many :scim_users, through: :scim_group_memberships
 
     validates :scim_id, presence: true, uniqueness: true
@@ -32,14 +32,12 @@ module TwoPercent
       # Generate ID if not present (for POST/create operations)
       scim_hash = scim_hash.dup
       scim_hash["id"] ||= SecureRandom.uuid
-      
+
       validated_data = TwoPercent::Scim::Schema.validate_group(scim_hash, require_id: true)
       scim_group = find_or_initialize_by(scim_id: scim_hash["id"])
       scim_group.update_from_scim!(resource_type, validated_data, correlation_id: correlation_id)
 
-      if scim_hash["members"].present?
-        scim_group.sync_members(scim_hash["members"], correlation_id)
-      end
+      scim_group.sync_members(scim_hash["members"], correlation_id) if scim_hash["members"].present?
 
       scim_group
     end
@@ -67,18 +65,18 @@ module TwoPercent
 
     def to_scim_representation
       representation = TwoPercent.group_mapper.build_scim_representation(self, resource_type: resource_type)
-      
+
       # Include members from associations if loaded or present
       if scim_users.loaded? || scim_users.any?
         representation["members"] = scim_users.map do |user|
           {
             "value" => user.scim_id,
             "display" => user.display_name,
-            "$ref" => "Users/#{user.scim_id}"
+            "$ref" => "Users/#{user.scim_id}",
           }
         end
       end
-      
+
       representation
     end
 
@@ -91,13 +89,14 @@ module TwoPercent
       self.resource_type = resource_type
 
       extension_data = validated_data[:extensions]
-      self.active = extension_data.dig("urn:ietf:params:scim:schemas:extension:authservice:2.0:Group", "active") != false
+      self.active = extension_data.dig("urn:ietf:params:scim:schemas:extension:authservice:2.0:Group",
+                                       "active") != false
       self.correlation_id = correlation_id
       save!
     end
 
     def sync_members(members_array, correlation_id)
-      member_scim_ids = members_array.map { |m| m["value"] }.compact
+      member_scim_ids = members_array.filter_map { |m| m["value"] }
       existing_user_ids = scim_group_memberships.pluck(:scim_user_id)
 
       users_to_add = TwoPercent::ScimUser.where(scim_id: member_scim_ids).where.not(id: existing_user_ids)

@@ -10,17 +10,17 @@ module TwoPercent
 
     def authenticate
       result = instance_exec(&TwoPercent.config.authenticate)
-      
-      unless result
-        render_scim_error(
-          status: :unauthorized,
-          scim_type: nil,  # RFC 7644: No scimType for 401
-          detail: "Authentication failed"
-        )
-      end
+
+      return if result
+
+      render_scim_error(
+        status: :unauthorized,
+        scim_type: nil, # RFC 7644: No scimType for 401
+        detail: "Authentication failed"
+      )
     end
 
-    private
+  private
 
     def handle_record_not_found(exception)
       # RFC 7644 Section 3.12: Error Response with scimType
@@ -68,7 +68,7 @@ module TwoPercent
     end
 
     # RFC 7644 Section 3.12: SCIM Error Response Format
-    # 
+    #
     # scimType values:
     # - invalidFilter: The specified filter syntax was invalid
     # - tooMany: The specified filter yields many more results than the server is willing to calculate
@@ -85,7 +85,7 @@ module TwoPercent
       error_response = {
         schemas: ["urn:ietf:params:scim:api:messages:2.0:Error"],
         status: Rack::Utils::SYMBOL_TO_STATUS_CODE[status].to_s,
-        detail: detail
+        detail: detail,
       }
 
       # RFC 7644: scimType is optional, only include if provided

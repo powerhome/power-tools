@@ -38,17 +38,17 @@ RSpec.describe TwoPercent::Scim::Schema do
         "userName" => "john.doe@example.com",
         "displayName" => "John Doe",
         "emails" => [
-          { "value" => "john@example.com", "type" => "work", "primary" => true }
+          { "value" => "john@example.com", "type" => "work", "primary" => true },
         ],
-        "active" => true
+        "active" => true,
       }
     end
 
     context "with require_id: true (default)" do
       it "validates a complete user" do
-        expect {
+        expect do
           described_class.validate_user(valid_user)
-        }.not_to raise_error
+        end.not_to raise_error
       end
 
       it "returns normalized user data with core and extensions" do
@@ -63,17 +63,17 @@ RSpec.describe TwoPercent::Scim::Schema do
       it "raises error when id is missing" do
         invalid_user = valid_user.dup.tap { |u| u.delete("id") }
 
-        expect {
+        expect do
           described_class.validate_user(invalid_user)
-        }.to raise_error(ArgumentError, "Missing required attributes: id")
+        end.to raise_error(ArgumentError, "Missing required attributes: id")
       end
 
       it "raises error when externalId is missing" do
         invalid_user = valid_user.dup.tap { |u| u.delete("externalId") }
 
-        expect {
+        expect do
           described_class.validate_user(invalid_user)
-        }.to raise_error(ArgumentError, "Missing required attributes: externalId")
+        end.to raise_error(ArgumentError, "Missing required attributes: externalId")
       end
     end
 
@@ -81,17 +81,17 @@ RSpec.describe TwoPercent::Scim::Schema do
       it "allows user without id (for creation)" do
         user_without_id = valid_user.dup.tap { |u| u.delete("id") }
 
-        expect {
+        expect do
           described_class.validate_user(user_without_id, require_id: false)
-        }.not_to raise_error
+        end.not_to raise_error
       end
 
       it "still requires externalId" do
         user_without_external_id = valid_user.dup.tap { |u| u.delete("externalId") }
 
-        expect {
+        expect do
           described_class.validate_user(user_without_external_id, require_id: false)
-        }.to raise_error(ArgumentError, "Missing required attributes: externalId")
+        end.to raise_error(ArgumentError, "Missing required attributes: externalId")
       end
     end
 
@@ -99,27 +99,28 @@ RSpec.describe TwoPercent::Scim::Schema do
       it "raises error when schemas attribute is missing" do
         user_without_schemas = valid_user.dup.tap { |u| u.delete("schemas") }
 
-        expect {
+        expect do
           described_class.validate_user(user_without_schemas)
-        }.to raise_error(ArgumentError, "schemas attribute is required")
+        end.to raise_error(ArgumentError, "schemas attribute is required")
       end
 
       it "raises error when schemas is empty array" do
         user_with_empty_schemas = valid_user.merge("schemas" => [])
 
-        expect {
+        expect do
           described_class.validate_user(user_with_empty_schemas)
-        }.to raise_error(ArgumentError, "schemas attribute is required")
+        end.to raise_error(ArgumentError, "schemas attribute is required")
       end
 
       it "accepts extension schemas" do
         user_with_extension = valid_user.merge(
-          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User", "urn:ietf:params:scim:schemas:extension:authservice:2.0:User"]
+          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User",
+                        "urn:ietf:params:scim:schemas:extension:authservice:2.0:User"]
         )
 
-        expect {
+        expect do
           described_class.validate_user(user_with_extension)
-        }.not_to raise_error
+        end.not_to raise_error
       end
     end
 
@@ -129,13 +130,13 @@ RSpec.describe TwoPercent::Scim::Schema do
           "name" => {
             "givenName" => "John",
             "familyName" => "Doe",
-            "middleName" => "M"
+            "middleName" => "M",
           }
         )
 
-        expect {
+        expect do
           described_class.validate_user(user_with_name)
-        }.not_to raise_error
+        end.not_to raise_error
       end
 
       it "raises error for invalid name attributes" do
@@ -143,22 +144,22 @@ RSpec.describe TwoPercent::Scim::Schema do
           "name" => { "invalidKey" => "value" }
         )
 
-        expect {
+        expect do
           described_class.validate_user(user_with_invalid_name)
-        }.to raise_error(ArgumentError, /Invalid name attributes/)
+        end.to raise_error(ArgumentError, /Invalid name attributes/)
       end
 
       it "validates emails multi-valued attribute" do
         user_with_emails = valid_user.merge(
           "emails" => [
             { "value" => "john@example.com", "type" => "work" },
-            { "value" => "john.doe@personal.com", "type" => "home" }
+            { "value" => "john.doe@personal.com", "type" => "home" },
           ]
         )
 
-        expect {
+        expect do
           described_class.validate_user(user_with_emails)
-        }.not_to raise_error
+        end.not_to raise_error
       end
 
       it "raises error when emails missing required keys" do
@@ -166,21 +167,21 @@ RSpec.describe TwoPercent::Scim::Schema do
           "emails" => [{ "value" => "john@example.com" }] # Missing 'type'
         )
 
-        expect {
+        expect do
           described_class.validate_user(user_with_invalid_emails)
-        }.to raise_error(ArgumentError, /Multi-valued attribute item 0 missing: type/)
+        end.to raise_error(ArgumentError, /Multi-valued attribute item 0 missing: type/)
       end
 
       it "validates phoneNumbers multi-valued attribute" do
         user_with_phones = valid_user.merge(
           "phoneNumbers" => [
-            { "value" => "555-1234", "type" => "mobile" }
+            { "value" => "555-1234", "type" => "mobile" },
           ]
         )
 
-        expect {
+        expect do
           described_class.validate_user(user_with_phones)
-        }.not_to raise_error
+        end.not_to raise_error
       end
 
       it "raises error when phoneNumbers missing required keys" do
@@ -188,21 +189,21 @@ RSpec.describe TwoPercent::Scim::Schema do
           "phoneNumbers" => [{ "value" => "555-1234" }] # Missing 'type'
         )
 
-        expect {
+        expect do
           described_class.validate_user(user_with_invalid_phones)
-        }.to raise_error(ArgumentError, /Multi-valued attribute item 0 missing: type/)
+        end.to raise_error(ArgumentError, /Multi-valued attribute item 0 missing: type/)
       end
 
       it "validates addresses multi-valued attribute" do
         user_with_addresses = valid_user.merge(
           "addresses" => [
-            { "type" => "work", "streetAddress" => "123 Main St", "locality" => "Springfield" }
+            { "type" => "work", "streetAddress" => "123 Main St", "locality" => "Springfield" },
           ]
         )
 
-        expect {
+        expect do
           described_class.validate_user(user_with_addresses)
-        }.not_to raise_error
+        end.not_to raise_error
       end
 
       it "raises error when addresses missing type" do
@@ -210,21 +211,21 @@ RSpec.describe TwoPercent::Scim::Schema do
           "addresses" => [{ "streetAddress" => "123 Main St" }] # Missing 'type'
         )
 
-        expect {
+        expect do
           described_class.validate_user(user_with_invalid_addresses)
-        }.to raise_error(ArgumentError, /Multi-valued attribute item 0 missing: type/)
+        end.to raise_error(ArgumentError, /Multi-valued attribute item 0 missing: type/)
       end
 
       it "validates photos multi-valued attribute" do
         user_with_photos = valid_user.merge(
           "photos" => [
-            { "value" => "https://example.com/photo.jpg", "type" => "photo" }
+            { "value" => "https://example.com/photo.jpg", "type" => "photo" },
           ]
         )
 
-        expect {
+        expect do
           described_class.validate_user(user_with_photos)
-        }.not_to raise_error
+        end.not_to raise_error
       end
 
       it "raises error when multi-valued item is not a hash" do
@@ -232,9 +233,9 @@ RSpec.describe TwoPercent::Scim::Schema do
           "emails" => ["string-instead-of-hash"]
         )
 
-        expect {
+        expect do
           described_class.validate_user(user_with_invalid_emails)
-        }.to raise_error(ArgumentError, /Multi-valued attribute item 0 must be an object/)
+        end.to raise_error(ArgumentError, /Multi-valued attribute item 0 must be an object/)
       end
     end
 
@@ -250,7 +251,7 @@ RSpec.describe TwoPercent::Scim::Schema do
         user_with_extension = valid_user.merge(
           "urn:ietf:params:scim:schemas:extension:authservice:2.0:User" => {
             "department" => "Engineering",
-            "role" => "Developer"
+            "role" => "Developer",
           }
         )
 
@@ -275,15 +276,15 @@ RSpec.describe TwoPercent::Scim::Schema do
         "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
         "id" => "group-123",
         "displayName" => "Engineering",
-        "members" => []
+        "members" => [],
       }
     end
 
     context "with require_id: true (default)" do
       it "validates a complete group" do
-        expect {
+        expect do
           described_class.validate_group(valid_group)
-        }.not_to raise_error
+        end.not_to raise_error
       end
 
       it "returns normalized group data" do
@@ -298,17 +299,17 @@ RSpec.describe TwoPercent::Scim::Schema do
       it "raises error when id is missing" do
         invalid_group = valid_group.dup.tap { |g| g.delete("id") }
 
-        expect {
+        expect do
           described_class.validate_group(invalid_group)
-        }.to raise_error(ArgumentError, "Missing required attributes: id")
+        end.to raise_error(ArgumentError, "Missing required attributes: id")
       end
 
       it "raises error when displayName is missing" do
         invalid_group = valid_group.dup.tap { |g| g.delete("displayName") }
 
-        expect {
+        expect do
           described_class.validate_group(invalid_group)
-        }.to raise_error(ArgumentError, /Missing required attributes.*displayName/)
+        end.to raise_error(ArgumentError, /Missing required attributes.*displayName/)
       end
     end
 
@@ -316,17 +317,17 @@ RSpec.describe TwoPercent::Scim::Schema do
       it "allows group without id (for creation)" do
         group_without_id = valid_group.dup.tap { |g| g.delete("id") }
 
-        expect {
+        expect do
           described_class.validate_group(group_without_id, require_id: false)
-        }.not_to raise_error
+        end.not_to raise_error
       end
 
       it "still requires displayName" do
         group_without_display_name = valid_group.dup.tap { |g| g.delete("displayName") }
 
-        expect {
+        expect do
           described_class.validate_group(group_without_display_name, require_id: false)
-        }.to raise_error(ArgumentError, "Missing required attributes: displayName")
+        end.to raise_error(ArgumentError, "Missing required attributes: displayName")
       end
     end
 
@@ -334,17 +335,17 @@ RSpec.describe TwoPercent::Scim::Schema do
       it "raises error when schemas attribute is missing" do
         group_without_schemas = valid_group.dup.tap { |g| g.delete("schemas") }
 
-        expect {
+        expect do
           described_class.validate_group(group_without_schemas)
-        }.to raise_error(ArgumentError, "schemas attribute is required")
+        end.to raise_error(ArgumentError, "schemas attribute is required")
       end
 
       it "raises error when schemas is empty array" do
         group_with_empty_schemas = valid_group.merge("schemas" => [])
 
-        expect {
+        expect do
           described_class.validate_group(group_with_empty_schemas)
-        }.to raise_error(ArgumentError, "schemas attribute is required")
+        end.to raise_error(ArgumentError, "schemas attribute is required")
       end
     end
 
@@ -359,7 +360,7 @@ RSpec.describe TwoPercent::Scim::Schema do
       it "handles group with members" do
         group_with_members = valid_group.merge(
           "members" => [
-            { "value" => "user-123", "display" => "John Doe" }
+            { "value" => "user-123", "display" => "John Doe" },
           ]
         )
 
@@ -379,8 +380,8 @@ RSpec.describe TwoPercent::Scim::Schema do
         "displayName" => "John Doe",
         "customAttribute" => "custom",
         "urn:ietf:params:scim:schemas:extension:authservice:2.0:User" => {
-          "department" => "Engineering"
-        }
+          "department" => "Engineering",
+        },
       }
 
       result = described_class.normalize_user(user_hash)
@@ -396,7 +397,7 @@ RSpec.describe TwoPercent::Scim::Schema do
       group_hash = {
         "id" => "group-123",
         "displayName" => "Engineering",
-        "customAttribute" => "custom"
+        "customAttribute" => "custom",
       }
 
       result = described_class.normalize_group(group_hash)
@@ -412,7 +413,7 @@ RSpec.describe TwoPercent::Scim::Schema do
         "id" => "123",
         "userName" => "john@example.com",
         "customAttr" => "custom",
-        "anotherAttr" => "another"
+        "anotherAttr" => "another",
       }
 
       result = described_class.extract_core_attributes(scim_hash, %w[id userName])
@@ -427,7 +428,7 @@ RSpec.describe TwoPercent::Scim::Schema do
         "id" => "123",
         "userName" => "john@example.com",
         "urn:ietf:params:scim:schemas:extension:authservice:2.0:User" => { "department" => "Engineering" },
-        "urn:ietf:params:scim:schemas:extension:custom:1.0:User" => { "customField" => "value" }
+        "urn:ietf:params:scim:schemas:extension:custom:1.0:User" => { "customField" => "value" },
       }
 
       result = described_class.extract_extensions(scim_hash)
@@ -440,7 +441,7 @@ RSpec.describe TwoPercent::Scim::Schema do
     it "returns empty hash when no extensions present" do
       scim_hash = {
         "id" => "123",
-        "userName" => "john@example.com"
+        "userName" => "john@example.com",
       }
 
       result = described_class.extract_extensions(scim_hash)
@@ -451,44 +452,44 @@ RSpec.describe TwoPercent::Scim::Schema do
 
   describe ".validate_schemas_present" do
     it "raises error when schemas is nil" do
-      expect {
+      expect do
         described_class.validate_schemas_present({})
-      }.to raise_error(ArgumentError, "schemas attribute is required")
+      end.to raise_error(ArgumentError, "schemas attribute is required")
     end
 
     it "raises error when schemas is empty" do
-      expect {
+      expect do
         described_class.validate_schemas_present({ "schemas" => [] })
-      }.to raise_error(ArgumentError, "schemas attribute is required")
+      end.to raise_error(ArgumentError, "schemas attribute is required")
     end
 
     it "does not raise error when schemas has values" do
-      expect {
+      expect do
         described_class.validate_schemas_present({ "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"] })
-      }.not_to raise_error
+      end.not_to raise_error
     end
   end
 
   describe ".validate_required_attributes" do
     it "raises error when required attribute is missing" do
-      expect {
+      expect do
         described_class.validate_required_attributes({ "id" => "123" }, %w[id externalId])
-      }.to raise_error(ArgumentError, "Missing required attributes: externalId")
+      end.to raise_error(ArgumentError, "Missing required attributes: externalId")
     end
 
     it "raises error when multiple required attributes are missing" do
-      expect {
+      expect do
         described_class.validate_required_attributes({}, %w[id externalId userName])
-      }.to raise_error(ArgumentError, /Missing required attributes/)
+      end.to raise_error(ArgumentError, /Missing required attributes/)
     end
 
     it "does not raise error when all required attributes present" do
-      expect {
+      expect do
         described_class.validate_required_attributes(
           { "id" => "123", "externalId" => "ext-123" },
           %w[id externalId]
         )
-      }.not_to raise_error
+      end.not_to raise_error
     end
   end
 
@@ -500,29 +501,29 @@ RSpec.describe TwoPercent::Scim::Schema do
         "givenName" => "John",
         "middleName" => "M",
         "honorificPrefix" => "Mr.",
-        "honorificSuffix" => "Jr."
+        "honorificSuffix" => "Jr.",
       }
 
-      expect {
+      expect do
         described_class.validate_name_structure(name)
-      }.not_to raise_error
+      end.not_to raise_error
     end
 
     it "raises error for invalid name keys" do
       name = {
         "givenName" => "John",
-        "invalidKey" => "invalid"
+        "invalidKey" => "invalid",
       }
 
-      expect {
+      expect do
         described_class.validate_name_structure(name)
-      }.to raise_error(ArgumentError, /Invalid name attributes: invalidKey/)
+      end.to raise_error(ArgumentError, /Invalid name attributes: invalidKey/)
     end
 
     it "does not validate non-hash name" do
-      expect {
+      expect do
         described_class.validate_name_structure("string-name")
-      }.not_to raise_error
+      end.not_to raise_error
     end
   end
 
@@ -530,34 +531,34 @@ RSpec.describe TwoPercent::Scim::Schema do
     it "validates array of valid objects" do
       emails = [
         { "value" => "john@example.com", "type" => "work" },
-        { "value" => "john.doe@personal.com", "type" => "home" }
+        { "value" => "john.doe@personal.com", "type" => "home" },
       ]
 
-      expect {
+      expect do
         described_class.validate_multi_valued(emails, %w[value type])
-      }.not_to raise_error
+      end.not_to raise_error
     end
 
     it "raises error when item is not a hash" do
       emails = ["string-instead-of-hash"]
 
-      expect {
+      expect do
         described_class.validate_multi_valued(emails, %w[value type])
-      }.to raise_error(ArgumentError, /Multi-valued attribute item 0 must be an object/)
+      end.to raise_error(ArgumentError, /Multi-valued attribute item 0 must be an object/)
     end
 
     it "raises error when required key is missing" do
       emails = [{ "value" => "john@example.com" }] # Missing 'type'
 
-      expect {
+      expect do
         described_class.validate_multi_valued(emails, %w[value type])
-      }.to raise_error(ArgumentError, /Multi-valued attribute item 0 missing: type/)
+      end.to raise_error(ArgumentError, /Multi-valued attribute item 0 missing: type/)
     end
 
     it "does not validate non-array input" do
-      expect {
+      expect do
         described_class.validate_multi_valued("not-an-array", %w[value type])
-      }.not_to raise_error
+      end.not_to raise_error
     end
   end
 end

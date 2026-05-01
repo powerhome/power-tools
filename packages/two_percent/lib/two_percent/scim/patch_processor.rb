@@ -13,7 +13,7 @@ module TwoPercent
 
       def apply_to_hash(scim_hash)
         result = scim_hash.deep_dup
-        
+
         operations.each do |operation|
           case operation[:op].downcase
           when "add"
@@ -26,7 +26,7 @@ module TwoPercent
             raise ArgumentError, "Unknown PATCH operation: #{operation[:op]}"
           end
         end
-        
+
         result
       end
 
@@ -35,7 +35,7 @@ module TwoPercent
       def parse_operations(patch_request)
         ops = patch_request["Operations"] || patch_request[:Operations]
         raise ArgumentError, "PATCH request must contain 'Operations' array" unless ops.is_a?(Array)
-        
+
         ops.flat_map do |op|
           derive_operation(op)
         end
@@ -57,7 +57,7 @@ module TwoPercent
           [{
             op: operation["op"] || operation[:op],
             path: operation["path"] || operation[:path],
-            value: operation["value"] || operation[:value]
+            value: operation["value"] || operation[:value],
           }]
         end
       end
@@ -70,12 +70,12 @@ module TwoPercent
           keys = path.split(".")
           target = navigate_to_parent(hash, keys[0..-2])
           last_key = keys.last
-          
-          if target[last_key].is_a?(Array)
-            target[last_key] = (target[last_key] + [value]).flatten
-          else
-            target[last_key] = value
-          end
+
+          target[last_key] = if target[last_key].is_a?(Array)
+                               (target[last_key] + [value]).flatten
+                             else
+                               value
+                             end
         end
       end
 
@@ -92,7 +92,7 @@ module TwoPercent
 
       def apply_remove(hash, path)
         return if path.nil? || path.empty?
-        
+
         keys = path.split(".")
         target = navigate_to_parent(hash, keys[0..-2])
         target.delete(keys.last)
@@ -100,7 +100,7 @@ module TwoPercent
 
       def navigate_to_parent(hash, keys)
         return hash if keys.empty?
-        
+
         keys.reduce(hash) do |current, key|
           current[key] ||= {}
           current[key]

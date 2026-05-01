@@ -6,7 +6,7 @@ module TwoPercent
     serialize :scim_data, coder: JSON
 
     has_many :scim_group_memberships, class_name: "TwoPercent::ScimGroupMembership",
-             foreign_key: :scim_user_id, dependent: :destroy
+                                      foreign_key: :scim_user_id, dependent: :destroy
     has_many :scim_groups, through: :scim_group_memberships
 
     validates :scim_id, presence: true, uniqueness: true
@@ -62,7 +62,7 @@ module TwoPercent
           {
             scim_id: group.scim_id,
             display_name: group.display_name,
-            resource_type: group.resource_type
+            resource_type: group.resource_type,
           }
         end
       end

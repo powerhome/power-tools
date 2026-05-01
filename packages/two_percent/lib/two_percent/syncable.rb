@@ -6,13 +6,13 @@ module TwoPercent
   # Usage:
   #   class User < ApplicationRecord
   #     include TwoPercent::Syncable
-  #     
+  #
   #     syncable_as :user, scim_id_column: :scim_id
   #   end
   #
   #   class Group < ApplicationRecord
   #     include TwoPercent::Syncable
-  #     
+  #
   #     syncable_as :group, scim_id_column: :scim_id
   #   end
   #
@@ -72,11 +72,11 @@ module TwoPercent
         end
       end
 
-      private
+    private
 
       def setup_user_syncable
         # Association to ScimUser
-        belongs_to :scim_user, 
+        belongs_to :scim_user,
                    class_name: "TwoPercent::ScimUser",
                    foreign_key: syncable_scim_id_column,
                    primary_key: "scim_id",
@@ -99,13 +99,13 @@ module TwoPercent
       end
 
       def setup_callbacks
-        after_commit :sync_to_scim_async, on: [:create, :update]
+        after_commit :sync_to_scim_async, on: %i[create update]
       end
 
       def sync_user_from_event(event)
         attrs = event.user_attributes
         scim_id = attrs[:scim_id]
-        
+
         return unless scim_id
 
         record = find_or_initialize_by(syncable_scim_id_column => scim_id)
@@ -117,7 +117,7 @@ module TwoPercent
       def sync_group_from_event(event)
         attrs = event.group_attributes
         scim_id = attrs[:scim_id]
-        
+
         return unless scim_id
 
         record = find_or_initialize_by(syncable_scim_id_column => scim_id)
@@ -169,11 +169,11 @@ module TwoPercent
     # Refresh this record from SCIM data
     def refresh_from_scim
       scim_record = case syncable_type
-      when :user
-        scim_user
-      when :group
-        scim_group
-      end
+                    when :user
+                      scim_user
+                    when :group
+                      scim_group
+                    end
 
       return unless scim_record
 
@@ -181,8 +181,6 @@ module TwoPercent
       assign_attributes(self.class.send(:map_scim_attributes_to_domain, attrs))
       save! if changed?
     end
-
-    private
 
     def sync_user_to_scim(correlation_id:)
       scim_data = map_domain_attributes_to_scim
@@ -223,7 +221,7 @@ module TwoPercent
         "id" => send(syncable_scim_id_column),
         "externalId" => try(:external_id) || "ext-#{id}",
         "displayName" => try(:display_name) || try(:name),
-        "active" => try(:active)
+        "active" => try(:active),
       }.compact
     end
   end

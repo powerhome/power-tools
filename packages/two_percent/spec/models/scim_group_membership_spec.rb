@@ -38,7 +38,7 @@ RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
 
       it "prevents duplicate memberships for the same user and group" do
         duplicate = described_class.new(scim_user: user, scim_group: group)
-        
+
         expect(duplicate).not_to be_valid
         expect(duplicate.errors[:scim_user_id]).to be_present
       end
@@ -46,14 +46,14 @@ RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
       it "allows the same user in different groups" do
         other_group = create_scim_group
         membership = described_class.new(scim_user: user, scim_group: other_group)
-        
+
         expect(membership).to be_valid
       end
 
       it "allows different users in the same group" do
         other_user = create_scim_user
         membership = described_class.new(scim_user: other_user, scim_group: group)
-        
+
         expect(membership).to be_valid
       end
     end
@@ -63,26 +63,26 @@ RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
     it "stores correlation_id when provided" do
       user = create_scim_user
       group = create_scim_group
-      
+
       membership = described_class.create!(
         scim_user: user,
         scim_group: group,
         correlation_id: "test-correlation-123"
       )
-      
+
       expect(membership.correlation_id).to eq("test-correlation-123")
     end
 
     it "allows nil correlation_id" do
       user = create_scim_user
       group = create_scim_group
-      
+
       membership = described_class.create!(
         scim_user: user,
         scim_group: group,
         correlation_id: nil
       )
-      
+
       expect(membership.correlation_id).to be_nil
     end
   end
@@ -91,17 +91,17 @@ RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
     it "persists to database" do
       user = create_scim_user
       group = create_scim_group
-      
-      expect {
+
+      expect do
         described_class.create!(scim_user: user, scim_group: group)
-      }.to change { described_class.count }.by(1)
+      end.to change { described_class.count }.by(1)
     end
 
     it "can be retrieved from database" do
       user = create_scim_user
       group = create_scim_group
       membership = described_class.create!(scim_user: user, scim_group: group)
-      
+
       retrieved = described_class.find(membership.id)
       expect(retrieved.scim_user).to eq(user)
       expect(retrieved.scim_group).to eq(group)
@@ -114,15 +114,15 @@ RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
     let!(:membership) { described_class.create!(scim_user: user, scim_group: group) }
 
     it "is deleted when user is destroyed" do
-      expect {
+      expect do
         user.destroy
-      }.to change { described_class.count }.by(-1)
+      end.to change { described_class.count }.by(-1)
     end
 
     it "is deleted when group is destroyed" do
-      expect {
+      expect do
         group.destroy
-      }.to change { described_class.count }.by(-1)
+      end.to change { described_class.count }.by(-1)
     end
   end
 
@@ -156,14 +156,14 @@ RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
 
   describe "bulk operations" do
     let(:user) { create_scim_user }
-    let(:groups) { 3.times.map { create_scim_group } }
+    let(:groups) { Array.new(3) { create_scim_group } }
 
     it "can create multiple memberships at once" do
-      expect {
+      expect do
         groups.each do |group|
           described_class.create!(scim_user: user, scim_group: group)
         end
-      }.to change { described_class.count }.by(3)
+      end.to change { described_class.count }.by(3)
     end
 
     it "can delete multiple memberships at once" do
@@ -171,9 +171,9 @@ RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
         described_class.create!(scim_user: user, scim_group: group)
       end
 
-      expect {
+      expect do
         described_class.where(scim_user: user).destroy_all
-      }.to change { described_class.count }.by(-3)
+      end.to change { described_class.count }.by(-3)
     end
   end
 
@@ -181,7 +181,7 @@ RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
   def build_membership(attributes = {})
     default_attributes = {
       scim_user: create_scim_user,
-      scim_group: create_scim_group
+      scim_group: create_scim_group,
     }
     described_class.new(default_attributes.merge(attributes))
   end
@@ -201,8 +201,8 @@ RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
         "userName" => "test.user@example.com",
         "displayName" => "Test User",
         "emails" => [{ "value" => "test.user@example.com", "type" => "work", "primary" => true }],
-        "active" => true
-      }
+        "active" => true,
+      },
     }
     TwoPercent::ScimUser.create!(default_attributes.merge(attributes))
   end
@@ -218,8 +218,8 @@ RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
         "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
         "id" => "test",
         "displayName" => "Test Group",
-        "members" => []
-      }
+        "members" => [],
+      },
     }
     TwoPercent::ScimGroup.create!(default_attributes.merge(attributes))
   end

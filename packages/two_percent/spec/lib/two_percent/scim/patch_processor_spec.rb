@@ -8,8 +8,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
       patch_request = {
         schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
         Operations: [
-          { op: "replace", path: "displayName", value: "New Name" }
-        ]
+          { op: "replace", path: "displayName", value: "New Name" },
+        ],
       }
 
       processor = described_class.new(patch_request)
@@ -20,17 +20,17 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
     it "raises error when Operations array is missing" do
       invalid_request = { schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"] }
 
-      expect {
+      expect do
         described_class.new(invalid_request)
-      }.to raise_error(ArgumentError, "PATCH request must contain 'Operations' array")
+      end.to raise_error(ArgumentError, "PATCH request must contain 'Operations' array")
     end
 
     it "raises error when Operations is not an array" do
       invalid_request = { Operations: "not-an-array" }
 
-      expect {
+      expect do
         described_class.new(invalid_request)
-      }.to raise_error(ArgumentError, "PATCH request must contain 'Operations' array")
+      end.to raise_error(ArgumentError, "PATCH request must contain 'Operations' array")
     end
   end
 
@@ -43,9 +43,9 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
         "userName" => "john.doe@example.com",
         "displayName" => "John Doe",
         "emails" => [
-          { "value" => "john@example.com", "type" => "work", "primary" => true }
+          { "value" => "john@example.com", "type" => "work", "primary" => true },
         ],
-        "active" => true
+        "active" => true,
       }
     end
 
@@ -53,8 +53,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
       it "replaces a simple attribute" do
         patch_request = {
           Operations: [
-            { op: "replace", path: "displayName", value: "Jane Doe" }
-          ]
+            { op: "replace", path: "displayName", value: "Jane Doe" },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -71,8 +71,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
 
         patch_request = {
           Operations: [
-            { op: "replace", path: "name.givenName", value: "Jane" }
-          ]
+            { op: "replace", path: "name.givenName", value: "Jane" },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -85,8 +85,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
       it "replaces boolean value" do
         patch_request = {
           Operations: [
-            { op: "replace", path: "active", value: false }
-          ]
+            { op: "replace", path: "active", value: false },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -98,8 +98,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
       it "replaces with nil value" do
         patch_request = {
           Operations: [
-            { op: "replace", path: "externalId", value: nil }
-          ]
+            { op: "replace", path: "externalId", value: nil },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -111,8 +111,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
       it "handles replace without path (replaces root attributes)" do
         patch_request = {
           Operations: [
-            { op: "replace", value: { "displayName" => "New Name", "userName" => "new.user@example.com" } }
-          ]
+            { op: "replace", value: { "displayName" => "New Name", "userName" => "new.user@example.com" } },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -128,8 +128,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
       it "adds a new attribute" do
         patch_request = {
           Operations: [
-            { op: "add", path: "nickName", value: "Johnny" }
-          ]
+            { op: "add", path: "nickName", value: "Johnny" },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -141,8 +141,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
       it "adds to an array by appending value" do
         patch_request = {
           Operations: [
-            { op: "add", path: "emails", value: [{ "value" => "jane@example.com", "type" => "home" }] }
-          ]
+            { op: "add", path: "emails", value: [{ "value" => "jane@example.com", "type" => "home" }] },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -155,8 +155,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
       it "creates nested path if it doesn't exist" do
         patch_request = {
           Operations: [
-            { op: "add", path: "address.streetAddress", value: "123 Main St" }
-          ]
+            { op: "add", path: "address.streetAddress", value: "123 Main St" },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -169,8 +169,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
       it "handles add without path (merges into root)" do
         patch_request = {
           Operations: [
-            { op: "add", value: { "nickName" => "Johnny", "title" => "Manager" } }
-          ]
+            { op: "add", value: { "nickName" => "Johnny", "title" => "Manager" } },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -185,8 +185,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
       it "removes an attribute" do
         patch_request = {
           Operations: [
-            { op: "remove", path: "externalId" }
-          ]
+            { op: "remove", path: "externalId" },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -203,8 +203,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
 
         patch_request = {
           Operations: [
-            { op: "remove", path: "name.middleName" }
-          ]
+            { op: "remove", path: "name.middleName" },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -217,8 +217,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
       it "handles remove without path (no-op)" do
         patch_request = {
           Operations: [
-            { op: "remove" }
-          ]
+            { op: "remove" },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -234,8 +234,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
           Operations: [
             { op: "replace", path: "displayName", value: "Jane Doe" },
             { op: "add", path: "nickName", value: "Janey" },
-            { op: "remove", path: "externalId" }
-          ]
+            { op: "remove", path: "externalId" },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -250,8 +250,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
         patch_request = {
           Operations: [
             { op: "add", path: "name.givenName", value: "Jane" },
-            { op: "add", path: "name.familyName", value: "Smith" }
-          ]
+            { op: "add", path: "name.familyName", value: "Smith" },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -270,10 +270,10 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
               op: "replace",
               value: {
                 "displayName" => "New Name",
-                "userName" => "new.user@example.com"
-              }
-            }
-          ]
+                "userName" => "new.user@example.com",
+              },
+            },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -291,10 +291,10 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
               path: "name",
               value: {
                 "givenName" => "Jane",
-                "familyName" => "Smith"
-              }
-            }
-          ]
+                "familyName" => "Smith",
+              },
+            },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -309,15 +309,15 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
       it "raises error for unknown operation type" do
         patch_request = {
           Operations: [
-            { op: "invalid", path: "displayName", value: "Test" }
-          ]
+            { op: "invalid", path: "displayName", value: "Test" },
+          ],
         }
 
         processor = described_class.new(patch_request)
 
-        expect {
+        expect do
           processor.apply_to_hash(original_hash)
-        }.to raise_error(ArgumentError, "Unknown PATCH operation: invalid")
+        end.to raise_error(ArgumentError, "Unknown PATCH operation: invalid")
       end
     end
 
@@ -327,8 +327,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
 
         patch_request = {
           Operations: [
-            { op: "replace", path: "displayName", value: "Modified Name" }
-          ]
+            { op: "replace", path: "displayName", value: "Modified Name" },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -342,8 +342,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
       it "handles operations with string keys" do
         patch_request = {
           Operations: [
-            { "op" => "replace", "path" => "displayName", "value" => "New Name" }
-          ]
+            { "op" => "replace", "path" => "displayName", "value" => "New Name" },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -354,9 +354,9 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
 
       it "handles mixed string/symbol keys in patch request" do
         patch_request = {
-          :Operations => [
-            { "op" => "replace", :path => "displayName", "value" => "New Name" }
-          ]
+          Operations: [
+            { "op" => "replace", :path => "displayName", "value" => "New Name" },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -381,16 +381,16 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
           "level1" => {
             "level2" => {
               "level3" => {
-                "value" => "deep"
-              }
-            }
-          }
+                "value" => "deep",
+              },
+            },
+          },
         }
 
         patch_request = {
           Operations: [
-            { op: "replace", path: "level1.level2.level3.value", value: "very deep" }
-          ]
+            { op: "replace", path: "level1.level2.level3.value", value: "very deep" },
+          ],
         }
 
         processor = described_class.new(patch_request)
@@ -402,8 +402,8 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
       it "handles numeric values" do
         patch_request = {
           Operations: [
-            { op: "add", path: "age", value: 30 }
-          ]
+            { op: "add", path: "age", value: 30 },
+          ],
         }
 
         processor = described_class.new(patch_request)

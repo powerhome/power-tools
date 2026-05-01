@@ -5,9 +5,9 @@ module TwoPercent
     self.table_name = "two_percent_scim_group_memberships"
 
     belongs_to :scim_user, class_name: "TwoPercent::ScimUser",
-               foreign_key: :scim_user_id
+                           foreign_key: :scim_user_id
     belongs_to :scim_group, class_name: "TwoPercent::ScimGroup",
-               foreign_key: :scim_group_id
+                            foreign_key: :scim_group_id
 
     validates :scim_user_id, presence: true
     validates :scim_group_id, presence: true

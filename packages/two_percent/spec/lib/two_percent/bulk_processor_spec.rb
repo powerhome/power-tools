@@ -23,9 +23,9 @@ RSpec.describe TwoPercent::BulkProcessor do
               "externalId" => "bulk-ext-#{SecureRandom.hex(4)}",
               "userName" => "bulk.user@example.com",
               "displayName" => "Bulk User",
-              "active" => true
-            }
-          }
+              "active" => true,
+            },
+          },
         ]
 
         allow(TwoPercent::Domain::Events::UserCreated).to receive(:create)
@@ -55,9 +55,9 @@ RSpec.describe TwoPercent::BulkProcessor do
               "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
               "externalId" => "bulk-group-#{SecureRandom.hex(4)}",
               "displayName" => "Bulk Group",
-              "members" => []
-            }
-          }
+              "members" => [],
+            },
+          },
         ]
 
         allow(TwoPercent::Domain::Events::GroupCreated).to receive(:create)
@@ -88,9 +88,9 @@ RSpec.describe TwoPercent::BulkProcessor do
               "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
               "externalId" => "bulk-dept-#{SecureRandom.hex(4)}",
               "displayName" => "Engineering Department",
-              "members" => []
-            }
-          }
+              "members" => [],
+            },
+          },
         ]
 
         allow(TwoPercent::Domain::Events::GroupCreated).to receive(:create)
@@ -107,12 +107,12 @@ RSpec.describe TwoPercent::BulkProcessor do
     describe "PUT operations" do
       it "updates existing User via bulk operation" do
         user = TwoPercent::ScimUser.upsert_from_scim({
-          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
-          "externalId" => "bulk-ext-#{SecureRandom.hex(4)}",
-          "userName" => "existing.user@example.com",
-          "displayName" => "Original Name",
-          "active" => true
-        })
+                                                       "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
+                                                       "externalId" => "bulk-ext-#{SecureRandom.hex(4)}",
+                                                       "userName" => "existing.user@example.com",
+                                                       "displayName" => "Original Name",
+                                                       "active" => true,
+                                                     })
 
         operations = [
           {
@@ -123,9 +123,9 @@ RSpec.describe TwoPercent::BulkProcessor do
               "externalId" => user.external_id,
               "userName" => "existing.user@example.com",
               "displayName" => "Updated Name via Bulk",
-              "active" => true
-            }
-          }
+              "active" => true,
+            },
+          },
         ]
 
         allow(TwoPercent::Domain::Events::UserUpdated).to receive(:create)
@@ -157,9 +157,9 @@ RSpec.describe TwoPercent::BulkProcessor do
               "externalId" => "bulk-ext-new",
               "userName" => "new.user@example.com",
               "displayName" => "New User via PUT",
-              "active" => true
-            }
-          }
+              "active" => true,
+            },
+          },
         ]
 
         allow(TwoPercent::Domain::Events::UserUpdated).to receive(:create)
@@ -176,12 +176,12 @@ RSpec.describe TwoPercent::BulkProcessor do
     describe "PATCH operations" do
       it "patches existing User via bulk operation" do
         user = TwoPercent::ScimUser.upsert_from_scim({
-          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
-          "externalId" => "bulk-patch-#{SecureRandom.hex(4)}",
-          "userName" => "patch.user@example.com",
-          "displayName" => "Original Patch Name",
-          "active" => true
-        })
+                                                       "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
+                                                       "externalId" => "bulk-patch-#{SecureRandom.hex(4)}",
+                                                       "userName" => "patch.user@example.com",
+                                                       "displayName" => "Original Patch Name",
+                                                       "active" => true,
+                                                     })
 
         operations = [
           {
@@ -190,9 +190,9 @@ RSpec.describe TwoPercent::BulkProcessor do
             data: {
               "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
               "externalId" => user.external_id,
-              "displayName" => "Patched Name via Bulk"
-            }
-          }
+              "displayName" => "Patched Name via Bulk",
+            },
+          },
         ]
 
         allow(TwoPercent::Domain::Events::UserUpdated).to receive(:create)
@@ -202,19 +202,19 @@ RSpec.describe TwoPercent::BulkProcessor do
 
         user.reload
         expect(user.display_name).to eq("Patched Name via Bulk")
-        # Note: BulkProcessor uses upsert which replaces all data, not RFC 7644 PATCH
+        # NOTE: BulkProcessor uses upsert which replaces all data, not RFC 7644 PATCH
       end
     end
 
     describe "DELETE operations" do
       it "deletes User via bulk operation" do
         user = TwoPercent::ScimUser.upsert_from_scim({
-          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
-          "externalId" => "bulk-delete-#{SecureRandom.hex(4)}",
-          "userName" => "delete.user@example.com",
-          "displayName" => "To Be Deleted",
-          "active" => true
-        })
+                                                       "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
+                                                       "externalId" => "bulk-delete-#{SecureRandom.hex(4)}",
+                                                       "userName" => "delete.user@example.com",
+                                                       "displayName" => "To Be Deleted",
+                                                       "active" => true,
+                                                     })
 
         user_id = user.scim_id
 
@@ -222,8 +222,8 @@ RSpec.describe TwoPercent::BulkProcessor do
           {
             method: "DELETE",
             path: "/Users/#{user_id}",
-            data: {}
-          }
+            data: {},
+          },
         ]
 
         allow(TwoPercent::Domain::Events::UserDeleted).to receive(:create)
@@ -243,19 +243,20 @@ RSpec.describe TwoPercent::BulkProcessor do
 
       it "deletes Group and cascades to memberships" do
         user = TwoPercent::ScimUser.upsert_from_scim({
-          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
-          "externalId" => "member-#{SecureRandom.hex(4)}",
-          "userName" => "member@example.com",
-          "displayName" => "Member User",
-          "active" => true
-        })
+                                                       "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
+                                                       "externalId" => "member-#{SecureRandom.hex(4)}",
+                                                       "userName" => "member@example.com",
+                                                       "displayName" => "Member User",
+                                                       "active" => true,
+                                                     })
 
         group = TwoPercent::ScimGroup.upsert_from_scim("Groups", {
-          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
-          "externalId" => "bulk-delete-group-#{SecureRandom.hex(4)}",
-          "displayName" => "To Be Deleted Group",
-          "members" => [{ "value" => user.scim_id, "display" => user.display_name }]
-        })
+                                                         "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+                                                         "externalId" => "bulk-delete-group-#{SecureRandom.hex(4)}",
+                                                         "displayName" => "To Be Deleted Group",
+                                                         "members" => [{ "value" => user.scim_id,
+                                                                         "display" => user.display_name }],
+                                                       })
 
         group_id = group.scim_id
         expect(group.scim_group_memberships.count).to eq(1)
@@ -264,8 +265,8 @@ RSpec.describe TwoPercent::BulkProcessor do
           {
             method: "DELETE",
             path: "/Groups/#{group_id}",
-            data: {}
-          }
+            data: {},
+          },
         ]
 
         allow(TwoPercent::Domain::Events::GroupDeleted).to receive(:create)
@@ -297,8 +298,8 @@ RSpec.describe TwoPercent::BulkProcessor do
               "externalId" => "multi-1",
               "userName" => "user1@example.com",
               "displayName" => "User 1",
-              "active" => true
-            }
+              "active" => true,
+            },
           },
           {
             method: "POST",
@@ -308,8 +309,8 @@ RSpec.describe TwoPercent::BulkProcessor do
               "externalId" => "multi-2",
               "userName" => "user2@example.com",
               "displayName" => "User 2",
-              "active" => true
-            }
+              "active" => true,
+            },
           },
           {
             method: "POST",
@@ -318,9 +319,9 @@ RSpec.describe TwoPercent::BulkProcessor do
               "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
               "externalId" => "multi-group",
               "displayName" => "Multi Group",
-              "members" => []
-            }
-          }
+              "members" => [],
+            },
+          },
         ]
 
         allow(TwoPercent::Domain::Events::UserCreated).to receive(:create)
@@ -349,8 +350,8 @@ RSpec.describe TwoPercent::BulkProcessor do
               "externalId" => "seq-user",
               "userName" => "seq@example.com",
               "displayName" => "Sequential User",
-              "active" => true
-            }
+              "active" => true,
+            },
           },
           {
             method: "PUT",
@@ -360,9 +361,9 @@ RSpec.describe TwoPercent::BulkProcessor do
               "externalId" => "seq-user",
               "userName" => "seq@example.com",
               "displayName" => "Updated Sequential User",
-              "active" => true
-            }
-          }
+              "active" => true,
+            },
+          },
         ]
 
         allow(TwoPercent::Domain::Events::UserCreated).to receive(:create)
@@ -389,16 +390,16 @@ RSpec.describe TwoPercent::BulkProcessor do
               "externalId" => "rollback-test",
               "userName" => "rollback@example.com",
               "displayName" => "Rollback Test",
-              "active" => true
-            }
-          }
+              "active" => true,
+            },
+          },
         ]
 
         processor = described_class.new(operations, correlation_id: correlation_id)
 
-        expect {
+        expect do
           processor.dispatch
-        }.to raise_error(StandardError, "Event system down")
+        end.to raise_error(StandardError, "Event system down")
 
         # Verify rollback - user should not exist
         expect(TwoPercent::ScimUser.find_by(user_name: "rollback@example.com")).to be_nil
@@ -411,15 +412,15 @@ RSpec.describe TwoPercent::BulkProcessor do
           {
             method: "OPTIONS",
             path: "/Users",
-            data: {}
-          }
+            data: {},
+          },
         ]
 
         processor = described_class.new(operations, correlation_id: correlation_id)
 
-        expect {
+        expect do
           processor.dispatch
-        }.to raise_error(ArgumentError, "Unknown HTTP method: OPTIONS")
+        end.to raise_error(ArgumentError, "Unknown HTTP method: OPTIONS")
       end
     end
 
@@ -433,9 +434,9 @@ RSpec.describe TwoPercent::BulkProcessor do
               "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
               "externalId" => "north-region",
               "displayName" => "North Region",
-              "members" => []
-            }
-          }
+              "members" => [],
+            },
+          },
         ]
 
         allow(TwoPercent::Domain::Events::GroupCreated).to receive(:create)
@@ -449,12 +450,12 @@ RSpec.describe TwoPercent::BulkProcessor do
 
       it "parses resource ID from path for updates" do
         user = TwoPercent::ScimUser.upsert_from_scim({
-          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
-          "externalId" => "path-parse-#{SecureRandom.hex(4)}",
-          "userName" => "pathparse@example.com",
-          "displayName" => "Path Parse",
-          "active" => true
-        })
+                                                       "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
+                                                       "externalId" => "path-parse-#{SecureRandom.hex(4)}",
+                                                       "userName" => "pathparse@example.com",
+                                                       "displayName" => "Path Parse",
+                                                       "active" => true,
+                                                     })
 
         operations = [
           {
@@ -465,9 +466,9 @@ RSpec.describe TwoPercent::BulkProcessor do
               "externalId" => user.external_id,
               "userName" => "pathparse@example.com",
               "displayName" => "Path Parsed Successfully",
-              "active" => true
-            }
-          }
+              "active" => true,
+            },
+          },
         ]
 
         allow(TwoPercent::Domain::Events::UserUpdated).to receive(:create)
@@ -491,9 +492,9 @@ RSpec.describe TwoPercent::BulkProcessor do
               "externalId" => "corr-#{SecureRandom.hex(4)}",
               "userName" => "correlation@example.com",
               "displayName" => "Correlation Test",
-              "active" => true
-            }
-          }
+              "active" => true,
+            },
+          },
         ]
 
         allow(TwoPercent::Domain::Events::UserCreated).to receive(:create)
@@ -515,9 +516,9 @@ RSpec.describe TwoPercent::BulkProcessor do
               "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
               "externalId" => "event-corr-group",
               "displayName" => "Event Correlation Group",
-              "members" => []
-            }
-          }
+              "members" => [],
+            },
+          },
         ]
 
         allow(TwoPercent::Domain::Events::GroupCreated).to receive(:create)

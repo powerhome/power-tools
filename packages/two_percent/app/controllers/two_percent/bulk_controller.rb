@@ -13,7 +13,8 @@ module TwoPercent
   private
 
     def extract_correlation_id
-      @correlation_id = request.headers["X-Correlation-Id"] || SecureRandom.uuid
+      header_name = TwoPercent.config.correlation_id_header
+      @correlation_id = request.headers[header_name] || SecureRandom.uuid
     end
 
     def processor
@@ -30,10 +31,10 @@ module TwoPercent
         operation: "bulk",
         operation_count: operations.size,
         stage: stage,
-        service: "two_percent"
+        service: "two_percent",
       }
 
-      Rails.logger.info(log_data.to_json) if defined?(Rails)
+      Rails.logger.info(log_data.to_json)
     end
   end
 end
