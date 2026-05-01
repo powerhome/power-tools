@@ -20,6 +20,43 @@ RSpec.describe DataTaster::Sanitizer do
     allow(DataTaster).to receive(:confection).and_return(confection_stub)
   end
 
+  describe "#update_sql_statements" do
+    context "when table is skippable" do
+      it "returns an empty array when confection is blank" do
+        stub_config
+        allow(confection_stub).to receive(:[]).with("users").and_return(nil)
+
+        expect(described_class.new("users", {}).update_sql_statements).to eq([])
+      end
+    end
+
+    context "when table is not skippable" do
+      before do
+        allow(confection_stub).to receive(:[]).with("users").and_return("some_config")
+      end
+
+      it "returns UPDATE strings and does not call safe_execute" do
+        stub_config
+        allow(DataTaster).to receive(:safe_execute)
+
+        stmts = described_class.new("users", {}).update_sql_statements
+
+        expect(stmts).to all(be_a(String))
+        expect(stmts.join(" ")).to include("UPDATE test_dump.users")
+        expect(DataTaster).not_to have_received(:safe_execute)
+      end
+
+      it "omits columns whose value is skip code" do
+        stub_config
+        sanitizer = described_class.new("users", { "ssn" => DataTaster::SKIP_CODE })
+
+        joined = sanitizer.update_sql_statements.join(" ")
+        expect(joined).not_to include("SET ssn =")
+        expect(joined).to include("SET encrypted_password = NULL")
+      end
+    end
+  end
+
   describe "#clean!" do
     context "when table is skippable" do
       before do

@@ -23,6 +23,19 @@ module DataTaster
       end
     end
 
+    def update_sql_statements
+      return [] if skippable_table?
+
+      default_selections.merge(custom_selections).filter_map do |column_name, sanitized_value|
+        sql = DataTaster::Detergent.new(
+          table_name, column_name, sanitized_value
+        ).deliver
+        next if sql == DataTaster::SKIP_CODE
+
+        sql
+      end
+    end
+
   private
 
     attr_reader :table_name, :custom_selections, :include_insert
