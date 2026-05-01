@@ -9,7 +9,10 @@ Gem::Specification.new do |spec|
   spec.authors     = ["Carlos Palhares", "Katie Edgar", "Dan Smith"]
   spec.homepage    = "https://github.com/powerhome/power-tools"
   spec.summary     = "SCIM 2.0 Rails Engine for identity provisioning with domain event publishing"
-  spec.description = "TwoPercent is a SCIM 2.0 Rails Engine with partial RFC 7644 protocol compliance for IdP provisioning. Supports POST/PUT/PATCH/DELETE/Bulk operations for Users and Groups, publishes domain events via AetherObservatory, and integrates seamlessly with Rails applications."
+  spec.description = "TwoPercent is a SCIM 2.0 Rails Engine with partial RFC 7644 protocol " \
+                     "compliance for IdP provisioning. Supports POST/PUT/PATCH/DELETE/Bulk " \
+                     "operations for Users and Groups, publishes domain events via " \
+                     "AetherObservatory, and integrates seamlessly with Rails applications."
   spec.license     = "MIT"
 
   spec.metadata["homepage_uri"] = spec.homepage

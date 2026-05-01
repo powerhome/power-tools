@@ -21,7 +21,8 @@ module TwoPercent
     # Validates the SCIM data against the User schema before persisting.
     #
     # @param scim_hash [Hash] SCIM User resource hash conforming to RFC 7643
-    # @param correlation_id [String, nil] Optional correlation ID for tracking changes across network hops (e.g., App A -> App B -> App C)
+    # @param correlation_id [String, nil] Optional correlation ID for tracking
+    #   changes across network hops (e.g., App A -> App B -> App C)
     # @return [TwoPercent::ScimUser] The persisted user record
     # @raise [TwoPercent::Scim::ValidationError] If SCIM data fails schema validation
     def self.upsert_from_scim(scim_hash, correlation_id: nil)

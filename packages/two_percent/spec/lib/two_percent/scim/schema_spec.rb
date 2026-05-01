@@ -258,7 +258,8 @@ RSpec.describe TwoPercent::Scim::Schema do
         result = described_class.validate_user(user_with_extension)
 
         expect(result[:extensions]).to have_key("urn:ietf:params:scim:schemas:extension:authservice:2.0:User")
-        expect(result[:extensions]["urn:ietf:params:scim:schemas:extension:authservice:2.0:User"]["department"]).to eq("Engineering")
+        extension_urn = "urn:ietf:params:scim:schemas:extension:authservice:2.0:User"
+        expect(result[:extensions][extension_urn]["department"]).to eq("Engineering")
       end
 
       it "returns empty extensions hash when no extensions present" do

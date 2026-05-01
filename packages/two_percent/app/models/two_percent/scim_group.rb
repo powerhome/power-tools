@@ -25,7 +25,8 @@ module TwoPercent
     #
     # @param resource_type [String] The resource type (e.g., "Groups", "Departments", "Territories")
     # @param scim_hash [Hash] SCIM Group resource hash conforming to RFC 7643
-    # @param correlation_id [String, nil] Optional correlation ID for tracking changes across network hops (e.g., App A -> App B -> App C)
+    # @param correlation_id [String, nil] Optional correlation ID for tracking
+    #   changes across network hops (e.g., App A -> App B -> App C)
     # @return [TwoPercent::ScimGroup] The persisted group record
     # @raise [TwoPercent::Scim::ValidationError] If SCIM data fails schema validation
     def self.upsert_from_scim(resource_type, scim_hash, correlation_id: nil)

@@ -3,6 +3,36 @@ require:
 
 AllCops:
   TargetRubyVersion: 3.0
+  Exclude:
+    - 'spec/dummy/db/schema.rb'
 
 Rails:
   Enabled: false
+
+# Relax metrics for Rails engines with domain logic
+Metrics/ClassLength:
+  Max: 150
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/ModuleLength:
+  Max: 150
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/MethodLength:
+  Max: 15
+  Exclude:
+    - 'spec/**/*'
+    - 'db/migrate/**/*'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - 'lib/two_percent/syncable.rb'
+
+Metrics/AbcSize:
+  Max: 20
+
+Layout/LineLength:
+  Max: 120
