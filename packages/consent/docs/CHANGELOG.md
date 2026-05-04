@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
+
 ### [2.4.0] - 2026-02-04
 - Adds ability to verify and synchronize permission definitions across environments using deterministic checksums [#387](https://github.com/powerhome/power-tools/pull/387)
 
