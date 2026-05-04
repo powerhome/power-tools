@@ -18,19 +18,18 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency "cygnet", "0.0.1"
-  s.add_dependency "nokogiri", "1.17.2" # can be removed after we remove support for Rails 6.0.1
-  s.add_dependency "rails", ">= 6.0"
+  s.add_dependency "rails", ">= 7.0"
   s.add_dependency "sassc-rails", "2.1.2"
 
   s.add_development_dependency "bundler", "~> 2.1"
   s.add_development_dependency "license_finder", "~> 7.0"
   s.add_development_dependency "pry", ">= 0.14"
   s.add_development_dependency "pry-byebug", "3.10.1"
-  s.add_development_dependency "rainbow", "2.2.2"
+  s.add_development_dependency "rainbow", "3.1.1"
   s.add_development_dependency "rake", "~> 13.0"
   s.add_development_dependency "rspec", "~> 3.0"
   s.add_development_dependency "simplecov", "0.15.1"
   s.add_development_dependency "test-unit", "3.1.5"
-  s.add_development_dependency "yard", "0.9.21"
+  s.add_development_dependency "yard", "0.9.38"
   s.metadata["rubygems_mfa_required"] = "true"
 end

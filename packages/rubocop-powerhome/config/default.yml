@@ -10,6 +10,9 @@ Gemspec/RequiredRubyVersion:
 Gemspec/DevelopmentDependencies:
   Enabled: false
 
+GraphQL:
+  Enabled: true
+
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
 
@@ -18,6 +21,11 @@ Lint/OrAssignmentToConstant:
 
 Lint/ScriptPermission:
   Enabled: false
+
+Metrics/BlockLength:
+  IgnoredMethods:
+    - describe
+    - context
 
 Naming/MethodParameterName:
   AllowedNames:
@@ -91,8 +99,3 @@ Style/TrailingCommaInArrayLiteral:
 
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: comma
-
-Metrics/BlockLength:
-  IgnoredMethods:
-    - describe
-    - context

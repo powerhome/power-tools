@@ -107,11 +107,16 @@ end
 Now that we have a new observer named `ExampleObserver`, we will need to
 start our observer before it will process any events. Observers default
 to `stopped`, so we need to call `start` on each observer before they will
-recieve events. Inside an initilizer is the recommended location to start
-your observers.
+receive events.
+
+In a Rails application, the recommended location to start observers is inside
+a `to_prepare` block, which runs on every code reload cycle. Starting observers
+in a plain initializer will cause them to stop permanently after the first reload.
 
 ```ruby
-AetherObservatory::Examples::ExampleObserver.start
+Rails.application.config.to_prepare do
+  AetherObservatory::Examples::ExampleObserver.start
+end
 ```
 
 <div align="right">
@@ -303,12 +308,15 @@ module AetherObservatory
 end
 ```
 
-We need to be sure to start our new observers before they will recieve
-any events.
+We need to be sure to start our new observers before they will receive
+any events. Use a `to_prepare` block so observers are restarted on every
+code reload cycle.
 
 ```ruby
-AetherObservatory::Examples::TalkboxCallHistoryObserver.start
-AetherObservatory::Examples::TalkboxCallErrorObserver.start
+Rails.application.config.to_prepare do
+  AetherObservatory::Examples::TalkboxCallHistoryObserver.start
+  AetherObservatory::Examples::TalkboxCallErrorObserver.start
+end
 ```
 
 Finally we are ready to create a new event and see what happens. First we
