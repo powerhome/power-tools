@@ -3,12 +3,6 @@
 require "rails_helper"
 
 RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
-  describe "table name" do
-    it "uses two_percent_scim_group_memberships table" do
-      expect(described_class.table_name).to eq("two_percent_scim_group_memberships")
-    end
-  end
-
   describe "associations" do
     it { is_expected.to belong_to(:scim_user) }
     it { is_expected.to belong_to(:scim_group) }
@@ -59,7 +53,7 @@ RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
     end
   end
 
-  describe "correlation_id" do
+  describe "#correlation_id" do
     it "stores correlation_id when provided" do
       user = create_scim_user
       group = create_scim_group

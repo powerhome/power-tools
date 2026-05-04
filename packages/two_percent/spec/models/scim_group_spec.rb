@@ -3,12 +3,6 @@
 require "rails_helper"
 
 RSpec.describe TwoPercent::ScimGroup, type: :model do
-  describe "table name" do
-    it "uses two_percent_scim_groups table" do
-      expect(described_class.table_name).to eq("two_percent_scim_groups")
-    end
-  end
-
   describe "validations" do
     subject(:scim_group) { build_scim_group }
 

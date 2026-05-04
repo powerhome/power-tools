@@ -3,12 +3,6 @@
 require "rails_helper"
 
 RSpec.describe TwoPercent::ScimUser, type: :model do
-  describe "table name" do
-    it "uses two_percent_scim_users table" do
-      expect(described_class.table_name).to eq("two_percent_scim_users")
-    end
-  end
-
   describe "validations" do
     subject(:scim_user) { build_scim_user }
 

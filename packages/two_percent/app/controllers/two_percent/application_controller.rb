@@ -23,7 +23,7 @@ module TwoPercent
   private
 
     def handle_record_not_found(exception)
-      # RFC 7644 Section 3.12: Error Response with scimType
+      # RFC 7644: Error Response with scimType
       render_scim_error(
         status: :not_found,
         scim_type: "noTarget",
