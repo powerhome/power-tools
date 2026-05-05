@@ -10,6 +10,20 @@ After installing DepShield, load any todo lists in your application with:
 
 `DepShield.todos.load("path-to-deprecation_todos.yml")`
 
+For a Rails application, you can simply put this line into an initializer: `config/initializers/dep_shield.rb`.
+
+For an engine (component), add this to your lib/[component_name]/engine.rb file:
+
+```ruby
+module MyEngine
+  class Engine < ::Rails::Engine
+    initializer "dep_shield.todo_list" do
+      DepShield.todos.load(config.root.join("./.deprecation_todo.yml"))
+    end
+  end
+end
+```
+
 ## Usage
 
 `DepShield#raise_or_capture!` is used to mark methods as deprecated. When called, it will intelligently warn or raise exceptions to alert developers to the deprecated activity. The method expects two arguments, a `name` (ie, the name of the deprecation you're introducing), and a `message` (usually information about what is deprecated and how to fix it). Marking something as deprecated is pretty simple:
