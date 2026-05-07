@@ -95,7 +95,15 @@ module TwoPercent
 
         keys = path.split(".")
         target = navigate_to_parent(hash, keys[0..-2])
-        target.delete(keys.last)
+        last_key = keys.last
+
+        # Special handling for members array - set to empty array instead of deleting
+        # This ensures upsert_from_scim can sync memberships to empty state
+        if last_key == "members"
+          target[last_key] = []
+        else
+          target.delete(last_key)
+        end
       end
 
       def navigate_to_parent(hash, keys)

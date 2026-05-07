@@ -409,13 +409,27 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
   end
 
   def create_scim_group(attributes = {})
-    TwoPercent::ScimGroup.create!({
-      scim_id: "group-#{SecureRandom.hex(4)}",
-      external_id: "ext-#{SecureRandom.hex(4)}",
-      display_name: "Test Group",
-      resource_type: "Groups",
-      scim_data: { "id" => "test" },
-    }.merge(attributes))
+    scim_id = attributes[:scim_id] || "group-#{SecureRandom.hex(4)}"
+    external_id = attributes[:external_id] || "ext-#{SecureRandom.hex(4)}"
+    display_name = attributes[:display_name] || "Test Group"
+    resource_type = attributes[:resource_type] || "Groups"
+
+    default_scim_data = {
+      "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+      "id" => scim_id,
+      "externalId" => external_id,
+      "displayName" => display_name,
+      "members" => [],
+    }
+
+    full_attributes = {
+      scim_id: scim_id,
+      external_id: external_id,
+      display_name: display_name,
+      resource_type: resource_type,
+      scim_data: attributes[:scim_data] || default_scim_data,
+    }
+    TwoPercent::ScimGroup.create!(full_attributes)
   end
 
   def create_scim_user_with_groups

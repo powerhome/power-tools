@@ -376,6 +376,255 @@ RSpec.describe "SCIM API", type: :request do
     end
   end
 
+  # ========== PATCH /scim/Groups/:id (Update Group Members) ==========
+  describe "PATCH /scim/Groups/:id" do
+    let!(:existing_group) do
+      create_scim_group(
+        scim_id: "group-123",
+        display_name: "Engineering Team",
+        resource_type: "Groups"
+      )
+    end
+
+    let!(:user1) { create_scim_user(scim_id: "user-1", display_name: "Alice") }
+    let!(:user2) { create_scim_user(scim_id: "user-2", display_name: "Bob") }
+    let!(:user3) { create_scim_user(scim_id: "user-3", display_name: "Charlie") }
+
+    context "with single add operation" do
+      let(:add_member_operations) do
+        {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "add",
+              path: "members",
+              value: [
+                { value: "user-1", "$ref" => "/Users/user-1", display: "Alice" },
+              ],
+            },
+          ],
+        }
+      end
+
+      it "returns 200 OK" do
+        patch "/scim/Groups/group-123", headers: headers, params: add_member_operations.to_json
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "adds member to group" do
+        patch "/scim/Groups/group-123", headers: headers, params: add_member_operations.to_json
+
+        existing_group.reload
+        expect(existing_group.scim_users).to include(user1)
+        expect(existing_group.scim_users.count).to eq(1)
+      end
+
+      it "is idempotent when adding same member twice" do
+        # First add
+        patch "/scim/Groups/group-123", headers: headers, params: add_member_operations.to_json
+        existing_group.reload
+        expect(existing_group.scim_users.count).to eq(1)
+
+        # Second add (idempotent)
+        patch "/scim/Groups/group-123", headers: headers, params: add_member_operations.to_json
+        existing_group.reload
+        expect(existing_group.scim_users.count).to eq(1)
+      end
+
+      it "publishes GroupUpdated event" do
+        patch "/scim/Groups/group-123", headers: headers, params: add_member_operations.to_json
+
+        expect(published_events.size).to eq(1)
+        event = published_events.first
+        expect(event).to be_a(TwoPercent::Domain::Events::GroupUpdated)
+        expect(event.group_attributes[:scim_id]).to eq("group-123")
+      end
+
+      it "returns updated SCIM representation with members" do
+        patch "/scim/Groups/group-123", headers: headers, params: add_member_operations.to_json
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["members"].size).to eq(1)
+        expect(json_response["members"].first["value"]).to eq("user-1")
+      end
+    end
+
+    context "with single remove operation" do
+      before do
+        # Add members first
+        TwoPercent::ScimGroupMembership.create!(scim_user: user1, scim_group: existing_group)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user2, scim_group: existing_group)
+      end
+
+      let(:remove_member_operations) do
+        {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "remove",
+              path: "members",
+            },
+          ],
+        }
+      end
+
+      it "returns 200 OK" do
+        patch "/scim/Groups/group-123", headers: headers, params: remove_member_operations.to_json
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "removes all members from group" do
+        patch "/scim/Groups/group-123", headers: headers, params: remove_member_operations.to_json
+
+        existing_group.reload
+        expect(existing_group.scim_users).to be_empty
+      end
+
+      it "is idempotent when removing from empty group" do
+        patch "/scim/Groups/group-123", headers: headers, params: remove_member_operations.to_json
+        existing_group.reload
+        expect(existing_group.scim_users).to be_empty
+
+        # Second remove (idempotent)
+        patch "/scim/Groups/group-123", headers: headers, params: remove_member_operations.to_json
+        existing_group.reload
+        expect(existing_group.scim_users).to be_empty
+      end
+
+      it "returns SCIM representation with empty members array" do
+        patch "/scim/Groups/group-123", headers: headers, params: remove_member_operations.to_json
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["members"]).to eq([])
+      end
+    end
+
+    context "with multiple operations in one request" do
+      context "multiple add operations" do
+        let(:multi_add_operations) do
+          {
+            schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+            Operations: [
+              {
+                op: "add",
+                path: "members",
+                value: [{ value: "user-1" }],
+              },
+              {
+                op: "add",
+                path: "members",
+                value: [{ value: "user-2" }],
+              },
+            ],
+          }
+        end
+
+        it "applies both add operations" do
+          patch "/scim/Groups/group-123", headers: headers, params: multi_add_operations.to_json
+
+          existing_group.reload
+          expect(existing_group.scim_users).to include(user1, user2)
+          expect(existing_group.scim_users.count).to eq(2)
+        end
+      end
+
+      context "add then remove operations" do
+        let(:add_then_remove_operations) do
+          {
+            schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+            Operations: [
+              {
+                op: "add",
+                path: "members",
+                value: [
+                  { value: "user-1" },
+                  { value: "user-2" },
+                  { value: "user-3" },
+                ],
+              },
+              {
+                op: "remove",
+                path: "members",
+              },
+            ],
+          }
+        end
+
+        it "applies operations sequentially (final state: empty)" do
+          patch "/scim/Groups/group-123", headers: headers, params: add_then_remove_operations.to_json
+
+          existing_group.reload
+          expect(existing_group.scim_users).to be_empty
+        end
+      end
+    end
+
+    context "with mixed operations (members + displayName)" do
+      let(:mixed_operations) do
+        {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "replace",
+              path: "displayName",
+              value: "Updated Team Name",
+            },
+            {
+              op: "add",
+              path: "members",
+              value: [
+                { value: "user-1" },
+                { value: "user-2" },
+              ],
+            },
+          ],
+        }
+      end
+
+      it "applies all operations correctly" do
+        patch "/scim/Groups/group-123", headers: headers, params: mixed_operations.to_json
+
+        existing_group.reload
+        expect(existing_group.display_name).to eq("Updated Team Name")
+        expect(existing_group.scim_users).to include(user1, user2)
+        expect(existing_group.scim_users.count).to eq(2)
+      end
+
+      it "returns updated SCIM representation with all changes" do
+        patch "/scim/Groups/group-123", headers: headers, params: mixed_operations.to_json
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["displayName"]).to eq("Updated Team Name")
+        expect(json_response["members"].size).to eq(2)
+      end
+    end
+
+    context "when group does not exist" do
+      let(:add_operations) do
+        {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            { op: "add", path: "members", value: [{ value: "user-1" }] },
+          ],
+        }
+      end
+
+      it "returns 404 Not Found" do
+        patch "/scim/Groups/nonexistent", headers: headers, params: add_operations.to_json
+
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "does not publish domain event" do
+        patch "/scim/Groups/nonexistent", headers: headers, params: add_operations.to_json
+
+        expect(published_events).to be_empty
+      end
+    end
+  end
+
   # ========== PUT /scim/Users/:id (Replace User) ==========
   describe "PUT /scim/Users/:id" do
     let(:full_user_payload) do
@@ -661,40 +910,50 @@ RSpec.describe "SCIM API", type: :request do
 
   # Test helpers
   def create_scim_user(attributes = {})
-    default_attributes = {
-      scim_id: "user-#{SecureRandom.hex(4)}",
-      external_id: "ext-#{SecureRandom.hex(4)}",
+    scim_id = attributes[:scim_id] || "user-#{SecureRandom.hex(4)}"
+    external_id = attributes[:external_id] || "ext-#{SecureRandom.hex(4)}"
+    display_name = attributes[:display_name] || "Test User"
+
+    full_attributes = {
+      scim_id: scim_id,
+      external_id: external_id,
       user_name: "test.user@example.com",
-      display_name: "Test User",
+      display_name: display_name,
       email: "test.user@example.com",
       active: true,
       scim_data: {
         "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
-        "id" => "test",
-        "externalId" => "ext-#{SecureRandom.hex(4)}",
+        "id" => scim_id,
+        "externalId" => external_id,
         "userName" => "test.user@example.com",
-        "displayName" => "Test User",
+        "displayName" => display_name,
         "emails" => [{ "value" => "test.user@example.com", "type" => "work", "primary" => true }],
         "active" => true,
       },
     }
-    TwoPercent::ScimUser.create!(default_attributes.merge(attributes))
+    TwoPercent::ScimUser.create!(full_attributes)
   end
 
   def create_scim_group(attributes = {})
-    default_attributes = {
-      scim_id: "group-#{SecureRandom.hex(4)}",
-      external_id: "ext-#{SecureRandom.hex(4)}",
-      display_name: "Test Group",
-      resource_type: "Groups",
+    scim_id = attributes[:scim_id] || "group-#{SecureRandom.hex(4)}"
+    external_id = attributes[:external_id] || "ext-#{SecureRandom.hex(4)}"
+    display_name = attributes[:display_name] || "Test Group"
+    resource_type = attributes[:resource_type] || "Groups"
+
+    full_attributes = {
+      scim_id: scim_id,
+      external_id: external_id,
+      display_name: display_name,
+      resource_type: resource_type,
       active: true,
       scim_data: {
         "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
-        "id" => "test",
-        "displayName" => "Test Group",
+        "id" => scim_id,
+        "externalId" => external_id,
+        "displayName" => display_name,
         "members" => [],
       },
     }
-    TwoPercent::ScimGroup.create!(default_attributes.merge(attributes))
+    TwoPercent::ScimGroup.create!(full_attributes)
   end
 end

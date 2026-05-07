@@ -181,40 +181,54 @@ RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
   end
 
   def create_scim_user(attributes = {})
-    default_attributes = {
-      scim_id: "user-#{SecureRandom.hex(4)}",
-      external_id: "ext-#{SecureRandom.hex(4)}",
+    scim_id = attributes[:scim_id] || "user-#{SecureRandom.hex(4)}"
+    external_id = attributes[:external_id] || "ext-#{SecureRandom.hex(4)}"
+    display_name = attributes[:display_name] || "Test User"
+
+    default_scim_data = {
+      "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
+      "id" => scim_id,
+      "externalId" => external_id,
+      "userName" => "test.user@example.com",
+      "displayName" => display_name,
+      "emails" => [{ "value" => "test.user@example.com", "type" => "work", "primary" => true }],
+      "active" => true,
+    }
+
+    full_attributes = {
+      scim_id: scim_id,
+      external_id: external_id,
       user_name: "test.user@example.com",
-      display_name: "Test User",
+      display_name: display_name,
       email: "test.user@example.com",
       active: true,
-      scim_data: {
-        "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
-        "id" => "test",
-        "externalId" => "ext-test",
-        "userName" => "test.user@example.com",
-        "displayName" => "Test User",
-        "emails" => [{ "value" => "test.user@example.com", "type" => "work", "primary" => true }],
-        "active" => true,
-      },
+      scim_data: attributes[:scim_data] || default_scim_data,
     }
-    TwoPercent::ScimUser.create!(default_attributes.merge(attributes))
+    TwoPercent::ScimUser.create!(full_attributes)
   end
 
   def create_scim_group(attributes = {})
-    default_attributes = {
-      scim_id: "group-#{SecureRandom.hex(4)}",
-      external_id: "ext-#{SecureRandom.hex(4)}",
-      display_name: "Test Group",
-      resource_type: "Groups",
-      active: true,
-      scim_data: {
-        "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
-        "id" => "test",
-        "displayName" => "Test Group",
-        "members" => [],
-      },
+    scim_id = attributes[:scim_id] || "group-#{SecureRandom.hex(4)}"
+    external_id = attributes[:external_id] || "ext-#{SecureRandom.hex(4)}"
+    display_name = attributes[:display_name] || "Test Group"
+    resource_type = attributes[:resource_type] || "Groups"
+
+    default_scim_data = {
+      "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+      "id" => scim_id,
+      "externalId" => external_id,
+      "displayName" => display_name,
+      "members" => [],
     }
-    TwoPercent::ScimGroup.create!(default_attributes.merge(attributes))
+
+    full_attributes = {
+      scim_id: scim_id,
+      external_id: external_id,
+      display_name: display_name,
+      resource_type: resource_type,
+      active: true,
+      scim_data: attributes[:scim_data] || default_scim_data,
+    }
+    TwoPercent::ScimGroup.create!(full_attributes)
   end
 end

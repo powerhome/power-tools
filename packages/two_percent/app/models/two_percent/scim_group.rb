@@ -38,7 +38,7 @@ module TwoPercent
       scim_group = find_or_initialize_by(scim_id: scim_hash["id"])
       scim_group.update_from_scim!(resource_type, validated_data, correlation_id: correlation_id)
 
-      scim_group.sync_members(scim_hash["members"], correlation_id) if scim_hash["members"].present?
+      scim_group.replace_members(scim_hash["members"], correlation_id) if scim_hash.key?("members")
 
       scim_group
     end
@@ -96,11 +96,12 @@ module TwoPercent
       save!
     end
 
-    def sync_members(members_array, correlation_id)
+    def replace_members(members_array, correlation_id)
       member_scim_ids = members_array.filter_map { |m| m["value"] }
+      existing_users = validate_users_exist!(member_scim_ids)
       existing_user_ids = scim_group_memberships.pluck(:scim_user_id)
 
-      users_to_add = TwoPercent::ScimUser.where(scim_id: member_scim_ids).where.not(id: existing_user_ids)
+      users_to_add = existing_users.where.not(id: existing_user_ids)
 
       users_to_add.each do |user|
         TwoPercent::ScimGroupMembership.create!(
@@ -123,6 +124,25 @@ module TwoPercent
     def scim_attribute(path)
       keys = path.split(".")
       scim_data.dig(*keys)
+    end
+
+  private
+
+    # Validates that all user IDs exist in the database
+    #
+    # @param member_scim_ids [Array<String>] Array of SCIM user IDs to validate
+    # @return [ActiveRecord::Relation] The existing users
+    # @raise [ArgumentError] If any users do not exist
+    def validate_users_exist!(member_scim_ids)
+      existing_users = TwoPercent::ScimUser.where(scim_id: member_scim_ids)
+      missing_ids = member_scim_ids - existing_users.pluck(:scim_id)
+
+      if missing_ids.any?
+        raise ArgumentError,
+              "Cannot add non-existent users to group: #{missing_ids.join(', ')}"
+      end
+
+      existing_users
     end
   end
 end

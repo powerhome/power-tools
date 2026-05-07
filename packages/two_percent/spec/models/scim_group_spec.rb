@@ -279,7 +279,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
     end
   end
 
-  describe "#sync_members" do
+  describe "#replace_members" do
     let(:group) { create_scim_group }
     let!(:user1) { create_scim_user(scim_id: "user-1") }
     let!(:user2) { create_scim_user(scim_id: "user-2") }
@@ -295,14 +295,14 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
 
       it "creates memberships for new members" do
         expect do
-          group.sync_members(members_array, "corr-123")
+          group.replace_members(members_array, "corr-123")
         end.to change { group.scim_group_memberships.count }.by(2)
 
         expect(group.scim_users).to include(user1, user2)
       end
 
       it "stores correlation_id on created memberships" do
-        group.sync_members(members_array, "corr-123")
+        group.replace_members(members_array, "corr-123")
 
         memberships = group.scim_group_memberships
         expect(memberships.pluck(:correlation_id).uniq).to eq(["corr-123"])
@@ -322,7 +322,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
 
       it "removes memberships not in the array" do
         expect do
-          group.sync_members(members_array, "corr-456")
+          group.replace_members(members_array, "corr-456")
         end.to change { group.scim_group_memberships.count }.by(-2)
 
         group.reload
@@ -346,7 +346,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       it "does not duplicate existing memberships" do
         # Only adds user2
         expect do
-          group.sync_members(members_array, "corr-789")
+          group.replace_members(members_array, "corr-789")
         end.to change { group.scim_group_memberships.count }.by(1)
         expect(group.scim_users).to include(user1, user2)
       end
@@ -360,7 +360,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
 
       it "removes all memberships" do
         expect do
-          group.sync_members([], "corr-empty")
+          group.replace_members([], "corr-empty")
         end.to change { group.scim_group_memberships.count }.from(2).to(0)
       end
     end
@@ -370,10 +370,10 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         [{ "value" => "nonexistent-user" }]
       end
 
-      it "does not create memberships for non-existent users" do
+      it "raises error for non-existent users" do
         expect do
-          group.sync_members(members_array, "corr-404")
-        end.not_to(change { group.scim_group_memberships.count })
+          group.replace_members(members_array, "corr-404")
+        end.to raise_error(ArgumentError, /Cannot add non-existent users to group: nonexistent-user/)
       end
     end
   end
@@ -484,43 +484,79 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
 
   # Test helpers
   def build_scim_group(attributes = {})
-    default_attributes = {
-      scim_id: "group-#{SecureRandom.hex(4)}",
-      external_id: "ext-#{SecureRandom.hex(4)}",
-      display_name: "Test Group",
-      resource_type: "Groups",
-      active: true,
-      scim_data: {
-        "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
-        "id" => "test",
-        "displayName" => "Test Group",
-        "members" => [],
-      },
+    scim_id = attributes[:scim_id] || "group-#{SecureRandom.hex(4)}"
+    external_id = attributes[:external_id] || "ext-#{SecureRandom.hex(4)}"
+    display_name = attributes[:display_name] || "Test Group"
+    resource_type = attributes[:resource_type] || "Groups"
+
+    default_scim_data = {
+      "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+      "id" => scim_id,
+      "externalId" => external_id,
+      "displayName" => display_name,
+      "members" => [],
     }
-    described_class.new(default_attributes.merge(attributes))
+
+    full_attributes = {
+      scim_id: scim_id,
+      external_id: external_id,
+      display_name: display_name,
+      resource_type: resource_type,
+      active: attributes.fetch(:active, true),
+      scim_data: attributes[:scim_data] || default_scim_data,
+    }
+    described_class.new(full_attributes)
   end
 
   def create_scim_group(attributes = {})
-    build_scim_group(attributes).tap(&:save!)
+    scim_id = attributes[:scim_id] || "group-#{SecureRandom.hex(4)}"
+    external_id = attributes[:external_id] || "ext-#{SecureRandom.hex(4)}"
+    display_name = attributes[:display_name] || "Test Group"
+    resource_type = attributes[:resource_type] || "Groups"
+
+    default_scim_data = {
+      "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+      "id" => scim_id,
+      "externalId" => external_id,
+      "displayName" => display_name,
+      "members" => [],
+    }
+
+    full_attributes = {
+      scim_id: scim_id,
+      external_id: external_id,
+      display_name: display_name,
+      resource_type: resource_type,
+      active: attributes.fetch(:active, true),
+      scim_data: attributes[:scim_data] || default_scim_data,
+    }
+    TwoPercent::ScimGroup.create!(full_attributes)
   end
 
   def create_scim_user(attributes = {})
-    default_attributes = {
-      scim_id: "user-#{SecureRandom.hex(4)}",
-      external_id: "ext-#{SecureRandom.hex(4)}",
+    scim_id = attributes[:scim_id] || "user-#{SecureRandom.hex(4)}"
+    external_id = attributes[:external_id] || "ext-#{SecureRandom.hex(4)}"
+    display_name = attributes[:display_name] || "Test User"
+
+    default_scim_data = {
+      "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
+      "id" => scim_id,
+      "externalId" => external_id,
+      "userName" => "test.user",
+      "displayName" => display_name,
+      "emails" => [{ "value" => "test@example.com", "type" => "work", "primary" => true }],
+      "active" => true,
+    }
+
+    full_attributes = {
+      scim_id: scim_id,
+      external_id: external_id,
       user_name: "test.user",
-      display_name: "Test User",
+      display_name: display_name,
       email: "test@example.com",
       active: true,
-      scim_data: {
-        "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
-        "id" => "test",
-        "userName" => "test.user",
-        "displayName" => "Test User",
-        "emails" => [{ "value" => "test@example.com", "type" => "work", "primary" => true }],
-        "active" => true,
-      },
+      scim_data: attributes[:scim_data] || default_scim_data,
     }
-    TwoPercent::ScimUser.create!(default_attributes.merge(attributes))
+    TwoPercent::ScimUser.create!(full_attributes)
   end
 end
