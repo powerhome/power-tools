@@ -1,5 +1,5 @@
 PATH
-  remote: ../rubocop-powerhome
+  remote: ../../rubocop-powerhome
   specs:
     rubocop-powerhome (0.6.1)
       rubocop (= 1.82.1)
@@ -9,7 +9,7 @@ PATH
       rubocop-rspec
 
 PATH
-  remote: .
+  remote: ..
   specs:
     camel_trail (1.3.0)
       attr_encrypted (= 4.0.0)
@@ -124,7 +124,7 @@ GEM
       prism (>= 1.3.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.19.3)
+    json (2.19.5)
     language_server-protocol (3.17.0.5)
     license_finder (7.2.1)
       bundler
@@ -147,7 +147,6 @@ GEM
       net-smtp
     marcel (1.1.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.9)
     minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
@@ -163,12 +162,7 @@ GEM
     nio4r (2.7.5)
     nitro_config (0.2.0)
       activesupport (>= 5.2.8.1)
-    nokogiri (1.19.3)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
     nokogiri (1.19.3-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.19.3-x86_64-linux-gnu)
       racc (~> 1.4)
     parallel (1.28.0)
     parser (3.3.11.1)
@@ -242,14 +236,14 @@ GEM
     rspec-mocks (3.13.8)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-rails (5.1.2)
-      actionpack (>= 5.2)
-      activesupport (>= 5.2)
-      railties (>= 5.2)
-      rspec-core (~> 3.10)
-      rspec-expectations (~> 3.10)
-      rspec-mocks (~> 3.10)
-      rspec-support (~> 3.10)
+    rspec-rails (8.0.4)
+      actionpack (>= 7.2)
+      activesupport (>= 7.2)
+      railties (>= 7.2)
+      rspec-core (>= 3.13.0, < 5.0.0)
+      rspec-expectations (>= 3.13.0, < 5.0.0)
+      rspec-mocks (>= 3.13.0, < 5.0.0)
+      rspec-support (>= 3.13.0, < 5.0.0)
     rspec-support (3.13.7)
     rubocop (1.82.1)
       json (~> 2.3)
@@ -289,10 +283,7 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
-    sqlite3 (2.9.2)
-      mini_portile2 (~> 2.8.0)
-    sqlite3 (2.9.2-arm64-darwin)
-    sqlite3 (2.9.2-x86_64-linux-gnu)
+    sqlite3 (2.9.4-arm64-darwin)
     stringio (3.2.0)
     thor (1.5.0)
     timeout (0.6.1)
@@ -316,18 +307,16 @@ GEM
     zeitwerk (2.7.5)
 
 PLATFORMS
-  arm64-darwin-22
-  arm64-darwin-23
-  ruby
-  x86_64-linux
+  arm64-darwin-24
 
 DEPENDENCIES
   appraisal (~> 2.5.0)
   camel_trail!
   license_finder (>= 7.0)
+  rails (= 8.1.3)
   rake (~> 13)
   rspec (~> 3.0)
-  rspec-rails (~> 5.1.2)
+  rspec-rails (~> 8.0.1)
   rubocop-powerhome!
   simplecov (= 0.15.1)
   sqlite3 (~> 2.9)
