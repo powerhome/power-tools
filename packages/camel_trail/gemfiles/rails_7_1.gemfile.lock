@@ -322,7 +322,7 @@ DEPENDENCIES
   rspec-rails (~> 7.1.1)
   rubocop-powerhome!
   simplecov (= 0.15.1)
-  sqlite3 (~> 1.7.3)
+  sqlite3 (~> 2.9)
   yard (= 0.9.38)
 
 BUNDLED WITH
