@@ -11,7 +11,7 @@ PATH
 PATH
   remote: .
   specs:
-    api_chai (0.0.1)
+    api_chai (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -132,7 +132,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  activesupport (<= 7.2.3.1)
+  activesupport (>= 7.1)
   api_chai!
   appraisal (~> 2.5.0)
   license_finder (~> 7.0)
