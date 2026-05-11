@@ -21,18 +21,17 @@ Gem::Specification.new do |spec|
   spec.files = Dir["{lib}/**/*", "README.md", "LICENSE.txt"]
   spec.require_paths = ["lib"]
 
+  spec.add_dependency "activesupport", "7.2.3.1"
   spec.add_dependency "rest-client", "~> 2.1"
   spec.add_dependency "securerandom", ">= 0.2.2"
-
-  spec.add_development_dependency "activesupport", "~> 7.1.0"
-  spec.add_development_dependency "appraisal", "~> 2.5.0"
-  spec.add_development_dependency "license_finder", "~> 7.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "rubocop", "~> 1.21"
-  spec.add_development_dependency "rubocop-powerhome"
-  spec.add_development_dependency "webmock", "~> 3.18"
-  spec.add_dependency "activesupport", "~> 7.0"
-
   spec.add_dependency "sequel", "~> 5.90.0"
+
+  spec.add_development_dependency "appraisal", "2.5.0"
+  spec.add_development_dependency "license_finder", "7.2.1"
+  spec.add_development_dependency "rspec", "3.13.2"
+  spec.add_development_dependency "rubocop", "1.82.1"
+  spec.add_development_dependency "rubocop-powerhome"
+  spec.add_development_dependency "webmock", "3.26.2"
+
   spec.metadata["rubygems_mfa_required"] = "true"
 end

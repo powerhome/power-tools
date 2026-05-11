@@ -76,8 +76,7 @@ GEM
       pry (>= 0.13, < 0.15)
     racc (1.8.1)
     rack (3.2.6)
-    rainbow (2.2.2)
-      rake
+    rainbow (3.1.1)
     rake (13.3.1)
     regexp_parser (2.12.0)
     rexml (3.4.4)
@@ -145,7 +144,7 @@ GEM
     with_env (1.1.0)
     xml-simple (1.1.9)
       rexml
-    yard (0.9.21)
+    yard (0.9.38)
 
 PLATFORMS
   arm64-darwin-20
@@ -165,13 +164,13 @@ DEPENDENCIES
   license_finder (~> 7.0)
   pry (>= 0.14)
   pry-byebug (= 3.10.1)
-  rainbow (= 2.2.2)
+  rainbow (= 3.1.1)
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop-powerhome!
   simplecov (= 0.15.1)
   test-unit (= 3.1.5)
-  yard (= 0.9.21)
+  yard (= 0.9.38)
 
 BUNDLED WITH
    2.5.23

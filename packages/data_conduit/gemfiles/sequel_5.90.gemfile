@@ -10,10 +10,10 @@ group :development, :test do
   gem "pry-byebug", "3.10.1"
   gem "rake", "~> 13.0"
   gem "rest-client", "~> 2.1"
-  gem "rspec", "~> 3.0"
-  gem "rubocop", "~> 1.21"
+  gem "rspec", "3.13.2"
+  gem "rubocop", "1.82.1"
   gem "rubocop-powerhome", path: "../../rubocop-powerhome"
-  gem "webmock", "~> 3.18"
+  gem "webmock", "3.26.2"
 end
 
 gemspec path: "../"

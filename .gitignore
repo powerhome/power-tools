@@ -33,6 +33,8 @@ config/master.key
 ## Environment normalization:
 /.bundle
 /vendor/bundle
+packages/*/gemfiles/vendor
+packages/*/vendor/bundle
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc

@@ -286,11 +286,14 @@ GEM
     securerandom (0.4.1)
     shoulda-matchers (5.1.0)
       activesupport (>= 5.2.0)
-    sqlite3 (1.7.3-aarch64-linux)
-    sqlite3 (1.7.3-arm-linux)
-    sqlite3 (1.7.3-arm64-darwin)
-    sqlite3 (1.7.3-x86_64-darwin)
-    sqlite3 (1.7.3-x86_64-linux)
+    sqlite3 (2.9.2-aarch64-linux-gnu)
+    sqlite3 (2.9.2-aarch64-linux-musl)
+    sqlite3 (2.9.2-arm-linux-gnu)
+    sqlite3 (2.9.2-arm-linux-musl)
+    sqlite3 (2.9.2-arm64-darwin)
+    sqlite3 (2.9.2-x86_64-darwin)
+    sqlite3 (2.9.2-x86_64-linux-gnu)
+    sqlite3 (2.9.2-x86_64-linux-musl)
     stringio (3.2.0)
     thor (1.5.0)
     timeout (0.6.1)
@@ -337,7 +340,7 @@ DEPENDENCIES
   rubocop (>= 1.32)
   rubocop-powerhome!
   shoulda-matchers (~> 5.1.0)
-  sqlite3 (~> 1.7.3)
+  sqlite3 (~> 2.9)
 
 BUNDLED WITH
    2.5.23
