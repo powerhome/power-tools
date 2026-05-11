@@ -1,7 +1,7 @@
 PATH
   remote: ../nitro_config
   specs:
-    nitro_config (0.2.0)
+    nitro_config (0.3.0)
       activesupport (>= 7.1, < 8.2)
 
 PATH
