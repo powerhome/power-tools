@@ -11,8 +11,8 @@ PATH
 PATH
   remote: ..
   specs:
-    nitro_config (0.2.0)
-      activesupport (>= 6.0.6.1, < 8)
+    nitro_config (0.3.0)
+      activesupport (>= 7.1, < 8.2)
 
 GEM
   remote: https://rubygems.org/
@@ -101,7 +101,7 @@ GEM
     ast (2.4.3)
     base64 (0.3.0)
     benchmark (0.5.0)
-    bigdecimal (4.1.1)
+    bigdecimal (4.1.2)
     builder (3.3.0)
     combustion (1.5.0)
       activesupport (>= 3.0.0)
@@ -150,7 +150,7 @@ GEM
     marcel (1.1.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
-    minitest (6.0.3)
+    minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
     mutex_m (0.3.0)
