@@ -15,6 +15,9 @@ module TwoPercent
 
       log_scim_operation("create", "complete", record.scim_id)
 
+      # Eager-load members for groups to include in response
+      record = reload_with_members(record) if group_resource?
+
       # RFC 7644: 201 Created with Location header and resource body
       response.headers["Location"] = scim_resource_url(record)
       render json: record.to_scim_representation, status: :created
@@ -39,6 +42,9 @@ module TwoPercent
       publish_updated_event(updated_record)
 
       log_scim_operation("update", "complete", record.scim_id)
+
+      # Eager-load members for groups to include in response
+      updated_record = reload_with_members(updated_record) if group_resource?
 
       # RFC 7644: 200 OK with updated resource body
       render json: updated_record.to_scim_representation, status: :ok
@@ -65,6 +71,9 @@ module TwoPercent
       end
 
       log_scim_operation("replace", "complete", record.scim_id)
+
+      # Eager-load members for groups to include in response
+      record = reload_with_members(record) if group_resource?
 
       # RFC 7644: 201 Created (if new) or 200 OK (if replaced)
       if was_new
@@ -211,6 +220,11 @@ module TwoPercent
     def scim_resource_url(record)
       resource_type = user_resource? ? "Users" : params[:resource_type]
       "#{request.base_url}/scim/#{resource_type}/#{record.scim_id}"
+    end
+
+    # Reload group record with members association to include in response
+    def reload_with_members(record)
+      TwoPercent::ScimGroup.includes(:scim_users).find(record.id)
     end
   end
 end

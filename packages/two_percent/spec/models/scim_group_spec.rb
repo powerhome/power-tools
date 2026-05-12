@@ -437,7 +437,9 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       TwoPercent::ScimGroupMembership.create!(scim_user: user1, scim_group: group)
       TwoPercent::ScimGroupMembership.create!(scim_user: user2, scim_group: group)
 
-      scim_repr = group.to_scim_representation
+      # Eager-load members to test serialization
+      group_with_members = TwoPercent::ScimGroup.includes(:scim_users).find(group.id)
+      scim_repr = group_with_members.to_scim_representation
 
       expect(scim_repr["members"]).to be_an(Array)
       expect(scim_repr["members"].size).to eq(2)

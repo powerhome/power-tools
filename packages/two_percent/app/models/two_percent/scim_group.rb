@@ -67,8 +67,8 @@ module TwoPercent
     def to_scim_representation
       representation = TwoPercent.group_mapper.build_scim_representation(self, resource_type: resource_type)
 
-      # Include members from associations if loaded or present
-      if scim_users.loaded? || scim_users.any?
+      # Include members only if association is already loaded
+      if scim_users.loaded?
         representation["members"] = scim_users.map do |user|
           {
             "value" => user.scim_id,
@@ -102,17 +102,11 @@ module TwoPercent
       existing_user_ids = scim_group_memberships.pluck(:scim_user_id)
 
       users_to_add = existing_users.where.not(id: existing_user_ids)
+      bulk_insert_memberships(users_to_add, correlation_id) if users_to_add.any?
 
-      users_to_add.each do |user|
-        TwoPercent::ScimGroupMembership.create!(
-          scim_user: user,
-          scim_group: self,
-          correlation_id: correlation_id
-        )
-      end
-
+      # Bulk delete removed memberships
       users_to_remove_ids = scim_users.where.not(scim_id: member_scim_ids).pluck(:id)
-      scim_group_memberships.where(scim_user_id: users_to_remove_ids).destroy_all
+      scim_group_memberships.where(scim_user_id: users_to_remove_ids).delete_all
     end
 
     # Extracts a nested attribute from the scim_data JSON
@@ -143,6 +137,28 @@ module TwoPercent
       end
 
       existing_users
+    end
+
+    # Bulk insert memberships for performance
+    #
+    # @param users_to_add [ActiveRecord::Relation] Users to add as members
+    # @param correlation_id [String, nil] Correlation ID for tracking
+    def bulk_insert_memberships(users_to_add, correlation_id)
+      membership_records = users_to_add.pluck(:id).map do |user_id|
+        {
+          scim_user_id: user_id,
+          scim_group_id: id,
+          correlation_id: correlation_id,
+          created_at: Time.current,
+          updated_at: Time.current,
+        }
+      end
+
+      # Skip duplicates (handles race conditions and migration scenarios)
+      TwoPercent::ScimGroupMembership.insert_all(
+        membership_records,
+        unique_by: %i[scim_user_id scim_group_id]
+      )
     end
   end
 end
