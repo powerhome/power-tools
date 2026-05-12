@@ -5,6 +5,8 @@ AllCops:
   TargetRubyVersion: 3.0
   Exclude:
     - 'spec/dummy/db/schema.rb'
+    - 'vendor/**/*'           # Add this
+    - 'gemfiles/vendor/**/*'   # Add this
 
 Rails:
   Enabled: false
