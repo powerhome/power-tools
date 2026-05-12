@@ -11,7 +11,7 @@ PATH
 PATH
   remote: ..
   specs:
-    consent (2.4.0)
+    consent (2.5.0)
       cancancan (= 3.2.1)
 
 GEM
@@ -328,7 +328,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  activerecord (>= 5)
+  activerecord (>= 7.1)
   appraisal (~> 2.5.0)
   bundler (~> 2.1)
   combustion (~> 1.3)
