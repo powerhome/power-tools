@@ -5,7 +5,16 @@ require "bundler/setup"
 require "bundler/gem_tasks"
 
 require "rspec/core/rake_task"
-RSpec::Core::RakeTask.new(:spec)
+
+# Ensure test database is migrated before running specs
+namespace :db do
+  desc "Migrate test database"
+  task :test_prepare do
+    sh "cd spec/dummy && bundle exec rake db:migrate RAILS_ENV=test"
+  end
+end
+
+RSpec::Core::RakeTask.new(:spec => "db:test_prepare")
 
 require "rubocop/rake_task"
 RuboCop::RakeTask.new(:rubocop)
