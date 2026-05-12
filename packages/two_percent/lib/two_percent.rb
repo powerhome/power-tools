@@ -7,7 +7,6 @@ require "two_percent/configuration"
 require "two_percent/domain"
 require "two_percent/bulk_processor"
 require "two_percent/scim"
-require "two_percent/syncable/model"
 require "two_percent/syncable"
 
 module TwoPercent
