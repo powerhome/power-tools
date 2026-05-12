@@ -10,4 +10,5 @@ jobs:
       package: ${{ github.workflow }}
       node: '["20", "22"]'
       workdir: "packages/${{ github.workflow }}"
-    secrets: inherit
+    secrets:
+      npm_token: ${{ secrets.POWERHOME_NPM_REGISTRY_PASSWORD }}
