@@ -1,8 +1,14 @@
 ## [Unreleased]
 
+## [2.5.0] - 2026-05-12
+
+[HFH-4410 - Bump powertools for Rails 8.1.3](https://github.com/powerhome/power-tools/pull/426)
+
+- Upgrade Rails to 8.1.3 for Nitro and Runway compatability
 - Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
 
 ### [2.4.0] - 2026-02-04
+
 - Adds ability to verify and synchronize permission definitions across environments using deterministic checksums [#387](https://github.com/powerhome/power-tools/pull/387)
 
 ## [2.3.0] - 2025-10-29
