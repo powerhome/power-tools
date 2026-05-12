@@ -11,4 +11,4 @@ gem "puma"
 gem "rspec-rails", ">= 7.0", require: false
 gem "rubocop-powerhome", path: "../rubocop-powerhome"
 gem "shoulda-matchers", "~> 6.0"
-gem "sqlite3", "~> 2.9"
+gem "sqlite3", "~> 2.4"
