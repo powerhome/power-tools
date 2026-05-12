@@ -64,17 +64,7 @@ module TwoPercent
         active: active,
       }
 
-      # Include group memberships from associations
-      if scim_groups.loaded? || scim_groups.any?
-        attributes[:groups] = scim_groups.map do |group|
-          {
-            scim_id: group.scim_id,
-            display_name: group.display_name,
-            resource_type: group.resource_type,
-          }
-        end
-      end
-
+      attributes[:groups] = group_memberships_attributes if scim_groups.loaded? || scim_groups.any?
       attributes.compact
     end
 
@@ -121,6 +111,18 @@ module TwoPercent
         scim_data[schema_urn] || {}
       else
         scim_data.select { |k, _| k.start_with?("urn:ietf:params:scim:schemas:extension:") }
+      end
+    end
+
+  private
+
+    def group_memberships_attributes
+      scim_groups.map do |group|
+        {
+          scim_id: group.scim_id,
+          display_name: group.display_name,
+          resource_type: group.resource_type,
+        }
       end
     end
   end

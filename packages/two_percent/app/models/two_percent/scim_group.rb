@@ -82,17 +82,7 @@ module TwoPercent
         }
       )
 
-      # Include members only if association is already loaded
-      if scim_users.loaded?
-        representation["members"] = scim_users.map do |user|
-          {
-            "value" => user.scim_id,
-            "display" => user.display_name,
-            "$ref" => "Users/#{user.scim_id}",
-          }
-        end
-      end
-
+      representation["members"] = members_representation if scim_users.loaded?
       representation
     end
 
@@ -174,6 +164,19 @@ module TwoPercent
         membership_records,
         unique_by: %i[scim_user_id scim_group_id]
       )
+    end
+
+    # Build SCIM members representation
+    #
+    # @return [Array<Hash>] Array of member references
+    def members_representation
+      scim_users.map do |user|
+        {
+          "value" => user.scim_id,
+          "display" => user.display_name,
+          "$ref" => "Users/#{user.scim_id}",
+        }
+      end
     end
   end
 end
