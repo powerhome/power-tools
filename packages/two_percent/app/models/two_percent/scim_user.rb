@@ -50,12 +50,19 @@ module TwoPercent
 
     # Extracts domain attributes for publishing in domain events
     #
-    # Uses the configured user_mapper to extract relevant attributes.
+    # Returns key attributes for event payloads.
     # Includes associated group memberships if loaded.
     #
-    # @return [Hash] Domain attributes configured via TwoPercent.user_mapper
+    # @return [Hash] Domain attributes
     def to_domain_attributes
-      attributes = TwoPercent.user_mapper.extract_domain_attributes(self) || {}
+      attributes = {
+        scim_id: scim_id,
+        external_id: external_id,
+        user_name: user_name,
+        display_name: display_name,
+        email: email,
+        active: active,
+      }
 
       # Include group memberships from associations
       if scim_groups.loaded? || scim_groups.any?
@@ -68,11 +75,21 @@ module TwoPercent
         end
       end
 
-      attributes
+      attributes.compact
     end
 
+    # Returns full SCIM representation for HTTP responses
+    #
+    # @return [Hash] RFC 7644 compliant SCIM User resource
     def to_scim_representation
-      TwoPercent.user_mapper.build_scim_representation(self, resource_type: "User")
+      scim_data.merge(
+        "id" => scim_id,
+        "meta" => {
+          "resourceType" => "User",
+          "created" => created_at.iso8601,
+          "lastModified" => updated_at.iso8601,
+        }
+      )
     end
 
     def update_from_scim!(validated_data, correlation_id: nil)

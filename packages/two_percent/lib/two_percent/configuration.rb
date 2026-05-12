@@ -66,54 +66,5 @@ module TwoPercent
   #
   config_accessor :correlation_id_header, default: "X-Correlation-Id"
 
-  #
-  # Attribute mapping configuration
-  # Maps SCIM attributes to model attributes
-  #
-  # For each SCIM attribute, specify either:
-  # - A symbol for the model attribute name
-  # - A proc/lambda for custom extraction
-  #
-  # I.e.:
-  #
-  #   TwoPercent.configure do |config|
-  #     config.user_attribute_mapping = {
-  #       scim_id: :id,
-  #       external_id: :auth_service_id,
-  #       user_name: :username,
-  #       display_name: -> (user) { user.full_name },
-  #       photos: -> (user) { [{ value: user.avatar_url }] }
-  #     }
-  #   end
-  #
-  config_accessor :user_attribute_mapping do
-    {
-      scim_id: :scim_id,
-      external_id: :external_id,
-      user_name: :user_name,
-      display_name: :display_name,
-      email: :email,
-      active: :active,
-    }
-  end
-
-  config_accessor :group_attribute_mapping do
-    {
-      scim_id: :scim_id,
-      external_id: :external_id,
-      display_name: :display_name,
-      resource_type: :resource_type,
-      active: :active,
-    }
-  end
-
-  #
-  # Column name where unmapped SCIM data is stored as JSON
-  # Set to nil if you want to manually handle SCIM representation
-  #
-  config_accessor :scim_data_column do
-    :scim_data
-  end
-
   class ConfigurationError < StandardError; end
 end

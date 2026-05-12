@@ -248,12 +248,6 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
       expect(attributes[:groups]).to be_an(Array)
       expect(attributes[:groups].first).to include(:scim_id, :display_name, :resource_type)
     end
-
-    it "uses AttributeMapper for extraction" do
-      expect(TwoPercent.user_mapper).to receive(:extract_domain_attributes).with(user)
-
-      user.to_domain_attributes
-    end
   end
 
   describe "#to_scim_representation" do
@@ -285,13 +279,6 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
       scim_repr = user_with_extension.to_scim_representation
 
       expect(scim_repr.keys).to include(match(/^urn:ietf:params:scim:schemas:extension:/))
-    end
-
-    it "uses AttributeMapper for building" do
-      expect(TwoPercent.user_mapper).to receive(:build_scim_representation)
-        .with(user, resource_type: "User")
-
-      user.to_scim_representation
     end
   end
 

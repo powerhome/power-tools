@@ -399,12 +399,6 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
 
       expect(attributes[:resource_type]).to eq("Departments")
     end
-
-    it "uses AttributeMapper for extraction" do
-      expect(TwoPercent.group_mapper).to receive(:extract_domain_attributes).with(group)
-
-      group.to_domain_attributes
-    end
   end
 
   describe "#to_scim_representation" do
@@ -443,13 +437,6 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
 
       expect(scim_repr["members"]).to be_an(Array)
       expect(scim_repr["members"].size).to eq(2)
-    end
-
-    it "uses AttributeMapper for building with resource_type" do
-      expect(TwoPercent.group_mapper).to receive(:build_scim_representation)
-        .with(group, resource_type: "Departments")
-
-      group.to_scim_representation
     end
   end
 
