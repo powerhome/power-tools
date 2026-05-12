@@ -9,7 +9,7 @@ jobs:
     with:
       package: ${{ github.workflow }}
       workdir: "packages/${{ github.workflow }}"
-      before_build: cd spec/dummy && bundle exec rake db:migrate RAILS_ENV=test
+      before_build: cd packages/two_percent/spec/dummy && bundle exec rake db:migrate RAILS_ENV=test
       gemfiles: "['gemfiles/rails_7_1.gemfile','gemfiles/rails_7_2.gemfile']"
       ruby: '["3.3"]'
     secrets: inherit
