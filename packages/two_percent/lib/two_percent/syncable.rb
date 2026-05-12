@@ -25,118 +25,53 @@ module TwoPercent
     extend ActiveSupport::Concern
 
     included do
-      class_attribute :syncable_type
-      class_attribute :syncable_scim_id_column
-      class_attribute :syncable_options
+      class_attribute :syncable_model
     end
 
     class_methods do
       # Configure this model as syncable with SCIM
       #
       # @param type [Symbol] :user or :group
-      # @param options [Hash] Configuration options
-      # @option options [Symbol] :scim_id_column Column storing SCIM ID (default: :scim_id)
+      # @param scim_id_column [Symbol] Column storing SCIM ID (default: :scim_id)
+      # @param options [Hash] Additional configuration options
       # @option options [Boolean] :auto_sync Automatically sync changes (default: false)
+      # @option options [String] :resource_type Resource type for groups (default: "Groups")
       #
-      def syncable_as(type, **options)
-        self.syncable_type = type
-        self.syncable_scim_id_column = options[:scim_id_column] || :scim_id
-        self.syncable_options = options
+      def syncable_as(type, scim_id_column: :scim_id, **options)
+        scim_model_class = type == :user ? TwoPercent::ScimUser : TwoPercent::ScimGroup
 
-        case type
-        when :user
-          setup_user_syncable
-        when :group
-          setup_group_syncable
-        else
-          raise ArgumentError, "Unsupported syncable type: #{type}. Use :user or :group"
-        end
+        self.syncable_model = TwoPercent::Syncable::Model.new(
+          scim_model_class: scim_model_class,
+          scim_id_column: scim_id_column,
+          resource_type: type,
+          **options
+        )
 
+        syncable_model.setup_association(self)
         setup_callbacks if options[:auto_sync]
       end
 
       # Sync from a SCIM domain event
       #
+      # Uses polymorphic dispatch - events know how to apply themselves
+      #
       # @param event [TwoPercent::Domain::Events::Base] Domain event
+      # @return [ActiveRecord::Base, nil] The affected record, if any
       #
       def sync_from_scim_event(event)
-        case event
-        when TwoPercent::Domain::Events::UserCreated, TwoPercent::Domain::Events::UserUpdated
-          sync_user_from_event(event)
-        when TwoPercent::Domain::Events::GroupCreated, TwoPercent::Domain::Events::GroupUpdated
-          sync_group_from_event(event)
-        when TwoPercent::Domain::Events::UserDeleted
-          handle_user_deleted(event)
-        when TwoPercent::Domain::Events::GroupDeleted
-          handle_group_deleted(event)
-        end
+        event.apply_to_model(self)
       end
 
     private
-
-      def setup_user_syncable
-        # Association to ScimUser
-        belongs_to :scim_user,
-                   class_name: "TwoPercent::ScimUser",
-                   foreign_key: syncable_scim_id_column,
-                   primary_key: "scim_id",
-                   optional: true
-
-        # Validation
-        validates syncable_scim_id_column, uniqueness: true, allow_nil: true
-      end
-
-      def setup_group_syncable
-        # Association to ScimGroup
-        belongs_to :scim_group,
-                   class_name: "TwoPercent::ScimGroup",
-                   foreign_key: syncable_scim_id_column,
-                   primary_key: "scim_id",
-                   optional: true
-
-        # Validation
-        validates syncable_scim_id_column, uniqueness: true, allow_nil: true
-      end
 
       def setup_callbacks
         after_commit :sync_to_scim_async, on: %i[create update]
       end
 
-      def sync_user_from_event(event)
-        attrs = event.user_attributes
-        scim_id = attrs[:scim_id]
-
-        return unless scim_id
-
-        record = find_or_initialize_by(syncable_scim_id_column => scim_id)
-        record.assign_attributes(map_scim_attributes_to_domain(attrs))
-        record.save! if record.changed?
-        record
-      end
-
-      def sync_group_from_event(event)
-        attrs = event.group_attributes
-        scim_id = attrs[:scim_id]
-
-        return unless scim_id
-
-        record = find_or_initialize_by(syncable_scim_id_column => scim_id)
-        record.assign_attributes(map_scim_attributes_to_domain(attrs))
-        record.save! if record.changed?
-        record
-      end
-
-      def handle_user_deleted(event)
-        record = find_by(syncable_scim_id_column => event.user_id)
-        record&.destroy
-      end
-
-      def handle_group_deleted(event)
-        record = find_by(syncable_scim_id_column => event.group_id)
-        record&.destroy
-      end
-
       # Override this in your model to customize attribute mapping
+      #
+      # @param scim_attrs [Hash] SCIM attributes from event
+      # @return [Hash] Attributes to assign to domain model
       def map_scim_attributes_to_domain(scim_attrs)
         # Default mapping - override in your model
         scim_attrs.slice(:external_id, :email, :display_name, :active)
@@ -151,12 +86,7 @@ module TwoPercent
     # @return [ScimUser, ScimGroup] The synced SCIM record
     #
     def sync_to_scim(correlation_id: nil)
-      case syncable_type
-      when :user
-        sync_user_to_scim(correlation_id: correlation_id)
-      when :group
-        sync_group_to_scim(correlation_id: correlation_id)
-      end
+      self.class.syncable_model.sync_to_scim(self, correlation_id: correlation_id)
     end
 
     # Async version of sync_to_scim (requires ActiveJob)
@@ -168,12 +98,9 @@ module TwoPercent
 
     # Refresh this record from SCIM data
     def refresh_from_scim
-      scim_record = case syncable_type
-                    when :user
-                      scim_user
-                    when :group
-                      scim_group
-                    end
+      model = self.class.syncable_model
+      association_name = model.scim_model_class == TwoPercent::ScimUser ? :scim_user : :scim_group
+      scim_record = public_send(association_name)
 
       return unless scim_record
 
@@ -182,43 +109,16 @@ module TwoPercent
       save! if changed?
     end
 
-    def sync_user_to_scim(correlation_id:)
-      scim_data = map_domain_attributes_to_scim
-
-      if scim_user
-        # Update existing
-        scim_user.update_from_scim!(scim_data, correlation_id: correlation_id)
-        scim_user
-      else
-        # Create new
-        scim_user = TwoPercent::ScimUser.upsert_from_scim(scim_data, correlation_id: correlation_id)
-        update_column(syncable_scim_id_column, scim_user.scim_id)
-        scim_user
-      end
-    end
-
-    def sync_group_to_scim(correlation_id:)
-      scim_data = map_domain_attributes_to_scim
-
-      if scim_group
-        # Update existing
-        scim_group.update_from_scim!(scim_data, correlation_id: correlation_id)
-        scim_group
-      else
-        # Create new (assuming Groups resource type)
-        resource_type = syncable_options[:resource_type] || "Groups"
-        scim_group = TwoPercent::ScimGroup.upsert_from_scim(resource_type, scim_data, correlation_id: correlation_id)
-        update_column(syncable_scim_id_column, scim_group.scim_id)
-        scim_group
-      end
-    end
-
     # Override this in your model to customize domain → SCIM mapping
+    #
+    # @return [Hash] SCIM-compliant resource hash
     def map_domain_attributes_to_scim
-      # Default SCIM structure
+      model = self.class.syncable_model
+      scim_id_value = send(model.scim_id_column)
+
       {
-        "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:#{syncable_type.to_s.capitalize}"],
-        "id" => send(syncable_scim_id_column),
+        "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:#{model.resource_type.to_s.capitalize}"],
+        "id" => scim_id_value,
         "externalId" => try(:external_id) || "ext-#{id}",
         "displayName" => try(:display_name) || try(:name),
         "active" => try(:active),

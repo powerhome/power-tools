@@ -13,6 +13,11 @@ module TwoPercent
         def group_id
           group_attributes[:scim_id]
         end
+
+        # Apply this event to a domain model class
+        def apply_to_model(model_class)
+          model_class.syncable_model.sync_created(group_attributes, model_class)
+        end
       end
 
       # Domain event: Group was updated
@@ -25,6 +30,11 @@ module TwoPercent
         def group_id
           group_attributes[:scim_id]
         end
+
+        # Apply this event to a domain model class
+        def apply_to_model(model_class)
+          model_class.syncable_model.sync_updated(group_attributes, model_class)
+        end
       end
 
       # Domain event: Group was deleted
@@ -33,6 +43,11 @@ module TwoPercent
 
         attribute :group_id # Just the ID for deletion
         attribute :resource_type
+
+        # Apply this event to a domain model class
+        def apply_to_model(model_class)
+          model_class.syncable_model.sync_deleted(group_id, model_class)
+        end
       end
     end
   end
