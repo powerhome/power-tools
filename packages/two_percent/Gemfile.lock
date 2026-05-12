@@ -319,7 +319,7 @@ DEPENDENCIES
   rspec-rails (>= 7.0)
   rubocop-powerhome!
   shoulda-matchers (~> 6.0)
-  sqlite3 (~> 2.4)
+  sqlite3 (~> 2.9)
   two_percent!
 
 BUNDLED WITH
