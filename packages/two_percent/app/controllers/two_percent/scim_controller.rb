@@ -2,8 +2,6 @@
 
 module TwoPercent
   class ScimController < ApplicationController
-    before_action :extract_correlation_id
-
     def create
       log_scim_operation("create", "start")
 
@@ -108,11 +106,6 @@ module TwoPercent
     end
 
   private
-
-    def extract_correlation_id
-      header_name = TwoPercent.config.correlation_id_header
-      @correlation_id = request.headers[header_name] || SecureRandom.uuid
-    end
 
     def scim_params
       params.except(:controller, :action, :resource_type).as_json.with_indifferent_access

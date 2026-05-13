@@ -2,8 +2,6 @@
 
 module TwoPercent
   class BulkController < ApplicationController
-    before_action :extract_correlation_id
-
     def _dispatch
       log_bulk_operation("start")
       processor.dispatch
@@ -11,11 +9,6 @@ module TwoPercent
     end
 
   private
-
-    def extract_correlation_id
-      header_name = TwoPercent.config.correlation_id_header
-      @correlation_id = request.headers[header_name] || SecureRandom.uuid
-    end
 
     def processor
       @processor ||= TwoPercent::BulkProcessor.new(operations, correlation_id: @correlation_id)

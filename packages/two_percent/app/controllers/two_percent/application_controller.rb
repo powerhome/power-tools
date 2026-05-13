@@ -3,6 +3,7 @@
 module TwoPercent
   class ApplicationController < ActionController::API
     before_action :authenticate
+    before_action :extract_correlation_id
 
     rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
     rescue_from ActiveRecord::RecordInvalid, with: :handle_validation_error
@@ -51,6 +52,11 @@ module TwoPercent
         scim_type: scim_type,
         detail: exception.message
       )
+    end
+
+    def extract_correlation_id
+      header_name = TwoPercent.config.correlation_id_header
+      @correlation_id = request.headers[header_name] || SecureRandom.uuid
     end
 
     # RFC 7644 Section 3.12: SCIM Error Response Format
