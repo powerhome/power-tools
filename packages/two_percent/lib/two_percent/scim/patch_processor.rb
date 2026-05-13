@@ -43,21 +43,21 @@ module TwoPercent
 
       def derive_operation(operation)
         # Handle nested value hashes by flattening to path notation
-        case operation["value"] || operation[:value]
+        case operation.fetch("value") { operation[:value] }
         when Hash
-          (operation["value"] || operation[:value]).flat_map do |key, value|
-            path = [operation["path"] || operation[:path], key].compact.join(".")
+          operation.fetch("value") { operation[:value] }.flat_map do |key, value|
+            path = [operation.fetch("path") { operation[:path] }, key].compact.join(".")
             derive_operation(
-              "op" => operation["op"] || operation[:op],
+              "op" => operation.fetch("op") { operation[:op] },
               "path" => path,
               "value" => value
             )
           end
         else
           [{
-            op: operation["op"] || operation[:op],
-            path: operation["path"] || operation[:path],
-            value: operation["value"] || operation[:value],
+            op: operation.fetch("op") { operation[:op] },
+            path: operation.fetch("path") { operation[:path] },
+            value: operation.fetch("value") { operation[:value] },
           }]
         end
       end

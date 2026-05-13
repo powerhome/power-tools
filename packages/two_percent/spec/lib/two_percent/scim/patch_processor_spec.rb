@@ -303,6 +303,26 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
         expect(result["name"]["givenName"]).to eq("Jane")
         expect(result["name"]["familyName"]).to eq("Smith")
       end
+
+      it "preserves false values when flattening hash" do
+        patch_request = {
+          Operations: [
+            {
+              op: "replace",
+              value: {
+                "active" => false,
+                "displayName" => "Inactive User",
+              },
+            },
+          ],
+        }
+
+        processor = described_class.new(patch_request)
+        result = processor.apply_to_hash(original_hash)
+
+        expect(result["active"]).to be false
+        expect(result["displayName"]).to eq("Inactive User")
+      end
     end
 
     describe "unknown operation" do
