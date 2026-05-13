@@ -7,19 +7,28 @@ module TwoPercent
   #   class User < ApplicationRecord
   #     include TwoPercent::Syncable
   #
-  #     syncable_as :user, scim_id_column: :scim_id
+  #     syncable_as :user, scim_id_column: :scim_id do |scim_attrs|
+  #       {
+  #         first_name: scim_attrs.dig(:name, :givenName),
+  #         last_name: scim_attrs.dig(:name, :familyName),
+  #         email: scim_attrs[:email],
+  #         active: scim_attrs[:active]
+  #       }
+  #     end
   #   end
   #
   #   class Group < ApplicationRecord
   #     include TwoPercent::Syncable
   #
-  #     syncable_as :group, scim_id_column: :scim_id
+  #     syncable_as :group, scim_id_column: :scim_id do |scim_attrs|
+  #       { name: scim_attrs[:display_name], active: scim_attrs[:active] }
+  #     end
   #   end
   #
   # This provides:
   # - user.scim_user => linked ScimUser record
-  # - user.sync_to_scim => push changes to SCIM
-  # - User.sync_from_scim_event(event) => pull changes from SCIM events
+  # - user.refresh_from_scim => pull latest data from SCIM
+  # - User.sync_from_scim_event(event) => sync from SCIM domain events
   #
   module Syncable
     # Encapsulates type-specific SCIM synchronization logic
@@ -28,13 +37,14 @@ module TwoPercent
     # by encapsulating all knowledge about User vs Group differences.
     #
     class Model
-      attr_reader :scim_model_class, :scim_id_column, :resource_type, :options
+      attr_reader :scim_model_class, :scim_id_column, :resource_type, :options, :attribute_mapper_block
 
-      def initialize(scim_model_class:, scim_id_column:, resource_type:, **options)
+      def initialize(scim_model_class:, scim_id_column:, resource_type:, **options, &block)
         @scim_model_class = scim_model_class
         @scim_id_column = scim_id_column
         @resource_type = resource_type
         @options = options
+        @attribute_mapper_block = block
       end
 
       # Setup association and validations on the domain model class
@@ -110,8 +120,12 @@ module TwoPercent
         scim_id = attributes[:scim_id]
         return unless scim_id
 
+        unless attribute_mapper_block
+          raise ArgumentError, "No attribute mapper block provided. Define one in syncable_as."
+        end
+
         record = domain_model_class.find_or_initialize_by(scim_id_column => scim_id)
-        mapped_attrs = domain_model_class.send(:map_scim_attributes_to_domain, attributes)
+        mapped_attrs = attribute_mapper_block.call(attributes)
         record.assign_attributes(mapped_attrs)
         record.save! if record.changed?
         record
@@ -156,15 +170,17 @@ module TwoPercent
       # @param options [Hash] Additional configuration options
       # @option options [Boolean] :auto_sync Automatically sync changes (default: false)
       # @option options [String] :resource_type Resource type for groups (default: "Groups")
+      # @param block [Proc] Optional block for custom attribute mapping from SCIM to domain
       #
-      def syncable_as(type, scim_id_column: :scim_id, **options)
+      def syncable_as(type, scim_id_column: :scim_id, **options, &block)
         scim_model_class = type == :user ? TwoPercent::ScimUser : TwoPercent::ScimGroup
 
         self.syncable_model = Model.new(
           scim_model_class: scim_model_class,
           scim_id_column: scim_id_column,
           resource_type: type,
-          **options
+          **options,
+          &block
         )
 
         syncable_model.setup_association(self)
@@ -186,15 +202,6 @@ module TwoPercent
 
       def setup_callbacks
         after_commit :sync_to_scim_async, on: %i[create update]
-      end
-
-      # Override this in your model to customize attribute mapping
-      #
-      # @param scim_attrs [Hash] SCIM attributes from event
-      # @return [Hash] Attributes to assign to domain model
-      def map_scim_attributes_to_domain(scim_attrs)
-        # Default mapping - override in your model
-        scim_attrs.slice(:external_id, :email, :display_name, :active)
       end
     end
 
@@ -224,8 +231,13 @@ module TwoPercent
 
       return unless scim_record
 
+      unless model.attribute_mapper_block
+        raise ArgumentError, "No attribute mapper block provided. Define one in syncable_as."
+      end
+
       attrs = scim_record.to_domain_attributes
-      assign_attributes(self.class.send(:map_scim_attributes_to_domain, attrs))
+      mapped_attrs = model.attribute_mapper_block.call(attrs)
+      assign_attributes(mapped_attrs)
       save! if changed?
     end
 
