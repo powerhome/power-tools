@@ -28,44 +28,51 @@ Rails.application.config.to_prepare do
     end
 
     # ============================================================
-    # Attribute Mapping (Optional)
+    # Integration with Your Application
     # ============================================================
-    # Map SCIM attributes to your domain model attributes
-    # This determines what data is extracted and published in domain events
+    # TwoPercent publishes domain events when SCIM resources change.
+    # Choose your integration approach:
     #
-    # User attribute mapper:
-    # config.user_mapper.map do |scim_user|
-    #   {
-    #     scim_id: scim_user.scim_id,
-    #     external_id: scim_user.external_id,
-    #     username: scim_user.user_name,
-    #     email: scim_user.email,
-    #     display_name: scim_user.display_name,
-    #     active: scim_user.active,
-    #     # Extract from scim_data JSON:
-    #     first_name: scim_user.scim_attribute("name", "givenName"),
-    #     last_name: scim_user.scim_attribute("name", "familyName"),
-    #     department: scim_user.extension_attributes["department"],
-    #     role: scim_user.extension_attributes["role"]
-    #   }
-    # end
+    # Option 1: Subscribe to domain events (recommended)
+    #   ActiveSupport::Notifications.subscribe(/TwoPercent::Domain::Events/) do |name, start, finish, id, payload|
+    #     event = payload[:event]
+    #     case event
+    #     when TwoPercent::Domain::Events::UserCreated
+    #       User.create!(
+    #         scim_id: event.user_attributes[:scim_id],
+    #         email: event.user_attributes[:email],
+    #         first_name: event.user_attributes.dig(:name, :givenName)
+    #       )
+    #     when TwoPercent::Domain::Events::UserUpdated
+    #       user = User.find_by(scim_id: event.user_attributes[:scim_id])
+    #       user&.update!(email: event.user_attributes[:email])
+    #     end
+    #   end
     #
-    # Group attribute mapper:
-    # config.group_mapper.map do |scim_group|
-    #   {
-    #     scim_id: scim_group.scim_id,
-    #     external_id: scim_group.external_id,
-    #     display_name: scim_group.display_name,
-    #     resource_type: scim_group.resource_type,
-    #     active: scim_group.active
-    #   }
-    # end
-
-    # ============================================================
-    # Event Publishing (Optional)
-    # ============================================================
-    # Domain events are published automatically using AetherObservatory
-    # No additional configuration needed unless you want custom event handling
+    # Option 2: Use the Syncable concern (declarative)
+    #   class User < ApplicationRecord
+    #     include TwoPercent::Syncable
+    #     
+    #     syncable_as :user, scim_id_column: :scim_id do |scim_attrs|
+    #       {
+    #         first_name: scim_attrs.dig(:name, :givenName),
+    #         last_name: scim_attrs.dig(:name, :familyName),
+    #         email: scim_attrs[:email],
+    #         active: scim_attrs[:active]
+    #       }
+    #     end
+    #   end
+    #   
+    #   # Then subscribe to events and sync automatically:
+    #   ActiveSupport::Notifications.subscribe(/TwoPercent::Domain::Events/) do |name, start, finish, id, payload|
+    #     event = payload[:event]
+    #     User.sync_from_scim_event(event) if event.is_a?(TwoPercent::Domain::Events::Base)
+    #   end
+    #
+    # Option 3: Query SCIM models directly
+    #   scim_user = TwoPercent::ScimUser.find_by_scim_id("user-123")
+    #   email = scim_user.scim_data["email"]
+    #   attrs = scim_user.to_domain_attributes
     #
     # Events published:
     # - TwoPercent::Domain::Events::UserCreated
@@ -74,24 +81,5 @@ Rails.application.config.to_prepare do
     # - TwoPercent::Domain::Events::GroupCreated
     # - TwoPercent::Domain::Events::GroupUpdated
     # - TwoPercent::Domain::Events::GroupDeleted
-    #
-    # To integrate TwoPercent with your application:
-    #   1. Subscribe to domain events using AetherObservatory observers
-    #   2. Query ScimUser/ScimGroup models directly from your code
-    #   3. Use the Syncable concern to link your models to SCIM resources
-    #
-    # Example event subscription:
-    #   class UserSyncObserver
-    #     include AetherObservatory::Observer
-    #     
-    #     observe "TwoPercent::Domain::Events::UserUpdated" do |event|
-    #       user = User.find_by(scim_id: event.data[:scim_id])
-    #       user.update!(event.data.slice(:email, :display_name))
-    #     end
-    #   end
-    #
-    # Example direct model access:
-    #   scim_user = ScimUser.find_by(scim_id: "abc123")
-    #   email = scim_user.scim_attribute("emails", 0, "value")
   end
 end

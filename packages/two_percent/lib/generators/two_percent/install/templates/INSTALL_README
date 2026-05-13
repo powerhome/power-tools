@@ -20,14 +20,9 @@ Next Steps:
    Or mount at a custom path:
    mount TwoPercent::Engine => "/api/scim/v2"
 
-4. (Optional) Customize attribute mapping in the initializer:
+4. Subscribe to domain events:
 
-   Configure user_mapper and group_mapper to extract the exact
-   attributes you need for your domain events
-
-5. Subscribe to domain events:
-
-   TwoPercent publishes the following events via AetherObservatory:
+   TwoPercent publishes domain events when SCIM resources change:
 
    - TwoPercent::Domain::Events::UserCreated
    - TwoPercent::Domain::Events::UserUpdated
@@ -36,21 +31,48 @@ Next Steps:
    - TwoPercent::Domain::Events::GroupUpdated
    - TwoPercent::Domain::Events::GroupDeleted
 
-   Subscribe to these events to sync SCIM data with your domain models
+   Subscribe using ActiveSupport::Notifications or integrate using the
+   Syncable concern (see step 5)
 
-6. (Optional) Add Syncable concern to your models:
+5. (Option A) Subscribe to events manually:
+
+   ActiveSupport::Notifications.subscribe(/TwoPercent::Domain::Events/) do |name, start, finish, id, payload|
+     event = payload[:event]
+     case event
+     when TwoPercent::Domain::Events::UserCreated
+       User.create!(scim_id: event.user_attributes[:scim_id], ...)
+     when TwoPercent::Domain::Events::UserUpdated
+       user = User.find_by(scim_id: event.user_attributes[:scim_id])
+       user&.update!(event.user_attributes.slice(...))
+     end
+   end
+
+6. (Option B) Use Syncable concern for automatic sync:
 
    class User < ApplicationRecord
      include TwoPercent::Syncable
 
-     syncable_as :user  # Links to ScimUser
+     syncable_as :user, scim_id_column: :scim_id do |scim_attrs|
+       {
+         first_name: scim_attrs.dig(:name, :givenName),
+         last_name: scim_attrs.dig(:name, :familyName),
+         email: scim_attrs[:email],
+         active: scim_attrs[:active]
+       }
+     end
    end
 
-   class Group < ApplicationRecord
-     include TwoPercent::Syncable
-
-     syncable_as :group  # Links to ScimGroup
+   Then subscribe to events:
+   ActiveSupport::Notifications.subscribe(/TwoPercent::Domain::Events/) do |name, start, finish, id, payload|
+     event = payload[:event]
+     User.sync_from_scim_event(event) if event.is_a?(TwoPercent::Domain::Events::Base)
    end
+
+7. (Option C) Query SCIM models directly:
+
+   scim_user = TwoPercent::ScimUser.find_by_scim_id("user-123")
+   attrs = scim_user.to_domain_attributes
+   email = scim_user.scim_data["email"]
 
 ===============================================================================
 
