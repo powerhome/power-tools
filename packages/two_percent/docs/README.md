@@ -28,34 +28,28 @@ TwoPercent is a SCIM 2.0 (System for Cross-domain Identity Management) Rails Eng
 
 TwoPercent is designed as a standalone gem that can be mounted in a parent Rails application:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  Parent Rails Application                                    │
-│                                                               │
-│  ┌──────────────────┐      ┌─────────────────────────┐     │
-│  │  Your Domain     │◄─────│  TwoPercent::Syncable   │     │
-│  │  Models          │      │  (SCIM → Domain sync)   │     │
-│  │  (User, Group)   │      └─────────────────────────┘     │
-│  └──────────────────┘               ▲                       │
-│           ▲                          │                       │
-│           │                  ┌───────┴────────┐             │
-│           │                  │  Domain Events │             │
-│           │                  │  (UserCreated, │             │
-│           │                  │   GroupUpdated,│             │
-│           │                  │   etc.)        │             │
-│           │                  └────────────────┘             │
-│           │                          ▲                       │
-│           │                          │                       │
-│  ┌────────┴──────────┐      ┌───────┴────────┐             │
-│  │  Query SCIM Data  │      │  TwoPercent    │             │
-│  │  (ScimUser,       │◄─────│  Engine        │             │
-│  │   ScimGroup)      │      │  (/scim)       │             │
-│  └───────────────────┘      └────────────────┘             │
-│                                      ▲                       │
-└──────────────────────────────────────┼───────────────────────┘
-                                       │
-                                  SCIM IdP
-                          (Okta, Azure AD, etc.)
+```mermaid
+graph TD
+    IdP[SCIM IdP<br/>Okta, Azure AD, etc.]
+    Engine[TwoPercent Engine<br/>/scim]
+    Events[Domain Events<br/>UserCreated, GroupUpdated, etc.]
+    ScimModels[SCIM Models<br/>ScimUser, ScimGroup]
+    Syncable[Syncable Concern<br/>SCIM → Domain sync]
+    DomainModels[Your Domain Models<br/>User, Group]
+
+    IdP -->|SCIM API| Engine
+    Engine -->|publishes| Events
+    Engine -->|persists to| ScimModels
+    Events -->|triggers| Syncable
+    Syncable -->|updates| DomainModels
+    DomainModels -.->|queries| ScimModels
+
+    style IdP fill:#e1f5ff
+    style Engine fill:#fff4e1
+    style Events fill:#ffe1f5
+    style Syncable fill:#e1ffe1
+    style DomainModels fill:#f0f0f0
+    style ScimModels fill:#f0f0f0
 ```
 
 **Key Principles:**
