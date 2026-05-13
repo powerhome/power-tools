@@ -5,6 +5,7 @@ require "logger"
 module DataTaster
   autoload :Collection, "data_taster/collection"
   autoload :Confection, "data_taster/confection"
+  autoload :ExportGraphCompiler, "data_taster/export_graph_compiler"
   autoload :Detergent, "data_taster/detergent"
   autoload :Helper, "data_taster/helper"
   autoload :Sample, "data_taster/sample"
@@ -34,7 +35,8 @@ module DataTaster
       source_client: args[:source_client] || raise(ArgumentError, "DataTaster.config missing source_client"),
       working_client: args[:working_client],
       include_insert: args[:include_insert] || false,
-      filename: args[:filename] || nil
+      filename: args[:filename] || nil,
+      graph_anchor_allowlist: args[:graph_anchor_allowlist]
     )
   end
 
@@ -74,5 +76,14 @@ module DataTaster
     end
   end
 
-  Config = Struct.new(:months, :list, :source_client, :working_client, :include_insert, :filename)
+  Config = Struct.new(
+    :months,
+    :list,
+    :source_client,
+    :working_client,
+    :include_insert,
+    :filename,
+    :graph_anchor_allowlist,
+    keyword_init: true
+  )
 end

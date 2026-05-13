@@ -24,7 +24,10 @@ module DataTaster
       flavored_erb = erb.def_class(DataTaster::Flavors, "render()")
       erb_result = flavored_erb.new.render
 
-      YAML.safe_load(erb_result.gsub(/((.|\n)*---)/, "\n---")) || {}
+      hash = YAML.safe_load(erb_result.gsub(/((.|\n)*---)/, "\n---")) || {}
+      hash.transform_keys!(&:to_s)
+      ExportGraphCompiler.merge_into!(hash)
+      hash
     end
 
   private
