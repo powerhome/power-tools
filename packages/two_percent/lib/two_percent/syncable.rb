@@ -51,14 +51,36 @@ module TwoPercent
       #
       # @param domain_model_class [Class] The ActiveRecord model including Syncable
       def setup_association(domain_model_class)
-        belongs_to_options = {
-          class_name: scim_model_class.name,
-          foreign_key: scim_id_column,
-          primary_key: "scim_id",
-          optional: true,
-        }
+        if scim_model_class == TwoPercent::ScimUser
+          setup_user_syncable(domain_model_class)
+        else
+          setup_group_syncable(domain_model_class)
+        end
+      end
 
-        domain_model_class.belongs_to association_name, **belongs_to_options
+      # Setup ScimUser association and validations
+      #
+      # @param domain_model_class [Class] The ActiveRecord model including Syncable
+      def setup_user_syncable(domain_model_class)
+        domain_model_class.belongs_to :scim_user,
+                                      class_name: "TwoPercent::ScimUser",
+                                      foreign_key: scim_id_column,
+                                      primary_key: "scim_id",
+                                      optional: true
+
+        domain_model_class.validates scim_id_column, uniqueness: true, allow_nil: true
+      end
+
+      # Setup ScimGroup association and validations
+      #
+      # @param domain_model_class [Class] The ActiveRecord model including Syncable
+      def setup_group_syncable(domain_model_class)
+        domain_model_class.belongs_to :scim_group,
+                                      class_name: "TwoPercent::ScimGroup",
+                                      foreign_key: scim_id_column,
+                                      primary_key: "scim_id",
+                                      optional: true
+
         domain_model_class.validates scim_id_column, uniqueness: true, allow_nil: true
       end
 
@@ -97,6 +119,7 @@ module TwoPercent
       # @return [ScimUser, ScimGroup] The synced SCIM record
       def sync_to_scim(domain_record, correlation_id:)
         scim_data = domain_record.map_domain_attributes_to_scim
+        association_name = scim_model_class == TwoPercent::ScimUser ? :scim_user : :scim_group
         scim_record = domain_record.public_send(association_name)
 
         if scim_record
@@ -109,11 +132,6 @@ module TwoPercent
       end
 
     private
-
-      # Association name (:scim_user or :scim_group)
-      def association_name
-        @association_name ||= scim_model_class == TwoPercent::ScimUser ? :scim_user : :scim_group
-      end
 
       # Shared logic for created/updated events
       def sync_upsert(attributes, domain_model_class)
