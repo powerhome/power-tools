@@ -8,13 +8,13 @@ module TwoPercent
       # Persist to two_percent tables first (validates SCIM schema)
       record = persist_scim_record(scim_params)
 
+      # Reload with associations for domain event and response
+      record = reload_with_members(record)
+
       # Publish domain event (not SCIM-specific)
       publish_created_event(record)
 
       log_scim_operation("create", "complete", record.scim_id)
-
-      # Eager-load members for groups to include in response
-      record = reload_with_members(record) if group_resource?
 
       # RFC 7644: 201 Created with Location header and resource body
       response.headers["Location"] = scim_resource_url(record)
@@ -36,13 +36,13 @@ module TwoPercent
       patched_data["id"] = params[:id] # Ensure ID is present
       updated_record = persist_scim_record(patched_data)
 
+      # Reload with associations for domain event and response
+      updated_record = reload_with_members(updated_record)
+
       # Publish domain event with final state
       publish_updated_event(updated_record)
 
       log_scim_operation("update", "complete", record.scim_id)
-
-      # Eager-load members for groups to include in response
-      updated_record = reload_with_members(updated_record) if group_resource?
 
       # RFC 7644: 200 OK with updated resource body
       render json: updated_record.to_scim_representation, status: :ok
@@ -61,6 +61,9 @@ module TwoPercent
 
       record = upsert_scim_record(params[:id], scim_params)
 
+      # Reload with associations for domain event and response
+      record = reload_with_members(record)
+
       # Publish appropriate domain event
       if was_new
         publish_created_event(record)
@@ -69,9 +72,6 @@ module TwoPercent
       end
 
       log_scim_operation("replace", "complete", record.scim_id)
-
-      # Eager-load members for groups to include in response
-      record = reload_with_members(record) if group_resource?
 
       # RFC 7644: 201 Created (if new) or 200 OK (if replaced)
       if was_new
@@ -215,9 +215,13 @@ module TwoPercent
       "#{request.base_url}/scim/#{resource_type}/#{record.scim_id}"
     end
 
-    # Reload group record with members association to include in response
+    # Reload record with associations (users load groups, groups load members)
     def reload_with_members(record)
-      TwoPercent::ScimGroup.includes(:scim_users).find(record.id)
+      if user_resource?
+        TwoPercent::ScimUser.includes(:scim_groups).find(record.id)
+      else
+        TwoPercent::ScimGroup.includes(:scim_users).find(record.id)
+      end
     end
   end
 end
