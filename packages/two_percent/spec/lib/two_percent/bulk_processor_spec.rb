@@ -174,7 +174,7 @@ RSpec.describe TwoPercent::BulkProcessor do
     end
 
     describe "PATCH operations" do
-      it "patches existing User via bulk operation" do
+      it "patches existing User via bulk operation using RFC 7644 PatchOp format" do
         user = TwoPercent::ScimUser.upsert_from_scim({
                                                        "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
                                                        "externalId" => "bulk-patch-#{SecureRandom.hex(4)}",
@@ -188,9 +188,14 @@ RSpec.describe TwoPercent::BulkProcessor do
             method: "PATCH",
             path: "/Users/#{user.scim_id}",
             data: {
-              "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
-              "externalId" => user.external_id,
-              "displayName" => "Patched Name via Bulk",
+              "schemas" => ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+              "Operations" => [
+                {
+                  "op" => "replace",
+                  "path" => "displayName",
+                  "value" => "Patched Name via Bulk",
+                },
+              ],
             },
           },
         ]
@@ -202,7 +207,50 @@ RSpec.describe TwoPercent::BulkProcessor do
 
         user.reload
         expect(user.display_name).to eq("Patched Name via Bulk")
-        # NOTE: BulkProcessor uses upsert which replaces all data, not RFC 7644 PATCH
+        expect(user.user_name).to eq("patch.user@example.com") # Other fields preserved
+      end
+
+      it "patches Group members via bulk operation using RFC 7644 PatchOp format" do
+        user = TwoPercent::ScimUser.upsert_from_scim({
+                                                       "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
+                                                       "externalId" => "member-#{SecureRandom.hex(4)}",
+                                                       "userName" => "member.user@example.com",
+                                                       "displayName" => "Member User",
+                                                       "active" => true,
+                                                     })
+
+        group = TwoPercent::ScimGroup.upsert_from_scim("Groups", {
+                                                         "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+                                                         "externalId" => "bulk-group-#{SecureRandom.hex(4)}",
+                                                         "displayName" => "Test Group",
+                                                         "members" => [],
+                                                       })
+
+        operations = [
+          {
+            method: "PATCH",
+            path: "/Groups/#{group.scim_id}",
+            data: {
+              "schemas" => ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+              "Operations" => [
+                {
+                  "op" => "add",
+                  "path" => "members",
+                  "value" => [{ "value" => user.scim_id }],
+                },
+              ],
+            },
+          },
+        ]
+
+        allow(TwoPercent::Domain::Events::GroupUpdated).to receive(:create)
+
+        processor = described_class.new(operations, correlation_id: correlation_id)
+        processor.dispatch
+
+        group.reload
+        expect(group.scim_users.pluck(:scim_id)).to include(user.scim_id)
+        expect(group.display_name).to eq("Test Group") # Other fields preserved
       end
     end
 

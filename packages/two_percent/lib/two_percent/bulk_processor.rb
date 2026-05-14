@@ -37,7 +37,9 @@ module TwoPercent
       case method
       when "POST"
         persist_create(resource_type, data)
-      when "PATCH", "PUT"
+      when "PATCH"
+        persist_patch(resource_type, id, data)
+      when "PUT"
         persist_update(resource_type, id, data)
       when "DELETE"
         persist_delete(resource_type, id)
@@ -55,8 +57,26 @@ module TwoPercent
       end
     end
 
+    def persist_patch(resource_type, id, data)
+      # PATCH - apply operations to existing resource
+      record = find_record(resource_type, id)
+      
+      # Apply SCIM PATCH operations (RFC 7644 compliance)
+      processor = TwoPercent::Scim::PatchProcessor.new(data)
+      current_scim_data = record.scim_data || {}
+      patched_data = processor.apply_to_hash(current_scim_data)
+      
+      # Persist patched data
+      patched_data["id"] = id # Ensure ID is present
+      if resource_type == "Users"
+        TwoPercent::ScimUser.upsert_from_scim(patched_data, correlation_id: @correlation_id)
+      else
+        TwoPercent::ScimGroup.upsert_from_scim(resource_type, patched_data, correlation_id: @correlation_id)
+      end
+    end
+
     def persist_update(resource_type, id, data)
-      # PATCH/PUT - merge with id and let model handle
+      # PUT - replace entire resource
       data_with_id = data.merge("id" => id)
       if resource_type == "Users"
         TwoPercent::ScimUser.upsert_from_scim(data_with_id, correlation_id: @correlation_id)
@@ -127,6 +147,19 @@ module TwoPercent
           correlation_id: @correlation_id
         )
       end
+    end
+
+    def find_record(resource_type, scim_id)
+      record =
+        if resource_type == "Users"
+          TwoPercent::ScimUser.find_by_scim_id(scim_id)
+        else
+          TwoPercent::ScimGroup.find_by_scim_id(scim_id)
+        end
+
+      raise ActiveRecord::RecordNotFound, "Resource \"#{scim_id}\" not found" unless record
+
+      record
     end
   end
 end
