@@ -60,12 +60,12 @@ module TwoPercent
     def persist_patch(resource_type, id, data)
       # PATCH - apply operations to existing resource
       record = find_record(resource_type, id)
-      
+
       # Apply SCIM PATCH operations (RFC 7644 compliance)
       processor = TwoPercent::Scim::PatchProcessor.new(data)
       current_scim_data = record.scim_data || {}
       patched_data = processor.apply_to_hash(current_scim_data)
-      
+
       # Persist patched data
       patched_data["id"] = id # Ensure ID is present
       if resource_type == "Users"
