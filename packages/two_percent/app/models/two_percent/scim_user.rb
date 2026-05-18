@@ -93,6 +93,15 @@ module TwoPercent
       self.active = core_data.fetch("active", true)
       self.correlation_id = correlation_id
       save!
+      sync_groups(core_data["groups"]) if core_data["groups"]
+    end
+
+    def sync_groups(groups_data)
+      return if groups_data.blank?
+
+      group_ids = groups_data.map { |g| g["value"] }.compact
+      groups = TwoPercent::ScimGroup.where(scim_id: group_ids)
+      self.scim_groups = groups
     end
 
     # Extracts a nested attribute from the scim_data JSON
