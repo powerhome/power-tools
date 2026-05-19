@@ -40,9 +40,9 @@ RSpec.describe ActiveRecord::ConnectionAdapters::TrinoAdapter do
 
   describe "configuration validation" do
     it "raises if a required key is missing" do
-      bad = trino_config.except(:server)
+      bad = trino_config.except(:host)
       expect { described_class.new(bad) }
-        .to raise_error(Stagecoach::ConfigurationError, /server/)
+        .to raise_error(Stagecoach::ConfigurationError, /host/)
     end
   end
 

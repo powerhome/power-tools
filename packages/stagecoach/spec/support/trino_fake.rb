@@ -15,14 +15,15 @@
 #     rows: [[1]],
 #   )
 module TrinoFake
-  HOST = "trino.example.com:8090"
-  BASE_URL = "http://#{HOST}".freeze
-  SERVER = HOST
+  HOST = "trino.example.com"
+  PORT = 8090
+  BASE_URL = "http://#{HOST}:#{PORT}".freeze
 
   def trino_config(overrides = {})
     {
       adapter: "trino",
-      server: HOST,
+      host: HOST,
+      port: PORT,
       user: "tester",
       catalog: "test_catalog",
       schema: "test_schema",

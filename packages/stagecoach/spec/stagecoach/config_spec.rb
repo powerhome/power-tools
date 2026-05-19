@@ -5,7 +5,7 @@ require "spec_helper"
 RSpec.describe Stagecoach::Config do
   let(:base_config) do
     {
-      server: "http://trino.example.com",
+      host: "trino.example.com",
       user: "ada",
       catalog: "warehouse",
       schema: "public",
@@ -13,6 +13,29 @@ RSpec.describe Stagecoach::Config do
   end
 
   describe ".client_options" do
+    it "composes server as host:port with the HTTP default port when ssl is unset" do
+      options = described_class.client_options(base_config)
+      expect(options[:server]).to eq("trino.example.com:8080")
+      expect(options[:ssl]).to be false
+    end
+
+    it "uses the HTTPS default port when ssl is true" do
+      options = described_class.client_options(base_config.merge(ssl: true))
+      expect(options[:server]).to eq("trino.example.com:443")
+      expect(options[:ssl]).to be true
+    end
+
+    it "honors an explicit port" do
+      options = described_class.client_options(base_config.merge(port: 9090))
+      expect(options[:server]).to eq("trino.example.com:9090")
+    end
+
+    it "honors an explicit port together with ssl" do
+      options = described_class.client_options(base_config.merge(port: 8443, ssl: true))
+      expect(options[:server]).to eq("trino.example.com:8443")
+      expect(options[:ssl]).to be true
+    end
+
     it "fills in default timeouts" do
       options = described_class.client_options(base_config)
       expect(options[:query_timeout]).to eq(60)
@@ -29,36 +52,14 @@ RSpec.describe Stagecoach::Config do
       expect { described_class.client_options(string_keyed) }.not_to raise_error
     end
 
-    it "raises when a required key is missing" do
-      expect { described_class.client_options(base_config.except(:user)) }
-        .to raise_error(Stagecoach::ConfigurationError, /user/)
+    it "raises when host is missing" do
+      expect { described_class.client_options(base_config.except(:host)) }
+        .to raise_error(Stagecoach::ConfigurationError, /host/)
     end
 
-    context "when server is a URL with a scheme prefix" do
-      it "strips https:// and sets ssl: true" do
-        options = described_class.client_options(base_config.merge(server: "https://trino.example.com:8443"))
-        expect(options[:server]).to eq("trino.example.com:8443")
-        expect(options[:ssl]).to be true
-      end
-
-      it "strips http:// and sets ssl: false" do
-        options = described_class.client_options(base_config.merge(server: "http://trino.example.com:8090"))
-        expect(options[:server]).to eq("trino.example.com:8090")
-        expect(options[:ssl]).to be false
-      end
-
-      it "lets an explicit ssl override the inferred value" do
-        options = described_class.client_options(
-          base_config.merge(server: "https://trino.example.com:8443", ssl: false)
-        )
-        expect(options[:ssl]).to be false
-      end
-
-      it "leaves a bare host:port server untouched" do
-        options = described_class.client_options(base_config.merge(server: "trino.example.com:8090"))
-        expect(options[:server]).to eq("trino.example.com:8090")
-        expect(options).not_to have_key(:ssl)
-      end
+    it "raises when user is missing" do
+      expect { described_class.client_options(base_config.except(:user)) }
+        .to raise_error(Stagecoach::ConfigurationError, /user/)
     end
   end
 

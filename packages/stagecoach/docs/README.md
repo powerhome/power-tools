@@ -25,7 +25,9 @@ Then in your `config/database.yml`:
 ```yaml
 warehouse:
   adapter: trino
-  server: <%= ENV["TRINO_SERVER"] %>
+  host: <%= ENV["TRINO_HOST"] %>
+  port: <%= ENV.fetch("TRINO_PORT", 8080) %>
+  ssl: <%= ENV.fetch("TRINO_SSL", "false") %>
   user: <%= ENV["TRINO_USER"] %>
   password: <%= ENV["TRINO_PASSWORD"] %>
   catalog: <%= ENV["TRINO_CATALOG"] %>
@@ -75,12 +77,13 @@ All keys are read from the `database.yml` entry:
 
 | Key | Default | Description |
 |---|---|---|
-| `server` | _required_ | Trino server URL (e.g. `https://trino.example.com:8443`) |
+| `host` | _required_ | Trino server hostname (e.g. `trino.example.com`) — no scheme, no port |
+| `port` | `8080` (HTTP) / `443` (HTTPS) | Trino server port |
+| `ssl` | `false` | Whether to use HTTPS. When `true`, also passing `password` requires the connection to be HTTPS (trino-client policy) |
 | `user` | _required_ | Trino user |
 | `password` | _nil_ | Optional basic-auth password |
 | `catalog` | _required_ | Default Trino catalog |
 | `schema` | _required_ | Default Trino schema |
-| `ssl` | _nil_ | Boolean or hash forwarded to `trino-client` |
 | `query_timeout` | `60` | Hard ceiling on query duration, in seconds |
 | `plan_timeout` | `10` | Ceiling on Trino query-planning phase, in seconds |
 | `slow_query_threshold_seconds` | `5` | Threshold above which a `stagecoach.slow_query` notification is emitted |

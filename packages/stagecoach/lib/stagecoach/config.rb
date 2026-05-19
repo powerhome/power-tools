@@ -1,29 +1,29 @@
 # frozen_string_literal: true
 
-require "uri"
-
 module Stagecoach
   module Config
     DEFAULT_QUERY_TIMEOUT = 60
     DEFAULT_PLAN_TIMEOUT = 10
     DEFAULT_SLOW_QUERY_THRESHOLD_SECONDS = 5
+    DEFAULT_HTTP_PORT = 8080
+    DEFAULT_HTTPS_PORT = 443
 
-    REQUIRED_KEYS = %i[server user catalog schema].freeze
-    URL_SERVER_PATTERN = %r{\Ahttps?://}i
+    REQUIRED_KEYS = %i[host user catalog schema].freeze
 
   module_function
 
     def client_options(config)
       symbolized = symbolize(config)
       validate!(symbolized)
-      server, scheme_ssl = normalize_server(symbolized[:server])
+      ssl = symbolized.fetch(:ssl, false)
+      port = symbolized.fetch(:port, default_port(ssl))
       {
-        server: server,
+        server: "#{symbolized[:host]}:#{port}",
         user: symbolized[:user],
         password: symbolized[:password],
         catalog: symbolized[:catalog],
         schema: symbolized[:schema],
-        ssl: symbolized.fetch(:ssl, scheme_ssl),
+        ssl: ssl,
         http_proxy: symbolized[:http_proxy],
         time_zone: symbolized[:time_zone],
         query_timeout: symbolized.fetch(:query_timeout, DEFAULT_QUERY_TIMEOUT),
@@ -31,17 +31,8 @@ module Stagecoach
       }.compact
     end
 
-    # trino-client wants server as bare host:port and infers scheme from the
-    # ssl: option. Accept URL-form servers (https://host:port) too, since that
-    # is what most config sources (database.yml, NitroConfig) hand back, and
-    # split them into host:port plus an ssl flag.
-    def normalize_server(server)
-      raw = server.to_s
-      return [raw, nil] unless raw.match?(URL_SERVER_PATTERN)
-
-      uri = URI.parse(raw)
-      host_port = uri.port ? "#{uri.host}:#{uri.port}" : uri.host.to_s
-      [host_port, uri.scheme.casecmp?("https")]
+    def default_port(ssl)
+      ssl ? DEFAULT_HTTPS_PORT : DEFAULT_HTTP_PORT
     end
 
     def slow_query_threshold(config)
