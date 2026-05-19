@@ -99,7 +99,7 @@ module TwoPercent
     def sync_groups(groups_data)
       return if groups_data.blank?
 
-      group_ids = groups_data.map { |g| g["value"] }.compact
+      group_ids = groups_data.filter_map { |g| g["value"] }
       groups = TwoPercent::ScimGroup.where(scim_id: group_ids)
       self.scim_groups = groups
     end
