@@ -12,11 +12,21 @@ require_relative "stagecoach/type/json"
 require_relative "stagecoach/type/timestamp_with_zone"
 require_relative "stagecoach/type/unsupported"
 
-ActiveRecord::ConnectionAdapters.register(
-  "trino",
-  "ActiveRecord::ConnectionAdapters::TrinoAdapter",
-  "active_record/connection_adapters/trino_adapter"
-)
+if ActiveRecord::ConnectionAdapters.respond_to?(:register)
+  ActiveRecord::ConnectionAdapters.register(
+    "trino",
+    "ActiveRecord::ConnectionAdapters::TrinoAdapter",
+    "active_record/connection_adapters/trino_adapter"
+  )
+else
+  # Rails 7.1 uses the legacy adapter_method pattern: ActiveRecord::Base needs
+  # a trino_connection class method that returns a new TrinoAdapter. Rails 7.2+
+  # replaced this with ConnectionAdapters.register above.
+  require "active_record/connection_adapters/trino_adapter"
+  ActiveRecord::Base.singleton_class.define_method(:trino_connection) do |config|
+    ActiveRecord::ConnectionAdapters::TrinoAdapter.new(config)
+  end
+end
 
 module Stagecoach
   def self.reset_schema_cache!(model_class)
