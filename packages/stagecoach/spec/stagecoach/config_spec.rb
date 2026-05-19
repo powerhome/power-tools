@@ -33,6 +33,33 @@ RSpec.describe Stagecoach::Config do
       expect { described_class.client_options(base_config.except(:user)) }
         .to raise_error(Stagecoach::ConfigurationError, /user/)
     end
+
+    context "when server is a URL with a scheme prefix" do
+      it "strips https:// and sets ssl: true" do
+        options = described_class.client_options(base_config.merge(server: "https://trino.example.com:8443"))
+        expect(options[:server]).to eq("trino.example.com:8443")
+        expect(options[:ssl]).to be true
+      end
+
+      it "strips http:// and sets ssl: false" do
+        options = described_class.client_options(base_config.merge(server: "http://trino.example.com:8090"))
+        expect(options[:server]).to eq("trino.example.com:8090")
+        expect(options[:ssl]).to be false
+      end
+
+      it "lets an explicit ssl override the inferred value" do
+        options = described_class.client_options(
+          base_config.merge(server: "https://trino.example.com:8443", ssl: false)
+        )
+        expect(options[:ssl]).to be false
+      end
+
+      it "leaves a bare host:port server untouched" do
+        options = described_class.client_options(base_config.merge(server: "trino.example.com:8090"))
+        expect(options[:server]).to eq("trino.example.com:8090")
+        expect(options).not_to have_key(:ssl)
+      end
+    end
   end
 
   describe ".slow_query_threshold" do
