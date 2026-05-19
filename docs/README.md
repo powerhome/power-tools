@@ -78,6 +78,10 @@ This gem is focused on providing Cops to support a healthy cobra app development
 
 This gem is focused on providing standard rubocop configuration for Power Home Remodeling ruby apps. See more in [`rubocop-powerhome`](../packages/rubocop-powerhome).
 
+[stagecoach](https://github.com/powerhome/power-tools/blob/main/packages/stagecoach/docs/README.md) 💎
+
+A read-only ActiveRecord SQL adapter for Trino, built on the `trino-client` gem.
+
 ## Installation 🛠
 
 These packages are all meant to install inside of an application and aren't intended to stand alone; currently, they are all published to [RubyGems](https://rubygems.org/) or [npm](https://www.npmjs.com/) and you can use standard methods to install them.

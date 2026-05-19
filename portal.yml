@@ -285,3 +285,19 @@ spec:
   system: power-application-framework
   lifecycle: production
   subcomponentOf: power-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: stagecoach
+  title: Stagecoach
+  description: >-
+    Read-only ActiveRecord SQL adapter for Trino, built on the trino-client gem.
+    Lets Rails apps query a Trino data warehouse via familiar ActiveRecord scopes
+    while preventing accidental writes.
+spec:
+  type: library
+  owner: heroes-for-hire
+  system: power-application-framework
+  lifecycle: production
+  subcomponentOf: power-tools
