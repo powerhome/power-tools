@@ -2,7 +2,7 @@
 
 A read-only ActiveRecord SQL adapter for [Trino](https://trino.io/), built on top of the [`trino-client`](https://rubygems.org/gems/trino-client) gem.
 
-Stagecoach lets a Rails application query a Trino data warehouse using familiar ActiveRecord scopes, `where` chains, and joins, while preventing accidental writes. It is designed for analytical use cases where the warehouse is the source of truth and the application only needs to read from it.
+Stagecoach lets a Rails application query a Trino data warehouse using familiar ActiveRecord scopes and `where` chains while preventing accidental writes. It is designed for analytical use cases where the warehouse is the source of truth and the application only needs to read from it.
 
 ## Features
 
