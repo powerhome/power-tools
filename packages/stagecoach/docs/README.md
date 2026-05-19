@@ -58,14 +58,16 @@ SalesByDay.where(month: "2026-04").order(:territory_id).limit(100)
 Supported:
 - `where`, `order`, `limit`, `offset`, `select`, `pluck`, `find_by`, `count`, `sum`, `average`
 - Scopes, including chained scopes
-- Single-database `joins` (against other tables in the same Trino catalog/schema)
 - Type-cast reads for varchar, integer (all widths), real/double, decimal, boolean, date, timestamp, timestamp with time zone, time, json, uuid
 
 Not supported (raises):
 - Any write path: `save`, `update`, `delete`, `destroy`, `insert`, `create_table`, transactions, savepoints
 - `find_each` / `find_in_batches` — Trino's pagination model is incompatible; use explicit `LIMIT`/`OFFSET` or `pluck` aggregates
-- Cross-database joins (against MySQL/Postgres tables); load both sides separately and combine in Ruby
 - Trino composite types (`array`, `map`, `row`) in result casting — select scalar columns or extract via Trino SQL (`element_at`, dot access)
+
+Out of design scope:
+- `joins` are not a design goal. The adapter passes SQL through to Trino, so a join across two Trino-backed models technically works, but it is not tested and the intended usage pattern is to query flat denormalized warehouse tables.
+- Cross-database joins (e.g., a MySQL model joined to a Trino model) do not work — Rails 7.1+ disallows joins across connection handles.
 
 ## Configuration options
 
