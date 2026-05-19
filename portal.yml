@@ -267,7 +267,7 @@ metadata:
     Ruby data warehouse connector library that provides a standardized interface for querying different data warehouse engines.
 spec:
   type: library
-  owner: batmans-oracle
+  owner: batman-s-oracle
   system: power-application-framework
   lifecycle: production
   subcomponentOf: power-tools
@@ -297,7 +297,7 @@ metadata:
     while preventing accidental writes.
 spec:
   type: library
-  owner: heroes-for-hire
+  owner: batman-s-oracle
   system: power-application-framework
   lifecycle: production
   subcomponentOf: power-tools
