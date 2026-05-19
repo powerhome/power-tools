@@ -1,0 +1,22 @@
+require:
+  - rubocop-powerhome
+
+AllCops:
+  TargetRubyVersion: 3.3
+  Exclude:
+    - gemfiles/**/*
+    - vendor/**/*
+
+Rails:
+  Enabled: false
+
+Metrics/ClassLength:
+  Max: 300
+
+Metrics/MethodLength:
+  Max: 25
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+    - "*.gemspec"

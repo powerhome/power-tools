@@ -1,0 +1,7 @@
+site_name: Stagecoach
+site_description: Read-only ActiveRecord adapter for Trino
+nav:
+  - "Home": "README.md"
+  - "Changelog": "CHANGELOG.md"
+plugins:
+  - techdocs-core
