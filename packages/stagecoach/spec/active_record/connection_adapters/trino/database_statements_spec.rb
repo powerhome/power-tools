@@ -40,6 +40,86 @@ RSpec.describe ActiveRecord::ConnectionAdapters::Trino::DatabaseStatements do
     end
   end
 
+  describe "result handling" do
+    it "concatenates rows across multiple Trino pages" do
+      statement_url = "#{TrinoFake::BASE_URL}/v1/statement"
+      page2_url = "#{TrinoFake::BASE_URL}/v1/next/q1/page2"
+      page3_url = "#{TrinoFake::BASE_URL}/v1/next/q1/page3"
+      column_spec = { name: "id", type: "integer", typeSignature: { rawType: "integer" } }
+
+      WebMock.stub_request(:post, statement_url).with(body: "SELECT id FROM t")
+             .to_return(
+               status: 200,
+               body: {
+                 id: "q1",
+                 nextUri: page2_url,
+                 columns: [column_spec],
+                 data: [[1]],
+                 stats: { state: "RUNNING" },
+               }.to_json,
+               headers: { "Content-Type" => "application/json" }
+             )
+
+      WebMock.stub_request(:get, page2_url).to_return(
+        status: 200,
+        body: {
+          id: "q1",
+          nextUri: page3_url,
+          columns: [column_spec],
+          data: [[2], [3]],
+          stats: { state: "RUNNING" },
+        }.to_json,
+        headers: { "Content-Type" => "application/json" }
+      )
+
+      WebMock.stub_request(:get, page3_url).to_return(
+        status: 200,
+        body: {
+          id: "q1",
+          columns: [column_spec],
+          data: [[4]],
+          stats: { state: "FINISHED" },
+        }.to_json,
+        headers: { "Content-Type" => "application/json" }
+      )
+
+      result = adapter.exec_query("SELECT id FROM t")
+      expect(result.rows).to eq([[1], [2], [3], [4]])
+    end
+
+    it "handles an empty result set" do
+      stub_trino_query(
+        sql: "SELECT * FROM empty_table",
+        columns: [%w[id integer]],
+        rows: []
+      )
+
+      result = adapter.exec_query("SELECT * FROM empty_table")
+      expect(result.columns).to eq(["id"])
+      expect(result.rows).to eq([])
+    end
+  end
+
+  describe "error mapping" do
+    it "translates TrinoQueryTimeoutError to ActiveRecord::StatementTimeout" do
+      allow(adapter.client).to receive(:query).and_raise(
+        Trino::Client::TrinoQueryTimeoutError.new("Query exceeded maximum execution time of 60 seconds")
+      )
+
+      expect { adapter.exec_query("SELECT 1") }
+        .to raise_error(ActiveRecord::StatementTimeout, /maximum execution time/)
+    end
+
+    it "translates TrinoHttpError to ActiveRecord::ConnectionFailed" do
+      allow(adapter.client).to receive(:query).and_raise(
+        Trino::Client::TrinoHttpError.new(503, "Service Unavailable")
+      )
+
+      expect { adapter.exec_query("SELECT 1") }
+        .to raise_error(ActiveRecord::ConnectionFailed, /Service Unavailable/)
+    end
+  end
+
   describe "slow-query notification" do
     it "emits stagecoach.slow_query when threshold is exceeded" do
       stub_trino_query(sql: "SELECT 1", columns: [%w[n integer]], rows: [[1]])
@@ -66,6 +146,23 @@ RSpec.describe ActiveRecord::ConnectionAdapters::Trino::DatabaseStatements do
       end
 
       expect(emitted).to be false
+    end
+
+    it "carries sql and a numeric duration in the notification payload" do
+      stub_trino_query(sql: "SELECT 2", columns: [%w[n integer]], rows: [[2]])
+      adapter.instance_variable_set(:@slow_query_threshold, 0.0)
+
+      payloads = []
+      subscriber = ActiveSupport::Notifications.subscribe("stagecoach.slow_query") do |*args|
+        payloads << args.last
+      end
+      adapter.execute("SELECT 2")
+      ActiveSupport::Notifications.unsubscribe(subscriber)
+
+      expect(payloads.size).to eq(1)
+      expect(payloads.first[:sql]).to eq("SELECT 2")
+      expect(payloads.first[:duration]).to be_a(Numeric)
+      expect(payloads.first[:duration]).to be >= 0
     end
   end
 end

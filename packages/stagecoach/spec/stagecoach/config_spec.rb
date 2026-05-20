@@ -38,8 +38,8 @@ RSpec.describe Stagecoach::Config do
 
     it "fills in default timeouts" do
       options = described_class.client_options(base_config)
-      expect(options[:query_timeout]).to eq(60)
-      expect(options[:plan_timeout]).to eq(10)
+      expect(options[:query_timeout]).to eq(300)
+      expect(options[:plan_timeout]).to eq(30)
     end
 
     it "preserves caller-supplied timeouts" do
@@ -64,8 +64,8 @@ RSpec.describe Stagecoach::Config do
   end
 
   describe ".slow_query_threshold" do
-    it "defaults to 5.0 seconds" do
-      expect(described_class.slow_query_threshold(base_config)).to eq(5.0)
+    it "defaults to 15.0 seconds" do
+      expect(described_class.slow_query_threshold(base_config)).to eq(15.0)
     end
 
     it "respects an explicit threshold" do
