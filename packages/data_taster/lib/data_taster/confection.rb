@@ -30,9 +30,9 @@ module DataTaster
   private
 
     def default_data
-      {
-        "schema_migrations" => "1 = 1",
-      }
+      return {} unless DataTaster.config.include_schema_migrations
+
+      { "schema_migrations" => "1 = 1" }
     end
   end
 end

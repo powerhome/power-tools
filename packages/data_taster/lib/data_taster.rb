@@ -34,6 +34,7 @@ module DataTaster
       source_client: args[:source_client] || raise(ArgumentError, "DataTaster.config missing source_client"),
       working_client: args[:working_client],
       include_insert: args[:include_insert] || false,
+      include_schema_migrations: args.fetch(:include_schema_migrations, false),
       filename: args[:filename] || nil
     )
   end
@@ -74,5 +75,13 @@ module DataTaster
     end
   end
 
-  Config = Struct.new(:months, :list, :source_client, :working_client, :include_insert, :filename)
+  Config = Struct.new(
+    :months,
+    :list,
+    :source_client,
+    :working_client,
+    :include_insert,
+    :include_schema_migrations,
+    :filename
+  )
 end
