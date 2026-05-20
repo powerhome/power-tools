@@ -120,6 +120,35 @@ RSpec.describe ActiveRecord::ConnectionAdapters::Trino::DatabaseStatements do
     end
   end
 
+  describe "query metadata capture" do
+    it "exposes last_query_id, last_query_info_uri, and last_query_stats after a query" do
+      stub_trino_query(
+        sql: "SELECT id FROM t",
+        columns: [%w[id integer]],
+        rows: [[1]],
+        query_id: "metadata_q"
+      )
+
+      adapter.exec_query("SELECT id FROM t")
+
+      expect(adapter.last_query_id).to eq("metadata_q")
+      expect(adapter.last_query_info_uri).to include("metadata_q")
+      expect(adapter.last_query_stats).to include(
+        state: "FINISHED",
+        queued_time_millis: 5,
+        elapsed_time_millis: 25,
+        cpu_time_millis: 15,
+        wall_time_millis: 20
+      )
+    end
+
+    it "returns nil for metadata before any query has run" do
+      expect(adapter.last_query_id).to be_nil
+      expect(adapter.last_query_info_uri).to be_nil
+      expect(adapter.last_query_stats).to be_nil
+    end
+  end
+
   describe "slow-query notification" do
     it "emits stagecoach.slow_query when threshold is exceeded" do
       stub_trino_query(sql: "SELECT 1", columns: [%w[n integer]], rows: [[1]])
@@ -163,6 +192,24 @@ RSpec.describe ActiveRecord::ConnectionAdapters::Trino::DatabaseStatements do
       expect(payloads.first[:sql]).to eq("SELECT 2")
       expect(payloads.first[:duration]).to be_a(Numeric)
       expect(payloads.first[:duration]).to be >= 0
+    end
+
+    it "carries query_id and info_uri in the notification payload" do
+      stub_trino_query(
+        sql: "SELECT 3",
+        columns: [%w[n integer]],
+        rows: [[3]],
+        query_id: "slow_q"
+      )
+      adapter.instance_variable_set(:@slow_query_threshold, 0.0)
+
+      payload = nil
+      ActiveSupport::Notifications.subscribed(->(*args) { payload = args.last }, "stagecoach.slow_query") do
+        adapter.execute("SELECT 3")
+      end
+
+      expect(payload[:query_id]).to eq("slow_q")
+      expect(payload[:info_uri]).to include("slow_q")
     end
   end
 end

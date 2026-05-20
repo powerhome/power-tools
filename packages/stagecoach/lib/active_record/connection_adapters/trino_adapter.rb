@@ -102,7 +102,7 @@ module ActiveRecord
         column.cast_type
       end
 
-      attr_reader :client
+      attr_reader :client, :last_query_id, :last_query_info_uri, :last_query_stats
 
     private
 

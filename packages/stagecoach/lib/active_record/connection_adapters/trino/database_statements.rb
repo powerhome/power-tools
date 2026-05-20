@@ -6,6 +6,14 @@ module ActiveRecord
       module DatabaseStatements
         SLOW_QUERY_NOTIFICATION = "stagecoach.slow_query"
 
+        STAT_FIELDS = %i[
+          state
+          queued_time_millis
+          elapsed_time_millis
+          cpu_time_millis
+          wall_time_millis
+        ].freeze
+
         InternalResult = Struct.new(:column_names, :rows, :column_types, keyword_init: true)
 
         def execute(sql, name = nil, **_kwargs)
@@ -47,6 +55,7 @@ module ActiveRecord
           start = monotonic_now
           query = client.query(sql)
           internal = consume_query(query)
+          capture_query_metadata(query)
           notify_slow_query(sql, monotonic_now - start)
           internal
         rescue ::Trino::Client::TrinoQueryTimeoutError => e
@@ -70,13 +79,35 @@ module ActiveRecord
           InternalResult.new(column_names: column_names, rows: rows, column_types: column_types)
         end
 
+        # Pull the Trino-side query metadata off of the final QueryResults
+        # page so callers can cross-reference in the Trino UI. Defensive
+        # against minor model differences across trino-client versions.
+        def capture_query_metadata(query)
+          results = query.current_results
+          return unless results
+
+          @last_query_id = results.id if results.respond_to?(:id)
+          @last_query_info_uri = results.info_uri if results.respond_to?(:info_uri)
+          @last_query_stats = extract_stats(results.stats) if results.respond_to?(:stats)
+        end
+
+        def extract_stats(stats)
+          return {} unless stats
+
+          STAT_FIELDS.each_with_object({}) do |field, acc|
+            acc[field] = stats.public_send(field) if stats.respond_to?(field)
+          end
+        end
+
         def notify_slow_query(sql, duration)
           return if duration < @slow_query_threshold
 
           ActiveSupport::Notifications.instrument(
             SLOW_QUERY_NOTIFICATION,
             sql: sql,
-            duration: duration
+            duration: duration,
+            query_id: @last_query_id,
+            info_uri: @last_query_info_uri
           )
         end
 

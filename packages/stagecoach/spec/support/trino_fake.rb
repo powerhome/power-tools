@@ -47,7 +47,13 @@ module TrinoFake
       infoUri: "#{BASE_URL}/ui/query.html?#{query_id}",
       columns: columns.map { |name, type| trino_column(name, type) },
       data: rows,
-      stats: { state: "FINISHED" },
+      stats: {
+        state: "FINISHED",
+        queuedTimeMillis: 5,
+        elapsedTimeMillis: 25,
+        cpuTimeMillis: 15,
+        wallTimeMillis: 20,
+      },
     }
 
     WebMock.stub_request(:post, statement_url)
