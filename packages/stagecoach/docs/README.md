@@ -8,7 +8,7 @@ Stagecoach lets a Rails application query a Trino data warehouse using familiar 
 
 - **Read-only by design.** All write paths (`insert`, `update`, `delete`, transactions, migrations, schema changes) raise `Stagecoach::ReadOnlyError`.
 - **ActiveRecord-native.** Plugs into Rails 7.1+ multi-database via `database.yml` and `connects_to`.
-- **Opinionated safety belts.** `find_each` / `find_in_batches` are banned (they don't fit Trino's pagination model); hard query timeouts default to 5 minutes; slow queries emit `ActiveSupport::Notifications` for any subscriber to pick up.
+- **Opinionated safety belts.** `find_each` / `find_in_batches` are banned (they don't fit Trino's pagination model); hard query timeouts default to 150 seconds; slow queries emit `ActiveSupport::Notifications` for any subscriber to pick up.
 - **SQL-injection conscious.** Trino has no parameterized queries, so every literal flows through a tight, fuzz-tested `quote` implementation.
 - **Schema introspection** via Trino's `information_schema.columns`, with a small but practical type map (varchar, integer, decimal, boolean, date, timestamp, timestamp with time zone, json, etc.).
 
@@ -32,7 +32,7 @@ warehouse:
   password: <%= ENV["TRINO_PASSWORD"] %>
   catalog: <%= ENV["TRINO_CATALOG"] %>
   schema: <%= ENV["TRINO_SCHEMA"] %>
-  query_timeout: 300
+  query_timeout: 150
   plan_timeout: 30
 ```
 
@@ -84,9 +84,9 @@ All keys are read from the `database.yml` entry:
 | `password` | _nil_ | Optional basic-auth password |
 | `catalog` | _required_ | Default Trino catalog |
 | `schema` | _required_ | Default Trino schema |
-| `query_timeout` | `300` | Hard ceiling on query duration, in seconds. 5 minutes is comfortable for most warehouse queries; cap lower for user-facing paths and higher for backfills |
+| `query_timeout` | `150` | Hard ceiling on query duration, in seconds. Cap lower for user-facing paths and higher for backfills |
 | `plan_timeout` | `30` | Ceiling on Trino query-planning phase, in seconds |
-| `slow_query_threshold_seconds` | `15` | Threshold above which a `stagecoach.slow_query` notification is emitted |
+| `slow_query_threshold_seconds` | `20` | Threshold above which a `stagecoach.slow_query` notification is emitted |
 
 ## Instrumentation
 
