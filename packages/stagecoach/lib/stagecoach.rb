@@ -11,6 +11,7 @@ require_relative "stagecoach/config"
 require_relative "stagecoach/type/json"
 require_relative "stagecoach/type/timestamp_with_zone"
 require_relative "stagecoach/type/unsupported"
+require_relative "stagecoach/diagnostics"
 
 if ActiveRecord::ConnectionAdapters.respond_to?(:register)
   ActiveRecord::ConnectionAdapters.register(

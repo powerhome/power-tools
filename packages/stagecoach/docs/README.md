@@ -92,7 +92,36 @@ All keys are read from the `database.yml` entry:
 
 Stagecoach uses ActiveRecord's standard `AbstractAdapter#log` for query instrumentation, so any `ActiveSupport::Notifications` subscriber on `sql.active_record` picks up Trino queries automatically.
 
-In addition, queries exceeding `slow_query_threshold_seconds` emit a `stagecoach.slow_query` notification with payload `{ sql:, duration:, name: }`.
+In addition, queries exceeding `slow_query_threshold_seconds` emit a `stagecoach.slow_query` notification with payload `{ sql:, duration:, query_id:, info_uri: }`. The `info_uri` deep-links to the query's stats page in the Trino web UI, which is handy for diagnosing slow paths.
+
+## Diagnostics
+
+For one-off latency investigation, `Stagecoach::Diagnostics.profile(model_class)` runs a sample query and reports where the time went, broken down between the Ruby/AR side and Trino's own per-query stats:
+
+```ruby
+Stagecoach::Diagnostics.profile(SalesByDay)
+# => {
+#   schema_time: 0.45,           # Ruby-side seconds for information_schema.columns
+#   query_time: 1.12,            # Ruby-side seconds for the sample SELECT
+#   query_id: "20260520_...",    # Trino query_id (deep-link via info_uri)
+#   info_uri: "https://...",     # URL to the query's stats page
+#   queued_time_ms: 50,          # Trino-side: queued waiting for resources
+#   elapsed_time_ms: 800,        # Trino-side: total wall clock
+#   cpu_time_ms: 200,            # Trino-side: CPU time spent
+#   wall_time_ms: 750,           # Trino-side: execution wall time
+#   state: "FINISHED"
+# }
+```
+
+The same metadata is available on the connection after any query:
+
+```ruby
+SalesByDay.first
+connection = SalesByDay.connection
+connection.last_query_id        # Trino query_id of the most recent query
+connection.last_query_info_uri  # Direct URL to the Trino UI for that query
+connection.last_query_stats     # Hash of state, queued_time_millis, elapsed_time_millis, etc.
+```
 
 ## Development
 
