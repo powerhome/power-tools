@@ -1,4 +1,51 @@
 module DataTaster
   VERSION: String
-  # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+  SKIP_CODE: String
+
+  def self.config: (source: MysqlSource, output: Output, ?months: Integer?, ?list: Array[String], ?include_schema_migrations: bool) -> Config
+  def self.export!: () -> void
+  def self.sample!: () -> void
+  def self.sample_to_sql_file!: () -> void
+  def self.target_database: () -> String
+  def self.reset!: () -> void
+
+  class MysqlSource
+    attr_reader client: untyped
+
+    def initialize: (client: untyped) -> void
+    def query: (String sql) -> untyped
+    def database: () -> String
+    def table_names: () -> Array[String]
+  end
+
+  class Output
+    def target_database: () -> String
+    def begin_export!: (source: MysqlSource) -> void
+    def write_statement: (String sql) -> void
+    def write_raw: (String line) -> void
+    def finish_export!: () -> void
+    def executes?: () -> bool
+    def file_export?: () -> bool
+    def database_export?: () -> bool
+  end
+
+  class DatabaseOutput < Output
+    attr_reader client: untyped
+
+    def initialize: (client: untyped, ?execute: bool) -> void
+  end
+
+  class FileOutput < Output
+    attr_reader path: String
+
+    def initialize: (path: String, target_database: String, ?execute: bool) -> void
+  end
+
+  Config = struct {
+    source: MysqlSource,
+    output: Output,
+    months: Integer?,
+    list: Array[String],
+    include_schema_migrations: bool,
+  }
 end

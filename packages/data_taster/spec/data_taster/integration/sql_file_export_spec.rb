@@ -9,12 +9,11 @@ RSpec.describe "DataTaster SQL file export", type: :integration do
   let(:export_path) { File.join(Dir.tmpdir, "data_taster_sql_export_#{Process.pid}.sql") }
 
   before do
-    DataTaster.config(
-      source_client: source_db_client,
-      working_client: dump_db_client,
+    configure_data_taster(
       list: [yaml_path],
-      include_insert: true,
-      filename: File.expand_path(export_path)
+      execute: true,
+      path: File.expand_path(export_path),
+      target_database: dump_db_name
     )
     setup_source_data
   end
@@ -30,7 +29,7 @@ RSpec.describe "DataTaster SQL file export", type: :integration do
 
       DataTaster.sample_to_sql_file!
 
-      path = File.expand_path(DataTaster.config.filename)
+      path = File.expand_path(DataTaster.config.output.path)
       expect(path).to eq(File.expand_path(export_path))
       expect(File).to exist(path)
 

@@ -8,12 +8,7 @@ RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integr
   let(:yaml_path) { File.join(__dir__, "..", "..", "fixtures", "full_users_dump_tables.yml") }
 
   before do
-    DataTaster.config(
-      source_client: source_db_client,
-      working_client: dump_db_client,
-      include_insert: true,
-      list: [yaml_path]
-    )
+    configure_data_taster(list: [yaml_path], execute: true)
     setup_source_data
   end
 

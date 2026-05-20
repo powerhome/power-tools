@@ -5,10 +5,14 @@ require "logger"
 module DataTaster
   autoload :Collection, "data_taster/collection"
   autoload :Confection, "data_taster/confection"
+  autoload :DatabaseOutput, "data_taster/adapters/database_output"
   autoload :Detergent, "data_taster/detergent"
+  autoload :DetergentRowInterpolator, "data_taster/detergent_row_interpolator"
+  autoload :Exporter, "data_taster/exporter"
+  autoload :FileOutput, "data_taster/adapters/file_output"
   autoload :Helper, "data_taster/helper"
-  autoload :Sample, "data_taster/sample"
-  autoload :SampleToSql, "data_taster/sample_to_sql"
+  autoload :MysqlSource, "data_taster/adapters/mysql_source"
+  autoload :Output, "data_taster/adapters/output"
   autoload :Sanitizer, "data_taster/sanitizer"
   autoload :SqlLiteral, "data_taster/sql_literal"
 
@@ -27,15 +31,13 @@ module DataTaster
     @confection = nil
   end
 
-  def self.config(**args)
-    @config ||= Config.new(
-      months: args[:months] || nil,
-      list: Array.wrap(args[:list] || Rails.root.glob("**/data_taster_export_tables.yml")),
-      source_client: args[:source_client] || raise(ArgumentError, "DataTaster.config missing source_client"),
-      working_client: args[:working_client],
-      include_insert: args[:include_insert] || false,
-      include_schema_migrations: args.fetch(:include_schema_migrations, false),
-      filename: args[:filename] || nil
+  def self.config(source:, output:, months: nil, list: default_list, include_schema_migrations: false)
+    @config = Config.new(
+      source,
+      output,
+      months,
+      Array.wrap(list),
+      include_schema_migrations
     )
   end
 
@@ -43,28 +45,25 @@ module DataTaster
     @confection ||= DataTaster::Confection.new.assemble
   end
 
+  def self.export!
+    Exporter.new.serve!
+  end
+
   def self.sample!
-    DataTaster
-      .config
-      .source_client
-      .query("SHOW tables").collect { |t| t[t.keys.first] }
-      .each do |table_name|
-        DataTaster::Sample.new(table_name).serve!
-      end
+    export!
   end
 
   def self.sample_to_sql_file!
-    DataTaster::SampleToSql.new.serve!
+    export!
   end
 
   def self.target_database
-    # when working_client is not set it means all operations should be performed on the source_client.
-    # Be careful with this, as this will mutate the source_client database.
-    client = config.working_client || config.source_client
-    client.query_options[:database]
+    config.output.target_database
   end
 
-  def self.safe_execute(sql, client = DataTaster.config.working_client)
+  def self.safe_execute(sql, client = nil)
+    client ||= config.output.client if config.output.respond_to?(:client)
+
     foreign_key_check = client.query("SELECT @@FOREIGN_KEY_CHECKS").first["@@FOREIGN_KEY_CHECKS"]
 
     begin
@@ -75,13 +74,13 @@ module DataTaster
     end
   end
 
-  Config = Struct.new(
-    :months,
-    :list,
-    :source_client,
-    :working_client,
-    :include_insert,
-    :include_schema_migrations,
-    :filename
-  )
+  def self.default_list
+    if defined?(Rails) && Rails.respond_to?(:root)
+      Rails.root.glob("**/data_taster_export_tables.yml")
+    else
+      []
+    end
+  end
+
+  Config = Struct.new(:source, :output, :months, :list, :include_schema_migrations)
 end

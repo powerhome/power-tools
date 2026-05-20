@@ -8,12 +8,8 @@ RSpec.describe DataTaster::Sanitizer do
 
   let(:confection_stub) { double("confection") }
 
-  def stub_config(include_insert: false)
-    DataTaster.config(
-      source_client: source_db_client,
-      working_client: dump_db_client,
-      include_insert: include_insert
-    )
+  def stub_config(execute: false)
+    configure_data_taster(execute: execute)
   end
 
   before do
@@ -89,7 +85,7 @@ RSpec.describe DataTaster::Sanitizer do
         allow(confection_stub).to receive(:[]).with("users").and_return("some_config")
       end
 
-      it "processes default selections when include_insert is false" do
+      it "processes default selections when execute is false" do
         stub_config
         allow(DataTaster).to receive(:safe_execute).and_return(true)
         sanitizer = described_class.new("users", {})
@@ -142,17 +138,17 @@ RSpec.describe DataTaster::Sanitizer do
         expect(sql_statements).to include("SET notes = 'Redacted for privacy'")
       end
 
-      it "executes SQL when include_insert is true" do
-        stub_config(include_insert: true)
+      it "executes SQL when execute is true" do
+        stub_config(execute: true)
 
-        expect(DataTaster).to receive(:safe_execute).with(include("UPDATE")).at_least(:once).and_return(true)
+        expect(DataTaster).to receive(:safe_execute).with(include("UPDATE"), dump_db_client).at_least(:once).and_return(true)
         sanitizer = described_class.new("users", {})
 
         sanitizer.clean!
       end
 
       it "handles errors and adds context warning" do
-        stub_config(include_insert: true)
+        stub_config(execute: true)
         allow(DataTaster).to receive(:safe_execute).and_raise(StandardError.new("Database error"))
 
         sanitizer = described_class.new("users", {})

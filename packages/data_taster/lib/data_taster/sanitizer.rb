@@ -7,7 +7,6 @@ module DataTaster
     def initialize(table_name, custom_selections)
       @table_name = table_name
       @custom_selections = custom_selections || {}
-      @include_insert = DataTaster.config.include_insert
     end
 
     def clean!
@@ -38,13 +37,13 @@ module DataTaster
 
   private
 
-    attr_reader :table_name, :custom_selections, :include_insert
+    attr_reader :table_name, :custom_selections
 
     def process(sql)
       return if sql == DataTaster::SKIP_CODE
-      return sql unless include_insert
+      return sql unless executes_sanitizer?
 
-      DataTaster.safe_execute(sql)
+      output.write_statement(sql)
     rescue => e
       raise e, e.message + context_warning
     end
@@ -59,6 +58,14 @@ module DataTaster
         *****
 
       WARNING
+    end
+
+    def output
+      DataTaster.config.output
+    end
+
+    def executes_sanitizer?
+      output.database_export? && output.executes?
     end
 
     def skippable_table?

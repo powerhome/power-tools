@@ -12,7 +12,6 @@ module DataTaster
     def initialize(table_name)
       @table_name = table_name
       @ingredients = DataTaster.confection[table_name]
-      @include_insert = DataTaster.config.include_insert
     end
 
     def assemble
@@ -35,7 +34,7 @@ module DataTaster
 
   private
 
-    attr_reader :table_name, :ingredients, :include_insert
+    attr_reader :table_name, :ingredients
 
     def skippable?
       table_name.downcase.match(/^_/) ||
@@ -43,7 +42,7 @@ module DataTaster
     end
 
     def selection
-      insert = include_insert ? "INSERT INTO #{working_db}.#{table_name}" : ""
+      insert = insert_into_selection? ? "INSERT INTO #{working_db}.#{table_name}" : ""
 
       sql = <<-SQL.squish
         #{insert}
@@ -70,8 +69,13 @@ module DataTaster
       ingredients["sanitize"]
     end
 
+    def insert_into_selection?
+      output = DataTaster.config.output
+      output.database_export? && output.executes?
+    end
+
     def source_db
-      @source_db ||= DataTaster.config.source_client.query_options[:database]
+      @source_db ||= DataTaster.config.source.database
     end
 
     def working_db

@@ -11,11 +11,7 @@ RSpec.describe DataTaster::Collection do
     months: nil,
     list: [test_yaml_path]
   )
-    DataTaster.config(months: months,
-                      list: list,
-                      source_client: source_db_client,
-                      working_client: dump_db_client,
-                      include_insert: false)
+    configure_data_taster(months: months, list: list, execute: false)
   end
 
   it "has '1 == 1' where clause for full table dump tables" do

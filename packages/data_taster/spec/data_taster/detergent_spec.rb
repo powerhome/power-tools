@@ -4,13 +4,12 @@ require "spec_helper"
 require "data_taster/detergent"
 
 RSpec.describe DataTaster::Detergent do
-  let(:source_client_stub) { double("client") }
-  let(:working_client_stub) { double("client") }
-  let(:config_stub) { double("config", working_client: working_client_stub) }
+  let(:output_stub) { double("output", target_database: "test_db") }
+  let(:config_stub) { double("config", output: output_stub) }
 
   before do
     allow(DataTaster).to receive(:config).and_return(config_stub)
-    allow(working_client_stub).to receive(:query_options).and_return(database: "test_db")
+    allow(DataTaster).to receive(:target_database).and_return("test_db")
     allow(DataTaster).to receive(:logger).and_return(double("logger", info: nil))
   end
 
