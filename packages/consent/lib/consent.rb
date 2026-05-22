@@ -123,7 +123,7 @@ module Consent
   def self.permission_definitions_payload
     {
       consent_version: Consent::VERSION,
-      permissions: Consent.subjects.map(&:to_h)
+      permissions: Consent.subjects.map(&:to_h),
     }
   end
 end

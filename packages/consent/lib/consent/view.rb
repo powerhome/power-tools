@@ -26,7 +26,7 @@ module Consent
     def to_h
       {
         view: key,
-        label: label
+        label: label,
       }
     end
   end

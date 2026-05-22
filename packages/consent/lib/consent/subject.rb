@@ -16,7 +16,7 @@ module Consent
         subject: key,
         label: label,
         actions: actions.map(&:to_h),
-        views: views.values.map(&:to_h)
+        views: views.values.map(&:to_h),
       }
     end
   end

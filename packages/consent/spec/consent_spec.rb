@@ -112,9 +112,9 @@ describe Consent do
     it "returns the correct permission definitions payload" do
       payload = Consent.permission_definitions_payload
       expect(payload).to eq({
-        consent_version: Consent::VERSION,
-        permissions: Consent.subjects.map(&:to_h)
-      })
+                              consent_version: Consent::VERSION,
+                              permissions: Consent.subjects.map(&:to_h),
+                            })
     end
   end
 end

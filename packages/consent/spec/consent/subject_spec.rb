@@ -20,11 +20,11 @@ RSpec.describe Consent::Subject do
   describe "#to_h" do
     it "returns the correct hash" do
       expect(subject.to_h).to eq({
-        subject: :subject,
-        label: "Subject",
-        actions: [action.to_h],
-        views: [view.to_h]
-      })
+                                   subject: :subject,
+                                   label: "Subject",
+                                   actions: [action.to_h],
+                                   views: [view.to_h],
+                                 })
     end
   end
 end

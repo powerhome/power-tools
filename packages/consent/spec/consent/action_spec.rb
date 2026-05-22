@@ -22,11 +22,11 @@ RSpec.describe Consent::Action do
   describe "#to_h" do
     it "returns the correct hash" do
       expect(action.to_h).to eq({
-        action: :key,
-        label: "Label",
-        views: action.views.values.map(&:to_h),
-        default_view: nil
-      })
+                                  action: :key,
+                                  label: "Label",
+                                  views: action.views.values.map(&:to_h),
+                                  default_view: nil,
+                                })
     end
   end
 end
