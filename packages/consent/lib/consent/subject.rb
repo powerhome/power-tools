@@ -10,5 +10,14 @@ module Consent
       @actions = []
       @views = Consent.default_views.clone
     end
+
+    def to_h
+      {
+        subject: key,
+        label: label,
+        actions: actions.map(&:to_h),
+        views: views.values.map(&:to_h)
+      }
+    end
   end
 end

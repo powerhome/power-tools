@@ -3,14 +3,28 @@
 require "spec_helper"
 
 RSpec.describe Consent::Subject do
-  subject { Consent::Subject.new(nil, nil) }
+  subject { Consent::Subject.new(:subject, "Subject") }
+  let(:view) { Consent::View.new(:view, "View") }
+  let(:action) { Consent::Action.new(subject, :action, "Action") }
+  before do
+    Consent.default_views[:view] = view
+    subject.actions << action
+  end
 
   describe "#views" do
     it "starts as the default_views" do
-      view = double
-      Consent.default_views[:view1] = view
+      expect(subject.views[:view]).to be view
+    end
+  end
 
-      expect(subject.views[:view1]).to be view
+  describe "#to_h" do
+    it "returns the correct hash" do
+      expect(subject.to_h).to eq({
+        subject: :subject,
+        label: "Subject",
+        actions: [action.to_h],
+        views: [view.to_h]
+      })
     end
   end
 end

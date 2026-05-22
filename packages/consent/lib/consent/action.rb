@@ -20,5 +20,14 @@ module Consent
 
       @default_view ||= @subject.views[@options[:default_view]]
     end
+
+    def to_h
+      {
+        action: key,
+        label: label,
+        views: views.values.map(&:to_h),
+        default_view: default_view&.to_h
+      }
+    end
   end
 end

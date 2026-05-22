@@ -22,5 +22,12 @@ module Consent
 
       @instance.curry[*args]
     end
+
+    def to_h
+      {
+        view: key,
+        label: label
+      }
+    end
   end
 end
