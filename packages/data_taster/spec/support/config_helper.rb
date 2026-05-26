@@ -10,8 +10,7 @@ module ConfigHelper
     path: nil,
     target_database: dump_db_name,
     months: nil,
-    list: nil,
-    include_schema_migrations: false
+    list: nil
   )
     source = DataTaster::MysqlSource.new(client: source_client)
     output = if path
@@ -24,8 +23,7 @@ module ConfigHelper
       source: source,
       output: output,
       months: months,
-      list: list || default_config_list,
-      include_schema_migrations: include_schema_migrations
+      list: list || default_config_list
     )
   end
 

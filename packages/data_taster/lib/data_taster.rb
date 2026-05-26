@@ -31,13 +31,12 @@ module DataTaster
     @confection = nil
   end
 
-  def self.config(source:, output:, months: nil, list: default_list, include_schema_migrations: false)
+  def self.config(source:, output:, months: nil, list: default_list)
     @config = Config.new(
       source,
       output,
       months,
-      Array.wrap(list),
-      include_schema_migrations
+      Array.wrap(list)
     )
   end
 
@@ -45,16 +44,8 @@ module DataTaster
     @confection ||= DataTaster::Confection.new.assemble
   end
 
-  def self.export!
-    Exporter.new.serve!
-  end
-
   def self.sample!
-    export!
-  end
-
-  def self.sample_to_sql_file!
-    export!
+    Exporter.new.serve!
   end
 
   def self.target_database
@@ -82,5 +73,5 @@ module DataTaster
     end
   end
 
-  Config = Struct.new(:source, :output, :months, :list, :include_schema_migrations)
+  Config = Struct.new(:source, :output, :months, :list)
 end

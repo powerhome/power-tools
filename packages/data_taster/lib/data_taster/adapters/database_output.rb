@@ -22,6 +22,10 @@ module DataTaster
       true
     end
 
+    def include_schema_migrations?
+      true
+    end
+
     def write_statement(sql)
       return DataTaster.logger.info(sql) unless executes?
 

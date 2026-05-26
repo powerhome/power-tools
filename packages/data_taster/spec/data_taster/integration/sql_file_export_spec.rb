@@ -27,7 +27,7 @@ RSpec.describe "DataTaster SQL file export", type: :integration do
     it "qualifies INSERTs and sanitizer UPDATEs with the working (restore target) DB, and does not mutate the source" do
       count_before = source_db_client.query("SELECT COUNT(*) AS cnt FROM users").first["cnt"]
 
-      DataTaster.sample_to_sql_file!
+      DataTaster.sample!
 
       path = File.expand_path(DataTaster.config.output.path)
       expect(path).to eq(File.expand_path(export_path))

@@ -29,5 +29,9 @@ module DataTaster
     def database_export?
       false
     end
+
+    def include_schema_migrations?
+      false
+    end
   end
 end
