@@ -31,12 +31,13 @@ module DataTaster
     @confection = nil
   end
 
-  def self.config(source:, output:, months: nil, list: default_list)
+  def self.config(source: nil, output: nil, months: nil, list: nil)
+    return @config if source.nil? && output.nil?
     @config = Config.new(
       source,
       output,
       months,
-      Array.wrap(list)
+      Array.wrap(list || default_list)
     )
   end
 
