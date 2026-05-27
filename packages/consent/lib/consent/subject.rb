@@ -11,12 +11,12 @@ module Consent
       @views = Consent.default_views.clone
     end
 
-    def to_h
+    def to_permission_payload
       {
         subject: key,
         label: label,
-        actions: actions.map(&:to_h),
-        views: views.values.map(&:to_h),
+        actions: actions.map(&:to_permission_payload),
+        views: views.values.map(&:to_permission_payload),
       }
     end
   end

@@ -21,12 +21,12 @@ module Consent
       @default_view ||= @subject.views[@options[:default_view]]
     end
 
-    def to_h
+    def to_permission_payload
       {
         action: key,
         label: label,
-        views: views.values.map(&:to_h),
-        default_view: default_view&.to_h,
+        views: views.values.map(&:to_permission_payload),
+        default_view: default_view&.to_permission_payload,
       }
     end
   end

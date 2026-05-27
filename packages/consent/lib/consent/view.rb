@@ -23,7 +23,7 @@ module Consent
       @instance.curry[*args]
     end
 
-    def to_h
+    def to_permission_payload
       {
         view: key,
         label: label,
