@@ -19,14 +19,14 @@ RSpec.describe Consent::Action do
     expect(action.label).to eql "Label"
   end
 
-  describe "#to_h" do
+  describe "#to_permission_payload" do
     it "returns the correct hash" do
-      expect(action.to_h).to eq({
-                                  action: :key,
-                                  label: "Label",
-                                  views: action.views.values.map(&:to_h),
-                                  default_view: nil,
-                                })
+      expect(action.to_permission_payload).to eq({
+                                                    action: :key,
+                                                    label: "Label",
+                                                    views: action.views.values.map(&:to_permission_payload),
+                                                    default_view: nil,
+                                                  })
     end
   end
 end

@@ -13,10 +13,10 @@ RSpec.describe Consent::View do
     end
   end
 
-  describe "#to_h" do
+  describe "#to_permission_payload" do
     it "returns the correct hash" do
       view = Consent::View.new(:view, "View")
-      expect(view.to_h).to eq({
+      expect(view.to_permission_payload).to eq({
                                 view: :view,
                                 label: "View",
                               })

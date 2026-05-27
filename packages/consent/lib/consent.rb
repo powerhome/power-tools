@@ -119,11 +119,4 @@ module Consent
       DSL.build(subject, defaults, &block)
     end
   end
-
-  def self.permission_definitions_payload
-    {
-      consent_version: Consent::VERSION,
-      permissions: Consent.subjects.map(&:to_permission_payload),
-    }
-  end
 end

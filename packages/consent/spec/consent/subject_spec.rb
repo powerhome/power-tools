@@ -17,14 +17,14 @@ RSpec.describe Consent::Subject do
     end
   end
 
-  describe "#to_h" do
+  describe "#to_permission_payload" do
     it "returns the correct hash" do
-      expect(subject.to_h).to eq({
-                                   subject: :subject,
-                                   label: "Subject",
-                                   actions: [action.to_h],
-                                   views: [view.to_h],
-                                 })
+      expect(subject.to_permission_payload).to eq({
+                                                    subject: :subject,
+                                                    label: "Subject",
+                                                    actions: [action.to_permission_payload],
+                                                    views: [view.to_permission_payload],
+                                                  })
     end
   end
 end
