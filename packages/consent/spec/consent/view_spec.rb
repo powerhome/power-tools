@@ -17,9 +17,9 @@ RSpec.describe Consent::View do
     it "returns the correct hash" do
       view = Consent::View.new(:view, "View")
       expect(view.to_permission_payload).to eq({
-                                view: :view,
-                                label: "View",
-                              })
+                                                 view: :view,
+                                                 label: "View",
+                                               })
     end
   end
 end
