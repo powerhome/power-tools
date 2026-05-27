@@ -2,10 +2,9 @@ module DataTaster
   VERSION: String
   SKIP_CODE: String
 
-  def self.config: (source: MysqlSource, output: Output, ?months: Integer?, ?list: Array[String], ?include_schema_migrations: bool) -> Config
-  def self.export!: () -> void
+  def self.configure: (source: MysqlSource, output: Output, ?months: Integer?, ?list: Array[String]) -> Config
+  def self.config: () -> Config
   def self.sample!: () -> void
-  def self.sample_to_sql_file!: () -> void
   def self.target_database: () -> String
   def self.reset!: () -> void
 
@@ -27,6 +26,7 @@ module DataTaster
     def executes?: () -> bool
     def file_export?: () -> bool
     def database_export?: () -> bool
+    def include_schema_migrations?: () -> bool
   end
 
   class DatabaseOutput < Output
@@ -46,6 +46,5 @@ module DataTaster
     output: Output,
     months: Integer?,
     list: Array[String],
-    include_schema_migrations: bool,
   }
 end
