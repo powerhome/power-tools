@@ -52,4 +52,19 @@ module TwoPercent
   # `TwoPercent.logger` will default to Rails.logger
   #
   config_accessor :logger
+
+  #
+  # HTTP header name for correlation ID tracking
+  # Defaults to "X-Correlation-Id" (common microservices pattern)
+  # Set to your IdP's correlation header (e.g., "SCIM-Request-ID")
+  #
+  # I.e.:
+  #
+  #   TwoPercent.configure do |config|
+  #     config.correlation_id_header = "SCIM-Request-ID"
+  #   end
+  #
+  config_accessor :correlation_id_header, default: "X-Correlation-Id"
+
+  class ConfigurationError < StandardError; end
 end
