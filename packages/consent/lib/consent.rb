@@ -3,6 +3,7 @@
 require "cancancan"
 
 require "consent/ability"
+require "consent/permission_definition_payload"
 require "consent/action"
 require "consent/dsl"
 require "consent/model_additions"
