@@ -54,32 +54,31 @@ module DataTaster
     end
 
     def export_to_file(collection, table_name, payload)
-      safe_db_name = quote_ident(target_database)
       safe_table_name = quote_ident(table_name)
 
-      export_data(collection, safe_db_name, safe_table_name)
+      export_data(collection, safe_table_name)
       sanitize_data(table_name, payload[:sanitize])
     end
 
-    def export_data(collection, safe_db_name, safe_table_name)
+    def export_data(collection, safe_table_name)
       result = source.query(collection.export_select_sql)
 
       columns = result.fields
       return if columns.empty?
 
-      process_export_in_batches(columns, result, safe_db_name, safe_table_name)
+      process_export_in_batches(columns, result, safe_table_name)
     end
 
-    def process_export_in_batches(columns, result, safe_db_name, safe_table_name)
+    def process_export_in_batches(columns, result, safe_table_name)
       batch = []
       result.each do |row|
         batch << row
         if batch.size >= BATCH_SIZE
-          write_export_batch(columns, batch, safe_db_name, safe_table_name)
+          write_export_batch(columns, batch, safe_table_name)
           batch.clear
         end
       end
-      write_export_batch(columns, batch, safe_db_name, safe_table_name) if batch.any?
+      write_export_batch(columns, batch, safe_table_name) if batch.any?
     end
 
     def sanitize_data(table_name, sanitize)
@@ -90,20 +89,19 @@ module DataTaster
 
     def write_drop_table(table_name)
       if output.file_export?
-        safe_db_name = quote_ident(target_database)
-        safe_table_name = quote_ident(table_name)
-        output.write_statement("DROP TABLE IF EXISTS #{safe_db_name}.#{safe_table_name}")
+        tbl = quote_ident(table_name)
+        output.write_statement("DROP TABLE IF EXISTS #{tbl}")
       else
         output.write_statement("DROP TABLE IF EXISTS #{table_name}")
       end
     end
 
-    def write_export_batch(columns, rows, safe_db_name, safe_table_name)
+    def write_export_batch(columns, rows, safe_table_name)
       return if rows.empty?
 
       col_list = columns.map { |c| quote_ident(c) }.join(", ")
       tuples = rows.map { |row| format_row_tuple(columns, row) }
-      output.write_raw("INSERT INTO #{safe_db_name}.#{safe_table_name} (#{col_list}) VALUES")
+      output.write_raw("INSERT INTO #{safe_table_name} (#{col_list}) VALUES")
       output.write_raw("#{tuples.join(",\n")};")
     end
 

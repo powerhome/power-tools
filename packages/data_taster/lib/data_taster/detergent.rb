@@ -59,7 +59,7 @@ module DataTaster
 
     def sql_for_uncast_value
       <<-SQL.squish
-        UPDATE #{target_database}.#{table_name}
+        UPDATE #{reference_table_name}
         SET #{column_name} = #{value}
         WHERE #{column_name} IS NOT NULL
         AND #{column_name} <> #{value}
@@ -68,7 +68,7 @@ module DataTaster
 
     def sql_for_date_value
       <<-SQL.squish
-        UPDATE #{target_database}.#{table_name}
+        UPDATE #{reference_table_name}
         SET #{column_name} = '#{value}'
         WHERE #{column_name} IS NOT NULL
       SQL
@@ -76,7 +76,7 @@ module DataTaster
 
     def sql_for_nil_value
       <<-SQL.squish
-        UPDATE #{target_database}.#{table_name}
+        UPDATE #{reference_table_name}
         SET #{column_name} = NULL
         WHERE #{column_name} IS NOT NULL
       SQL
@@ -84,7 +84,7 @@ module DataTaster
 
     def sql_for_cast_value
       <<-SQL.squish
-        UPDATE #{target_database}.#{table_name}
+        UPDATE #{reference_table_name}
         SET #{column_name} = '#{value}'
         WHERE #{column_name} IS NOT NULL
         AND #{column_name} <> ''
@@ -93,6 +93,14 @@ module DataTaster
 
     def target_database
       DataTaster.target_database
+    end
+
+    def reference_table_name
+      if DataTaster.config&.output&.database_export?
+        "#{target_database}.#{table_name}"
+      else
+        "`#{table_name.to_s.gsub('`', '``')}`"
+      end
     end
   end
 end
