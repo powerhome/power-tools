@@ -4,7 +4,7 @@ require "spec_helper"
 require "data_taster/detergent"
 
 RSpec.describe DataTaster::Detergent do
-  let(:output_stub) { double("output", target_database: "test_db") }
+  let(:output_stub) { double("output", target_database: "test_db", database_export?: true) }
   let(:config_stub) { double("config", output: output_stub) }
 
   before do
@@ -67,6 +67,18 @@ RSpec.describe DataTaster::Detergent do
       result = detergent.deliver
 
       expect(result).to eq(DataTaster::SKIP_CODE)
+    end
+
+    context "when output is SQL file (not database export)" do
+      let(:output_stub) { double("output", target_database: "test_db", database_export?: false) }
+
+      it "uses only the quoted table name in UPDATE statements" do
+        detergent = described_class.new("users", "email", "test@example.com")
+        result = detergent.deliver
+
+        expect(result).to include("UPDATE `users`")
+        expect(result).not_to include("UPDATE test_db.users")
+      end
     end
   end
 end

@@ -24,7 +24,7 @@ RSpec.describe "DataTaster SQL file export", type: :integration do
   end
 
   describe "dump file content" do
-    it "qualifies INSERTs and sanitizer UPDATEs with the working (restore target) DB, and does not mutate the source" do
+    it "writes INSERT and sanitizer UPDATE with quoted table names only (no database prefix), and does not mutate the source" do
       count_before = source_db_client.query("SELECT COUNT(*) AS cnt FROM users").first["cnt"]
 
       DataTaster.sample!
@@ -41,9 +41,11 @@ RSpec.describe "DataTaster SQL file export", type: :integration do
       expect(sql).to include("SET FOREIGN_KEY_CHECKS=1;")
 
       quoted_dump_db = "`#{dump_db_name.gsub('`', '``')}`"
-      expect(sql).to include("INSERT INTO #{quoted_dump_db}.`users`")
+      expect(sql).to include("INSERT INTO `users`")
+      expect(sql).not_to include("#{quoted_dump_db}.`users`")
 
-      expect(sql).to include("UPDATE #{dump_db_name}.users")
+      expect(sql).to match(/UPDATE `users` SET/)
+      expect(sql).not_to include("UPDATE #{dump_db_name}.users")
 
       expect(sql).to include("CONCAT('users_', id, '@nitrophrg.com')")
       expect(sql).to include("test@example.com")

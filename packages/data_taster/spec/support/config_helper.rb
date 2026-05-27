@@ -19,7 +19,7 @@ module ConfigHelper
                DataTaster::DatabaseOutput.new(client: output_client, execute: execute)
              end
 
-    DataTaster.config(
+    DataTaster.configure(
       source: source,
       output: output,
       months: months,
