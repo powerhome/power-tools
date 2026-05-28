@@ -22,7 +22,6 @@ module DataTaster
   class Output
     def target_database: () -> String
     def export_mode: () -> export_mode
-    def table_names: (MysqlSource source) -> Array[String]
     def qualified_table_name: (String table_name) -> String
     def begin_export!: (source: MysqlSource) -> void
     def write_statement: (String sql) -> void

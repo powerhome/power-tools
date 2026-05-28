@@ -6,7 +6,7 @@ module DataTaster
 
     def serve!
       output.begin_export!(source: source)
-      table_names.each { |table_name| export_table(table_name) }
+      DataTaster.confection.keys.each { |table_name| export_table(table_name) }
       output.finish_export!
     end
 
@@ -22,10 +22,6 @@ module DataTaster
 
     def output
       config.output
-    end
-
-    def table_names
-      output.table_names(source)
     end
 
     def export_table(table_name)

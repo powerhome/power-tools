@@ -5,17 +5,12 @@ module DataTaster
     attr_reader :path, :target_database
 
     def initialize(path:, target_database:)
-      super()
       @path = path
       @target_database = target_database
     end
 
     def export_mode
       :file
-    end
-
-    def table_names(_source)
-      DataTaster.confection.keys
     end
 
     def qualified_table_name(table_name)
