@@ -141,7 +141,8 @@ RSpec.describe DataTaster::Sanitizer do
       it "executes SQL when execute is true" do
         stub_config(execute: true)
 
-        expect(DataTaster).to receive(:safe_execute).with(include("UPDATE"), dump_db_client).at_least(:once).and_return(true)
+        expect(DataTaster).to receive(:safe_execute).with(include("UPDATE"),
+                                                          dump_db_client).at_least(:once).and_return(true)
         sanitizer = described_class.new("users", {})
 
         sanitizer.clean!

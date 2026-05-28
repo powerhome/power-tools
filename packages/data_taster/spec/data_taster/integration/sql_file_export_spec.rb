@@ -24,7 +24,7 @@ RSpec.describe "DataTaster SQL file export", type: :integration do
   end
 
   describe "dump file content" do
-    it "writes INSERT and sanitizer UPDATE with quoted table names only (no database prefix), and does not mutate the source" do
+    it "writes INSERT and sanitizer UPDATE with quoted table" do
       count_before = source_db_client.query("SELECT COUNT(*) AS cnt FROM users").first["cnt"]
 
       DataTaster.sample!
