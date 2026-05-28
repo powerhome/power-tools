@@ -18,6 +18,10 @@ module DataTaster
 
   SKIP_CODE = "skip_processing"
 
+  class << self
+    attr_accessor :config
+  end
+
   def self.logger=(logger)
     @logger = logger
   end
@@ -27,21 +31,17 @@ module DataTaster
   end
 
   def self.reset!
-    @config = nil
+    self.config = nil
     @confection = nil
   end
 
   def self.setup(source:, output:, months: nil, list: nil)
-    @config = Config.new(
+    self.config = Config.new(
       source,
       output,
       months,
       Array.wrap(list || default_list)
     )
-  end
-
-  def self.config
-    @config
   end
 
   def self.confection
