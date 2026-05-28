@@ -3,32 +3,39 @@
 require "spec_helper"
 
 module ConfigHelper
-  def configure_data_taster(
-    source_client: source_db_client,
-    output_client: dump_db_client,
-    path: nil,
-    target_database: dump_db_name,
-    months: nil,
-    list: nil
-  )
-    source = DataTaster::MysqlSource.new(client: source_client)
-    output = if path
-               DataTaster::FileOutput.new(path: path, target_database: target_database)
-             else
-               DataTaster::DatabaseOutput.new(client: output_client)
-             end
-
+  def configure_data_taster(**options)
     DataTaster.reset!
-    DataTaster.setup(
-      source: source,
-      output: output,
-      months: months,
-      list: list || default_config_list
-    )
+    DataTaster.setup(**data_taster_setup_options(options))
   end
 
   def default_config_list
     [File.join(__dir__, "..", "fixtures", "data_taster_export_tables.yml")]
+  end
+
+private
+
+  def data_taster_setup_options(options)
+    {
+      source: mysql_source(options.fetch(:source_client) { source_db_client }),
+      output: data_taster_output(options),
+      months: options[:months],
+      list: options[:list] || default_config_list,
+    }
+  end
+
+  def mysql_source(client)
+    DataTaster::MysqlSource.new(client: client)
+  end
+
+  def data_taster_output(options)
+    if options[:path]
+      DataTaster::FileOutput.new(
+        path: options[:path],
+        target_database: options.fetch(:target_database) { dump_db_name }
+      )
+    else
+      DataTaster::DatabaseOutput.new(client: options.fetch(:output_client) { dump_db_client })
+    end
   end
 end
 

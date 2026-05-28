@@ -5,6 +5,7 @@ module DataTaster
     attr_reader :path, :target_database
 
     def initialize(path:, target_database:)
+      super()
       @path = path
       @target_database = target_database
     end
