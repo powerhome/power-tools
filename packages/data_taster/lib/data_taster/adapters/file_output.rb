@@ -22,7 +22,7 @@ module DataTaster
       "`#{table_name.to_s.gsub('`', '``')}`"
     end
 
-    def begin_export!(_source:)
+    def begin_export!(**)
       DataTaster.logger.info("Writing SQL file to #{path}")
       @io = File.open(path, "w")
       @io.puts "SET FOREIGN_KEY_CHECKS=0;"
