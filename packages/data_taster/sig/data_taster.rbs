@@ -2,6 +2,8 @@ module DataTaster
   VERSION: String
   SKIP_CODE: String
 
+  type export_mode = :file | :database
+
   def self.configure: (source: MysqlSource, output: Output, ?months: Integer?, ?list: Array[String]) -> Config
   def self.config: () -> Config
   def self.sample!: () -> void
@@ -19,14 +21,14 @@ module DataTaster
 
   class Output
     def target_database: () -> String
+    def export_mode: () -> export_mode
+    def apply?: () -> bool
+    def table_names: (MysqlSource source) -> Array[String]
+    def qualified_table_name: (String table_name) -> String
     def begin_export!: (source: MysqlSource) -> void
     def write_statement: (String sql) -> void
     def write_raw: (String line) -> void
     def finish_export!: () -> void
-    def executes?: () -> bool
-    def file_export?: () -> bool
-    def database_export?: () -> bool
-    def include_schema_migrations?: () -> bool
   end
 
   class DatabaseOutput < Output
@@ -37,8 +39,9 @@ module DataTaster
 
   class FileOutput < Output
     attr_reader path: String
+    attr_reader target_database: String
 
-    def initialize: (path: String, target_database: String, ?execute: bool) -> void
+    def initialize: (path: String, target_database: String) -> void
   end
 
   Config = struct {

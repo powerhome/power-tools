@@ -27,16 +27,16 @@ RSpec.describe DataTaster::FileOutput do
     expect(sql).to end_with("SET FOREIGN_KEY_CHECKS=1;\n")
   end
 
-  it "honors execute for deprecated table drops" do
-    output = described_class.new(path: export_path, target_database: dump_db_name, execute: false)
-
-    expect(output.executes?).to be(false)
-  end
-
   it "reports file export mode" do
     output = described_class.new(path: export_path, target_database: dump_db_name)
 
-    expect(output.file_export?).to be(true)
-    expect(output.database_export?).to be(false)
+    expect(output.export_mode).to eq(:file)
+    expect(output.apply?).to be(true)
+  end
+
+  it "qualifies table names for SQL file statements" do
+    output = described_class.new(path: export_path, target_database: dump_db_name)
+
+    expect(output.qualified_table_name("users")).to eq("`users`")
   end
 end

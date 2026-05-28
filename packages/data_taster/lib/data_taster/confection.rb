@@ -30,7 +30,7 @@ module DataTaster
   private
 
     def default_data
-      return {} unless DataTaster.config.output.include_schema_migrations?
+      return {} unless DataTaster.config.output.export_mode == :database
 
       { "schema_migrations" => "1 = 1" }
     end

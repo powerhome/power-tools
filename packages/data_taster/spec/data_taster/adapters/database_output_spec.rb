@@ -37,7 +37,24 @@ RSpec.describe DataTaster::DatabaseOutput do
   it "reports database export mode" do
     output = described_class.new(client: client)
 
-    expect(output.database_export?).to be(true)
-    expect(output.file_export?).to be(false)
+    expect(output.export_mode).to eq(:database)
+  end
+
+  it "applies SQL when execute is true" do
+    output = described_class.new(client: client, execute: true)
+
+    expect(output.apply?).to be(true)
+  end
+
+  it "dry-runs when execute is false" do
+    output = described_class.new(client: client, execute: false)
+
+    expect(output.apply?).to be(false)
+  end
+
+  it "qualifies table names with the target database" do
+    output = described_class.new(client: client)
+
+    expect(output.qualified_table_name("users")).to eq("#{dump_db_name}.users")
   end
 end

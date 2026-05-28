@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 module DataTaster
-  # Selects and sanitizes tables from the source database, writing results
-  # through the configured output adapter (database or SQL file).
   class Exporter
     BATCH_SIZE = 100
 
@@ -27,20 +25,16 @@ module DataTaster
     end
 
     def table_names
-      if output.file_export?
-        DataTaster.confection.keys
-      else
-        source.table_names
-      end
+      output.table_names(source)
     end
 
     def export_table(table_name)
       collection = DataTaster::Collection.new(table_name)
       payload = collection.assemble
 
-      return write_drop_table(table_name) if payload.empty? && output.executes?
+      return write_drop_table(table_name) if payload.empty? && output.apply?
 
-      if output.database_export?
+      if output.export_mode == :database
         export_to_database(payload, table_name)
       else
         export_to_file(collection, table_name, payload)
@@ -57,7 +51,9 @@ module DataTaster
       safe_table_name = quote_ident(table_name)
 
       export_data(collection, safe_table_name)
-      sanitize_data(table_name, payload[:sanitize])
+      DataTaster::Sanitizer.new(table_name, payload[:sanitize]).update_sql_statements.each do |stmt|
+        output.write_statement(stmt)
+      end
     end
 
     def export_data(collection, safe_table_name)
@@ -81,19 +77,9 @@ module DataTaster
       write_export_batch(columns, batch, safe_table_name) if batch.any?
     end
 
-    def sanitize_data(table_name, sanitize)
-      DataTaster::Sanitizer.new(table_name, sanitize).update_sql_statements.each do |stmt|
-        output.write_statement(stmt)
-      end
-    end
-
     def write_drop_table(table_name)
-      if output.file_export?
-        tbl = quote_ident(table_name)
-        output.write_statement("DROP TABLE IF EXISTS #{tbl}")
-      else
-        output.write_statement("DROP TABLE IF EXISTS #{table_name}")
-      end
+      name = output.export_mode == :file ? output.qualified_table_name(table_name) : table_name
+      output.write_statement("DROP TABLE IF EXISTS #{name}")
     end
 
     def write_export_batch(columns, rows, safe_table_name)

@@ -6,6 +6,22 @@ module DataTaster
       raise NotImplementedError
     end
 
+    def export_mode
+      raise NotImplementedError
+    end
+
+    def apply?
+      true
+    end
+
+    def table_names(source)
+      raise NotImplementedError
+    end
+
+    def qualified_table_name(table_name)
+      raise NotImplementedError
+    end
+
     def begin_export!(source:); end
 
     def write_statement(_sql)
@@ -17,21 +33,5 @@ module DataTaster
     end
 
     def finish_export!; end
-
-    def executes?
-      true
-    end
-
-    def file_export?
-      false
-    end
-
-    def database_export?
-      false
-    end
-
-    def include_schema_migrations?
-      false
-    end
   end
 end

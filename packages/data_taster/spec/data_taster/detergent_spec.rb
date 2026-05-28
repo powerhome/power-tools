@@ -4,7 +4,14 @@ require "spec_helper"
 require "data_taster/detergent"
 
 RSpec.describe DataTaster::Detergent do
-  let(:output_stub) { double("output", target_database: "test_db", database_export?: true) }
+  let(:output_stub) do
+    double(
+      "output",
+      target_database: "test_db",
+      export_mode: :database,
+      qualified_table_name: "test_db.users"
+    )
+  end
   let(:config_stub) { double("config", output: output_stub) }
 
   before do
@@ -70,7 +77,14 @@ RSpec.describe DataTaster::Detergent do
     end
 
     context "when output is SQL file (not database export)" do
-      let(:output_stub) { double("output", target_database: "test_db", database_export?: false) }
+      let(:output_stub) do
+        double(
+          "output",
+          target_database: "test_db",
+          export_mode: :file,
+          qualified_table_name: "`users`"
+        )
+      end
 
       it "uses only the quoted table name in UPDATE statements" do
         detergent = described_class.new("users", "email", "test@example.com")

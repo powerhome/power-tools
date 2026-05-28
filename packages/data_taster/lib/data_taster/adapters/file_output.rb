@@ -4,22 +4,25 @@ module DataTaster
   class FileOutput < Output
     attr_reader :path, :target_database
 
-    def initialize(path:, target_database:, execute: true)
+    def initialize(path:, target_database:)
       super()
       @path = path
       @target_database = target_database
-      @execute = execute
     end
 
-    def executes?
-      @execute
+    def export_mode
+      :file
     end
 
-    def file_export?
-      true
+    def table_names(_source)
+      DataTaster.confection.keys
     end
 
-    def begin_export!(source:) # rubocop:disable Lint/UnusedMethodArgument
+    def qualified_table_name(table_name)
+      "`#{table_name.to_s.gsub('`', '``')}`"
+    end
+
+    def begin_export!(_source:)
       DataTaster.logger.info("Writing SQL file to #{path}")
       @io = File.open(path, "w")
       @io.puts "SET FOREIGN_KEY_CHECKS=0;"

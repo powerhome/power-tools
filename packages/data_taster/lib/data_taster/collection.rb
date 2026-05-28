@@ -71,7 +71,7 @@ module DataTaster
 
     def insert_into_selection?
       output = DataTaster.config.output
-      output.database_export? && output.executes?
+      output.export_mode == :database && output.apply?
     end
 
     def source_db

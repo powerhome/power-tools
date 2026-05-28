@@ -10,24 +10,28 @@ module DataTaster
       @execute = execute
     end
 
+    def export_mode
+      :database
+    end
+
+    def apply?
+      @execute
+    end
+
     def target_database
       client.query_options[:database]
     end
 
-    def executes?
-      @execute
+    def table_names(source)
+      source.table_names
     end
 
-    def database_export?
-      true
-    end
-
-    def include_schema_migrations?
-      true
+    def qualified_table_name(table_name)
+      "#{target_database}.#{table_name}"
     end
 
     def write_statement(sql)
-      return DataTaster.logger.info(sql) unless executes?
+      return DataTaster.logger.info(sql) unless apply?
 
       DataTaster.safe_execute(sql, client)
     end
