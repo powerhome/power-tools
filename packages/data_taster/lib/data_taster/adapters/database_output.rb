@@ -4,18 +4,13 @@ module DataTaster
   class DatabaseOutput < Output
     attr_reader :client
 
-    def initialize(client:, execute: true)
+    def initialize(client:)
       super()
       @client = client
-      @execute = execute
     end
 
     def export_mode
       :database
-    end
-
-    def apply?
-      @execute
     end
 
     def target_database
@@ -31,8 +26,6 @@ module DataTaster
     end
 
     def write_statement(sql)
-      return DataTaster.logger.info(sql) unless apply?
-
       DataTaster.safe_execute(sql, client)
     end
 

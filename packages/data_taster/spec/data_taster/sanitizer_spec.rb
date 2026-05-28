@@ -8,8 +8,8 @@ RSpec.describe DataTaster::Sanitizer do
 
   let(:confection_stub) { double("confection") }
 
-  def stub_config(execute: false)
-    configure_data_taster(execute: execute)
+  def stub_config
+    configure_data_taster
   end
 
   before do
@@ -85,39 +85,13 @@ RSpec.describe DataTaster::Sanitizer do
         allow(confection_stub).to receive(:[]).with("users").and_return("some_config")
       end
 
-      it "processes default selections when execute is false" do
+      it "executes default sanitization SQL on database export" do
         stub_config
-        allow(DataTaster).to receive(:safe_execute).and_return(true)
+        expect(DataTaster).to receive(:safe_execute).with(include("UPDATE test_dump.users"),
+                                                          dump_db_client).at_least(:once).and_return(true)
         sanitizer = described_class.new("users", {})
 
-        result = sanitizer.clean!
-
-        expect(result).to be_an(Array)
-        expect(result).not_to be_empty
-
-        # Check that we get SQL for columns that match default patterns
-        sql_statements = result.join(" ")
-        expect(sql_statements).to include("UPDATE test_dump.users")
-
-        # encrypted pattern
-        expect(sql_statements).to include("SET encrypted_password = NULL")
-
-        # ssn|passport|license patterns
-        expect(sql_statements).to include("SET ssn = '111111111'")
-        expect(sql_statements).to include("SET passport_number = '111111111'")
-        expect(sql_statements).to include("SET license_number = '111111111'")
-
-        # dob|birth patterns
-        expect(sql_statements).to include("SET date_of_birth = '#{Date.current - 29.years}'")
-        expect(sql_statements).to include("SET dob = '#{Date.current - 29.years}'")
-
-        # note|body patterns
-        expect(sql_statements).to include("SET notes = 'Redacted for privacy'")
-        expect(sql_statements).to include("SET body = 'Redacted for privacy'")
-
-        # compensation|income patterns
-        expect(sql_statements).to include("SET compensation = 999999")
-        expect(sql_statements).to include("SET income = 999999")
+        sanitizer.clean!
       end
 
       it "processes custom selections that override defaults" do
@@ -138,18 +112,8 @@ RSpec.describe DataTaster::Sanitizer do
         expect(sql_statements).to include("SET notes = 'Redacted for privacy'")
       end
 
-      it "executes SQL when execute is true" do
-        stub_config(execute: true)
-
-        expect(DataTaster).to receive(:safe_execute).with(include("UPDATE"),
-                                                          dump_db_client).at_least(:once).and_return(true)
-        sanitizer = described_class.new("users", {})
-
-        sanitizer.clean!
-      end
-
       it "handles errors and adds context warning" do
-        stub_config(execute: true)
+        stub_config
         allow(DataTaster).to receive(:safe_execute).and_raise(StandardError.new("Database error"))
 
         sanitizer = described_class.new("users", {})

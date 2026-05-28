@@ -65,7 +65,7 @@ module DataTaster
     end
 
     def executes_sanitizer?
-      output.export_mode == :database && output.apply?
+      output.export_mode == :database
     end
 
     def skippable_table?

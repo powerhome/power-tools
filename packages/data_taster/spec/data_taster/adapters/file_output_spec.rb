@@ -31,7 +31,6 @@ RSpec.describe DataTaster::FileOutput do
     output = described_class.new(path: export_path, target_database: dump_db_name)
 
     expect(output.export_mode).to eq(:file)
-    expect(output.apply?).to be(true)
   end
 
   it "qualifies table names for SQL file statements" do

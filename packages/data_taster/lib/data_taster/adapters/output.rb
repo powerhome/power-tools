@@ -10,10 +10,6 @@ module DataTaster
       raise NotImplementedError
     end
 
-    def apply?
-      true
-    end
-
     def table_names(source)
       raise NotImplementedError
     end

@@ -22,7 +22,6 @@ module DataTaster
   class Output
     def target_database: () -> String
     def export_mode: () -> export_mode
-    def apply?: () -> bool
     def table_names: (MysqlSource source) -> Array[String]
     def qualified_table_name: (String table_name) -> String
     def begin_export!: (source: MysqlSource) -> void
@@ -34,7 +33,7 @@ module DataTaster
   class DatabaseOutput < Output
     attr_reader client: untyped
 
-    def initialize: (client: untyped, ?execute: bool) -> void
+    def initialize: (client: untyped) -> void
   end
 
   class FileOutput < Output

@@ -32,7 +32,7 @@ module DataTaster
       collection = DataTaster::Collection.new(table_name)
       payload = collection.assemble
 
-      return write_drop_table(table_name) if payload.empty? && output.apply?
+      return write_drop_table(table_name) if payload.empty? && output.export_mode == :database
 
       if output.export_mode == :database
         export_to_database(payload, table_name)

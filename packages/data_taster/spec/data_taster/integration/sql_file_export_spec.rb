@@ -11,7 +11,6 @@ RSpec.describe "DataTaster SQL file export", type: :integration do
   before do
     configure_data_taster(
       list: [yaml_path],
-      execute: true,
       path: File.expand_path(export_path),
       target_database: dump_db_name
     )

@@ -11,7 +11,7 @@ RSpec.describe DataTaster::Collection do
     months: nil,
     list: [test_yaml_path]
   )
-    configure_data_taster(months: months, list: list, execute: false)
+    configure_data_taster(months: months, list: list)
   end
 
   it "has '1 == 1' where clause for full table dump tables" do
