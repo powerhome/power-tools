@@ -44,6 +44,7 @@ module DataTaster
       return sql unless executes_sanitizer?
 
       output.write_statement(sql)
+      sql
     rescue => e
       raise e, e.message + context_warning
     end

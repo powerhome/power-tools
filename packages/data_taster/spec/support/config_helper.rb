@@ -18,6 +18,7 @@ module ConfigHelper
                DataTaster::DatabaseOutput.new(client: output_client)
              end
 
+    DataTaster.reset!
     DataTaster.setup(
       source: source,
       output: output,

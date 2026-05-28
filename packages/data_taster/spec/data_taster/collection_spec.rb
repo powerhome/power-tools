@@ -19,7 +19,9 @@ RSpec.describe DataTaster::Collection do
 
     result = DataTaster::Collection.new("projects").assemble
 
-    expect(result[:select]).to eq("SELECT * FROM #{source_db_name}.projects WHERE 1 = 1")
+    expect(result[:select]).to eq(
+      "INSERT INTO #{dump_db_name}.projects SELECT * FROM #{source_db_name}.projects WHERE 1 = 1"
+    )
   end
 
   describe "#export_select_sql" do
