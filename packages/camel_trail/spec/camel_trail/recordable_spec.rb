@@ -36,6 +36,21 @@ RSpec.describe CamelTrail::Recordable do
     expect(last_truck_history.user_id).to eql 13
   end
 
+  context "when attributes should not be tracked" do
+    it "does not create a trail" do
+      truck = TruckDoNotTrackName.create! name: "Anti-alians Window", price: 1_000_000
+      last_truck_history = CamelTrail.for(truck).first
+
+      expect(last_truck_history.activity).to eql "created"
+      expect(last_truck_history.source_type).to eql "TruckDoNotTrackName"
+      expect(last_truck_history.source_id).to eql truck.id.to_s
+      expect(last_truck_history.source_changes).to include(
+        "price" => [nil, 1_000_000]
+      )
+      expect { truck.update(name: "Pickup") }.not_to change(CamelTrail.for(Truck), :count)
+    end
+  end
+
   it "works fine when history_options is not passed" do
     truck = TruckWithoutHistoryOptions.create! name: "Anti-alians Window", price: 1_000_000
     last_truck_history = CamelTrail.for(truck).first

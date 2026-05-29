@@ -23,6 +23,7 @@ module CamelTrail
       yield
 
       return if saved_changes.blank?
+      return if __camel_trail_source_changes.blank?
 
       CamelTrail.record!(self, activity, __camel_trail_source_changes,
                          CamelTrail::Config.current_session_user_id&.call)
