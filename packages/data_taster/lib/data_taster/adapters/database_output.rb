@@ -27,10 +27,6 @@ module DataTaster
       client.query_options[:database]
     end
 
-    def table_names(source)
-      source.table_names
-    end
-
     def qualified_table_name(table_name)
       "#{target_database}.#{table_name}"
     end

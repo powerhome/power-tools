@@ -1,51 +1,23 @@
+# frozen_string_literal: true
+
 module DataTaster
-  VERSION: String
-  SKIP_CODE: String
-
-  type export_mode = :file | :database
-
-  def self.configure: (source: MysqlSource, output: Output, ?months: Integer?, ?list: Array[String]) -> Config
-  def self.config: () -> Config
-  def self.sample!: () -> void
-  def self.target_database: () -> String
-  def self.reset!: () -> void
-
   class MysqlSource
-    attr_reader client: untyped
+    attr_reader :client
 
-    def initialize: (client: untyped) -> void
-    def query: (String sql) -> untyped
-    def database: () -> String
-    def table_names: () -> Array[String]
+    def initialize(client:)
+      @client = client
+    end
+
+    def query(sql)
+      client.query(sql)
+    end
+
+    def database
+      client.query_options[:database]
+    end
+
+    def table_names
+      query("SHOW tables").map { |row| row[row.keys.first] }
+    end
   end
-
-  class Output
-    def initialize: (**untyped) -> void
-    def serve!: () -> void
-    def export_mode: () -> export_mode
-    def target_database: () -> String
-    def qualified_table_name: (String table_name) -> String
-    def write_statement: (String sql) -> void
-    def write_raw: (String line) -> void
-  end
-
-  class DatabaseOutput < Output
-    attr_reader client: untyped
-
-    def initialize: (client: untyped) -> void
-    def table_names: (MysqlSource source) -> Array[String]
-  end
-
-  class FileOutput < Output
-    BATCH_SIZE: Integer
-    attr_reader path: String
-    attr_reader target_database: String
-  end
-
-  Config = struct {
-    source: MysqlSource,
-    output: Output,
-    months: Integer?,
-    list: Array[String],
-  }
 end
