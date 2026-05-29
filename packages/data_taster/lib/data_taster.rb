@@ -8,7 +8,6 @@ module DataTaster
   autoload :DatabaseOutput, "data_taster/adapters/database_output"
   autoload :Detergent, "data_taster/detergent"
   autoload :DetergentRowInterpolator, "data_taster/detergent_row_interpolator"
-  autoload :Exporter, "data_taster/exporter"
   autoload :FileOutput, "data_taster/adapters/file_output"
   autoload :Helper, "data_taster/helper"
   autoload :MysqlSource, "data_taster/adapters/mysql_source"
@@ -31,6 +30,7 @@ module DataTaster
   end
 
   def self.reset!
+    # TODO: Turn this into objects
     self.config = nil
     @confection = nil
   end
@@ -49,7 +49,7 @@ module DataTaster
   end
 
   def self.sample!
-    Exporter.new.serve!
+    config.output.sample!
   end
 
   def self.target_database

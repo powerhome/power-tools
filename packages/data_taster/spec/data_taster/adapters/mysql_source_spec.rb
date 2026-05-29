@@ -7,15 +7,21 @@ RSpec.describe DataTaster::MysqlSource do
 
   subject(:source) { described_class.new(client: source_db_client) }
 
-  it "delegates query to the client" do
-    expect(source.query("SELECT 1 AS one").first["one"]).to eq(1)
+  describe "#query" do
+    it "delegates to the mysql client" do
+      expect(source.query("SELECT 1 AS one").first["one"]).to eq(1)
+    end
   end
 
-  it "returns the database name" do
-    expect(source.database).to eq(source_db_name)
+  describe "#database" do
+    it "returns the database from the client connection options" do
+      expect(source.database).to eq(source_db_name)
+    end
   end
 
-  it "lists table names" do
-    expect(source.table_names).to include("users")
+  describe "#table_names" do
+    it "lists tables from the source database" do
+      expect(source.table_names).to include("users")
+    end
   end
 end

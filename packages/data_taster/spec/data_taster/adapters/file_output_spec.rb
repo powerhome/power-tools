@@ -5,37 +5,111 @@ require "spec_helper"
 RSpec.describe DataTaster::FileOutput do
   include DatabaseHelper
 
+  subject(:output) { described_class.new(path: export_path, target_database: dump_db_name) }
+
   let(:export_path) { File.join(Dir.tmpdir, "data_taster_file_output_#{Process.pid}.sql") }
+  let(:users_yaml) { File.join(__dir__, "..", "..", "fixtures", "full_users_dump_tables.yml") }
 
   after do
     FileUtils.rm_f(export_path)
+    DataTaster.reset!
   end
 
-  it "writes FK toggles and closes the file" do
-    output = described_class.new(path: export_path, target_database: dump_db_name)
-    source = DataTaster::MysqlSource.new(client: source_db_client)
-
-    output.begin_export!(source: source)
-    output.write_statement("SELECT 1")
-    output.write_raw("INSERT INTO `db`.`t` VALUES (1);")
-    output.finish_export!
-
-    sql = File.read(export_path)
-    expect(sql).to start_with("SET FOREIGN_KEY_CHECKS=0;\n")
-    expect(sql).to include("SELECT 1;")
-    expect(sql).to include("INSERT INTO `db`.`t` VALUES (1);")
-    expect(sql).to end_with("SET FOREIGN_KEY_CHECKS=1;\n")
+  describe "#export_mode" do
+    it "is file export" do
+      expect(output.export_mode).to eq(:file)
+    end
   end
 
-  it "reports file export mode" do
-    output = described_class.new(path: export_path, target_database: dump_db_name)
-
-    expect(output.export_mode).to eq(:file)
+  describe "#target_database" do
+    it "stores the configured dump database name" do
+      expect(output.target_database).to eq(dump_db_name)
+    end
   end
 
-  it "qualifies table names for SQL file statements" do
-    output = described_class.new(path: export_path, target_database: dump_db_name)
+  describe "#qualified_table_name" do
+    it "wraps the table name in backticks" do
+      expect(output.qualified_table_name("users")).to eq("`users`")
+    end
 
-    expect(output.qualified_table_name("users")).to eq("`users`")
+    it "escapes backticks in table names" do
+      expect(output.qualified_table_name("user`s")).to eq("`user``s`")
+    end
+  end
+
+  describe "file lifecycle" do
+    it "writes FK toggles, statements, and closes the file" do
+      output.send(:start_export)
+      output.write_statement("SELECT 1")
+      output.write_raw("INSERT INTO `db`.`t` VALUES (1);")
+      output.send(:finish_export)
+
+      sql = File.read(export_path)
+      expect(sql).to start_with("SET FOREIGN_KEY_CHECKS=0;\n")
+      expect(sql).to include("SELECT 1;")
+      expect(sql).to include("INSERT INTO `db`.`t` VALUES (1);")
+      expect(sql).to end_with("SET FOREIGN_KEY_CHECKS=1;\n")
+    end
+  end
+
+  describe "#serve!" do
+    let(:source) { instance_double(DataTaster::MysqlSource, client: source_db_client) }
+    let(:rows) do
+      [
+        { "id" => 1, "email" => "a@example.com" },
+        { "id" => 2, "email" => "b@example.com" }
+      ]
+    end
+    let(:query_result) do
+      Struct.new(:fields, :each).new(%w[id email], rows.each)
+    end
+
+    before do
+      allow(DataTaster).to receive(:confection).and_return({ "users" => "1 = 1" })
+      allow(source).to receive(:query).and_return(query_result)
+      allow(DataTaster::Sanitizer).to receive(:new).and_return(
+        instance_double(DataTaster::Sanitizer, update_sql_statements: [])
+      )
+
+      DataTaster.setup(
+        source: source,
+        output: output,
+        list: [users_yaml]
+      )
+    end
+
+    it "writes batched INSERT statements for exported rows" do
+      output.serve!
+
+      sql = File.read(export_path)
+      expect(sql).to start_with("SET FOREIGN_KEY_CHECKS=0;\n")
+      expect(sql).to include("INSERT INTO `users` (`id`, `email`) VALUES")
+      expect(sql).to include("'a@example.com'")
+      expect(sql).to include("'b@example.com'")
+      expect(sql).to end_with("SET FOREIGN_KEY_CHECKS=1;\n")
+    end
+
+    it "skips tables with an empty payload" do
+      allow(DataTaster).to receive(:confection).and_return({ "users" => DataTaster::SKIP_CODE })
+
+      output.serve!
+
+      sql = File.read(export_path)
+      expect(sql).not_to include("INSERT INTO `users`")
+    end
+
+    context "when more rows than BATCH_SIZE" do
+      let(:rows) { Array.new(described_class::BATCH_SIZE + 1) { |i| { "id" => i } } }
+      let(:query_result) do
+        Struct.new(:fields, :each).new(["id"], rows.each)
+      end
+
+      it "writes multiple INSERT batches" do
+        output.serve!
+
+        sql = File.read(export_path)
+        expect(sql.scan("INSERT INTO `users` (`id`) VALUES").size).to eq(2)
+      end
+    end
   end
 end

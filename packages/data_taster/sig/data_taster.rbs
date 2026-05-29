@@ -20,27 +20,26 @@ module DataTaster
   end
 
   class Output
-    def target_database: () -> String
+    def initialize: (**untyped) -> void
+    def serve!: () -> void
     def export_mode: () -> export_mode
-    def table_names: (MysqlSource source) -> Array[String]
+    def target_database: () -> String
     def qualified_table_name: (String table_name) -> String
-    def begin_export!: (source: MysqlSource) -> void
     def write_statement: (String sql) -> void
     def write_raw: (String line) -> void
-    def finish_export!: () -> void
   end
 
   class DatabaseOutput < Output
     attr_reader client: untyped
 
     def initialize: (client: untyped) -> void
+    def table_names: (MysqlSource source) -> Array[String]
   end
 
   class FileOutput < Output
+    BATCH_SIZE: Integer
     attr_reader path: String
     attr_reader target_database: String
-
-    def initialize: (path: String, target_database: String) -> void
   end
 
   Config = struct {

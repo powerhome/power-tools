@@ -2,7 +2,11 @@
 
 module DataTaster
   class Output
-    def target_database
+    def initialize(**options)
+      options.each { |key, value| instance_variable_set(:"@#{key}", value) }
+    end
+
+    def sample!
       raise NotImplementedError
     end
 
@@ -10,15 +14,13 @@ module DataTaster
       raise NotImplementedError
     end
 
-    def table_names(source)
+    def target_database
       raise NotImplementedError
     end
 
     def qualified_table_name(table_name)
       raise NotImplementedError
     end
-
-    def begin_export!(source:); end
 
     def write_statement(_sql)
       raise NotImplementedError
@@ -27,7 +29,5 @@ module DataTaster
     def write_raw(_line)
       raise NotImplementedError
     end
-
-    def finish_export!; end
   end
 end
