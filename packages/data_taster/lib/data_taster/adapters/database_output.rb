@@ -41,6 +41,10 @@ module DataTaster
 
   private
 
+    def table_names(source)
+      source.table_names
+    end
+
     def export(_collection, table_name, payload)
       write_statement("TRUNCATE TABLE #{target_database}.#{table_name}")
       write_statement(payload[:select])

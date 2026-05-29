@@ -27,14 +27,6 @@ RSpec.describe DataTaster::DatabaseOutput do
     end
   end
 
-  describe "#table_names" do
-    it "delegates to the source" do
-      source = DataTaster::MysqlSource.new(client: source_db_client)
-
-      expect(output.table_names(source)).to include("users")
-    end
-  end
-
   describe "#write_statement" do
     it "runs SQL through safe_execute" do
       expect(DataTaster).to receive(:safe_execute).with("SELECT 1", client)
@@ -82,15 +74,31 @@ RSpec.describe DataTaster::DatabaseOutput do
     end
   end
 
-  describe "#serve!" do
-    before { configure_data_taster }
+  describe "#sample!" do
+    it "delegates table discovery to the source" do
+      source = DataTaster::MysqlSource.new(client: source_db_client)
+      allow(DataTaster).to receive(:config).and_return(
+        Struct.new(:source).new(source)
+      )
+      expect(source).to receive(:table_names).and_return(["users"])
+      allow(DataTaster::Collection).to receive(:new).and_return(
+        instance_double(DataTaster::Collection, assemble: {})
+      )
+      expect(DataTaster).to receive(:safe_execute)
 
-    it "exports configured tables to the dump database" do
-      setup_source_data
+      output.sample!
+    end
 
-      expect(DataTaster).to receive(:safe_execute).at_least(:once).and_call_original
+    context "with a configured export", :integration do
+      before { configure_data_taster }
 
-      DataTaster.config.output.serve!
+      it "exports configured tables to the dump database" do
+        setup_source_data
+
+        expect(DataTaster).to receive(:safe_execute).at_least(:once).and_call_original
+
+        DataTaster.config.output.sample!
+      end
     end
   end
 end

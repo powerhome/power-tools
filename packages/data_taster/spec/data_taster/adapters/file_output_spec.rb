@@ -52,7 +52,7 @@ RSpec.describe DataTaster::FileOutput do
     end
   end
 
-  describe "#serve!" do
+  describe "#sample!" do
     let(:source) { instance_double(DataTaster::MysqlSource, client: source_db_client) }
     let(:rows) do
       [
@@ -79,7 +79,7 @@ RSpec.describe DataTaster::FileOutput do
     end
 
     it "writes batched INSERT statements for exported rows" do
-      output.serve!
+      output.sample!
 
       sql = File.read(export_path)
       expect(sql).to start_with("SET FOREIGN_KEY_CHECKS=0;\n")
@@ -92,7 +92,7 @@ RSpec.describe DataTaster::FileOutput do
     it "skips tables with an empty payload" do
       allow(DataTaster).to receive(:confection).and_return({ "users" => DataTaster::SKIP_CODE })
 
-      output.serve!
+      output.sample!
 
       sql = File.read(export_path)
       expect(sql).not_to include("INSERT INTO `users`")
@@ -105,7 +105,7 @@ RSpec.describe DataTaster::FileOutput do
       end
 
       it "writes multiple INSERT batches" do
-        output.serve!
+        output.sample!
 
         sql = File.read(export_path)
         expect(sql.scan("INSERT INTO `users` (`id`) VALUES").size).to eq(2)

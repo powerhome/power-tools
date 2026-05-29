@@ -1,23 +1,61 @@
-# frozen_string_literal: true
-
 module DataTaster
+  VERSION: String
+  SKIP_CODE: String
+
+  type export_mode = :file | :database
+
+  def self.setup: (source: MysqlSource, output: Output, ?months: Integer?, ?list: Array[String]?) -> void
+  def self.config: () -> Config
+  def self.config=: (Config?) -> void
+  def self.sample!: () -> void
+  def self.target_database: () -> String
+  def self.reset!: () -> void
+  def self.confection: () -> Hash[String, untyped]
+  def self.logger: () -> ::Logger
+  def self.logger=: (::Logger) -> void
+  def self.safe_execute: (String sql, ?untyped client) -> untyped
+
   class MysqlSource
-    attr_reader :client
+    attr_reader client: untyped
 
-    def initialize(client:)
-      @client = client
-    end
-
-    def query(sql)
-      client.query(sql)
-    end
-
-    def database
-      client.query_options[:database]
-    end
-
-    def table_names
-      query("SHOW tables").map { |row| row[row.keys.first] }
-    end
+    def initialize: (client: untyped) -> void
+    def query: (String sql) -> untyped
+    def database: () -> String
+    def table_names: () -> Array[String]
   end
+
+  class Output
+    def initialize: (**untyped) -> void
+    def sample!: () -> void
+    def export_mode: () -> export_mode
+    def target_database: () -> String
+    def qualified_table_name: (String table_name) -> String
+    def write_statement: (String sql) -> void
+    def write_raw: (String line) -> void
+  end
+
+  class DatabaseOutput < Output
+    attr_reader client: untyped
+
+    def export_table: (Collection collection, String table_name) -> void
+  end
+
+  class FileOutput < Output
+    BATCH_SIZE: Integer
+    attr_reader path: String
+    attr_reader target_database: String
+  end
+
+  class Collection
+    def initialize: (String table_name) -> void
+    def assemble: () -> Hash[Symbol, untyped]
+    def export_select_sql: () -> String
+  end
+
+  Config = struct {
+    source: MysqlSource,
+    output: Output,
+    months: Integer?,
+    list: Array[String],
+  }
 end
