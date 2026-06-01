@@ -22,6 +22,14 @@ module DataTaster
       "`#{table_name.to_s.gsub('`', '``')}`"
     end
 
+    def write_statement(sql)
+      @io.puts "#{sql};"
+    end
+
+    def write_raw(line)
+      @io.puts line
+    end
+
   private
 
     def process_export
@@ -53,14 +61,6 @@ module DataTaster
 
     def table_names
       DataTaster.confection.keys
-    end
-
-    def write_statement(sql)
-      @io.puts "#{sql};"
-    end
-
-    def write_raw(line)
-      @io.puts line
     end
 
     def source
