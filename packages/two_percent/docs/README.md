@@ -68,6 +68,10 @@ TwoPercent provides RFC 7644-compliant SCIM 2.0 endpoints for all standard CRUD 
 
 All endpoints require authentication via the configured `authenticate` block (see Configuration section). Typically uses HTTP Bearer token authentication.
 
+### Content Types
+
+Per RFC 7644, requests should use `Content-Type: application/scim+json`. For backward compatibility, `application/json` is also accepted.
+
 ### Resource Types
 
 **Users:**
@@ -212,7 +216,7 @@ Create a new SCIM resource. Publishes domain events.
 ```http
 POST /scim/Users
 Authorization: Bearer <token>
-Content-Type: application/json
+Content-Type: application/scim+json
 
 {
   "schemas": ["urn:ietf:params:scim:schemas:core:2.0:User"],
@@ -246,7 +250,7 @@ Partially update a SCIM resource using RFC 7644 PATCH operations. Publishes doma
 ```http
 PATCH /scim/Users/abc123
 Authorization: Bearer <token>
-Content-Type: application/json
+Content-Type: application/scim+json
 
 {
   "schemas": ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
@@ -277,7 +281,7 @@ Replace entire SCIM resource (upsert). Publishes domain events.
 ```http
 PUT /scim/Users/abc123
 Authorization: Bearer <token>
-Content-Type: application/json
+Content-Type: application/scim+json
 
 {
   "schemas": ["urn:ietf:params:scim:schemas:core:2.0:User"],
@@ -318,7 +322,7 @@ Perform multiple operations in a single request.
 ```http
 POST /scim/Bulk
 Authorization: Bearer <token>
-Content-Type: application/json
+Content-Type: application/scim+json
 
 {
   "schemas": ["urn:ietf:params:scim:api:messages:2.0:BulkRequest"],
