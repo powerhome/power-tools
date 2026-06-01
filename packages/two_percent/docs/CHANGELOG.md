@@ -1,5 +1,15 @@
 ## [Unreleased]
 
+- **GET Endpoints**: Full RFC 7644-compliant read operations
+  - `GET /scim/:resource_type/:id` - Single resource retrieval
+  - `GET /scim/:resource_type` - List/search resources with pagination
+  - RFC 7644 ListResponse format: `{schemas, totalResults, startIndex, itemsPerPage, Resources}`
+  - Query filtering: `?query=` parameter for display_name substring match (case-insensitive)
+  - SCIM pagination: `?startIndex=` (1-based) and `?count=` parameters (default: 100, max: 1000)
+  - Supports all resource types: Users, Groups, Departments, Territories, Roles, Titles
+  - Eager loading of associations (users → groups, groups → members)
+  - No domain events published for read operations
+
 ## [1.0.0] - 2026-05-20
 
 - **Domain Events System**: TwoPercent now publishes domain events when SCIM resources change [#424](https://github.com/powerhome/power-tools/pull/424)
