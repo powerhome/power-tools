@@ -162,6 +162,7 @@ module TwoPercent
     def find_scim_record(scim_id)
       record = model_class.find_by_scim_id(scim_id)
       raise ActiveRecord::RecordNotFound, "Resource \"#{scim_id}\" not found" unless record
+
       record
     end
 
