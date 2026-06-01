@@ -105,6 +105,45 @@ module TwoPercent
       head :no_content
     end
 
+    def show
+      log_scim_operation("get", "start", params[:id])
+
+      # Find record (raises RecordNotFound if not exists)
+      record = find_scim_record(params[:id])
+
+      # Reload with associations for complete SCIM representation
+      record = reload_with_members(record)
+
+      log_scim_operation("get", "complete", record.scim_id)
+
+      # RFC 7644: 200 OK with resource body (no domain events for read operations)
+      render json: record.to_scim_representation, status: :ok
+    end
+
+    def index
+      log_scim_operation("list", "start")
+
+      # Build base query scope
+      scope = build_query_scope
+
+      # Get total count before pagination
+      total_count = scope.count
+
+      # Apply pagination
+      paginated_scope = apply_pagination(scope)
+
+      # Load records with associations
+      records = load_records_with_associations(paginated_scope)
+
+      # Build RFC 7644 ListResponse
+      list_response = build_list_response(records, total_count)
+
+      log_scim_operation("list", "complete")
+
+      # RFC 7644: 200 OK with ListResponse (no domain events for read operations)
+      render json: list_response, status: :ok
+    end
+
   private
 
     def scim_params
@@ -222,6 +261,54 @@ module TwoPercent
       else
         TwoPercent::ScimGroup.includes(:scim_users).find(record.id)
       end
+    end
+
+    # Index action helpers
+
+    # Build base query scope with optional filtering
+    def build_query_scope
+      base_scope = user_resource? ? TwoPercent::ScimUser.all : TwoPercent::ScimGroup.where(resource_type: params[:resource_type])
+
+      return base_scope unless params[:query].present?
+
+      # Apply query filter (display_name substring match, case-insensitive)
+      base_scope.where("LOWER(display_name) LIKE LOWER(?)", "%#{params[:query]}%")
+    end
+
+    # Apply SCIM pagination (RFC 7644 uses 1-based indexing)
+    def apply_pagination(scope)
+      start_index = (params[:startIndex] || 1).to_i
+      count = (params[:count] || 100).to_i
+
+      # Enforce maximum count limit
+      count = [count, 1000].min
+
+      # Convert SCIM 1-based startIndex to 0-based offset
+      offset = [start_index - 1, 0].max
+
+      scope.offset(offset).limit(count)
+    end
+
+    # Load records with associations
+    def load_records_with_associations(scope)
+      if user_resource?
+        scope.includes(:scim_groups).to_a
+      else
+        scope.includes(:scim_users).to_a
+      end
+    end
+
+    # Build RFC 7644 ListResponse format
+    def build_list_response(records, total_count)
+      start_index = (params[:startIndex] || 1).to_i
+
+      {
+        schemas: ["urn:ietf:params:scim:api:messages:2.0:ListResponse"],
+        totalResults: total_count,
+        startIndex: start_index,
+        itemsPerPage: records.size,
+        Resources: records.map(&:to_scim_representation),
+      }
     end
   end
 end

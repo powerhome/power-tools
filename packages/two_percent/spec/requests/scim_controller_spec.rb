@@ -908,6 +908,362 @@ RSpec.describe "SCIM API", type: :request do
     end
   end
 
+  # ========== GET /scim/Users/:id (Retrieve Single User) ==========
+  describe "GET /scim/Users/:id" do
+    let!(:existing_user) do
+      create_scim_user(
+        scim_id: "get-user-123",
+        display_name: "John Doe",
+        email: "john@example.com"
+      )
+    end
+
+    context "when user exists" do
+      it "returns 200 OK" do
+        get "/scim/Users/get-user-123", headers: headers
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "returns SCIM User resource with correct schemas" do
+        get "/scim/Users/get-user-123", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["schemas"]).to include("urn:ietf:params:scim:schemas:core:2.0:User")
+      end
+
+      it "returns user with id and meta" do
+        get "/scim/Users/get-user-123", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["id"]).to eq("get-user-123")
+        expect(json_response["displayName"]).to eq("John Doe")
+        expect(json_response["meta"]).to be_present
+        expect(json_response["meta"]["resourceType"]).to eq("User")
+      end
+
+      it "includes created and lastModified timestamps in meta" do
+        get "/scim/Users/get-user-123", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["meta"]["created"]).to be_present
+        expect(json_response["meta"]["lastModified"]).to be_present
+      end
+
+      it "does not publish domain events (read-only)" do
+        get "/scim/Users/get-user-123", headers: headers
+
+        expect(published_events).to be_empty
+      end
+    end
+
+    context "when user does not exist" do
+      it "returns 404 Not Found" do
+        get "/scim/Users/nonexistent-user", headers: headers
+
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "returns RFC 7644 error response" do
+        get "/scim/Users/nonexistent-user", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["schemas"]).to include("urn:ietf:params:scim:api:messages:2.0:Error")
+        expect(json_response["scimType"]).to eq("noTarget")
+      end
+    end
+  end
+
+  # ========== GET /scim/Groups/:id (Retrieve Single Group) ==========
+  describe "GET /scim/Groups/:id" do
+    let!(:user1) { create_scim_user(scim_id: "member-1", display_name: "Alice") }
+    let!(:user2) { create_scim_user(scim_id: "member-2", display_name: "Bob") }
+    let!(:existing_group) do
+      group = create_scim_group(
+        scim_id: "get-group-456",
+        display_name: "Engineering Team",
+        resource_type: "Groups"
+      )
+      TwoPercent::ScimGroupMembership.create!(scim_user: user1, scim_group: group)
+      TwoPercent::ScimGroupMembership.create!(scim_user: user2, scim_group: group)
+      group
+    end
+
+    context "when group exists" do
+      it "returns 200 OK" do
+        get "/scim/Groups/get-group-456", headers: headers
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "returns SCIM Group resource with correct schemas" do
+        get "/scim/Groups/get-group-456", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["schemas"]).to include("urn:ietf:params:scim:schemas:core:2.0:Group")
+      end
+
+      it "returns group with members" do
+        get "/scim/Groups/get-group-456", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["id"]).to eq("get-group-456")
+        expect(json_response["displayName"]).to eq("Engineering Team")
+        expect(json_response["members"]).to be_an(Array)
+        expect(json_response["members"].size).to eq(2)
+      end
+
+      it "includes meta with resourceType" do
+        get "/scim/Groups/get-group-456", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["meta"]["resourceType"]).to eq("Groups")
+      end
+    end
+
+    context "when group does not exist" do
+      it "returns 404 Not Found" do
+        get "/scim/Groups/nonexistent-group", headers: headers
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  # ========== GET /scim/Departments/:id (Retrieve Single Department) ==========
+  describe "GET /scim/Departments/:id" do
+    let!(:department) do
+      create_scim_group(
+        scim_id: "dept-789",
+        display_name: "Sales Department",
+        resource_type: "Departments"
+      )
+    end
+
+    it "returns department with correct resource_type in meta" do
+      get "/scim/Departments/dept-789", headers: headers
+
+      expect(response).to have_http_status(:ok)
+      json_response = JSON.parse(response.body)
+      expect(json_response["meta"]["resourceType"]).to eq("Departments")
+    end
+  end
+
+  # ========== GET /scim/Users (List Users with RFC 7644 ListResponse) ==========
+  describe "GET /scim/Users" do
+    let!(:user1) { create_scim_user(scim_id: "list-user-1", display_name: "Alice Anderson") }
+    let!(:user2) { create_scim_user(scim_id: "list-user-2", display_name: "Bob Brown") }
+    let!(:user3) { create_scim_user(scim_id: "list-user-3", display_name: "Charlie Chen") }
+
+    context "without query parameters" do
+      it "returns 200 OK" do
+        get "/scim/Users", headers: headers
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "returns RFC 7644 ListResponse format" do
+        get "/scim/Users", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["schemas"]).to include("urn:ietf:params:scim:api:messages:2.0:ListResponse")
+        expect(json_response).to have_key("totalResults")
+        expect(json_response).to have_key("startIndex")
+        expect(json_response).to have_key("itemsPerPage")
+        expect(json_response).to have_key("Resources")
+      end
+
+      it "returns all users in Resources array" do
+        get "/scim/Users", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["totalResults"]).to eq(3)
+        expect(json_response["Resources"]).to be_an(Array)
+        expect(json_response["Resources"].size).to eq(3)
+      end
+
+      it "returns users with full SCIM representation" do
+        get "/scim/Users", headers: headers
+
+        json_response = JSON.parse(response.body)
+        first_user = json_response["Resources"].first
+        expect(first_user["schemas"]).to include("urn:ietf:params:scim:schemas:core:2.0:User")
+        expect(first_user["id"]).to be_present
+        expect(first_user["displayName"]).to be_present
+        expect(first_user["meta"]).to be_present
+      end
+
+      it "defaults startIndex to 1" do
+        get "/scim/Users", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["startIndex"]).to eq(1)
+      end
+
+      it "does not publish domain events (read-only)" do
+        get "/scim/Users", headers: headers
+
+        expect(published_events).to be_empty
+      end
+    end
+
+    context "with pagination parameters" do
+      it "respects count parameter" do
+        get "/scim/Users?count=2", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["totalResults"]).to eq(3)
+        expect(json_response["itemsPerPage"]).to eq(2)
+        expect(json_response["Resources"].size).to eq(2)
+      end
+
+      it "respects startIndex parameter (1-based)" do
+        get "/scim/Users?startIndex=2&count=2", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["startIndex"]).to eq(2)
+        expect(json_response["Resources"].size).to eq(2)
+        # Should skip first user
+        expect(json_response["Resources"].map { |u| u["id"] }).not_to include("list-user-1")
+      end
+
+      it "handles startIndex beyond results" do
+        get "/scim/Users?startIndex=100", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["totalResults"]).to eq(3)
+        expect(json_response["Resources"]).to eq([])
+        expect(json_response["itemsPerPage"]).to eq(0)
+      end
+
+      it "enforces maximum count limit" do
+        get "/scim/Users?count=10000", headers: headers
+
+        json_response = JSON.parse(response.body)
+        # Should cap at maximum (1000)
+        expect(json_response["itemsPerPage"]).to be <= 1000
+      end
+    end
+
+    context "with query filter parameter" do
+      it "filters by display_name substring match" do
+        get "/scim/Users?query=Alice", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["totalResults"]).to eq(1)
+        expect(json_response["Resources"].first["displayName"]).to eq("Alice Anderson")
+      end
+
+      it "is case-insensitive" do
+        get "/scim/Users?query=alice", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["totalResults"]).to eq(1)
+      end
+
+      it "returns empty array when no matches" do
+        get "/scim/Users?query=Nonexistent", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["totalResults"]).to eq(0)
+        expect(json_response["Resources"]).to eq([])
+      end
+
+      it "combines query with pagination" do
+        get "/scim/Users?query=n&count=1", headers: headers
+
+        json_response = JSON.parse(response.body)
+        # Should match "Anderson", "Brown", "Chen" (3 total)
+        expect(json_response["totalResults"]).to eq(3)
+        expect(json_response["itemsPerPage"]).to eq(1)
+        expect(json_response["Resources"].size).to eq(1)
+      end
+    end
+
+    context "with empty results" do
+      before do
+        TwoPercent::ScimUser.delete_all
+      end
+
+      it "returns empty Resources array" do
+        get "/scim/Users", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["totalResults"]).to eq(0)
+        expect(json_response["Resources"]).to eq([])
+        expect(json_response["itemsPerPage"]).to eq(0)
+      end
+
+      it "maintains RFC 7644 format" do
+        get "/scim/Users", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["schemas"]).to include("urn:ietf:params:scim:api:messages:2.0:ListResponse")
+      end
+    end
+  end
+
+  # ========== GET /scim/Groups (List Groups with RFC 7644 ListResponse) ==========
+  describe "GET /scim/Groups" do
+    let!(:group1) { create_scim_group(scim_id: "list-group-1", display_name: "Engineering", resource_type: "Groups") }
+    let!(:group2) { create_scim_group(scim_id: "list-group-2", display_name: "Marketing", resource_type: "Groups") }
+
+    it "returns RFC 7644 ListResponse format" do
+      get "/scim/Groups", headers: headers
+
+      json_response = JSON.parse(response.body)
+      expect(json_response["schemas"]).to include("urn:ietf:params:scim:api:messages:2.0:ListResponse")
+      expect(json_response["totalResults"]).to eq(2)
+      expect(json_response["Resources"]).to be_an(Array)
+    end
+
+    it "filters by query parameter" do
+      get "/scim/Groups?query=Engineer", headers: headers
+
+      json_response = JSON.parse(response.body)
+      expect(json_response["totalResults"]).to eq(1)
+      expect(json_response["Resources"].first["displayName"]).to eq("Engineering")
+    end
+  end
+
+  # ========== GET /scim/Departments (List Departments) ==========
+  describe "GET /scim/Departments" do
+    let!(:dept1) { create_scim_group(scim_id: "dept-1", display_name: "Sales", resource_type: "Departments") }
+    let!(:dept2) { create_scim_group(scim_id: "dept-2", display_name: "Support", resource_type: "Departments") }
+    let!(:group) { create_scim_group(scim_id: "other-1", display_name: "Other Group", resource_type: "Groups") }
+
+    it "returns only Departments resource_type" do
+      get "/scim/Departments", headers: headers
+
+      json_response = JSON.parse(response.body)
+      expect(json_response["totalResults"]).to eq(2)
+      json_response["Resources"].each do |resource|
+        expect(resource["meta"]["resourceType"]).to eq("Departments")
+      end
+    end
+
+    it "does not include other resource types" do
+      get "/scim/Departments", headers: headers
+
+      json_response = JSON.parse(response.body)
+      resource_ids = json_response["Resources"].map { |r| r["id"] }
+      expect(resource_ids).not_to include("other-1")
+    end
+  end
+
+  # ========== GET /scim/Territories (List Territories) ==========
+  describe "GET /scim/Territories" do
+    let!(:territory) { create_scim_group(scim_id: "terr-1", display_name: "Northeast", resource_type: "Territories") }
+
+    it "returns only Territories resource_type" do
+      get "/scim/Territories", headers: headers
+
+      json_response = JSON.parse(response.body)
+      expect(json_response["totalResults"]).to eq(1)
+      expect(json_response["Resources"].first["meta"]["resourceType"]).to eq("Territories")
+    end
+  end
+
   # Test helpers
   def create_scim_user(attributes = {})
     scim_id = attributes[:scim_id] || "user-#{SecureRandom.hex(4)}"
