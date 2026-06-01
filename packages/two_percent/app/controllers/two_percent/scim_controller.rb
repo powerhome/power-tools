@@ -285,8 +285,6 @@ module TwoPercent
       }
     end
 
-    # Dynamic dispatch helpers
-
     def model_class
       user_resource? ? TwoPercent::ScimUser : TwoPercent::ScimGroup
     end
