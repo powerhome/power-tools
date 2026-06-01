@@ -52,12 +52,7 @@ module TwoPercent
       log_scim_operation("replace", "start")
 
       # Upsert record (create or replace)
-      was_new =
-        if user_resource?
-          !TwoPercent::ScimUser.exists_by_scim_id?(params[:id])
-        else
-          !TwoPercent::ScimGroup.exists_by_scim_id?(params[:id])
-        end
+      was_new = !model_class.exists_by_scim_id?(params[:id])
 
       record = upsert_scim_record(params[:id], scim_params)
 
@@ -90,11 +85,7 @@ module TwoPercent
       scim_id = record.scim_id
 
       # Destroy record
-      if user_resource?
-        TwoPercent::ScimUser.destroy_by_scim_id(scim_id)
-      else
-        TwoPercent::ScimGroup.destroy_by_scim_id(scim_id)
-      end
+      model_class.destroy_by_scim_id(scim_id)
 
       # Publish domain delete event
       publish_deleted_event(scim_id)
@@ -169,17 +160,8 @@ module TwoPercent
     end
 
     def find_scim_record(scim_id)
-      record =
-        if user_resource?
-          TwoPercent::ScimUser.find_by_scim_id(scim_id)
-        elsif group_resource?
-          TwoPercent::ScimGroup.find_by_scim_id(scim_id)
-        else
-          raise ArgumentError, "Unknown resource type: #{params[:resource_type]}"
-        end
-
+      record = model_class.find_by_scim_id(scim_id)
       raise ActiveRecord::RecordNotFound, "Resource \"#{scim_id}\" not found" unless record
-
       record
     end
 
@@ -256,18 +238,14 @@ module TwoPercent
 
     # Reload record with associations (users load groups, groups load members)
     def reload_with_members(record)
-      if user_resource?
-        TwoPercent::ScimUser.includes(:scim_groups).find(record.id)
-      else
-        TwoPercent::ScimGroup.includes(:scim_users).find(record.id)
-      end
+      model_class.includes(association_name).find(record.id)
     end
 
     # Index action helpers
 
     # Build base query scope with optional filtering
     def build_query_scope
-      base_scope = user_resource? ? TwoPercent::ScimUser.all : TwoPercent::ScimGroup.where(resource_type: params[:resource_type])
+      base_scope = user_resource? ? model_class.all : model_class.where(resource_type: params[:resource_type])
 
       return base_scope unless params[:query].present?
 
@@ -291,11 +269,7 @@ module TwoPercent
 
     # Load records with associations
     def load_records_with_associations(scope)
-      if user_resource?
-        scope.includes(:scim_groups).to_a
-      else
-        scope.includes(:scim_users).to_a
-      end
+      scope.includes(association_name).to_a
     end
 
     # Build RFC 7644 ListResponse format
@@ -309,6 +283,16 @@ module TwoPercent
         itemsPerPage: records.size,
         Resources: records.map(&:to_scim_representation),
       }
+    end
+
+    # Dynamic dispatch helpers
+
+    def model_class
+      user_resource? ? TwoPercent::ScimUser : TwoPercent::ScimGroup
+    end
+
+    def association_name
+      user_resource? ? :scim_groups : :scim_users
     end
   end
 end
