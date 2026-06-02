@@ -23,7 +23,7 @@ RSpec.describe "DataTaster SQL file export", type: :integration do
   end
 
   describe "dump file content" do
-    it "writes INSERT and sanitizer UPDATE with quoted table" do
+    it "writes masked INSERTs with quoted table, no sanitizer UPDATEs, and does not mutate the source" do
       count_before = source_db_client.query("SELECT COUNT(*) AS cnt FROM users").first["cnt"]
 
       DataTaster.sample!
@@ -41,13 +41,16 @@ RSpec.describe "DataTaster SQL file export", type: :integration do
 
       quoted_dump_db = "`#{dump_db_name.gsub('`', '``')}`"
       expect(sql).to include("INSERT INTO `users`")
-      expect(sql).not_to include("#{quoted_dump_db}.`users`")
+      expect(sql).not_to include("INSERT INTO #{quoted_dump_db}.`users`")
 
-      expect(sql).to match(/UPDATE `users` SET/)
+      expect(sql).not_to match(/UPDATE `users` SET/)
       expect(sql).not_to include("UPDATE #{dump_db_name}.users")
 
-      expect(sql).to include("CONCAT('users_', id, '@nitrophrg.com')")
-      expect(sql).to include("test@example.com")
+      expect(sql).to include("CONCAT('users_', 1, '@nitrophrg.com')")
+      expect(sql).not_to include("test@example.com")
+      expect(sql).not_to include("test2@example.com")
+      expect(sql).not_to include("123-45-6789")
+      expect(sql).not_to include("Private notes")
     end
   end
 end

@@ -16,6 +16,41 @@ RSpec.describe DataTaster::Sanitizer do
     allow(DataTaster).to receive(:confection).and_return(confection_stub)
   end
 
+  describe "#sanitization_rules" do
+    context "when table is skippable" do
+      it "returns an empty hash when confection is blank" do
+        stub_config
+        allow(confection_stub).to receive(:[]).with("users").and_return(nil)
+
+        expect(described_class.new("users", {}).sanitization_rules).to eq({})
+      end
+    end
+
+    context "when table is not skippable" do
+      before do
+        allow(confection_stub).to receive(:[]).with("users").and_return("some_config")
+      end
+
+      it "returns column names mapped to sanitization specs" do
+        stub_config
+
+        rules = described_class.new("users", {}).sanitization_rules
+
+        expect(rules).to be_a(Hash)
+        expect(rules["email"]).to include("CONCAT")
+        expect(rules["encrypted_password"]).to eq("")
+      end
+
+      it "omits columns whose value is skip code" do
+        stub_config
+        rules = described_class.new("users", { "ssn" => DataTaster::SKIP_CODE }).sanitization_rules
+
+        expect(rules).not_to have_key("ssn")
+        expect(rules).to have_key("encrypted_password")
+      end
+    end
+  end
+
   describe "#update_sql_statements" do
     context "when table is skippable" do
       it "returns an empty array when confection is blank" do

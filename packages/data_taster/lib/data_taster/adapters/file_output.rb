@@ -10,7 +10,7 @@ module DataTaster
       start_export
 
       process_export
-      
+
       finish_export
     end
 
@@ -19,7 +19,7 @@ module DataTaster
     end
 
     def qualified_table_name(table_name)
-      "`#{table_name.to_s.gsub('`', '``')}`"
+      DataTaster::ExportContext.quote_ident(table_name)
     end
 
     def write_statement(sql)
@@ -54,9 +54,14 @@ module DataTaster
       payload = collection.assemble
       return if payload.empty?
 
-      safe_table_name = quote_ident(table_name)
-      export_data(collection, safe_table_name)
-      sanitize_data(table_name, payload[:sanitize])
+      @export_context = DataTaster::ExportContext.new(table_name, payload[:sanitize])
+
+      query_result = source.query(collection.export_select_sql)
+
+      columns = query_result.fields
+      return if columns.empty?
+
+      process_export_in_batches(columns, query_result)
     end
 
     def table_names
@@ -67,48 +72,26 @@ module DataTaster
       DataTaster.config.source
     end
 
-    def export_data(collection, safe_table_name)
-      result = source.query(collection.export_select_sql)
-
-      columns = result.fields
-      return if columns.empty?
-
-      process_export_in_batches(columns, result, safe_table_name)
-    end
-
-    def sanitize_data(table_name, sanitize)
-      DataTaster::Sanitizer.new(table_name, sanitize).update_sql_statements.each do |stmt|
-        write_statement(stmt)
-      end
-    end
-
-    def process_export_in_batches(columns, result, safe_table_name)
+    def process_export_in_batches(columns, query_result)
       batch = []
-      result.each do |row|
+      query_result.each do |row|
         batch << row
         if batch.size >= BATCH_SIZE
-          write_export_batch(columns, batch, safe_table_name)
+          write_export_batch(columns, batch)
           batch.clear
         end
       end
-      write_export_batch(columns, batch, safe_table_name) if batch.any?
+      write_export_batch(columns, batch) if batch.any?
     end
 
-    def write_export_batch(columns, rows, safe_table_name)
-      return if rows.empty?
+    def write_export_batch(columns, batches)
+      return if batches.empty?
 
-      col_list = columns.map { |c| quote_ident(c) }.join(", ")
-      tuples = rows.map { |row| format_row_tuple(columns, row) }
-      write_raw("INSERT INTO #{safe_table_name} (#{col_list}) VALUES")
+      client = source.client
+      col_list = columns.map { |c| DataTaster::ExportContext.quote_ident(c) }.join(", ")
+      tuples = batches.map { |batch| @export_context.format_row_tuple(columns, batch, client) }
+      write_raw("INSERT INTO #{@export_context.safe_table_name} (#{col_list}) VALUES")
       write_raw("#{tuples.join(",\n")};")
-    end
-
-    def format_row_tuple(columns, row)
-      "(#{columns.map { |c| DataTaster::SqlLiteral.format(source.client, row[c]) }.join(', ')})"
-    end
-
-    def quote_ident(name)
-      "`#{name.to_s.gsub('`', '``')}`"
     end
   end
 end

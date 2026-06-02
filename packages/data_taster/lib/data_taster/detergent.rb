@@ -30,6 +30,18 @@ module DataTaster
       sql
     end
 
+    def insert_value_expression(row, client)
+      return DataTaster::SKIP_CODE if value == DataTaster::SKIP_CODE
+
+      if sanitize_function?
+        DataTaster::DetergentRowInterpolator.substitute(value.to_s, row, client)
+      elsif value.blank?
+        "NULL"
+      else
+        SqlLiteral.format(client, value)
+      end
+    end
+
   private
 
     attr_reader :table_name, :column_name, :value

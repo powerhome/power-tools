@@ -57,7 +57,7 @@ RSpec.describe DataTaster::FileOutput do
     let(:rows) do
       [
         { "id" => 1, "email" => "a@example.com" },
-        { "id" => 2, "email" => "b@example.com" }
+        { "id" => 2, "email" => "b@example.com" },
       ]
     end
     let(:query_result) do
@@ -70,9 +70,6 @@ RSpec.describe DataTaster::FileOutput do
     before do
       allow(DataTaster).to receive(:confection).and_return({ "users" => "1 = 1" })
       allow(source).to receive(:query).and_return(query_result)
-      allow(DataTaster::Sanitizer).to receive(:new).and_return(
-        instance_double(DataTaster::Sanitizer, update_sql_statements: [])
-      )
 
       DataTaster.setup(
         source: source,
@@ -81,14 +78,17 @@ RSpec.describe DataTaster::FileOutput do
       )
     end
 
-    it "writes batched INSERT statements for exported rows" do
+    it "writes batched INSERT statements with masked sensitive columns" do
       output.sample!
 
       sql = File.read(export_path)
       expect(sql).to start_with("SET FOREIGN_KEY_CHECKS=0;\n")
       expect(sql).to include("INSERT INTO `users` (`id`, `email`) VALUES")
-      expect(sql).to include("'a@example.com'")
-      expect(sql).to include("'b@example.com'")
+      expect(sql).to include("CONCAT('users_', 1, '@nitrophrg.com')")
+      expect(sql).to include("CONCAT('users_', 2, '@nitrophrg.com')")
+      expect(sql).not_to include("'a@example.com'")
+      expect(sql).not_to include("'b@example.com'")
+      expect(sql).not_to match(/UPDATE `users` SET/)
       expect(sql).to end_with("SET FOREIGN_KEY_CHECKS=1;\n")
     end
 

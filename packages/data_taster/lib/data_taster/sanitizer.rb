@@ -35,6 +35,16 @@ module DataTaster
       end
     end
 
+    def sanitization_rules
+      return {} if skippable_table?
+
+      default_selections.merge(custom_selections).each_with_object({}) do |(column_name, sanitized_value), memo|
+        next if sanitized_value == DataTaster::SKIP_CODE
+
+        memo[column_name.to_s] = sanitized_value
+      end
+    end
+
   private
 
     attr_reader :table_name, :custom_selections

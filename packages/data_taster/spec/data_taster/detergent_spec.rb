@@ -20,6 +20,42 @@ RSpec.describe DataTaster::Detergent do
     allow(DataTaster).to receive(:logger).and_return(double("logger", info: nil))
   end
 
+  describe "#insert_value_expression" do
+    let(:client) { double("client") }
+
+    before do
+      allow(client).to receive(:escape) { |s| s }
+    end
+
+    it "returns a literal SQL string for plain masked values" do
+      detergent = described_class.new("users", "ssn", "111111111")
+      row = { "id" => 1, "ssn" => "123-45-6789" }
+
+      expect(detergent.insert_value_expression(row, client)).to eq("'111111111'")
+    end
+
+    it "substitutes row identifiers inside function expressions" do
+      detergent = described_class.new("users", "email", "CONCAT('users_', id, '@nitrophrg.com')")
+      row = { "id" => 1, "email" => "secret@example.com" }
+
+      expect(detergent.insert_value_expression(row, client)).to eq("CONCAT('users_', 1, '@nitrophrg.com')")
+    end
+
+    it "returns NULL for blank replacement values" do
+      detergent = described_class.new("users", "encrypted_password", "")
+      row = { "id" => 1, "encrypted_password" => "x" }
+
+      expect(detergent.insert_value_expression(row, client)).to eq("NULL")
+    end
+
+    it "returns skip code when value is skip code" do
+      detergent = described_class.new("users", "email", DataTaster::SKIP_CODE)
+      row = { "id" => 1 }
+
+      expect(detergent.insert_value_expression(row, client)).to eq(DataTaster::SKIP_CODE)
+    end
+  end
+
   describe "#deliver" do
     it "generates SQL for string values" do
       detergent = described_class.new("users", "email", "test@example.com")
