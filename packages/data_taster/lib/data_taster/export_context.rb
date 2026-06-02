@@ -17,7 +17,7 @@ module DataTaster
     def format_row_tuple(columns, row, client)
       frags = columns.map do |col|
         col_key = col.to_s
-        if @rules.key?(col_key)
+        if @rules.key?(col_key) # the colunm has a sanitization rule
           DataTaster::Detergent.new(@table_name, col_key, @rules[col_key])
             .insert_value_expression(row, client)
         else

@@ -38,7 +38,7 @@ module DataTaster
       elsif value.blank?
         "NULL"
       else
-        SqlLiteral.format(client, value)
+        DataTaster::SqlLiteral.format(client, value)
       end
     end
 
