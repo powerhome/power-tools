@@ -7,7 +7,6 @@ module DataTaster
   autoload :Confection, "data_taster/confection"
   autoload :DatabaseOutput, "data_taster/adapters/database_output"
   autoload :Detergent, "data_taster/detergent"
-  autoload :DetergentRowInterpolator, "data_taster/detergent_row_interpolator"
   autoload :ExportContext, "data_taster/export_context"
   autoload :FileOutput, "data_taster/adapters/file_output"
   autoload :Helper, "data_taster/helper"

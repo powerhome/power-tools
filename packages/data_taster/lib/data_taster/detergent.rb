@@ -34,7 +34,7 @@ module DataTaster
       return DataTaster::SKIP_CODE if value == DataTaster::SKIP_CODE
 
       if sanitize_function?
-        DataTaster::DetergentRowInterpolator.replace_values(value.to_s, row, client)
+        wash_values(value.to_s, row, client)
       elsif value.blank?
         "NULL"
       else
@@ -45,6 +45,18 @@ module DataTaster
   private
 
     attr_reader :table_name, :column_name, :value
+
+    def wash_values(expression, row, client)
+      result = expression.dup
+      identifiers = row.keys.map(&:to_s).grep(/\A[a-zA-Z_][a-zA-Z0-9_]*\z/)
+      identifiers.sort_by! { |k| -k.size }
+      identifiers.each do |key|
+        next unless result.match?(/\b#{Regexp.escape(key)}\b/)
+
+        result.gsub!(/\b#{Regexp.escape(key)}\b/, SqlLiteral.format(client, row[key]))
+      end
+      result
+    end
 
     def parse_value(given_value)
       # yml files can't hold custom-set dates, they have to be converted to strings

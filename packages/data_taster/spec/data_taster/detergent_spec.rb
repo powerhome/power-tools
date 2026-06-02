@@ -19,6 +19,25 @@ RSpec.describe DataTaster::Detergent do
     allow(DataTaster).to receive(:logger).and_return(double("logger", info: nil))
   end
 
+  describe "#wash_values" do
+    let(:client) { double("client", escape: ->(s) { s }) }
+    let(:detergent) { described_class.new("users", "email", "CONCAT(id)") }
+
+    it "replaces longer identifier names before shorter ones" do
+      row = { "id" => 1, "identity" => 99 }
+      expression = "CONCAT(id, '-', identity)"
+
+      expect(detergent.send(:wash_values, expression, row, client)).to eq("CONCAT(1, '-', 99)")
+    end
+
+    it "leaves non-identifier tokens unchanged" do
+      row = { "id" => 5 }
+      expression = "CONCAT('users_', id, '@nitrophrg.com')"
+
+      expect(detergent.send(:wash_values, expression, row, client)).to eq("CONCAT('users_', 5, '@nitrophrg.com')")
+    end
+  end
+
   describe "#insert_value_expression" do
     let(:client) { double("client") }
 
