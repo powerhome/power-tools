@@ -103,10 +103,6 @@ module DataTaster
       SQL
     end
 
-    def target_database
-      DataTaster.target_database
-    end
-
     def qualified_table_name
       DataTaster.config.output.qualified_table_name(table_name)
     end

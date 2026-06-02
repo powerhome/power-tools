@@ -1,15 +1,24 @@
 # frozen_string_literal: true
 
-require "rake"
+require "mysql2"
 
 RSpec.configure do |config|
   config.before(:suite) do
-    # Create the databases
-    Rails.application.load_tasks
-    Rake::Task["db:drop"].invoke
-    Rake::Task["db:create"].invoke
+    ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).each do |db_config|
+      hash = db_config.configuration_hash
+      client = Mysql2::Client.new(
+        host: hash[:host],
+        username: hash[:username],
+        password: hash[:password],
+        port: hash[:port]
+      )
+      client.query("DROP DATABASE IF EXISTS `#{hash[:database]}`")
+      client.query("CREATE DATABASE `#{hash[:database]}`")
+      client.close
+    end
 
-    # Load the schema
+    ActiveRecord::Base.connection_handler.clear_all_connections!
+
     load Rails.root.join("db", "schema.rb")
     load Rails.root.join("db", "test_dump_schema.rb")
   end
