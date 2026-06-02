@@ -2,18 +2,18 @@
 
 module DataTaster
   class MysqlSource
-    attr_reader :client
+    attr_reader :source_client
 
-    def initialize(client:)
-      @client = client
+    def initialize(source_client:)
+      @source_client = source_client
     end
 
     def query(sql)
-      client.query(sql)
+      source_client.query(sql)
     end
 
     def database
-      client.query_options[:database]
+      source_client.query_options[:database]
     end
 
     def table_names

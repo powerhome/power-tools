@@ -53,7 +53,7 @@ RSpec.describe DataTaster::FileOutput do
   end
 
   describe "#sample!" do
-    let(:source) { instance_double(DataTaster::MysqlSource, client: source_db_client, database: source_db_name) }
+    let(:source) { instance_double(DataTaster::MysqlSource, source_client: source_db_client, database: source_db_name) }
     let(:rows) do
       [
         { "id" => 1, "email" => "a@example.com" },
@@ -102,7 +102,7 @@ RSpec.describe DataTaster::FileOutput do
     end
 
     context "when more rows than BATCH_SIZE" do
-      let(:rows) { Array.new(described_class::BATCH_SIZE + 1) { |i| { "id" => i } } }
+      let(:rows) { Array.new(DataTaster::Sanitizer::BATCH_SIZE + 1) { |i| { "id" => i } } }
       let(:query_result) do
         result = instance_double("Mysql2::Result")
         allow(result).to receive(:fields).and_return(["id"])

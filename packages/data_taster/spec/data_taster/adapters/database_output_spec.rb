@@ -5,9 +5,9 @@ require "spec_helper"
 RSpec.describe DataTaster::DatabaseOutput do
   include DatabaseHelper
 
-  subject(:output) { described_class.new(client: client) }
+  subject(:output) { described_class.new(target_client: target_client) }
 
-  let(:client) { dump_db_client }
+  let(:target_client) { dump_db_client }
 
   describe "#export_mode" do
     it "is database export" do
@@ -29,7 +29,7 @@ RSpec.describe DataTaster::DatabaseOutput do
 
   describe "#write_statement" do
     it "runs SQL through safe_execute" do
-      expect(DataTaster).to receive(:safe_execute).with("SELECT 1", client)
+      expect(output).to receive(:safe_execute).with("SELECT 1").and_call_original
 
       output.write_statement("SELECT 1")
     end
@@ -43,40 +43,53 @@ RSpec.describe DataTaster::DatabaseOutput do
     end
   end
 
-  describe "#export_table" do
+  describe "#import_table" do
     let(:collection) { instance_double(DataTaster::Collection, assemble: payload) }
 
     context "when the table is skipped" do
       let(:payload) { {} }
 
       it "drops the table" do
-        expect(DataTaster).to receive(:safe_execute).with("DROP TABLE IF EXISTS users", client)
+        expect(output).to receive(:safe_execute)
+          .with("DROP TABLE IF EXISTS #{dump_db_name}.users")
+          .and_call_original
 
-        output.export_table(collection, "users")
+        output.import_table(collection, "users")
       end
     end
 
     context "when the table has export data" do
       let(:payload) { { select: "SELECT 1", sanitize: { "email" => "x@example.com" } } }
-      let(:sanitizer) { instance_double(DataTaster::Sanitizer, clean!: nil) }
+      let(:query_result) do
+        result = instance_double("Mysql2::Result")
+        allow(result).to receive(:fields).and_return(%w[id email])
+        allow(result).to receive(:each) { |&block| [{ "id" => 1, "email" => "a@example.com" }].each(&block) }
+        result
+      end
 
-      it "truncates, copies data, and sanitizes" do
-        expect(DataTaster).to receive(:safe_execute)
-          .with("TRUNCATE TABLE #{dump_db_name}.users", client)
-        expect(DataTaster).to receive(:safe_execute).with("SELECT 1", client)
-        expect(DataTaster::Sanitizer).to receive(:new)
-          .with("users", payload[:sanitize])
-          .and_return(sanitizer)
-        expect(sanitizer).to receive(:clean!)
+      before do
+        configure_data_taster
+        allow(DataTaster).to receive(:confection).and_return({ "users" => "1 = 1" })
+        allow(collection).to receive(:export_select_sql).and_return("SELECT * FROM source.users WHERE 1 = 1")
+        allow(DataTaster.config.source).to receive(:query).and_return(query_result)
+      end
 
-        output.export_table(collection, "users")
+      it "truncates and inserts sanitized rows" do
+        allow(output).to receive(:safe_execute).and_call_original
+        expect(output).to receive(:safe_execute).with("TRUNCATE TABLE #{dump_db_name}.users").ordered
+        expect(output).to receive(:safe_execute) do |sql|
+          expect(sql).to include("INSERT INTO `#{dump_db_name}`.`users` (`id`, `email`) VALUES")
+          expect(sql).to include("'x@example.com'")
+        end.ordered
+
+        output.import_table(collection, "users")
       end
     end
   end
 
   describe "#sample!" do
     it "delegates table discovery to the source" do
-      source = DataTaster::MysqlSource.new(client: source_db_client)
+      source = DataTaster::MysqlSource.new(source_client: source_db_client)
       allow(DataTaster).to receive(:config).and_return(
         Struct.new(:source).new(source)
       )
@@ -84,7 +97,7 @@ RSpec.describe DataTaster::DatabaseOutput do
       allow(DataTaster::Collection).to receive(:new).and_return(
         instance_double(DataTaster::Collection, assemble: {})
       )
-      expect(DataTaster).to receive(:safe_execute)
+      expect(output).to receive(:safe_execute).and_call_original
 
       output.sample!
     end
@@ -95,9 +108,7 @@ RSpec.describe DataTaster::DatabaseOutput do
       it "exports configured tables to the dump database" do
         setup_source_data
 
-        expect(DataTaster).to receive(:safe_execute).at_least(:once).and_call_original
-
-        DataTaster.config.output.sample!
+        expect { DataTaster.config.output.sample! }.not_to raise_error
       end
     end
   end

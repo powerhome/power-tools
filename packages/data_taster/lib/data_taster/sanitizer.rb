@@ -2,6 +2,8 @@
 
 module DataTaster
   class Sanitizer
+    BATCH_SIZE = 100
+
     # Ensures the given tables are cleaned of
     # information deemed sensitive
     def initialize(table_name, custom_selections)
@@ -32,9 +34,47 @@ module DataTaster
       end
     end
 
+    def export_sanitized_rows(collection, insert_table_name:, &write_insert)
+      @export_context = ExportContext.new(table_name, custom_selections, insert_table_name: insert_table_name)
+      query_result = export_source.query(collection.export_select_sql)
+
+      columns = query_result.fields
+      return if columns.empty?
+
+      process_export_in_batches(columns, query_result, &write_insert)
+    end
+
   private
 
     attr_reader :table_name, :custom_selections
+
+    def process_export_in_batches(columns, query_result, &write_insert)
+      batch = []
+      query_result.each do |row|
+        batch << row
+        if batch.size >= BATCH_SIZE
+          write_export_batch(columns, batch, &write_insert)
+          batch.clear
+        end
+      end
+      write_export_batch(columns, batch, &write_insert) if batch.any?
+    end
+
+    def write_export_batch(columns, rows, &write_insert)
+      return if rows.empty?
+
+      client = export_source.source_client
+      col_list = columns.map { |c| ExportContext.quote_ident(c) }.join(", ")
+      tuples = rows.map { |row| @export_context.format_row_tuple(columns, row, client) }
+      header = "INSERT INTO #{@export_context.insert_table_name} (#{col_list}) VALUES"
+      values = tuples.join(",\n")
+
+      write_insert.call(header, values)
+    end
+
+    def export_source
+      DataTaster.config.source
+    end
 
     def process(sql)
       return if sql == DataTaster::SKIP_CODE

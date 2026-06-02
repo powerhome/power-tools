@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+- Database export now inserts sanitized row values via `Sanitizer#export_sanitized_rows` (same path as SQL file export) instead of copying raw data and running UPDATE statements
+- Rename `DatabaseOutput#client` to `target_client` and `MysqlSource#client` to `source_client`
+- Move `DataTaster.safe_execute` to private `DatabaseOutput#safe_execute`
+- Remove `DataTaster.target_database`; use `DataTaster.config.output.target_database` instead
 - Update rainbow to v3.x [#372](https://github.com/powerhome/power-tools/pull/372)
 - Update yard to 0.9.38 to address [Cross-site Scripting vulnerability](https://github.com/powerhome/power-tools/security/dependabot/544) [#394](https://github.com/powerhome/power-tools/pull/394)
 - Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)

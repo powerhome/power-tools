@@ -27,6 +27,11 @@ RSpec.configure do |config|
     include DatabaseHelper
 
     source_db_client.query("TRUNCATE TABLE users")
-    dump_db_client.query("TRUNCATE TABLE users")
+    begin
+      dump_db_client.query("TRUNCATE TABLE users")
+    rescue Mysql2::Error
+      load Rails.root.join("db", "test_dump_schema.rb")
+      dump_db_client.query("TRUNCATE TABLE users")
+    end
   end
 end

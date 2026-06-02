@@ -23,8 +23,8 @@ private
     }
   end
 
-  def mysql_source(client)
-    DataTaster::MysqlSource.new(client: client)
+  def mysql_source(source_client)
+    DataTaster::MysqlSource.new(source_client: source_client)
   end
 
   def data_taster_output(options)
@@ -34,7 +34,7 @@ private
         target_database: options.fetch(:target_database) { dump_db_name }
       )
     else
-      DataTaster::DatabaseOutput.new(client: options.fetch(:output_client) { dump_db_client })
+      DataTaster::DatabaseOutput.new(target_client: options.fetch(:target_client) { dump_db_client })
     end
   end
 end

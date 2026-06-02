@@ -53,23 +53,6 @@ module DataTaster
     config.output.sample!
   end
 
-  def self.target_database
-    config.output.target_database
-  end
-
-  def self.safe_execute(sql, client = nil)
-    client ||= config.output.client if config.output.respond_to?(:client)
-
-    foreign_key_check = client.query("SELECT @@FOREIGN_KEY_CHECKS").first["@@FOREIGN_KEY_CHECKS"]
-
-    begin
-      client.query("SET FOREIGN_KEY_CHECKS=0")
-      client.query(sql)
-    ensure
-      client.query("SET FOREIGN_KEY_CHECKS=#{foreign_key_check};")
-    end
-  end
-
   def self.default_list
     if defined?(Rails) && Rails.respond_to?(:root)
       Rails.root.glob("**/data_taster_export_tables.yml")

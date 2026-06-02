@@ -16,7 +16,6 @@ RSpec.describe DataTaster::Detergent do
 
   before do
     allow(DataTaster).to receive(:config).and_return(config_stub)
-    allow(DataTaster).to receive(:target_database).and_return("test_db")
     allow(DataTaster).to receive(:logger).and_return(double("logger", info: nil))
   end
 

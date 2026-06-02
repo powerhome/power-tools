@@ -6,13 +6,17 @@ module DataTaster
       "`#{name.to_s.gsub('`', '``')}`"
     end
 
-    def initialize(table_name, sanitize)
+    def initialize(table_name, sanitize, insert_table_name: nil)
       @table_name = table_name
-      @safe_table_name = self.class.quote_ident(table_name)
+      @insert_table_name = insert_table_name || self.class.quote_ident(table_name)
       @rules = DataTaster::Sanitizer.new(table_name, sanitize).sanitization_rules
     end
 
-    attr_reader :safe_table_name
+    attr_reader :insert_table_name
+
+    def safe_table_name
+      insert_table_name
+    end
 
     def format_row_tuple(columns, row, client)
       frags = columns.map do |col|

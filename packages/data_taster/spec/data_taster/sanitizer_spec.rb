@@ -53,10 +53,6 @@ RSpec.describe DataTaster::Sanitizer do
 
   describe "#clean!" do
     context "when table is skippable" do
-      before do
-        allow(DataTaster).to receive(:safe_execute).and_return(true)
-      end
-
       it "returns early when confection is blank" do
         stub_config
         allow(confection_stub).to receive(:[]).with("users").and_return(nil)
@@ -85,8 +81,10 @@ RSpec.describe DataTaster::Sanitizer do
 
       it "executes default sanitization SQL on database export" do
         stub_config
-        expect(DataTaster).to receive(:safe_execute).with(include("UPDATE test_dump.users"),
-                                                          dump_db_client).at_least(:once).and_return(true)
+        expect(DataTaster.config.output).to receive(:write_statement)
+          .with(include("UPDATE test_dump.users"))
+          .at_least(:once)
+          .and_return(true)
         sanitizer = described_class.new("users", {})
 
         sanitizer.clean!
@@ -94,7 +92,7 @@ RSpec.describe DataTaster::Sanitizer do
 
       it "processes custom selections that override defaults" do
         stub_config
-        allow(DataTaster).to receive(:safe_execute).and_return(true)
+        allow(DataTaster.config.output).to receive(:write_statement).and_return(true)
         custom_selections = { "ssn" => "custom_ssn_value" }
         sanitizer = described_class.new("users", custom_selections)
 
@@ -112,7 +110,8 @@ RSpec.describe DataTaster::Sanitizer do
 
       it "handles errors and adds context warning" do
         stub_config
-        allow(DataTaster).to receive(:safe_execute).and_raise(StandardError.new("Database error"))
+        allow(DataTaster.config.output).to receive(:write_statement)
+          .and_raise(StandardError.new("Database error"))
 
         sanitizer = described_class.new("users", {})
 
@@ -124,7 +123,7 @@ RSpec.describe DataTaster::Sanitizer do
 
       it "skips processing when SQL is skip code" do
         stub_config
-        allow(DataTaster).to receive(:safe_execute).and_return(true)
+        allow(DataTaster.config.output).to receive(:write_statement).and_return(true)
         custom_selections = { "ssn" => DataTaster::SKIP_CODE }
         sanitizer = described_class.new("users", custom_selections)
 

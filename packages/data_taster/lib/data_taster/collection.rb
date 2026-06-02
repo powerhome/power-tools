@@ -42,14 +42,7 @@ module DataTaster
     end
 
     def selection
-      insert = insert_into_selection? ? "INSERT INTO #{working_db}.#{table_name}" : ""
-
-      sql = <<-SQL.squish
-        #{insert}
-        SELECT * FROM #{source_db}.#{table_name}
-        WHERE #{where_clause}
-      SQL
-
+      sql = export_select_sql
       DataTaster.logger.info(sql)
       sql
     end
@@ -69,16 +62,8 @@ module DataTaster
       ingredients["sanitize"]
     end
 
-    def insert_into_selection?
-      DataTaster.config.output.export_mode == :database
-    end
-
     def source_db
       @source_db ||= DataTaster.config.source.database
-    end
-
-    def working_db
-      @working_db ||= DataTaster.target_database
     end
   end
 end

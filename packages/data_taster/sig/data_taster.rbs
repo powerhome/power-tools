@@ -8,17 +8,14 @@ module DataTaster
   def self.config: () -> Config
   def self.config=: (Config?) -> void
   def self.sample!: () -> void
-  def self.target_database: () -> String
   def self.reset!: () -> void
   def self.confection: () -> Hash[String, untyped]
   def self.logger: () -> ::Logger
   def self.logger=: (::Logger) -> void
-  def self.safe_execute: (String sql, ?untyped client) -> untyped
-
   class MysqlSource
-    attr_reader client: untyped
+    attr_reader source_client: untyped
 
-    def initialize: (client: untyped) -> void
+    def initialize: (source_client: untyped) -> void
     def query: (String sql) -> untyped
     def database: () -> String
     def table_names: () -> Array[String]
@@ -35,13 +32,25 @@ module DataTaster
   end
 
   class DatabaseOutput < Output
-    attr_reader client: untyped
+    attr_reader target_client: untyped
 
-    def export_table: (Collection collection, String table_name) -> void
+    def import_table: (Collection collection, String table_name) -> void
+  end
+
+  class ExportContext
+    def self.quote_ident: (String | Symbol name) -> String
+    def initialize: (String table_name, Hash[String, untyped]? sanitize, ?insert_table_name: String?) -> void
+    def insert_table_name: () -> String
+    def safe_table_name: () -> String
+    def format_row_tuple: (Array[String | Symbol] columns, Hash[String, untyped] row, untyped client) -> String
+  end
+
+  class Sanitizer
+    BATCH_SIZE: Integer
+    def export_sanitized_rows: (Collection collection, insert_table_name: String) { (String header, String values) -> void } -> void
   end
 
   class FileOutput < Output
-    BATCH_SIZE: Integer
     attr_reader path: String
     attr_reader target_database: String
   end

@@ -5,7 +5,7 @@ require "spec_helper"
 RSpec.describe DataTaster::MysqlSource do
   include DatabaseHelper
 
-  subject(:source) { described_class.new(client: source_db_client) }
+  subject(:source) { described_class.new(source_client: source_db_client) }
 
   describe "#query" do
     it "delegates to the mysql client" do
