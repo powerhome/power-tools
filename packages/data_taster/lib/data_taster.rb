@@ -12,6 +12,7 @@ module DataTaster
   autoload :Helper, "data_taster/helper"
   autoload :MysqlSource, "data_taster/adapters/mysql_source"
   autoload :Output, "data_taster/adapters/output"
+  autoload :SanitizerExporter, "data_taster/sanitizer_exporter"
   autoload :Sanitizer, "data_taster/sanitizer"
   autoload :SqlLiteral, "data_taster/sql_literal"
 
