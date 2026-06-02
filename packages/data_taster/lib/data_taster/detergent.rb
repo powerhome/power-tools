@@ -34,7 +34,7 @@ module DataTaster
       return DataTaster::SKIP_CODE if value == DataTaster::SKIP_CODE
 
       if sanitize_function?
-        DataTaster::DetergentRowInterpolator.substitute(value.to_s, row, client)
+        DataTaster::DetergentRowInterpolator.replace_values(value.to_s, row, client)
       elsif value.blank?
         "NULL"
       else

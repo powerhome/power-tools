@@ -4,8 +4,7 @@ module DataTaster
   class Sanitizer
     BATCH_SIZE = 100
 
-    # Ensures the given tables are cleaned of
-    # information deemed sensitive
+    # Ensures the given tables are cleaned of information deemed sensitive
     def initialize(table_name, custom_selections)
       @table_name = table_name
       @custom_selections = custom_selections || {}
@@ -60,7 +59,7 @@ module DataTaster
       write_export_batch(columns, batch, &write_insert) if batch.any?
     end
 
-    def write_export_batch(columns, rows, &write_insert)
+    def write_export_batch(columns, rows)
       return if rows.empty?
 
       client = export_source.source_client
@@ -69,7 +68,7 @@ module DataTaster
       header = "INSERT INTO #{@export_context.insert_table_name} (#{col_list}) VALUES"
       values = tuples.join(",\n")
 
-      write_insert.call(header, values)
+      yield(header, values)
     end
 
     def export_source

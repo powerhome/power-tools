@@ -33,7 +33,7 @@ RSpec.describe DataTaster::Detergent do
       expect(detergent.insert_value_expression(row, client)).to eq("'111111111'")
     end
 
-    it "substitutes row identifiers inside function expressions" do
+    it "replaces row identifiers inside function expressions" do
       detergent = described_class.new("users", "email", "CONCAT('users_', id, '@nitrophrg.com')")
       row = { "id" => 1, "email" => "secret@example.com" }
 
