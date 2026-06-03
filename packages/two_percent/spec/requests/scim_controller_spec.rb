@@ -1178,6 +1178,14 @@ RSpec.describe "SCIM API", type: :request do
         expect(json_response["itemsPerPage"]).to eq(1)
         expect(json_response["Resources"].size).to eq(1)
       end
+
+      it "escapes LIKE wildcards in query parameter" do
+        # Verify wildcards are treated as literals, not pattern operators
+        get "/scim/Users?query=#{CGI.escape('_')}", headers: headers
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["totalResults"]).to eq(0) # No matches (not single-char wildcard)
+      end
     end
 
     context "with empty results" do

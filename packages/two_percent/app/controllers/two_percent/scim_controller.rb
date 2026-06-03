@@ -254,8 +254,9 @@ module TwoPercent
 
       return base_scope unless params[:query].present?
 
-      # Apply query filter (display_name substring match, case-insensitive)
-      base_scope.where("LOWER(display_name) LIKE LOWER(?)", "%#{params[:query]}%")
+      # Sanitize LIKE wildcards (%, _, \) before interpolating into pattern
+      sanitized_query = ActiveRecord::Base.sanitize_sql_like(params[:query])
+      base_scope.where("LOWER(display_name) LIKE LOWER(?) ESCAPE '\\'", "%#{sanitized_query}%")
     end
 
     # Apply SCIM pagination (RFC 7644 uses 1-based indexing)
