@@ -10,7 +10,11 @@ module DataTaster
       raise NotImplementedError
     end
 
-    def export_mode
+    def default_data
+      raise NotImplementedError
+    end
+
+    def run_sanitization?
       raise NotImplementedError
     end
 

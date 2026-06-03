@@ -12,8 +12,12 @@ module DataTaster
       finish_export
     end
 
-    def export_mode
-      :file
+    def default_data
+      {}
+    end
+
+    def run_sanitization?
+      false
     end
 
     def qualified_table_name(table_name)

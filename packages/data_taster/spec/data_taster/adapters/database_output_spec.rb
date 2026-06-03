@@ -9,9 +9,15 @@ RSpec.describe DataTaster::DatabaseOutput do
 
   let(:target_client) { dump_db_client }
 
-  describe "#export_mode" do
-    it "is database export" do
-      expect(output.export_mode).to eq(:database)
+  describe "#run_sanitization?" do
+    it "runs post-export UPDATE sanitization" do
+      expect(output.run_sanitization?).to eq(true)
+    end
+  end
+
+  describe "#default_data" do
+    it "includes schema_migrations by default" do
+      expect(output.default_data).to eq({ "schema_migrations" => "1 = 1" })
     end
   end
 

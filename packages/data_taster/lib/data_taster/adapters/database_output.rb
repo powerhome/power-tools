@@ -4,16 +4,20 @@ module DataTaster
   class DatabaseOutput < Output
     attr_reader :target_client
 
-    def export_mode
-      :database
-    end
-
     def sample!
       source = DataTaster.config.source
       table_names(source).each do |table_name|
         collection = DataTaster::Collection.new(table_name)
         import_table(collection, table_name)
       end
+    end
+
+    def run_sanitization?
+      true
+    end
+
+    def default_data
+      { "schema_migrations" => "1 = 1" }
     end
 
     def import_table(collection, table_name)

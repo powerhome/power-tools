@@ -44,7 +44,7 @@ module DataTaster
 
     def process(sql)
       return if sql == DataTaster::SKIP_CODE
-      return sql unless executes_sanitizer?
+      return sql unless output.run_sanitization?
 
       output.write_statement(sql)
       sql
@@ -66,10 +66,6 @@ module DataTaster
 
     def output
       DataTaster.config.output
-    end
-
-    def executes_sanitizer?
-      output.export_mode == :database
     end
 
     def skippable_table?

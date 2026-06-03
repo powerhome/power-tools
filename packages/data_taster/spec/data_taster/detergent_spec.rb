@@ -8,7 +8,7 @@ RSpec.describe DataTaster::Detergent do
     double(
       "output",
       target_database: "test_db",
-      export_mode: :database,
+      run_sanitization?: true,
       qualified_table_name: "test_db.users"
     )
   end
@@ -135,7 +135,7 @@ RSpec.describe DataTaster::Detergent do
         double(
           "output",
           target_database: "test_db",
-          export_mode: :file,
+          run_sanitization?: false,
           qualified_table_name: "`users`"
         )
       end

@@ -15,9 +15,15 @@ RSpec.describe DataTaster::FileOutput do
     DataTaster.reset!
   end
 
-  describe "#export_mode" do
-    it "is file export" do
-      expect(output.export_mode).to eq(:file)
+  describe "#run_sanitization?" do
+    it "does not run post-export UPDATE sanitization" do
+      expect(output.run_sanitization?).to eq(false)
+    end
+  end
+
+  describe "#default_data" do
+    it "does not add default confection entries" do
+      expect(output.default_data).to eq({})
     end
   end
 
