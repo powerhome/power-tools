@@ -62,7 +62,7 @@ graph TD
 
 ## API Endpoints
 
-TwoPercent provides RFC 7644-compliant SCIM 2.0 endpoints for all standard CRUD operations.
+TwoPercent provides SCIM 2.0 endpoints for all standard CRUD operations with RFC 7644 ListResponse format for collection endpoints.
 
 ### Authentication
 
@@ -140,7 +140,7 @@ Authorization: Bearer <token>
 
 ### GET - List/Search Resources
 
-Retrieve multiple resources with optional filtering and pagination. Returns RFC 7644-compliant ListResponse format.
+Retrieve multiple resources with optional filtering and pagination. Returns RFC 7644 ListResponse format with legacy query filtering.
 
 **Request:**
 ```http
