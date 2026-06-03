@@ -3,18 +3,18 @@
 module TwoPercent
   class ScimController < ApplicationController
     def create
-      log_scim_operation("create", "start")
+      record = with_scim_logging("create") do
+        # Persist to two_percent tables first (validates SCIM schema)
+        record = persist_scim_record(scim_params)
 
-      # Persist to two_percent tables first (validates SCIM schema)
-      record = persist_scim_record(scim_params)
+        # Reload with associations for domain event and response
+        record = reload_with_members(record)
 
-      # Reload with associations for domain event and response
-      record = reload_with_members(record)
+        # Publish domain event (not SCIM-specific)
+        publish_created_event(record)
 
-      # Publish domain event (not SCIM-specific)
-      publish_created_event(record)
-
-      log_scim_operation("create", "complete", record.scim_id)
+        record
+      end
 
       # RFC 7644: 201 Created with Location header and resource body
       response.headers["Location"] = scim_resource_url(record)
@@ -22,51 +22,51 @@ module TwoPercent
     end
 
     def update
-      log_scim_operation("update", "start")
+      record = with_scim_logging("update") do
+        # Find existing record
+        record = find_scim_record(params[:id])
 
-      # Find existing record
-      record = find_scim_record(params[:id])
+        # Apply SCIM PATCH operations (RFC 7644 compliance)
+        processor = TwoPercent::Scim::PatchProcessor.new(scim_params)
+        current_scim_data = record.scim_data || {}
+        patched_data = processor.apply_to_hash(current_scim_data)
 
-      # Apply SCIM PATCH operations (RFC 7644 compliance)
-      processor = TwoPercent::Scim::PatchProcessor.new(scim_params)
-      current_scim_data = record.scim_data || {}
-      patched_data = processor.apply_to_hash(current_scim_data)
+        # Persist patched data
+        patched_data["id"] = params[:id] # Ensure ID is present
+        updated_record = persist_scim_record(patched_data)
 
-      # Persist patched data
-      patched_data["id"] = params[:id] # Ensure ID is present
-      updated_record = persist_scim_record(patched_data)
+        # Reload with associations for domain event and response
+        updated_record = reload_with_members(updated_record)
 
-      # Reload with associations for domain event and response
-      updated_record = reload_with_members(updated_record)
+        # Publish domain event with final state
+        publish_updated_event(updated_record)
 
-      # Publish domain event with final state
-      publish_updated_event(updated_record)
-
-      log_scim_operation("update", "complete", record.scim_id)
+        updated_record
+      end
 
       # RFC 7644: 200 OK with updated resource body
-      render json: updated_record.to_scim_representation, status: :ok
+      render json: record.to_scim_representation, status: :ok
     end
 
     def replace
-      log_scim_operation("replace", "start")
-
       # Upsert record (create or replace)
       was_new = !model_class.exists_by_scim_id?(params[:id])
 
-      record = upsert_scim_record(params[:id], scim_params)
+      record = with_scim_logging("replace") do
+        record = upsert_scim_record(params[:id], scim_params)
 
-      # Reload with associations for domain event and response
-      record = reload_with_members(record)
+        # Reload with associations for domain event and response
+        record = reload_with_members(record)
 
-      # Publish appropriate domain event
-      if was_new
-        publish_created_event(record)
-      else
-        publish_updated_event(record)
+        # Publish appropriate domain event
+        if was_new
+          publish_created_event(record)
+        else
+          publish_updated_event(record)
+        end
+
+        record
       end
-
-      log_scim_operation("replace", "complete", record.scim_id)
 
       # RFC 7644: 201 Created (if new) or 200 OK (if replaced)
       if was_new
@@ -78,34 +78,32 @@ module TwoPercent
     end
 
     def destroy
-      log_scim_operation("delete", "start")
+      scim_id = with_scim_logging("delete") do
+        # Find and destroy record
+        record = find_scim_record(params[:id])
+        scim_id = record.scim_id
 
-      # Find and destroy record
-      record = find_scim_record(params[:id])
-      scim_id = record.scim_id
+        # Destroy record
+        model_class.destroy_by_scim_id(scim_id)
 
-      # Destroy record
-      model_class.destroy_by_scim_id(scim_id)
+        # Publish domain delete event
+        publish_deleted_event(scim_id)
 
-      # Publish domain delete event
-      publish_deleted_event(scim_id)
-
-      log_scim_operation("delete", "complete", scim_id)
+        scim_id
+      end
 
       # RFC 7644: 204 No Content
       head :no_content
     end
 
     def show
-      log_scim_operation("get", "start", params[:id])
+      record = with_scim_logging("get") do
+        # Find record (raises RecordNotFound if not exists)
+        record = find_scim_record(params[:id])
 
-      # Find record (raises RecordNotFound if not exists)
-      record = find_scim_record(params[:id])
-
-      # Reload with associations for complete SCIM representation
-      record = reload_with_members(record)
-
-      log_scim_operation("get", "complete", record.scim_id)
+        # Reload with associations for complete SCIM representation
+        reload_with_members(record)
+      end
 
       # RFC 7644: 200 OK with resource body (no domain events for read operations)
       render json: record.to_scim_representation, status: :ok
@@ -170,6 +168,14 @@ module TwoPercent
       # Ensure scim_id is in the hash
       scim_hash_with_id = scim_hash.merge("id" => scim_id)
       persist_scim_record(scim_hash_with_id)
+    end
+
+    def with_scim_logging(operation)
+      log_scim_operation(operation, "start", params[:id])
+      record = yield
+      scim_id = record.respond_to?(:scim_id) ? record.scim_id : record
+      log_scim_operation(operation, "complete", scim_id || params[:id])
+      record
     end
 
     def log_scim_operation(operation, stage, scim_id = nil)
@@ -241,8 +247,6 @@ module TwoPercent
     def reload_with_members(record)
       model_class.includes(association_name).find(record.id)
     end
-
-    # Index action helpers
 
     # Build base query scope with optional filtering
     def build_query_scope
