@@ -906,6 +906,44 @@ RSpec.describe "SCIM API", type: :request do
       expect(response).to have_http_status(:created)
       expect(TwoPercent::ScimGroup.last.resource_type).to eq("Titles")
     end
+
+    context "with unknown resource type" do
+      it "returns 400 Bad Request with error message" do
+        post "/scim/UnknownType", params: valid_payload.to_json, headers: headers
+
+        expect(response).to have_http_status(:bad_request)
+
+        json = JSON.parse(response.body)
+        expect(json["schemas"]).to include("urn:ietf:params:scim:api:messages:2.0:Error")
+        expect(json["detail"]).to eq("Unknown resource type: UnknownType")
+      end
+    end
+
+    context "with custom group_resource_types configuration" do
+      before do
+        @original_config = TwoPercent.config.group_resource_types
+        TwoPercent.config.group_resource_types = %w[Groups Teams]
+      end
+
+      after do
+        TwoPercent.config.group_resource_types = @original_config
+      end
+
+      it "accepts configured resource types" do
+        post "/scim/Teams", params: valid_payload.to_json, headers: headers
+        expect(response).to have_http_status(:created)
+        expect(TwoPercent::ScimGroup.last.resource_type).to eq("Teams")
+      end
+
+      it "rejects non-configured resource types" do
+        post "/scim/Departments", params: valid_payload.to_json, headers: headers
+
+        expect(response).to have_http_status(:bad_request)
+
+        json = JSON.parse(response.body)
+        expect(json["detail"]).to eq("Unknown resource type: Departments")
+      end
+    end
   end
 
   # ========== GET /scim/Users/:id (Retrieve Single User) ==========

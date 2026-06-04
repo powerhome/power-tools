@@ -6,10 +6,13 @@
   - RFC 7644 ListResponse format: `{schemas, totalResults, startIndex, itemsPerPage, Resources}`
   - Legacy query filtering: `?query=` parameter for display_name substring match (case-insensitive)
   - SCIM pagination: `?startIndex=` (1-based) and `?count=` parameters (default: 100, max: 1000)
-  - Supports all resource types: Users, Groups, Departments, Territories, Roles, Titles
+  - Supports all configured resource types (Users + configured group types)
   - Eager loading of associations (users → groups, groups → members)
   - No domain events published for read operations
   - Note: RFC 7644 `filter`, `sortBy`, and `attributes` parameters not yet supported
+- **Configurable Group Resource Types**: `config.group_resource_types` setting
+  - Defaults to `%w[Groups]` (SCIM standard type only)
+  - Configure additional types (e.g., Departments, Territories) in initializer
 
 ## [1.0.0] - 2026-05-20
 

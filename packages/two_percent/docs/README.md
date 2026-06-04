@@ -82,15 +82,15 @@ Per RFC 7644, requests should use `Content-Type: application/scim+json`. For bac
 - `PUT /scim/Users/:id` - Replace user
 - `DELETE /scim/Users/:id` - Delete user
 
-**Groups (and subtypes):**
-- `POST /scim/:resource_type` - Create group (Groups, Departments, Territories, Roles, Titles)
+**Groups:**
+- `POST /scim/:resource_type` - Create group (e.g., `/scim/Groups`)
 - `GET /scim/:resource_type/:id` - Get single group
 - `GET /scim/:resource_type` - List/search groups
 - `PATCH /scim/:resource_type/:id` - Update group
 - `PUT /scim/:resource_type/:id` - Replace group
 - `DELETE /scim/:resource_type/:id` - Delete group
 
-Where `:resource_type` can be: `Groups`, `Departments`, `Territories`, `Roles`, `Titles`
+**Note:** By default, only `Groups` is supported. To enable additional custom resource types, configure them in your initializer (see [Configuration](#configuration)).
 
 ### GET - Single Resource Retrieval
 
@@ -201,11 +201,14 @@ curl -H "Authorization: Bearer <token>" "https://your-app.com/scim/Users?query=j
 # Paginated results
 curl -H "Authorization: Bearer <token>" "https://your-app.com/scim/Users?startIndex=11&count=10"
 
-# Get all departments
-curl -H "Authorization: Bearer <token>" https://your-app.com/scim/Departments
+# Get all groups (works out-of-box)
+curl -H "Authorization: Bearer <token>" https://your-app.com/scim/Groups
 
-# Search territories
-curl -H "Authorization: Bearer <token>" "https://your-app.com/scim/Territories?query=west"
+# Search groups by name
+curl -H "Authorization: Bearer <token>" "https://your-app.com/scim/Groups?query=engineering"
+
+# Custom resource types (requires configuration - see Group Resource Types section)
+curl -H "Authorization: Bearer <token>" https://your-app.com/scim/Departments
 ```
 
 ### POST - Create Resource
@@ -368,7 +371,50 @@ Mount the engine in your parent application's `config/routes.rb`:
 mount TwoPercent::Engine => "/scim"
 ```
 
-Configure authentication in `config/initializers/two_percent.rb`.
+## Configuration
+
+Configure TwoPercent in `config/initializers/two_percent.rb`:
+
+### Authentication
+
+Authentication is required for SCIM endpoints. Configure it using the `authenticate` block:
+
+```ruby
+TwoPercent.configure do |config|
+  config.authenticate = ->(*) do
+    authenticate_with_http_token do |token|
+      Token.active.find_by!(token:)
+    end
+  end
+end
+```
+
+See the [Authenticating SCIM requests](#authenticating-scim-requests) section for more details.
+
+### Group Resource Types
+
+By default, TwoPercent supports only the standard SCIM "Groups" resource type. To enable additional company-specific group types, configure them explicitly:
+
+```ruby
+TwoPercent.configure do |config|
+  # Enable custom group types for your organization
+  config.group_resource_types = %w[Groups Departments Territories]
+end
+```
+
+**Default:** `%w[Groups]`
+
+**What this controls:**
+- Which resource types are accepted at `/scim/:resource_type` endpoints
+- All configured types store data in the same `scim_groups` table with a `resource_type` column
+- Domain events include the `resource_type` to distinguish between group types
+
+**Examples of custom group types:**
+You can define any resource types that fit your organization's structure, such as:
+- `Departments` - Organizational departments
+- `Territories` - Geographic regions or sales territories
+
+All configured types support the full CRUD API (POST/PUT/PATCH/DELETE/GET).
 
 ## Integration
 
@@ -526,15 +572,18 @@ GET /scim/Users/user-123
 
 # List/search resources with pagination and filtering
 GET /scim/Users?query=john&startIndex=1&count=10
+GET /scim/Groups
+GET /scim/Groups?query=engineering
+
+# Custom resource types (requires configuration)
 GET /scim/Departments
-GET /scim/Territories?query=west
 ```
 
 See the [API Endpoints](#api-endpoints) section for full GET endpoint documentation.
 
 **Available Models:**
 - `TwoPercent::ScimUser` - Stores user SCIM data
-- `TwoPercent::ScimGroup` - Stores group SCIM data (departments, territories, roles, etc.)
+- `TwoPercent::ScimGroup` - Stores group SCIM data (Groups and any configured custom types)
 
 ## Authenticating SCIM requests
 

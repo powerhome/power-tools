@@ -144,7 +144,7 @@ module TwoPercent
     end
 
     def group_resource?
-      %w[Groups Departments Territories Roles Titles].include?(params[:resource_type])
+      TwoPercent.config.group_resource_types.include?(params[:resource_type])
     end
 
     def persist_scim_record(scim_hash)
