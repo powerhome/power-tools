@@ -1310,6 +1310,33 @@ RSpec.describe "SCIM API", type: :request do
     end
   end
 
+  # ========== GET with Invalid Resource Types (Validation) ==========
+  describe "GET with invalid resource type" do
+    context "GET /scim/:resource_type/:id (show)" do
+      it "returns 400 Bad Request for unknown resource type" do
+        get "/scim/InvalidType/some-id", headers: headers
+
+        expect(response).to have_http_status(:bad_request)
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["schemas"]).to include("urn:ietf:params:scim:api:messages:2.0:Error")
+        expect(json_response["detail"]).to eq("Unknown resource type: InvalidType")
+      end
+    end
+
+    context "GET /scim/:resource_type (index)" do
+      it "returns 400 Bad Request for unknown resource type" do
+        get "/scim/InvalidType", headers: headers
+
+        expect(response).to have_http_status(:bad_request)
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["schemas"]).to include("urn:ietf:params:scim:api:messages:2.0:Error")
+        expect(json_response["detail"]).to eq("Unknown resource type: InvalidType")
+      end
+    end
+  end
+
   # Test helpers
   def create_scim_user(attributes = {})
     scim_id = attributes[:scim_id] || "user-#{SecureRandom.hex(4)}"

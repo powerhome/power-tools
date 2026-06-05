@@ -97,6 +97,8 @@ module TwoPercent
     end
 
     def show
+      validate_resource_type!
+
       record = with_scim_logging("get") do
         # Find record (raises RecordNotFound if not exists)
         record = find_scim_record(params[:id])
@@ -110,6 +112,7 @@ module TwoPercent
     end
 
     def index
+      validate_resource_type!
       log_scim_operation("list", "start")
 
       # Build base query scope
@@ -145,6 +148,12 @@ module TwoPercent
 
     def group_resource?
       TwoPercent.config.group_resource_types.include?(params[:resource_type])
+    end
+
+    def validate_resource_type!
+      return if user_resource? || group_resource?
+
+      raise ArgumentError, "Unknown resource type: #{params[:resource_type]}"
     end
 
     def persist_scim_record(scim_hash)
