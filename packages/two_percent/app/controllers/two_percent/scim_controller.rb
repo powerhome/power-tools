@@ -259,11 +259,18 @@ module TwoPercent
     def build_query_scope
       base_scope = user_resource? ? model_class.all : model_class.where(resource_type: params[:resource_type])
 
-      return base_scope unless params[:query].present?
+      # Apply query filtering if present
+      scope = if params[:query].present?
+                # Sanitize LIKE wildcards (%, _, \) before interpolating into pattern
+                sanitized_query = ActiveRecord::Base.sanitize_sql_like(params[:query])
+                base_scope.where("LOWER(display_name) LIKE LOWER(?) ESCAPE '\\'", "%#{sanitized_query}%")
+              else
+                base_scope
+              end
 
-      # Sanitize LIKE wildcards (%, _, \) before interpolating into pattern
-      sanitized_query = ActiveRecord::Base.sanitize_sql_like(params[:query])
-      base_scope.where("LOWER(display_name) LIKE LOWER(?) ESCAPE '\\'", "%#{sanitized_query}%")
+      # Order by id for deterministic pagination results
+      # Without ORDER BY, paginated results are non-deterministic and can return duplicates/skip records
+      scope.order(:id)
     end
 
     # Apply SCIM pagination (RFC 7644 uses 1-based indexing)
