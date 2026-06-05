@@ -1,6 +1,8 @@
 ## [Unreleased]
 
-- **GET Endpoints**: Read operations with RFC 7644 ListResponse format
+## [1.1.0] - 2026-06-05
+
+- **GET Endpoints**: Read operations with RFC 7644 ListResponse format [#436](https://github.com/powerhome/power-tools/pull/436)
   - `GET /scim/:resource_type/:id` - Single resource retrieval
   - `GET /scim/:resource_type` - List/search resources with pagination
   - RFC 7644 ListResponse format: `{schemas, totalResults, startIndex, itemsPerPage, Resources}`
@@ -10,7 +12,7 @@
   - Eager loading of associations (users → groups, groups → members)
   - No domain events published for read operations
   - Note: RFC 7644 `filter`, `sortBy`, and `attributes` parameters not yet supported
-- **Configurable Group Resource Types**: `config.group_resource_types` setting
+- **Configurable Group Resource Types**: `config.group_resource_types` setting [#436](https://github.com/powerhome/power-tools/pull/436
   - Defaults to `%w[Groups]` (SCIM standard type only)
   - Configure additional types (e.g., Departments, Territories) in initializer
 
