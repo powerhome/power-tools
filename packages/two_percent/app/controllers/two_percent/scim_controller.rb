@@ -17,8 +17,7 @@ module TwoPercent
       end
 
       # RFC 7644: 201 Created with Location header and resource body
-      response.headers["Location"] = scim_resource_url(record)
-      render json: record.to_scim_representation, status: :created
+      render json: record.to_scim_representation, status: :created, location: scim_resource_url(record)
     end
 
     def update
@@ -70,8 +69,7 @@ module TwoPercent
 
       # RFC 7644: 201 Created (if new) or 200 OK (if replaced)
       if was_new
-        response.headers["Location"] = scim_resource_url(record)
-        render json: record.to_scim_representation, status: :created
+        render json: record.to_scim_representation, status: :created, location: scim_resource_url(record)
       else
         render json: record.to_scim_representation, status: :ok
       end
