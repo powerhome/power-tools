@@ -3,106 +3,135 @@
 module TwoPercent
   class ScimController < ApplicationController
     def create
-      log_scim_operation("create", "start")
+      record = with_scim_logging("create") do
+        # Persist to two_percent tables first (validates SCIM schema)
+        record = persist_scim_record(scim_params)
 
-      # Persist to two_percent tables first (validates SCIM schema)
-      record = persist_scim_record(scim_params)
+        # Reload with associations for domain event and response
+        record = reload_with_members(record)
 
-      # Reload with associations for domain event and response
-      record = reload_with_members(record)
+        # Publish domain event (not SCIM-specific)
+        publish_created_event(record)
 
-      # Publish domain event (not SCIM-specific)
-      publish_created_event(record)
-
-      log_scim_operation("create", "complete", record.scim_id)
+        record
+      end
 
       # RFC 7644: 201 Created with Location header and resource body
-      response.headers["Location"] = scim_resource_url(record)
-      render json: record.to_scim_representation, status: :created
+      render json: record.to_scim_representation, status: :created, location: scim_resource_url(record)
     end
 
     def update
-      log_scim_operation("update", "start")
+      record = with_scim_logging("update") do
+        # Find existing record
+        record = find_scim_record(params[:id])
 
-      # Find existing record
-      record = find_scim_record(params[:id])
+        # Apply SCIM PATCH operations (RFC 7644 compliance)
+        processor = TwoPercent::Scim::PatchProcessor.new(scim_params)
+        current_scim_data = record.scim_data || {}
+        patched_data = processor.apply_to_hash(current_scim_data)
 
-      # Apply SCIM PATCH operations (RFC 7644 compliance)
-      processor = TwoPercent::Scim::PatchProcessor.new(scim_params)
-      current_scim_data = record.scim_data || {}
-      patched_data = processor.apply_to_hash(current_scim_data)
+        # Persist patched data
+        patched_data["id"] = params[:id] # Ensure ID is present
+        updated_record = persist_scim_record(patched_data)
 
-      # Persist patched data
-      patched_data["id"] = params[:id] # Ensure ID is present
-      updated_record = persist_scim_record(patched_data)
+        # Reload with associations for domain event and response
+        updated_record = reload_with_members(updated_record)
 
-      # Reload with associations for domain event and response
-      updated_record = reload_with_members(updated_record)
+        # Publish domain event with final state
+        publish_updated_event(updated_record)
 
-      # Publish domain event with final state
-      publish_updated_event(updated_record)
-
-      log_scim_operation("update", "complete", record.scim_id)
+        updated_record
+      end
 
       # RFC 7644: 200 OK with updated resource body
-      render json: updated_record.to_scim_representation, status: :ok
+      render json: record.to_scim_representation, status: :ok
     end
 
     def replace
-      log_scim_operation("replace", "start")
-
       # Upsert record (create or replace)
-      was_new =
-        if user_resource?
-          !TwoPercent::ScimUser.exists_by_scim_id?(params[:id])
+      was_new = !model_class.exists_by_scim_id?(params[:id])
+
+      record = with_scim_logging("replace") do
+        record = upsert_scim_record(params[:id], scim_params)
+
+        # Reload with associations for domain event and response
+        record = reload_with_members(record)
+
+        # Publish appropriate domain event
+        if was_new
+          publish_created_event(record)
         else
-          !TwoPercent::ScimGroup.exists_by_scim_id?(params[:id])
+          publish_updated_event(record)
         end
 
-      record = upsert_scim_record(params[:id], scim_params)
-
-      # Reload with associations for domain event and response
-      record = reload_with_members(record)
-
-      # Publish appropriate domain event
-      if was_new
-        publish_created_event(record)
-      else
-        publish_updated_event(record)
+        record
       end
-
-      log_scim_operation("replace", "complete", record.scim_id)
 
       # RFC 7644: 201 Created (if new) or 200 OK (if replaced)
       if was_new
-        response.headers["Location"] = scim_resource_url(record)
-        render json: record.to_scim_representation, status: :created
+        render json: record.to_scim_representation, status: :created, location: scim_resource_url(record)
       else
         render json: record.to_scim_representation, status: :ok
       end
     end
 
     def destroy
-      log_scim_operation("delete", "start")
+      scim_id = with_scim_logging("delete") do
+        # Find and destroy record
+        record = find_scim_record(params[:id])
+        scim_id = record.scim_id
 
-      # Find and destroy record
-      record = find_scim_record(params[:id])
-      scim_id = record.scim_id
+        # Destroy record
+        model_class.destroy_by_scim_id(scim_id)
 
-      # Destroy record
-      if user_resource?
-        TwoPercent::ScimUser.destroy_by_scim_id(scim_id)
-      else
-        TwoPercent::ScimGroup.destroy_by_scim_id(scim_id)
+        # Publish domain delete event
+        publish_deleted_event(scim_id)
+
+        scim_id
       end
-
-      # Publish domain delete event
-      publish_deleted_event(scim_id)
-
-      log_scim_operation("delete", "complete", scim_id)
 
       # RFC 7644: 204 No Content
       head :no_content
+    end
+
+    def show
+      validate_resource_type!
+
+      record = with_scim_logging("get") do
+        # Find record (raises RecordNotFound if not exists)
+        record = find_scim_record(params[:id])
+
+        # Reload with associations for complete SCIM representation
+        reload_with_members(record)
+      end
+
+      # RFC 7644: 200 OK with resource body (no domain events for read operations)
+      render json: record.to_scim_representation, status: :ok
+    end
+
+    def index
+      validate_resource_type!
+      log_scim_operation("list", "start")
+
+      # Build base query scope
+      scope = build_query_scope
+
+      # Get total count before pagination
+      total_count = scope.count
+
+      # Apply pagination
+      paginated_scope = apply_pagination(scope)
+
+      # Load records with associations
+      records = load_records_with_associations(paginated_scope)
+
+      # Build RFC 7644 ListResponse
+      list_response = build_list_response(records, total_count)
+
+      log_scim_operation("list", "complete")
+
+      # RFC 7644: 200 OK with ListResponse (no domain events for read operations)
+      render json: list_response, status: :ok
     end
 
   private
@@ -116,7 +145,13 @@ module TwoPercent
     end
 
     def group_resource?
-      %w[Groups Departments Territories Roles Titles].include?(params[:resource_type])
+      TwoPercent.config.group_resource_types.include?(params[:resource_type])
+    end
+
+    def validate_resource_type!
+      return if user_resource? || group_resource?
+
+      raise ArgumentError, "Unknown resource type: #{params[:resource_type]}"
     end
 
     def persist_scim_record(scim_hash)
@@ -130,15 +165,7 @@ module TwoPercent
     end
 
     def find_scim_record(scim_id)
-      record =
-        if user_resource?
-          TwoPercent::ScimUser.find_by_scim_id(scim_id)
-        elsif group_resource?
-          TwoPercent::ScimGroup.find_by_scim_id(scim_id)
-        else
-          raise ArgumentError, "Unknown resource type: #{params[:resource_type]}"
-        end
-
+      record = model_class.find_by_scim_id(scim_id)
       raise ActiveRecord::RecordNotFound, "Resource \"#{scim_id}\" not found" unless record
 
       record
@@ -148,6 +175,14 @@ module TwoPercent
       # Ensure scim_id is in the hash
       scim_hash_with_id = scim_hash.merge("id" => scim_id)
       persist_scim_record(scim_hash_with_id)
+    end
+
+    def with_scim_logging(operation)
+      log_scim_operation(operation, "start", params[:id])
+      record = yield
+      scim_id = record.respond_to?(:scim_id) ? record.scim_id : record
+      log_scim_operation(operation, "complete", scim_id || params[:id])
+      record
     end
 
     def log_scim_operation(operation, stage, scim_id = nil)
@@ -217,11 +252,65 @@ module TwoPercent
 
     # Reload record with associations (users load groups, groups load members)
     def reload_with_members(record)
-      if user_resource?
-        TwoPercent::ScimUser.includes(:scim_groups).find(record.id)
-      else
-        TwoPercent::ScimGroup.includes(:scim_users).find(record.id)
-      end
+      model_class.includes(association_name).find(record.id)
+    end
+
+    # Build base query scope with optional filtering
+    def build_query_scope
+      base_scope = user_resource? ? model_class.all : model_class.where(resource_type: params[:resource_type])
+
+      # Apply query filtering if present
+      scope = if params[:query].present?
+                # Sanitize LIKE wildcards (%, _, \) before interpolating into pattern
+                sanitized_query = ActiveRecord::Base.sanitize_sql_like(params[:query])
+                base_scope.where("LOWER(display_name) LIKE LOWER(?) ESCAPE '\\'", "%#{sanitized_query}%")
+              else
+                base_scope
+              end
+
+      # Order by id for deterministic pagination results
+      # Without ORDER BY, paginated results are non-deterministic and can return duplicates/skip records
+      scope.order(:id)
+    end
+
+    # Apply SCIM pagination (RFC 7644 uses 1-based indexing)
+    def apply_pagination(scope)
+      start_index = (params[:startIndex] || 1).to_i
+      count = (params[:count] || 100).to_i
+
+      # Enforce maximum count limit
+      count = [count, 1000].min
+
+      # Convert SCIM 1-based startIndex to 0-based offset
+      offset = [start_index - 1, 0].max
+
+      scope.offset(offset).limit(count)
+    end
+
+    # Load records with associations
+    def load_records_with_associations(scope)
+      scope.includes(association_name).to_a
+    end
+
+    # Build RFC 7644 ListResponse format
+    def build_list_response(records, total_count)
+      start_index = (params[:startIndex] || 1).to_i
+
+      {
+        schemas: ["urn:ietf:params:scim:api:messages:2.0:ListResponse"],
+        totalResults: total_count,
+        startIndex: start_index,
+        itemsPerPage: records.size,
+        Resources: records.map(&:to_scim_representation),
+      }
+    end
+
+    def model_class
+      user_resource? ? TwoPercent::ScimUser : TwoPercent::ScimGroup
+    end
+
+    def association_name
+      user_resource? ? :scim_groups : :scim_users
     end
   end
 end
