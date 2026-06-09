@@ -5,7 +5,7 @@ module Consent
     def self.generate
       {
         consent_version: Consent::VERSION,
-        permissions: Consent.subjects.map(&:to_permission_payload),
+        permissions: Consent.subjects.sort_by(&:key).map(&:to_permission_payload),
       }
     end
   end

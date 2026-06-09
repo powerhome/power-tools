@@ -15,8 +15,8 @@ module Consent
       {
         subject: key,
         label: label,
-        actions: actions.map(&:to_permission_payload),
-        views: views.values.map(&:to_permission_payload),
+        actions: actions.sort_by(&:key).map(&:to_permission_payload),
+        views: views.values.sort_by(&:key).map(&:to_permission_payload),
       }
     end
   end

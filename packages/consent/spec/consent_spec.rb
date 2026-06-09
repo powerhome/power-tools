@@ -73,40 +73,19 @@ describe Consent do
   end
 
   describe ".subjects_checksum" do
-    it "returns SHA256 hexdigest of permission file contents" do
-      dir = Dir.mktmpdir
-      File.write(File.join(dir, "test.rb"), "test content")
+    it "returns SHA256 hexdigest of permission definitions" do
+      checksum = Consent.subjects_checksum
+      subjects_checksum = Digest::SHA256.hexdigest(Consent.subjects.sort_by(&:key).map(&:to_permission_payload))
 
-      checksum = Consent.subjects_checksum([dir])
-
-      expect(checksum).to eq(Digest::SHA256.hexdigest("test content"))
-
-      FileUtils.rm_rf(dir)
-    end
-
-    it "returns same checksum for same content" do
-      dir = Dir.mktmpdir
-      File.write(File.join(dir, "test.rb"), "test content")
-
-      checksum1 = Consent.subjects_checksum([dir])
-      checksum2 = Consent.subjects_checksum([dir])
-
-      expect(checksum1).to eq(checksum2)
-
-      FileUtils.rm_rf(dir)
+      expect(checksum).to eq(subjects_checksum)
     end
 
     it "returns different checksum when content changes" do
-      dir = Dir.mktmpdir
-      File.write(File.join(dir, "test.rb"), "original content")
-      checksum1 = Consent.subjects_checksum([dir])
+      subjects_checksum1 = Consent.subjects_checksum
+      Consent.subjects.last.actions << Consent::Action.new(Consent.subjects.last, :new_action, "New Action")
+      subjects_checksum2 = Consent.subjects_checksum
 
-      File.write(File.join(dir, "test.rb"), "modified content")
-      checksum2 = Consent.subjects_checksum([dir])
-
-      expect(checksum1).not_to eq(checksum2)
-
-      FileUtils.rm_rf(dir)
+      expect(subjects_checksum1).not_to eq(subjects_checksum2)
     end
   end
 end
