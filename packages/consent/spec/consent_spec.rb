@@ -46,7 +46,8 @@ describe Consent do
   describe ".subjects_checksum" do
     it "returns SHA256 hexdigest of permission definitions" do
       checksum = Consent.subjects_checksum
-      subjects_checksum = Digest::SHA256.hexdigest(Consent.subjects.sort.map(&:to_permission_payload).to_json)
+      subjects = Consent.subjects.sort
+      subjects_checksum = Digest::SHA256.hexdigest(subjects.map(&:to_permission_payload).to_json)
 
       expect(checksum).to eq(subjects_checksum)
     end
