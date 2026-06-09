@@ -3,9 +3,10 @@
 module Consent
   class PermissionDefinitionPayload
     def self.generate
+      subjects = Consent.subjects.sort
       {
         consent_version: Consent::VERSION,
-        permissions: Consent.subjects.sort.map(&:to_permission_payload),
+        permissions: subjects.map(&:to_permission_payload),
       }
     end
   end

@@ -90,7 +90,8 @@ module Consent
   def self.subjects_checksum
     require "digest/sha2"
 
-    Digest::SHA256.hexdigest(Consent.subjects.sort.map(&:to_permission_payload).to_json)
+    subjects = Consent.subjects.sort
+    Digest::SHA256.hexdigest(subjects.map(&:to_permission_payload).to_json)
   end
 
   # Defines a subject with the given key, label and options

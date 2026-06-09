@@ -22,10 +22,11 @@ module Consent
     end
 
     def to_permission_payload
+      views = self.views.values.sort
       {
         action: key,
         label: label,
-        views: views.values.sort.map(&:to_permission_payload),
+        views: views.map(&:to_permission_payload),
         default_view: default_view&.to_permission_payload,
       }
     end
