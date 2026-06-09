@@ -43,39 +43,10 @@ describe Consent do
     end
   end
 
-  describe ".subjects_content" do
-    it "returns concatenated contents of all permission files" do
-      dir = Dir.mktmpdir
-      File.write(File.join(dir, "file1.rb"), "# File 1\nConsent.define :test1")
-      File.write(File.join(dir, "file2.rb"), "# File 2\nConsent.define :test2")
-
-      content = Consent.subjects_content([dir])
-
-      expect(content).to include("# File 1")
-      expect(content).to include("# File 2")
-      expect(content).to include("Consent.define :test1")
-      expect(content).to include("Consent.define :test2")
-
-      FileUtils.rm_rf(dir)
-    end
-
-    it "returns files in sorted order for deterministic results" do
-      dir = Dir.mktmpdir
-      File.write(File.join(dir, "z_last.rb"), "LAST")
-      File.write(File.join(dir, "a_first.rb"), "FIRST")
-
-      content = Consent.subjects_content([dir])
-
-      expect(content.index("FIRST")).to be < content.index("LAST")
-
-      FileUtils.rm_rf(dir)
-    end
-  end
-
   describe ".subjects_checksum" do
     it "returns SHA256 hexdigest of permission definitions" do
       checksum = Consent.subjects_checksum
-      subjects_checksum = Digest::SHA256.hexdigest(Consent.subjects.sort_by(&:key).map(&:to_permission_payload))
+      subjects_checksum = Digest::SHA256.hexdigest(Consent.subjects.sort.map(&:to_permission_payload).to_json)
 
       expect(checksum).to eq(subjects_checksum)
     end

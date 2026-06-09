@@ -25,9 +25,13 @@ module Consent
       {
         action: key,
         label: label,
-        views: views.values.sort_by(&:key).map(&:to_permission_payload),
+        views: views.values.sort.map(&:to_permission_payload),
         default_view: default_view&.to_permission_payload,
       }
+    end
+
+    def <=>(other)
+      key <=> other.key
     end
   end
 end

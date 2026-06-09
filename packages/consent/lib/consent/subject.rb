@@ -15,9 +15,15 @@ module Consent
       {
         subject: key,
         label: label,
-        actions: actions.sort_by(&:key).map(&:to_permission_payload),
-        views: views.values.sort_by(&:key).map(&:to_permission_payload),
+        actions: actions.sort.map(&:to_permission_payload),
+        views: views.values.sort.map(&:to_permission_payload),
       }
+    end
+
+    def <=>(other)
+      key = Consent::SubjectCoder.dump(key)
+      other_key = Consent::SubjectCoder.dump(other.key)
+      key <=> other_key
     end
   end
 end
