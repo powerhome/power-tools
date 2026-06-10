@@ -27,6 +27,7 @@ module Consent
         action: key,
         label: label,
         views: views.map(&:to_permission_payload),
+        options: options.except(:views),
         default_view: default_view&.to_permission_payload,
       }
     end
