@@ -1,0 +1,85 @@
+# frozen_string_literal: true
+
+Rails.application.config.to_prepare do
+  TwoPercent.configure do |config|
+    # ============================================================
+    # Authentication (Required)
+    # ============================================================
+    # Define how to authenticate SCIM requests
+    # This should return truthy value for authenticated requests
+    #
+    # Example with bearer token:
+    #   config.authenticate = ->(request) do
+    #     token = request.headers["Authorization"]&.remove("Bearer ")
+    #     token == Rails.application.credentials.scim_token
+    #   end
+    #
+    # Example with BasicAuth:
+    #   config.authenticate = ->(request) do
+    #     ActionController::HttpAuthentication::Basic.authenticate(request) do |username, password|
+    #       username == "scim_user" && password == Rails.application.credentials.scim_password
+    #     end
+    #   end
+    #
+    config.authenticate = ->(request) do
+      # TODO: Implement your authentication logic here
+      # Return true for authenticated requests, false otherwise
+      raise NotImplementedError, "TwoPercent authentication not configured"
+    end
+
+    # ============================================================
+    # Integration with Your Application
+    # ============================================================
+    # TwoPercent publishes domain events when SCIM resources change.
+    # Choose your integration approach:
+    #
+    # Option 1: Subscribe to domain events (recommended)
+    #   ActiveSupport::Notifications.subscribe(/TwoPercent::Domain::Events/) do |name, start, finish, id, payload|
+    #     event = payload[:event]
+    #     case event
+    #     when TwoPercent::Domain::Events::UserCreated
+    #       User.create!(
+    #         scim_id: event.user_attributes[:scim_id],
+    #         email: event.user_attributes[:email],
+    #         first_name: event.user_attributes.dig(:name, :givenName)
+    #       )
+    #     when TwoPercent::Domain::Events::UserUpdated
+    #       user = User.find_by(scim_id: event.user_attributes[:scim_id])
+    #       user&.update!(email: event.user_attributes[:email])
+    #     end
+    #   end
+    #
+    # Option 2: Use the Syncable concern (declarative)
+    #   class User < ApplicationRecord
+    #     include TwoPercent::Syncable
+    #
+    #     syncable_as :user, scim_id_column: :scim_id do |scim_attrs|
+    #       {
+    #         first_name: scim_attrs.dig(:name, :givenName),
+    #         last_name: scim_attrs.dig(:name, :familyName),
+    #         email: scim_attrs[:email],
+    #         active: scim_attrs[:active]
+    #       }
+    #     end
+    #   end
+    #
+    #   # Then subscribe to events and sync automatically:
+    #   ActiveSupport::Notifications.subscribe(/TwoPercent::Domain::Events/) do |name, start, finish, id, payload|
+    #     event = payload[:event]
+    #     User.sync_from_scim_event(event) if event.is_a?(TwoPercent::Domain::Events::Base)
+    #   end
+    #
+    # Option 3: Query SCIM models directly
+    #   scim_user = TwoPercent::ScimUser.find_by_scim_id("user-123")
+    #   email = scim_user.scim_data["email"]
+    #   attrs = scim_user.to_domain_attributes
+    #
+    # Events published:
+    # - TwoPercent::Domain::Events::UserCreated
+    # - TwoPercent::Domain::Events::UserUpdated
+    # - TwoPercent::Domain::Events::UserDeleted
+    # - TwoPercent::Domain::Events::GroupCreated
+    # - TwoPercent::Domain::Events::GroupUpdated
+    # - TwoPercent::Domain::Events::GroupDeleted
+  end
+end
