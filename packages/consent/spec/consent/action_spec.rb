@@ -25,6 +25,7 @@ RSpec.describe Consent::Action do
                                                    action: :key,
                                                    label: "Label",
                                                    views: action.views.values.map(&:to_permission_payload),
+                                                   options: {},
                                                    default_view: nil,
                                                  })
     end

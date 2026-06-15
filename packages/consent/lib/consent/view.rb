@@ -29,5 +29,9 @@ module Consent
         label: label,
       }
     end
+
+    def <=>(other)
+      key <=> other.key
+    end
   end
 end
