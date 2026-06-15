@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+### [2.6.0] - 2026-06-15
+
+- Changed permission checksum calculation to use permission data rather than permission file contents. [#438](https://github.com/powerhome/power-tools/pull/438)
+
 ### [2.5.0] - 2026-05-27
 
 - Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
