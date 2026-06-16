@@ -7,7 +7,7 @@ Rails.application.config.to_prepare do
     # ============================================================
     # Define how to authenticate SCIM requests
     # This should return truthy value for authenticated requests
-    # 
+    #
     # Example with bearer token:
     #   config.authenticate = ->(request) do
     #     token = request.headers["Authorization"]&.remove("Bearer ")
@@ -52,7 +52,7 @@ Rails.application.config.to_prepare do
     # Option 2: Use the Syncable concern (declarative)
     #   class User < ApplicationRecord
     #     include TwoPercent::Syncable
-    #     
+    #
     #     syncable_as :user, scim_id_column: :scim_id do |scim_attrs|
     #       {
     #         first_name: scim_attrs.dig(:name, :givenName),
@@ -62,7 +62,7 @@ Rails.application.config.to_prepare do
     #       }
     #     end
     #   end
-    #   
+    #
     #   # Then subscribe to events and sync automatically:
     #   ActiveSupport::Notifications.subscribe(/TwoPercent::Domain::Events/) do |name, start, finish, id, payload|
     #     event = payload[:event]

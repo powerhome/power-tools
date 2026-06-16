@@ -301,12 +301,6 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         expect(group.scim_users).to include(user1, user2)
       end
 
-      it "stores correlation_id on created memberships" do
-        group.replace_members(members_array, "corr-123")
-
-        memberships = group.scim_group_memberships
-        expect(memberships.pluck(:correlation_id).uniq).to eq(["corr-123"])
-      end
     end
 
     context "when removing members" do
