@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+require "logger"
+require "bundler"
+Dir[File.expand_path("support/**/*.rb", __dir__)].each { |f| require f }
+require "active_support"
+require "active_support/testing/time_helpers"
+
+Bundler.require(:development)
+
+# Disable database handling - Combustion doesn't handle multiple databases well so we'll do it ourselves
+Combustion.initialize! :active_record, load_schema: false, database_reset: false, database_migrate: false
+
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "data_taster"
 
@@ -53,4 +64,6 @@ RSpec.configure do |config|
     # a real object. This is generally recommended.
     mocks.verify_partial_doubles = false
   end
+
+  config.include ActiveSupport::Testing::TimeHelpers
 end

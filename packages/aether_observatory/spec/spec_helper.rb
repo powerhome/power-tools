@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "logger"
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "aether_observatory"
 require "pry-byebug"

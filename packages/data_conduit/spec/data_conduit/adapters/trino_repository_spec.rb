@@ -65,6 +65,78 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
     end
   end
 
+  describe "#build_query" do
+    context "when the condition key is a String" do
+      let(:conditions) { { "status" => "active" } }
+
+      it "converts the key and still builds the correct SQL" do
+        sql = repository.send(:build_query)
+        expect(sql).to eq("SELECT * FROM #{table_name} WHERE (status = 'active')")
+      end
+    end
+  end
+
+  describe ".tables(config)" do
+    let(:query_url) { "#{server}/v1/statement" }
+
+    let(:response) do
+      {
+        "columns" => [
+          {
+            "name" => "Table",
+            "type" => "varchar",
+            "typeSignature" => {
+              "rawType" => "varchar",
+              "arguments" => [
+                { "kind" => "LONG", "value" => 2_147_483_647 },
+              ],
+            },
+          },
+        ],
+        "data" => [
+          [["foo"], ["bar"], ["qux"]],
+        ],
+      }
+    end
+
+    it "returns alphabetized array of table names" do
+      stub_request(:post, query_url)
+        .with(body: "SHOW tables")
+        .to_return(status: 200, body: response.to_json)
+
+      result = described_class.tables(config)
+
+      expect(result).to eq(%w[bar foo qux])
+
+      expect(WebMock).to have_requested(:post, query_url)
+        .with(body: "SHOW tables")
+    end
+
+    context "when Trino returns an error" do
+      let(:error_response) do
+        {
+          "error" => {
+            "message" => "Schema 'test_schema' does not exist",
+            "errorCode" => 1,
+            "errorName" => "SCHEMA_NOT_FOUND",
+            "errorType" => "USER_ERROR",
+          },
+        }
+      end
+
+      it "raises a TrinoException with the error message" do
+        stub_request(:post, query_url)
+          .with(body: "SHOW tables")
+          .to_return(status: 200, body: error_response.to_json)
+
+        expect { described_class.tables(config) }.to raise_error(
+          DataConduit::TrinoException,
+          /Schema 'test_schema' does not exist/
+        )
+      end
+    end
+  end
+
   describe "#query" do
     let(:query_url) { "#{server}/v1/statement" }
     let(:next_url) { "#{server}/v1/statement/20240101_1" }
@@ -181,17 +253,30 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
     end
 
     context "when the query fails" do
-      before do
+      let(:error_body) { { "error" => { "message" => "SQL syntax error" } } }
+
+      it "raises an error with a canned error message when 400 status" do
         stub_request(:post, query_url)
           .with(body: expected_sql)
           .to_return(
             status: 400,
-            body: { "error" => { "message" => "SQL syntax error" } }.to_json
+            body: error_body.to_json
           )
+
+        expect { repository.query }.to raise_error(DataConduit::Error, /Query failed/)
       end
 
-      it "raises an error with the error message" do
-        expect { repository.query }.to raise_error(DataConduit::Error, /Query failed/)
+      it "responds with error message given by Trino when 200 status" do
+        stub_request(:post, query_url)
+          .with(body: expected_sql)
+          .to_return(
+            status: 200,
+            body: error_body.to_json
+          )
+
+        result = repository.query
+
+        expect(result).to eq([error_body])
       end
     end
 
@@ -243,18 +328,73 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
     end
 
     context "when the query fails" do
-      before do
+      let(:error_body) { { "error" => { "message" => "SQL syntax error" } } }
+
+      it "raises an error with a canned error message when 400 status" do
         stub_request(:post, query_url)
           .with(body: sql_query)
           .to_return(
             status: 400,
-            body: { "error" => { "message" => "SQL syntax error" } }.to_json
+            body: error_body.to_json
           )
-      end
 
-      it "raises an error with the error message" do
         expect { repository.execute(sql_query) }.to raise_error(DataConduit::Error, /Query failed/)
       end
+
+      it "responds with error message given by Trino when 200 status" do
+        stub_request(:post, query_url)
+          .with(body: sql_query)
+          .to_return(
+            status: 200,
+            body: error_body.to_json
+          )
+
+        result = repository.execute(sql_query)
+
+        expect(result).to eq([error_body])
+      end
+    end
+  end
+
+  describe "#last_updated" do
+    let(:query_url) { "#{server}/v1/statement" }
+    let(:last_updated_query) do
+      "SELECT made_current_at FROM \"#{table_name}$history\" ORDER BY made_current_at DESC LIMIT 1"
+    end
+    let(:datetime_string) { "2025-11-05 02:01:24.660 UTC" }
+
+    let(:response) do
+      {
+        "columns" => [
+          {
+            "name" => "made_current_at",
+            "type" => "timestamp(3) with time zone",
+            "typeSignature" => {
+              "rawType" => "timestamp with time zone",
+              "arguments" => [
+                {
+                  "kind" => "LONG",
+                  "value" => 3,
+                },
+              ],
+            },
+          },
+        ],
+        "data" => [[datetime_string]],
+      }
+    end
+
+    it "returns DateTime of last time table was updated" do
+      stub_request(:post, query_url)
+        .with(body: last_updated_query)
+        .to_return(status: 200, body: response.to_json)
+
+      result = described_class.new(table_name, nil, config).last_updated
+
+      expect(result).to eq(DateTime.parse(datetime_string))
+
+      expect(WebMock).to have_requested(:post, query_url)
+        .with(body: last_updated_query)
     end
   end
 end

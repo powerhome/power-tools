@@ -140,6 +140,10 @@ For JS modules you will need to use gitpkg.now.sh to point to a subfolder within
 
 Releases will be published according to [Semantic Versioning](https://semver.org/) and it is the responsibility of the consumers to keep their application dependencies up to date. We recommend leveraging [renovatebot](https://github.com/renovatebot/renovate) 🤖
 
+To release a new version of a package, [create a new release](https://github.com/powerhome/power-tools/releases/new) and a tag in the format of `v<new-version>-<package-name>`, where `new-version` matches the new version of your package and the `package-name` matches the github workflow name (which should match the package name).
+
+When releasing different packages, please create different releases.
+
 ## Supporting multiple gem versions
 
 To support multiple versions of a gem, and add a build to the pipeline, we use [Appraisal](https://github.com/thoughtbot/appraisal). The installation is simple, add `appraisal` to your gemspec as a development dependency and install it, then create an Appraisals file like the following to support multiple versions of rails:

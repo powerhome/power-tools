@@ -2,6 +2,8 @@
 
 ENV["RAILS_ENV"] ||= "test"
 
+require "logger"
+
 # Per SimpleCov documentation, this MUST be required before any appplication code
 # https://github.com/colszowka/simplecov#getting-started
 unless ENV["SIMPLECOV"] == "false"

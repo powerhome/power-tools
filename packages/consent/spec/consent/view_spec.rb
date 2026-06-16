@@ -7,9 +7,19 @@ RSpec.describe Consent::View do
 
   describe "#conditions" do
     it "is the callable with the given args" do
-      view = Consent::View.new(nil, nil, nil, ->(obj) { obj.id })
+      view = Consent::View.new(nil, nil, nil, lambda(&:id))
 
       expect(view.conditions(obj)).to eql "1235"
+    end
+  end
+
+  describe "#to_permission_payload" do
+    it "returns the correct hash" do
+      view = Consent::View.new(:view, "View")
+      expect(view.to_permission_payload).to eq({
+                                                 view: :view,
+                                                 label: "View",
+                                               })
     end
   end
 end

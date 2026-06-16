@@ -1,0 +1,5 @@
+# Full dump configuration for integration testing
+# This file defines which tables to dump and how to dump them for the full dump integration test
+
+---
+users: "<%= full_table_dump %>"

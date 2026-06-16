@@ -25,14 +25,31 @@ module DataConduit
         validate_config!
       end
 
+      def self.tables(config)
+        repo = new(nil, nil, config)
+        response_data = repo.send(:response_to, "SHOW tables")
+        if response_data[:result_data].is_a?(Hash) && response_data[:result_data]["error"]
+          raise DataConduit::TrinoException, response_data[:result_data]["error"].to_s
+        end
+
+        response_data[:result_data]&.flatten&.sort
+      end
+
       def query(sql_query = nil)
         sql_query ||= build_query
         execute(sql_query)
       end
 
       def execute(sql_query)
-        response_data = process_response(send_query(sql_query))
+        response_data = response_to(sql_query)
         transform_response(response_data[:result_data], response_data[:result_columns])
+      end
+
+      def last_updated
+        response_data = response_to("SELECT made_current_at FROM \"#{table_name}$history\" " \
+                                    "ORDER BY made_current_at DESC LIMIT 1")
+        datetime_string = response_data[:result_data]&.flatten&.first
+        datetime_string.nil? ? nil : DateTime.parse(datetime_string)
       end
 
     private
@@ -65,10 +82,21 @@ module DataConduit
             raise ArgumentError, "Conditions must be provided as a Hash for safe query building"
           end
 
-          dataset = dataset.where(conditions)
+          converted_conditions = convert_string_keys(conditions)
+          dataset = dataset.where(converted_conditions)
         end
 
         dataset.sql
+      end
+
+      def convert_string_keys(conditions_hash)
+        conditions_hash.transform_keys do |key|
+          key.is_a?(String) || key.is_a?(Symbol) ? Sequel[key.to_sym] : key
+        end
+      end
+
+      def response_to(sql)
+        process_response(send_query(sql))
       end
 
       def process_response(initial_response)
@@ -77,10 +105,16 @@ module DataConduit
         response_data = initial_response
 
         while response_data
-          result_data.concat(response_data["data"]) if response_data["data"]
-          result_columns ||= response_data["columns"]
-          next_uri = response_data["nextUri"]
-          response_data = next_uri ? fetch_next(next_uri) : nil
+          if response_data["error"]
+            result_data = { "error" => response_data["error"] }
+            result_columns = nil
+            response_data = nil
+          else
+            result_data.concat(response_data["data"]) if response_data["data"]
+            result_columns ||= response_data["columns"]
+            next_uri = response_data["nextUri"]
+            response_data = next_uri ? fetch_next(next_uri) : nil
+          end
         end
 
         { result_data: result_data, result_columns: result_columns }

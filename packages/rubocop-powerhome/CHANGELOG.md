@@ -1,5 +1,26 @@
 ## [Unreleased]
 
+- Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
+
+## [0.6.1] - 2026-02-26
+
+- Adds Graphql/DefaultNullTrue cop
+- Adds Graphql/DefaultRequiredTrue cop
+- Adds Graphql/FieldTypeInBlock cop
+- Adds Graphql/RootTypesInBlock cop
+
+## [0.6.0] - 2026-01-05
+
+- Bump rubocop version with release of new cops
+- Adds Migration/AcknowledgeIgnoredColumn cop [#382](https://github.com/powerhome/power-tools/pull/382)
+- Extends Migration/RenameColumn to cover uses in a change_table [#381](https://github.com/powerhome/power-tools/pull/381)
+- Adds Migration/RenameColumn and Migration/RenameTable cops [#380](https://github.com/powerhome/power-tools/pull/380)
+- Standardize all libs to support ruby 3.0, ruby 3.3 x rails 6.1 through rails 7.2 [#359](https://github.com/powerhome/power-tools/pull/359)
+
+## [0.5.6] - 2025-09-09
+
+- Bump Rubocop version to unblock dependabot in repos
+
 ## [0.5.5] - 2025-04-22
 
 - Fix Rubocop base class inheritance [#323](https://github.com/powerhome/power-tools/pull/323)
@@ -24,10 +45,12 @@
 - Ignore Metrics/BlockLength on Rspec's context and describe (#43)
 
 ### Documentation
+
 - Fix rel links in README (#37)
 - Initial portal setup (#34)
 
 ### Updates
+
 - Lock file maintenance
 - Update tj-actions/changed-files action to v24 (#47)
 - Update dependency rubocop to ~> 1.32.0 (#46)

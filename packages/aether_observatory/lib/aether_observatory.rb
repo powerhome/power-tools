@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "active_support/all"
+require "aether_observatory/backend/notifications"
 require "aether_observatory/configuration"
 require "aether_observatory/railtie" if defined?(Rails)
 

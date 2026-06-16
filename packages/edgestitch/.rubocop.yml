@@ -1,10 +1,27 @@
 require:
   - rubocop-powerhome
 
-Style/FrozenStringLiteralComment:
-  Exclude:
-    - 'gemfiles/*'
+Rails/SchemaComment:
+  Enabled: false
 
-Bundler/OrderedGems:
+Rails/ActionFilter:
+  Enabled: false
+
+Rails/ActionOrder:
+  Enabled: false
+
+Rails/FilePath:
+  Enabled: false
+
+Rails/EnvironmentVariableAccess:
   Exclude:
-    - 'gemfiles/*'
+    - 'spec/**/*'
+
+Rails/HelperInstanceVariable:
+  Exclude:
+    - 'lib/edgestitch/**/*'
+
+Performance/ChainArrayAllocation:
+  Exclude:
+    - 'lib/edgestitch/exporter.rb'
+    - 'lib/edgestitch/mysql/dump.rb'

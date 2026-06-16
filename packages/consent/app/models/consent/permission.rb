@@ -14,7 +14,7 @@ module Consent
     after_save { ::Consent::History.record(:grant, self) }
     after_destroy { ::Consent::History.record(:revoke, self) }
 
-    scope :to, ->(subject:, action: nil, view: nil) do
+    def self.to(subject:, action: nil, view: nil)
       where({ subject: subject, action: action, view: view }.compact)
     end
 

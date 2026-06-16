@@ -30,18 +30,19 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "nokogiri", "> 1.14.0" # can be removed after we remove support for Rails 6.0.1
-  spec.add_dependency "rails", ">= 6.0"
+  spec.add_dependency "rails", ">= 6.1", "< 8"
 
   spec.add_development_dependency "license_finder", "~> 7.0"
 
   spec.add_development_dependency "appraisal", "2.5.0"
   spec.add_development_dependency "bundler", "~> 2.1"
+  spec.add_development_dependency "combustion", "~> 1.3"
+  spec.add_development_dependency "mysql2", "0.5.5"
   spec.add_development_dependency "parser", ">= 2.5", "!= 2.5.1.1"
-  spec.add_development_dependency "rainbow", "2.2.2"
+  spec.add_development_dependency "rainbow", "3.1.1"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "simplecov", "0.15.1"
   spec.add_development_dependency "test-unit", "3.1.5"
-  spec.add_development_dependency "yard", "0.9.34"
+  spec.add_development_dependency "yard", "0.9.38"
 end

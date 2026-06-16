@@ -42,4 +42,22 @@ describe Consent do
       expect(keys).to include :lol_key
     end
   end
+
+  describe ".subjects_checksum" do
+    it "returns SHA256 hexdigest of permission definitions" do
+      checksum = Consent.subjects_checksum
+      subjects = Consent.subjects.sort
+      subjects_checksum = Digest::SHA256.hexdigest(subjects.map(&:to_permission_payload).to_json)
+
+      expect(checksum).to eq(subjects_checksum)
+    end
+
+    it "returns different checksum when content changes" do
+      subjects_checksum1 = Consent.subjects_checksum
+      Consent.subjects.last.actions << Consent::Action.new(Consent.subjects.last, :new_action, "New Action")
+      subjects_checksum2 = Consent.subjects_checksum
+
+      expect(subjects_checksum1).not_to eq(subjects_checksum2)
+    end
+  end
 end

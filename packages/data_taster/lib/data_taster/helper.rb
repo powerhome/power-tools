@@ -14,7 +14,9 @@ module DataTaster
     end
 
     def db_config
-      ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, name: "primary").configuration_hash
+      ActiveRecord::Base.configurations
+                        .configs_for(env_name: Rails.env, name: "primary")
+                        .configuration_hash
     end
 
     def logg(message)

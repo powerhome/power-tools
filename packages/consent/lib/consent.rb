@@ -3,6 +3,7 @@
 require "cancancan"
 
 require "consent/ability"
+require "consent/permission_definition_payload"
 require "consent/action"
 require "consent/dsl"
 require "consent/model_additions"
@@ -81,6 +82,16 @@ module Consent
   def self.load_subjects!(paths)
     permission_files = paths.map { |dir| File.join(dir, "*.rb") }
     Dir[*permission_files].each { |file| Kernel.load(file) }
+  end
+
+  # Calculates a deterministic checksum of all permission definitions
+  #
+  # @return [String] SHA256 hexdigest of all permission definitions
+  def self.subjects_checksum
+    require "digest/sha2"
+
+    subjects = Consent.subjects.sort
+    Digest::SHA256.hexdigest(subjects.map(&:to_permission_payload).to_json)
   end
 
   # Defines a subject with the given key, label and options

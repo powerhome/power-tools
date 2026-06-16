@@ -1,0 +1,12 @@
+# Define the data that you would like to include in local and demo environments here.
+# Each key should represent the table name that you are defining rules for, and the value should be a clause that will be wrapped in a MySQL WHERE clause.
+# If you choose to reference another table name in your where clause, be sure to prepend it with the source db to ensure that it's pulling from the correct db, ie `(SELECT id from <%= source_db %>.my_table name)`
+
+# In order to help acquire data with relative dates and referential integrity, you have access to extra methods.
+# They are defined in DataTaster::Flavors and DataTaster::Helper.
+# In order to use them, you'd need to wrap these things in erb tags (<%= %>).
+# Please note that dates should be wrapped in strings as well to keep the datatype clear.
+# More information can be found in the DataTaster documentation.
+
+---
+projects: "<%= full_table_dump %>"

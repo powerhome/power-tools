@@ -30,7 +30,7 @@ module TwoPercent
     # @return [TwoPercent::ScimGroup] The persisted group record
     # @raise [TwoPercent::Scim::ValidationError] If SCIM data fails schema validation
     def self.upsert_from_scim(resource_type, scim_hash, correlation_id: nil)
-      # Generate ID if not present (for POST/create operations)
+      # Generate SCIM id (stored as scim_id) if not provided (typical for POST operations)
       scim_hash = scim_hash.dup
       scim_hash["id"] ||= SecureRandom.uuid
 

@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require "bundler/setup"
-require "trino/connector"
-
 require "irb"
+require "data_conduit"
+
 IRB.start(__FILE__)

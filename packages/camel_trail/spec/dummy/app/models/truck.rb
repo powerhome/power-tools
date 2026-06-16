@@ -4,6 +4,7 @@ require "camel_trail"
 
 class Truck < ApplicationRecord
   include CamelTrail::Recordable
+
   history_options(source_changes: :history_changes)
 
 private

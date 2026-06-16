@@ -133,6 +133,25 @@ department_id = 13, it will run a query similar to:
 "SELECT * FROM projects WHERE department_id = 1"
 ```
 
+### Verifying Permission Definitions
+
+Consent provides methods to verify and synchronize permission definitions across environments:
+
+```ruby
+# Get the concatenated contents of all permission files
+content = Consent.subjects_content([Rails.root.join('app/permissions')])
+
+# Calculate a deterministic checksum
+checksum = Consent.subjects_checksum([Rails.root.join('app/permissions')])
+```
+
+These methods are useful for:
+- Verifying permission files are identical across environments
+- Detecting when permission definitions have changed
+- Synchronizing permissions between systems
+
+The checksum is deterministic - the same permission file contents will always produce the same SHA256 hash.
+
 ### Subject
 
 The subject is the central point of a group of actions and views. It will typically

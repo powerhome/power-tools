@@ -33,9 +33,7 @@ module DataTaster
 
       DataTaster.safe_execute(sql)
     rescue => e
-      e.message << context_warning
-
-      raise e
+      raise e, e.message + context_warning
     end
 
     def context_warning

@@ -97,7 +97,7 @@ RSpec.describe DataConduit::DataWarehouseRepository do
       let(:config) do
         {
           transform_options: {
-            transform_keys: ->(key) { key.downcase },
+            transform_keys: lambda(&:downcase),
           },
         }
       end
@@ -132,7 +132,7 @@ RSpec.describe DataConduit::DataWarehouseRepository do
         {
           transform_options: {
             keys: :symbol,
-            transform_keys: ->(key) { key.downcase },
+            transform_keys: lambda(&:downcase),
             transform_values: ->(value) { value.is_a?(String) ? value.strip : value },
           },
         }

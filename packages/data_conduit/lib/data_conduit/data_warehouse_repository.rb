@@ -18,6 +18,10 @@ module DataConduit
         raise NotImplementedError, "You must implement the initialize method"
       end
 
+      def self.tables(_config = {})
+        raise NotImplementedError, "You must implement the tables method"
+      end
+
       def query(_sql_query = nil)
         raise NotImplementedError, "You must implement the query method"
       end
@@ -26,12 +30,16 @@ module DataConduit
         raise NotImplementedError, "You must implement the execute method"
       end
 
+      def last_updated
+        raise NotImplementedError, "You must implement the last_updated method"
+      end
+
     protected
 
       def validate_table_name(table_name)
         raise ArgumentError, "Table name cannot be blank" if table_name.nil? || table_name.empty?
 
-        return if table_name.to_s.match?(/^[a-zA-Z0-9_\.]+$/)
+        return if table_name.to_s.match?(/^[a-zA-Z0-9_.]+$/)
 
         raise ArgumentError, "Invalid table name format. Table name must contain only letters, " \
                              "numbers, underscores, and periods."
@@ -39,6 +47,7 @@ module DataConduit
 
       def transform_response(result_data, result_columns)
         return [] if result_data.nil? || result_data.empty?
+        return [result_data] if result_data.is_a?(Hash) && result_data["error"]
 
         columns = extract_column_names(result_columns)
         result_data.map do |row|

@@ -2,7 +2,13 @@ require:
   - rubocop-powerhome
   
 AllCops: 
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.3
 
 Rails:
   Enabled: false
+
+Metrics/ClassLength:
+  Max: 250
+
+Metrics/MethodLength:
+  Max: 25

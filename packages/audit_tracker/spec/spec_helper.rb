@@ -2,6 +2,7 @@
 
 ENV["RAILS_ENV"] ||= "test"
 
+require "logger"
 require "bundler"
 
 Bundler.require(:development)
