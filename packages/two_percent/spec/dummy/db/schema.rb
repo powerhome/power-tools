@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_28_000003) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_28_000003) do
   create_table "two_percent_scim_group_memberships", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "scim_group_id", null: false
