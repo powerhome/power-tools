@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [1.2.0] - 2026-06-17
+
+- **Simplify ScimGroupMembership**: Removed correlation_id from join table (tracking remains on ScimGroup and ScimUser)
+
 ## [1.1.0] - 2026-06-05
 
 - **GET Endpoints**: Read operations with RFC 7644 ListResponse format [#436](https://github.com/powerhome/power-tools/pull/436)
