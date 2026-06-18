@@ -295,17 +295,10 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
 
       it "creates memberships for new members" do
         expect do
-          group.replace_members(members_array, "corr-123")
+          group.replace_members(members_array)
         end.to change { group.scim_group_memberships.count }.by(2)
 
         expect(group.scim_users).to include(user1, user2)
-      end
-
-      it "stores correlation_id on created memberships" do
-        group.replace_members(members_array, "corr-123")
-
-        memberships = group.scim_group_memberships
-        expect(memberships.pluck(:correlation_id).uniq).to eq(["corr-123"])
       end
     end
 
@@ -322,7 +315,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
 
       it "removes memberships not in the array" do
         expect do
-          group.replace_members(members_array, "corr-456")
+          group.replace_members(members_array)
         end.to change { group.scim_group_memberships.count }.by(-2)
 
         group.reload
@@ -346,7 +339,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       it "does not duplicate existing memberships" do
         # Only adds user2
         expect do
-          group.replace_members(members_array, "corr-789")
+          group.replace_members(members_array)
         end.to change { group.scim_group_memberships.count }.by(1)
         expect(group.scim_users).to include(user1, user2)
       end
@@ -360,7 +353,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
 
       it "removes all memberships" do
         expect do
-          group.replace_members([], "corr-empty")
+          group.replace_members([])
         end.to change { group.scim_group_memberships.count }.from(2).to(0)
       end
     end
@@ -372,7 +365,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
 
       it "raises error for non-existent users" do
         expect do
-          group.replace_members(members_array, "corr-404")
+          group.replace_members(members_array)
         end.to raise_error(ArgumentError, /Cannot add non-existent users to group: nonexistent-user/)
       end
     end

@@ -53,34 +53,6 @@ RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
     end
   end
 
-  describe "#correlation_id" do
-    it "stores correlation_id when provided" do
-      user = create_scim_user
-      group = create_scim_group
-
-      membership = described_class.create!(
-        scim_user: user,
-        scim_group: group,
-        correlation_id: "test-correlation-123"
-      )
-
-      expect(membership.correlation_id).to eq("test-correlation-123")
-    end
-
-    it "allows nil correlation_id" do
-      user = create_scim_user
-      group = create_scim_group
-
-      membership = described_class.create!(
-        scim_user: user,
-        scim_group: group,
-        correlation_id: nil
-      )
-
-      expect(membership.correlation_id).to be_nil
-    end
-  end
-
   describe "database persistence" do
     it "persists to database" do
       user = create_scim_user
