@@ -22,5 +22,16 @@ module Consent
 
       @instance.curry[*args]
     end
+
+    def to_permission_payload
+      {
+        view: key,
+        label: label,
+      }
+    end
+
+    def <=>(other)
+      key <=> other.key
+    end
   end
 end

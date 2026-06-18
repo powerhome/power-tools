@@ -3,6 +3,7 @@
 require_relative "boot"
 require "logger"
 
+require "active_record/railtie"
 require "action_controller/railtie"
 require "two_percent/engine"
 

@@ -11,7 +11,7 @@ PATH
 PATH
   remote: ..
   specs:
-    two_percent (0.5.0)
+    two_percent (1.1.0)
       aether_observatory (>= 1.0)
       rails (>= 6.1)
 
@@ -279,6 +279,16 @@ GEM
       rubocop (~> 1.81)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
+    shoulda-matchers (6.5.0)
+      activesupport (>= 5.2.0)
+    sqlite3 (2.9.4-aarch64-linux-gnu)
+    sqlite3 (2.9.4-aarch64-linux-musl)
+    sqlite3 (2.9.4-arm-linux-gnu)
+    sqlite3 (2.9.4-arm-linux-musl)
+    sqlite3 (2.9.4-arm64-darwin)
+    sqlite3 (2.9.4-x86_64-darwin)
+    sqlite3 (2.9.4-x86_64-linux-gnu)
+    sqlite3 (2.9.4-x86_64-linux-musl)
     stringio (3.2.0)
     thor (1.5.0)
     timeout (0.6.1)
@@ -311,6 +321,8 @@ DEPENDENCIES
   rails (= 7.1.5.2)
   rspec-rails (= 7.1.1)
   rubocop-powerhome!
+  shoulda-matchers (~> 6.0)
+  sqlite3 (~> 2.4)
   two_percent!
 
 BUNDLED WITH

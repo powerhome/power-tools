@@ -12,4 +12,14 @@ RSpec.describe Consent::View do
       expect(view.conditions(obj)).to eql "1235"
     end
   end
+
+  describe "#to_permission_payload" do
+    it "returns the correct hash" do
+      view = Consent::View.new(:view, "View")
+      expect(view.to_permission_payload).to eq({
+                                                 view: :view,
+                                                 label: "View",
+                                               })
+    end
+  end
 end
