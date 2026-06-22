@@ -38,7 +38,7 @@ module TwoPercent
       scim_group = find_or_initialize_by(scim_id: scim_hash["id"])
       scim_group.update_from_scim!(resource_type, validated_data, correlation_id: correlation_id)
 
-      scim_group.replace_members(scim_hash["members"], correlation_id) if scim_hash.key?("members")
+      scim_group.replace_members(scim_hash["members"]) if scim_hash.key?("members")
 
       scim_group
     end
@@ -101,13 +101,13 @@ module TwoPercent
       save!
     end
 
-    def replace_members(members_array, correlation_id)
+    def replace_members(members_array)
       member_scim_ids = members_array.filter_map { |m| m["value"] }
       existing_users = validate_users_exist!(member_scim_ids)
       existing_user_ids = scim_group_memberships.pluck(:scim_user_id)
 
       users_to_add = existing_users.where.not(id: existing_user_ids)
-      bulk_insert_memberships(users_to_add, correlation_id) if users_to_add.any?
+      bulk_insert_memberships(users_to_add) if users_to_add.any?
 
       # Bulk delete removed memberships
       users_to_remove_ids = scim_users.where.not(scim_id: member_scim_ids).pluck(:id)
@@ -147,13 +147,11 @@ module TwoPercent
     # Bulk insert memberships for performance
     #
     # @param users_to_add [ActiveRecord::Relation] Users to add as members
-    # @param correlation_id [String, nil] Correlation ID for tracking
-    def bulk_insert_memberships(users_to_add, correlation_id)
+    def bulk_insert_memberships(users_to_add)
       membership_records = users_to_add.pluck(:id).map do |user_id|
         {
           scim_user_id: user_id,
           scim_group_id: id,
-          correlation_id: correlation_id,
           created_at: Time.current,
           updated_at: Time.current,
         }
