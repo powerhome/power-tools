@@ -21,7 +21,7 @@ module TwoPercent
           when "replace"
             apply_replace(result, operation[:path], operation[:value])
           when "remove"
-            apply_remove(result, operation[:path])
+            apply_remove(result, operation[:path], operation[:value])
           else
             raise ArgumentError, "Unknown PATCH operation: #{operation[:op]}"
           end
@@ -90,17 +90,26 @@ module TwoPercent
         end
       end
 
-      def apply_remove(hash, path)
+      def apply_remove(hash, path, value = nil)
         return if path.nil? || path.empty?
 
         keys = path.split(".")
         target = navigate_to_parent(hash, keys[0..-2])
         last_key = keys.last
 
-        # Special handling for members array - set to empty array instead of deleting
-        # This ensures upsert_from_scim can sync memberships to empty state
+        # Special handling for members array
         if last_key == "members"
-          target[last_key] = []
+          if value.nil? || (value.is_a?(Array) && value.empty?)
+            # No value or empty array means remove all members
+            target[last_key] = []
+          elsif target[last_key].is_a?(Array)
+            # Value provided: remove specific members by filtering
+            values_to_remove = Array(value).map { |v| v["value"] || v[:value] }.compact
+            target[last_key] = target[last_key].reject do |member|
+              member_value = member["value"] || member[:value]
+              values_to_remove.include?(member_value)
+            end
+          end
         else
           target.delete(last_key)
         end

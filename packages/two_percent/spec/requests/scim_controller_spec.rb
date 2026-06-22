@@ -450,6 +450,113 @@ RSpec.describe "SCIM API", type: :request do
       end
     end
 
+    context "adding members to group with existing members (verify append not replace)" do
+      let!(:group_with_members) do
+        group = create_scim_group(scim_id: "group-789", display_name: "Existing Group")
+        group.scim_users = [user1, user2]
+        group.save!
+        # Update scim_data to reflect current members
+        group.scim_data["members"] = [
+          { "value" => user1.scim_id, "type" => "User" },
+          { "value" => user2.scim_id, "type" => "User" },
+        ]
+        group.save!
+        group
+      end
+
+      let(:add_third_member_operations) do
+        {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "add",
+              path: "members",
+              value: [{ value: user3.scim_id }],
+            },
+          ],
+        }
+      end
+
+      it "appends new member (does not replace existing)" do
+        patch "/scim/Groups/group-789", headers: headers, params: add_third_member_operations.to_json
+
+        group_with_members.reload
+        expect(group_with_members.scim_users.count).to eq(3)
+        expect(group_with_members.scim_users).to contain_exactly(user1, user2, user3)
+      end
+
+      it "returns SCIM representation with all members" do
+        patch "/scim/Groups/group-789", headers: headers, params: add_third_member_operations.to_json
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["members"].size).to eq(3)
+        member_ids = json_response["members"].map { |m| m["value"] }
+        expect(member_ids).to contain_exactly(user1.scim_id, user2.scim_id, user3.scim_id)
+      end
+    end
+
+    context "replacing members" do
+      let!(:group_with_members) do
+        group = create_scim_group(scim_id: "group-replace", display_name: "Replace Group")
+        group.scim_users = [user1, user2]
+        group.save!
+        group.scim_data["members"] = [
+          { "value" => user1.scim_id, "type" => "User" },
+          { "value" => user2.scim_id, "type" => "User" },
+        ]
+        group.save!
+        group
+      end
+
+      let(:replace_members_operations) do
+        {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "replace",
+              path: "members",
+              value: [
+                { value: user3.scim_id },
+                { value: user1.scim_id },
+              ],
+            },
+          ],
+        }
+      end
+
+      it "replaces all members with new set" do
+        patch "/scim/Groups/group-replace", headers: headers, params: replace_members_operations.to_json
+
+        group_with_members.reload
+        expect(group_with_members.scim_users.count).to eq(2)
+        expect(group_with_members.scim_users).to contain_exactly(user1, user3)
+        expect(group_with_members.scim_users).not_to include(user2)
+      end
+
+      it "returns SCIM representation with replaced members" do
+        patch "/scim/Groups/group-replace", headers: headers, params: replace_members_operations.to_json
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["members"].size).to eq(2)
+        member_ids = json_response["members"].map { |m| m["value"] }
+        expect(member_ids).to contain_exactly(user1.scim_id, user3.scim_id)
+      end
+
+      it "can replace with empty array" do
+        empty_replace_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            { op: "replace", path: "members", value: [] },
+          ],
+        }
+
+        patch "/scim/Groups/group-replace", headers: headers, params: empty_replace_operations.to_json
+
+        group_with_members.reload
+        expect(group_with_members.scim_users).to be_empty
+      end
+    end
+
     context "with single remove operation" do
       before do
         # Add members first
@@ -498,6 +605,104 @@ RSpec.describe "SCIM API", type: :request do
 
         json_response = JSON.parse(response.body)
         expect(json_response["members"]).to eq([])
+      end
+    end
+
+    context "removing specific member (with value)" do
+      let!(:user3) { create_scim_user(scim_id: "user-3", display_name: "Charlie") }
+      let!(:existing_group_with_members) do
+        group = create_scim_group(
+          scim_id: "group-456",
+          display_name: "Test Group"
+        )
+        group.scim_users = [user1, user2, user3]
+        group.save!
+        # Update scim_data to reflect current members
+        group.scim_data["members"] = [
+          { "value" => user1.scim_id, "type" => "User" },
+          { "value" => user2.scim_id, "type" => "User" },
+          { "value" => user3.scim_id, "type" => "User" },
+        ]
+        group.save!
+        group
+      end
+
+      let(:remove_specific_member_operations) do
+        {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "remove",
+              path: "members",
+              value: [{ value: user2.scim_id }],
+            },
+          ],
+        }
+      end
+
+      it "removes only the specified member (keeps others)" do
+        patch "/scim/Groups/group-456", headers: headers, params: remove_specific_member_operations.to_json
+
+        existing_group_with_members.reload
+        expect(existing_group_with_members.scim_users.count).to eq(2)
+        expect(existing_group_with_members.scim_users).to include(user1, user3)
+        expect(existing_group_with_members.scim_users).not_to include(user2)
+      end
+
+      it "returns SCIM representation with remaining members" do
+        patch "/scim/Groups/group-456", headers: headers, params: remove_specific_member_operations.to_json
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["members"].size).to eq(2)
+        member_ids = json_response["members"].map { |m| m["value"] }
+        expect(member_ids).to contain_exactly(user1.scim_id, user3.scim_id)
+      end
+
+      it "is idempotent when removing non-existent member" do
+        operations_with_nonexistent = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "remove",
+              path: "members",
+              value: [{ value: "user-999-nonexistent" }],
+            },
+          ],
+        }
+
+        patch "/scim/Groups/group-456", headers: headers, params: operations_with_nonexistent.to_json
+
+        existing_group_with_members.reload
+        expect(existing_group_with_members.scim_users.count).to eq(3)
+        expect(existing_group_with_members.scim_users).to contain_exactly(user1, user2, user3)
+      end
+
+      it "removes multiple members in one operation" do
+        operations_remove_multiple = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "remove",
+              path: "members",
+              value: [
+                { value: user1.scim_id },
+                { value: user3.scim_id },
+              ],
+            },
+          ],
+        }
+
+        patch "/scim/Groups/group-456", headers: headers, params: operations_remove_multiple.to_json
+
+        existing_group_with_members.reload
+        expect(existing_group_with_members.scim_users.count).to eq(1)
+        expect(existing_group_with_members.scim_users).to contain_exactly(user2)
+      end
+
+      it "returns 200 OK" do
+        patch "/scim/Groups/group-456", headers: headers, params: remove_specific_member_operations.to_json
+
+        expect(response).to have_http_status(:ok)
       end
     end
 

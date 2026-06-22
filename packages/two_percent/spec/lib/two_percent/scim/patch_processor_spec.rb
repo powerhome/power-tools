@@ -226,6 +226,105 @@ RSpec.describe TwoPercent::Scim::PatchProcessor do
 
         expect(result).to eq(original_hash) # Unchanged
       end
+
+      context "removing members from array" do
+        let(:hash_with_members) do
+          original_hash.merge(
+            "members" => [
+              { "value" => "user-1", "type" => "User" },
+              { "value" => "user-2", "type" => "User" },
+              { "value" => "user-3", "type" => "User" },
+            ]
+          )
+        end
+
+        it "removes specific member by value (keeps others)" do
+          patch_request = {
+            Operations: [
+              { op: "remove", path: "members", value: [{ "value" => "user-2" }] },
+            ],
+          }
+
+          processor = described_class.new(patch_request)
+          result = processor.apply_to_hash(hash_with_members)
+
+          expect(result["members"].size).to eq(2)
+          expect(result["members"].map { |m| m["value"] }).to contain_exactly("user-1", "user-3")
+        end
+
+        it "removes all members when no value provided (backwards compatible)" do
+          patch_request = {
+            Operations: [
+              { op: "remove", path: "members" },
+            ],
+          }
+
+          processor = described_class.new(patch_request)
+          result = processor.apply_to_hash(hash_with_members)
+
+          expect(result["members"]).to eq([])
+        end
+
+        it "removes non-existent member (idempotent no-op)" do
+          patch_request = {
+            Operations: [
+              { op: "remove", path: "members", value: [{ "value" => "user-99" }] },
+            ],
+          }
+
+          processor = described_class.new(patch_request)
+          result = processor.apply_to_hash(hash_with_members)
+
+          expect(result["members"].size).to eq(3)
+          expect(result["members"]).to eq(hash_with_members["members"])
+        end
+
+        it "removes multiple members in one operation" do
+          patch_request = {
+            Operations: [
+              {
+                op: "remove",
+                path: "members",
+                value: [{ "value" => "user-1" }, { "value" => "user-3" }],
+              },
+            ],
+          }
+
+          processor = described_class.new(patch_request)
+          result = processor.apply_to_hash(hash_with_members)
+
+          expect(result["members"].size).to eq(1)
+          expect(result["members"].first["value"]).to eq("user-2")
+        end
+
+        it "handles empty members array (idempotent)" do
+          empty_hash = original_hash.merge("members" => [])
+
+          patch_request = {
+            Operations: [
+              { op: "remove", path: "members", value: [{ "value" => "user-1" }] },
+            ],
+          }
+
+          processor = described_class.new(patch_request)
+          result = processor.apply_to_hash(empty_hash)
+
+          expect(result["members"]).to eq([])
+        end
+
+        it "removes all members when value is empty array" do
+          patch_request = {
+            Operations: [
+              { op: "remove", path: "members", value: [] },
+            ],
+          }
+
+          processor = described_class.new(patch_request)
+          result = processor.apply_to_hash(hash_with_members)
+
+          expect(result["members"]).to eq([])
+        end
+      end
     end
 
     describe "multiple operations" do

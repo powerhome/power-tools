@@ -252,6 +252,98 @@ RSpec.describe TwoPercent::BulkProcessor do
         expect(group.scim_users.pluck(:scim_id)).to include(user.scim_id)
         expect(group.display_name).to eq("Test Group") # Other fields preserved
       end
+
+      it "removes specific member from Group via bulk operation" do
+        user1 = TwoPercent::ScimUser.upsert_from_scim({
+                                                        "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
+                                                        "externalId" => "member1-#{SecureRandom.hex(4)}",
+                                                        "userName" => "user1@example.com",
+                                                        "displayName" => "User One",
+                                                        "active" => true,
+                                                      })
+
+        user2 = TwoPercent::ScimUser.upsert_from_scim({
+                                                        "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
+                                                        "externalId" => "member2-#{SecureRandom.hex(4)}",
+                                                        "userName" => "user2@example.com",
+                                                        "displayName" => "User Two",
+                                                        "active" => true,
+                                                      })
+
+        group = TwoPercent::ScimGroup.upsert_from_scim("Groups", {
+                                                         "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+                                                         "externalId" => "bulk-remove-#{SecureRandom.hex(4)}",
+                                                         "displayName" => "Test Group",
+                                                         "members" => [
+                                                           { "value" => user1.scim_id },
+                                                           { "value" => user2.scim_id },
+                                                         ],
+                                                       })
+
+        operations = [
+          {
+            method: "PATCH",
+            path: "/Groups/#{group.scim_id}",
+            data: {
+              "schemas" => ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+              "Operations" => [
+                {
+                  "op" => "remove",
+                  "path" => "members",
+                  "value" => [{ "value" => user2.scim_id }],
+                },
+              ],
+            },
+          },
+        ]
+
+        allow(TwoPercent::Domain::Events::GroupUpdated).to receive(:create)
+
+        processor = described_class.new(operations, correlation_id: correlation_id)
+        processor.dispatch
+
+        group.reload
+        expect(group.scim_users.count).to eq(1)
+        expect(group.scim_users.pluck(:scim_id)).to contain_exactly(user1.scim_id)
+      end
+
+      it "removes all members from Group via bulk operation" do
+        user = TwoPercent::ScimUser.upsert_from_scim({
+                                                       "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
+                                                       "externalId" => "member-#{SecureRandom.hex(4)}",
+                                                       "userName" => "user@example.com",
+                                                       "displayName" => "User",
+                                                       "active" => true,
+                                                     })
+
+        group = TwoPercent::ScimGroup.upsert_from_scim("Groups", {
+                                                         "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+                                                         "externalId" => "bulk-remove-all-#{SecureRandom.hex(4)}",
+                                                         "displayName" => "Test Group",
+                                                         "members" => [{ "value" => user.scim_id }],
+                                                       })
+
+        operations = [
+          {
+            method: "PATCH",
+            path: "/Groups/#{group.scim_id}",
+            data: {
+              "schemas" => ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+              "Operations" => [
+                { "op" => "remove", "path" => "members" },
+              ],
+            },
+          },
+        ]
+
+        allow(TwoPercent::Domain::Events::GroupUpdated).to receive(:create)
+
+        processor = described_class.new(operations, correlation_id: correlation_id)
+        processor.dispatch
+
+        group.reload
+        expect(group.scim_users).to be_empty
+      end
     end
 
     describe "DELETE operations" do
