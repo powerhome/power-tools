@@ -370,6 +370,122 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
     end
   end
 
+  describe "#to_scim_representation with dynamic groups (RFC 7643 read-only)" do
+    let!(:user) { create_scim_user(scim_id: "user-789") }
+    let!(:group1) do
+      create_scim_group(
+        scim_id: "group-111",
+        display_name: "Engineering",
+        resource_type: "Departments"
+      )
+    end
+    let!(:group2) do
+      create_scim_group(
+        scim_id: "group-222",
+        display_name: "Admins",
+        resource_type: "Groups"
+      )
+    end
+
+    context "when user has group memberships" do
+      before do
+        TwoPercent::ScimGroupMembership.create!(scim_user: user, scim_group: group1)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user, scim_group: group2)
+        # Reload with scim_groups association preloaded (like ScimController does)
+        user.reload
+        user.scim_groups.reload
+      end
+
+      it "includes groups array in SCIM representation" do
+        scim_repr = user.to_scim_representation
+
+        expect(scim_repr["groups"]).to be_an(Array)
+        expect(scim_repr["groups"].size).to eq(2)
+      end
+
+      it "includes SCIM-compliant group attributes (value, display, $ref, type)" do
+        scim_repr = user.to_scim_representation
+        groups = scim_repr["groups"]
+
+        group_values = groups.map { |g| g["value"] }
+        expect(group_values).to contain_exactly("group-111", "group-222")
+
+        # Verify all groups have required/recommended attributes
+        groups.each do |group|
+          expect(group).to have_key("value")
+          expect(group).to have_key("display")
+          expect(group).to have_key("$ref")
+          expect(group).to have_key("type")
+        end
+      end
+
+      it "builds groups dynamically from join table, not from scim_data" do
+        # Verify groups are NOT stored in scim_data
+        expect(user.scim_data).not_to have_key("groups")
+
+        # But they appear in SCIM representation
+        scim_repr = user.to_scim_representation
+        expect(scim_repr["groups"]).to be_present
+        expect(scim_repr["groups"].size).to eq(2)
+      end
+
+      it "includes correct display names for groups" do
+        scim_repr = user.to_scim_representation
+        groups = scim_repr["groups"]
+
+        display_names = groups.map { |g| g["display"] }
+        expect(display_names).to contain_exactly("Engineering", "Admins")
+      end
+
+      it "includes $ref URIs for groups" do
+        scim_repr = user.to_scim_representation
+        groups = scim_repr["groups"]
+
+        refs = groups.map { |g| g["$ref"] }
+        expect(refs).to contain_exactly("Departments/group-111", "Groups/group-222")
+      end
+
+      it "includes resource type for groups" do
+        scim_repr = user.to_scim_representation
+        groups = scim_repr["groups"]
+
+        types = groups.map { |g| g["type"] }
+        expect(types).to contain_exactly("Departments", "Groups")
+      end
+    end
+
+    context "when user has no group memberships" do
+      it "returns empty groups array or omits groups key" do
+        user.reload # Ensure no memberships loaded
+        scim_repr = user.to_scim_representation
+
+        # Either empty array or key is not present
+        groups = scim_repr["groups"]
+        expect(groups).to be_nil.or(eq([]))
+      end
+    end
+
+    context "when group is added via Group.members (not User.groups)" do
+      it "reflects in user's groups array dynamically" do
+        # Initially no groups
+        user.scim_groups.reload
+        scim_repr_before = user.to_scim_representation
+        expect(scim_repr_before["groups"] || []).to be_empty
+
+        # Add membership via join table
+        TwoPercent::ScimGroupMembership.create!(scim_user: user, scim_group: group1)
+        user.reload
+        user.scim_groups.reload
+
+        # Now appears in groups
+        scim_repr_after = user.to_scim_representation
+        expect(scim_repr_after["groups"]).to be_an(Array)
+        expect(scim_repr_after["groups"].size).to eq(1)
+        expect(scim_repr_after["groups"].first["value"]).to eq("group-111")
+      end
+    end
+  end
+
   # Test helpers
   def build_scim_user(attributes = {})
     default_attributes = {

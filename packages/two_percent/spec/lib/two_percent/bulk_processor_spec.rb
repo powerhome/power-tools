@@ -672,5 +672,233 @@ RSpec.describe TwoPercent::BulkProcessor do
         )
       end
     end
+
+    describe "RFC 7643: User.groups read-only compliance" do
+      let!(:test_group) do
+        TwoPercent::ScimGroup.upsert_from_scim("Groups", {
+                                                 "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+                                                 "externalId" => "test-group-#{SecureRandom.hex(4)}",
+                                                 "displayName" => "Test Group",
+                                                 "members" => [],
+                                               })
+      end
+
+      let!(:existing_user) do
+        TwoPercent::ScimUser.upsert_from_scim({
+                                                "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
+                                                "externalId" => "user-bulk-#{SecureRandom.hex(4)}",
+                                                "userName" => "bulk.readonly@example.com",
+                                                "displayName" => "Bulk Readonly User",
+                                                "active" => true,
+                                              })
+      end
+
+      context "POST operations" do
+        it "silently ignores groups attribute per RFC 7644 Section 3.3" do
+          operations = [
+            {
+              method: "POST",
+              path: "/Users",
+              data: {
+                "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
+                "externalId" => "post-ignore-#{SecureRandom.hex(4)}",
+                "userName" => "post.ignore@example.com",
+                "displayName" => "Post Ignore Groups",
+                "active" => true,
+                "groups" => [{ "value" => test_group.scim_id, "display" => test_group.display_name }],
+              },
+            },
+          ]
+
+          allow(TwoPercent::Domain::Events::UserCreated).to receive(:create)
+
+          processor = described_class.new(operations, correlation_id: correlation_id)
+          processor.dispatch
+
+          user = TwoPercent::ScimUser.find_by(user_name: "post.ignore@example.com")
+          expect(user).to be_present
+
+          # Groups should not be set from POST
+          user.reload
+          expect(user.scim_groups.count).to eq(0)
+
+          # Groups should not be stored in scim_data
+          expect(user.scim_data).not_to have_key("groups")
+        end
+      end
+
+      context "PUT operations" do
+        it "silently ignores groups attribute per RFC 7644 Section 3.5.1" do
+          operations = [
+            {
+              method: "PUT",
+              path: "/Users/#{existing_user.scim_id}",
+              data: {
+                "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
+                "externalId" => "put-ignore-#{SecureRandom.hex(4)}",
+                "userName" => "put.ignore@example.com",
+                "displayName" => "Put Ignore Groups",
+                "active" => true,
+                "groups" => [{ "value" => test_group.scim_id, "display" => test_group.display_name }],
+              },
+            },
+          ]
+
+          allow(TwoPercent::Domain::Events::UserUpdated).to receive(:create)
+
+          processor = described_class.new(operations, correlation_id: correlation_id)
+          processor.dispatch
+
+          existing_user.reload
+          expect(existing_user.display_name).to eq("Put Ignore Groups")
+
+          # Groups should not be set from PUT
+          expect(existing_user.scim_groups.count).to eq(0)
+
+          # Groups should not be stored in scim_data
+          expect(existing_user.scim_data).not_to have_key("groups")
+        end
+      end
+
+      context "PATCH operations" do
+        it "raises ReadOnlyAttributeError when attempting to add groups per RFC 7643 Section 4.1.2" do
+          operations = [
+            {
+              method: "PATCH",
+              path: "/Users/#{existing_user.scim_id}",
+              data: {
+                "schemas" => ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+                "Operations" => [
+                  {
+                    "op" => "add",
+                    "path" => "groups",
+                    "value" => [{ "value" => test_group.scim_id }],
+                  },
+                ],
+              },
+            },
+          ]
+
+          processor = described_class.new(operations, correlation_id: correlation_id)
+
+          expect do
+            processor.dispatch
+          end.to raise_error(TwoPercent::ReadOnlyAttributeError, /Attribute 'groups' is read-only/)
+        end
+
+        it "raises ReadOnlyAttributeError when attempting to remove groups" do
+          operations = [
+            {
+              method: "PATCH",
+              path: "/Users/#{existing_user.scim_id}",
+              data: {
+                "schemas" => ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+                "Operations" => [
+                  {
+                    "op" => "remove",
+                    "path" => "groups[value eq \"#{test_group.scim_id}\"]",
+                  },
+                ],
+              },
+            },
+          ]
+
+          processor = described_class.new(operations, correlation_id: correlation_id)
+
+          expect do
+            processor.dispatch
+          end.to raise_error(TwoPercent::ReadOnlyAttributeError, /Attribute 'groups' is read-only/)
+        end
+
+        it "raises ReadOnlyAttributeError when attempting to replace groups" do
+          operations = [
+            {
+              method: "PATCH",
+              path: "/Users/#{existing_user.scim_id}",
+              data: {
+                "schemas" => ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+                "Operations" => [
+                  {
+                    "op" => "replace",
+                    "path" => "groups",
+                    "value" => [{ "value" => test_group.scim_id }],
+                  },
+                ],
+              },
+            },
+          ]
+
+          processor = described_class.new(operations, correlation_id: correlation_id)
+
+          expect do
+            processor.dispatch
+          end.to raise_error(TwoPercent::ReadOnlyAttributeError, /Attribute 'groups' is read-only/)
+        end
+
+        it "allows other PATCH operations on Users to proceed normally" do
+          operations = [
+            {
+              method: "PATCH",
+              path: "/Users/#{existing_user.scim_id}",
+              data: {
+                "schemas" => ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+                "Operations" => [
+                  {
+                    "op" => "replace",
+                    "path" => "displayName",
+                    "value" => "Patched Display Name",
+                  },
+                ],
+              },
+            },
+          ]
+
+          allow(TwoPercent::Domain::Events::UserUpdated).to receive(:create)
+
+          processor = described_class.new(operations, correlation_id: correlation_id)
+          processor.dispatch
+
+          existing_user.reload
+          expect(existing_user.display_name).to eq("Patched Display Name")
+        end
+      end
+
+      context "Group operations (control test)" do
+        it "allows PATCH operations on Group.members as expected" do
+          user = TwoPercent::ScimUser.upsert_from_scim({
+                                                         "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
+                                                         "externalId" => "member-bulk-#{SecureRandom.hex(4)}",
+                                                         "userName" => "member.bulk@example.com",
+                                                         "displayName" => "Member Bulk",
+                                                         "active" => true,
+                                                       })
+
+          operations = [
+            {
+              method: "PATCH",
+              path: "/Groups/#{test_group.scim_id}",
+              data: {
+                "schemas" => ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+                "Operations" => [
+                  {
+                    "op" => "add",
+                    "path" => "members",
+                    "value" => [{ "value" => user.scim_id }],
+                  },
+                ],
+              },
+            },
+          ]
+
+          allow(TwoPercent::Domain::Events::GroupUpdated).to receive(:create)
+
+          processor = described_class.new(operations, correlation_id: correlation_id)
+          processor.dispatch
+
+          test_group.reload
+          expect(test_group.scim_users.pluck(:scim_id)).to include(user.scim_id)
+        end
+      end
+    end
   end
 end

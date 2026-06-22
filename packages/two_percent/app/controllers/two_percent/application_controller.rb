@@ -8,6 +8,7 @@ module TwoPercent
     rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
     rescue_from ActiveRecord::RecordInvalid, with: :handle_validation_error
     rescue_from ArgumentError, with: :handle_bad_request
+    rescue_from TwoPercent::ReadOnlyAttributeError, with: :handle_read_only_attribute
 
     def authenticate
       result = instance_exec(&TwoPercent.config.authenticate)
@@ -50,6 +51,15 @@ module TwoPercent
       render_scim_error(
         status: :bad_request,
         scim_type: scim_type,
+        detail: exception.message
+      )
+    end
+
+    def handle_read_only_attribute(exception)
+      # RFC 7644 Section 3.5.2: Read-only attribute modification attempt
+      render_scim_error(
+        status: :bad_request,
+        scim_type: "mutability",
         detail: exception.message
       )
     end

@@ -181,6 +181,71 @@ RSpec.describe "SCIM API", type: :request do
         end.not_to(change { published_events.size })
       end
     end
+
+    context "when groups attribute is present in request (RFC 7643 read-only)" do
+      let!(:test_group) do
+        create_scim_group(
+          scim_id: "group-999",
+          display_name: "Test Group",
+          resource_type: "Groups"
+        )
+      end
+
+      let(:scim_user_with_groups) do
+        scim_user_payload.merge(
+          groups: [{ value: "group-999", display: "Test Group" }]
+        )
+      end
+
+      it "silently ignores groups attribute per RFC 7644 Section 3.3" do
+        post "/scim/Users", params: scim_user_with_groups.to_json, headers: headers
+
+        expect(response).to have_http_status(:created)
+        json_response = JSON.parse(response.body)
+        # groups should be empty or absent since not set via Group.members
+        expect(json_response["groups"] || []).to be_empty
+      end
+
+      it "does not create group memberships from POST request" do
+        post "/scim/Users", params: scim_user_with_groups.to_json, headers: headers
+
+        user = TwoPercent::ScimUser.last
+        user.reload
+        expect(user.scim_groups.count).to eq(0)
+      end
+
+      it "does not store groups in scim_data" do
+        post "/scim/Users", params: scim_user_with_groups.to_json, headers: headers
+
+        user = TwoPercent::ScimUser.last
+        expect(user.scim_data).not_to have_key("groups")
+      end
+    end
+  end
+
+  # Helper method for creating test groups
+  def create_scim_group(attributes = {})
+    scim_id = attributes[:scim_id] || "group-#{SecureRandom.hex(4)}"
+    external_id = attributes[:external_id] || "ext-#{SecureRandom.hex(4)}"
+    display_name = attributes[:display_name] || "Test Group"
+    resource_type = attributes[:resource_type] || "Groups"
+
+    default_scim_data = {
+      "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+      "id" => scim_id,
+      "externalId" => external_id,
+      "displayName" => display_name,
+      "members" => [],
+    }
+
+    full_attributes = {
+      scim_id: scim_id,
+      external_id: external_id,
+      display_name: display_name,
+      resource_type: resource_type,
+      scim_data: attributes[:scim_data] || default_scim_data,
+    }
+    TwoPercent::ScimGroup.create!(full_attributes)
   end
 
   # ========== POST /scim/Groups (Create Group) ==========
@@ -358,6 +423,92 @@ RSpec.describe "SCIM API", type: :request do
 
         json_response = JSON.parse(response.body)
         expect(json_response["displayName"]).to eq("New Name")
+      end
+    end
+
+    context "when attempting to modify groups attribute (RFC 7643 read-only)" do
+      let!(:test_group) do
+        create_scim_group(
+          scim_id: "group-999",
+          display_name: "Test Group",
+          resource_type: "Groups"
+        )
+      end
+
+      it "rejects PATCH add operation with 400 mutability error" do
+        add_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "add",
+              path: "groups",
+              value: [{ value: "group-999" }],
+            },
+          ],
+        }
+
+        patch "/scim/Users/user-456", headers: headers, params: add_operations.to_json
+
+        expect(response).to have_http_status(:bad_request)
+        json_response = JSON.parse(response.body)
+        expect(json_response["scimType"]).to eq("mutability")
+        expect(json_response["detail"]).to include("read-only")
+      end
+
+      it "rejects PATCH remove operation with 400 mutability error" do
+        remove_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "remove",
+              path: "groups[value eq \"group-999\"]",
+            },
+          ],
+        }
+
+        patch "/scim/Users/user-456", headers: headers, params: remove_operations.to_json
+
+        expect(response).to have_http_status(:bad_request)
+        json_response = JSON.parse(response.body)
+        expect(json_response["scimType"]).to eq("mutability")
+        expect(json_response["detail"]).to include("read-only")
+      end
+
+      it "rejects PATCH replace operation with 400 mutability error" do
+        replace_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "replace",
+              path: "groups",
+              value: [{ value: "group-999" }],
+            },
+          ],
+        }
+
+        patch "/scim/Users/user-456", headers: headers, params: replace_operations.to_json
+
+        expect(response).to have_http_status(:bad_request)
+        json_response = JSON.parse(response.body)
+        expect(json_response["scimType"]).to eq("mutability")
+        expect(json_response["detail"]).to include("read-only")
+      end
+
+      it "does not publish domain events when groups modification is rejected" do
+        add_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "add",
+              path: "groups",
+              value: [{ value: "group-999" }],
+            },
+          ],
+        }
+
+        patch "/scim/Users/user-456", headers: headers, params: add_operations.to_json
+
+        expect(published_events).to be_empty
       end
     end
 
@@ -917,6 +1068,50 @@ RSpec.describe "SCIM API", type: :request do
 
         event = published_events.first
         expect(event).to be_a(TwoPercent::Domain::Events::UserUpdated)
+      end
+    end
+
+    context "when groups attribute is present in request (RFC 7643 read-only)" do
+      let!(:existing_user) do
+        create_scim_user(scim_id: "user-with-group-attempt", display_name: "Test User")
+      end
+
+      let!(:test_group) do
+        create_scim_group(
+          scim_id: "group-888",
+          display_name: "Attempted Group",
+          resource_type: "Groups"
+        )
+      end
+
+      let(:user_payload_with_groups) do
+        full_user_payload.merge(
+          id: "user-with-group-attempt",
+          groups: [{ value: "group-888", display: "Attempted Group" }]
+        )
+      end
+
+      it "silently ignores groups attribute per RFC 7644 Section 3.5.1" do
+        put "/scim/Users/user-with-group-attempt", headers: headers, params: user_payload_with_groups.to_json
+
+        expect(response).to have_http_status(:ok)
+        json_response = JSON.parse(response.body)
+        # groups should be empty since not set via Group.members
+        expect(json_response["groups"] || []).to be_empty
+      end
+
+      it "does not create group memberships from PUT request" do
+        put "/scim/Users/user-with-group-attempt", headers: headers, params: user_payload_with_groups.to_json
+
+        existing_user.reload
+        expect(existing_user.scim_groups.count).to eq(0)
+      end
+
+      it "does not store groups in scim_data" do
+        put "/scim/Users/user-with-group-attempt", headers: headers, params: user_payload_with_groups.to_json
+
+        existing_user.reload
+        expect(existing_user.scim_data).not_to have_key("groups")
       end
     end
   end

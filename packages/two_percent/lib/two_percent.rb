@@ -10,6 +10,9 @@ require "two_percent/scim"
 require "two_percent/syncable"
 
 module TwoPercent
+  # Custom exception for SCIM RFC 7643 read-only attribute violations
+  class ReadOnlyAttributeError < StandardError; end
+
   # Logger used by TwoPercent. Defaults to Rails.logger
   def self.logger
     config.logger || Rails.logger

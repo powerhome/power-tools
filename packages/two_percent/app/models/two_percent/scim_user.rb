@@ -72,7 +72,7 @@ module TwoPercent
     #
     # @return [Hash] RFC 7644 compliant SCIM User resource
     def to_scim_representation
-      scim_data.merge(
+      representation = scim_data.merge(
         "id" => scim_id,
         "meta" => {
           "resourceType" => "User",
@@ -80,10 +80,35 @@ module TwoPercent
           "lastModified" => updated_at.iso8601,
         }
       )
+
+      # Build groups dynamically from join table (RFC 7643: User.groups is read-only)
+      representation["groups"] = groups_representation if scim_groups.loaded?
+
+      representation
+    end
+
+    # Build SCIM groups representation dynamically from join table
+    # Per RFC 7643 Section 4.1.2, User.groups is read-only and must reflect Group memberships
+    #
+    # @return [Array<Hash>] Array of group references with SCIM-compliant attributes
+    def groups_representation
+      scim_groups.map do |group|
+        {
+          "value" => group.scim_id,
+          "display" => group.display_name,
+          "$ref" => "#{group.resource_type}/#{group.scim_id}",
+          "type" => group.resource_type,
+        }
+      end
     end
 
     def update_from_scim!(validated_data, correlation_id: nil)
       core_data = validated_data[:core]
+
+      # RFC 7644 Sections 3.3 & 3.5.1: Silently ignore read-only attributes
+      # User.groups is read-only per RFC 7643 Section 4.1.2
+      core_data = core_data.except("groups")
+
       self.scim_data = core_data.merge(validated_data[:extensions])
       self.scim_id = core_data["id"]
       self.external_id = core_data["externalId"]
@@ -93,15 +118,7 @@ module TwoPercent
       self.active = core_data.fetch("active", true)
       self.correlation_id = correlation_id
       save!
-      sync_groups(core_data["groups"]) if core_data["groups"]
-    end
-
-    def sync_groups(groups_data)
-      return if groups_data.blank?
-
-      group_ids = groups_data.filter_map { |g| g["value"] }
-      groups = TwoPercent::ScimGroup.where(scim_id: group_ids)
-      self.scim_groups = groups
+      # Note: groups are ignored - manage via PATCH /scim/Groups/{id} instead
     end
 
     # Extracts a nested attribute from the scim_data JSON

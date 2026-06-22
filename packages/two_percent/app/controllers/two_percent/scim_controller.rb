@@ -25,6 +25,9 @@ module TwoPercent
         # Find existing record
         record = find_scim_record(params[:id])
 
+        # Validate RFC 7643 read-only attributes before processing
+        validate_patch_operations!(scim_params) if user_resource?
+
         # Apply SCIM PATCH operations (RFC 7644 compliance)
         processor = TwoPercent::Scim::PatchProcessor.new(scim_params)
         current_scim_data = record.scim_data || {}
@@ -311,6 +314,28 @@ module TwoPercent
 
     def association_name
       user_resource? ? :scim_groups : :scim_users
+    end
+
+    # Validate PATCH operations against RFC 7643 read-only attributes
+    # @raise [TwoPercent::ReadOnlyAttributeError] if attempting to modify read-only User.groups
+    def validate_patch_operations!(patch_request)
+      operations = patch_request["Operations"] || patch_request[:Operations]
+      return unless operations.is_a?(Array)
+
+      operations.each do |operation|
+        path = operation["path"] || operation[:path]
+        next unless path
+
+        # Extract base attribute from path (e.g., "groups" from "groups[value eq '123']")
+        base_path = path.split(/[\.\[]/).first
+
+        if base_path == "groups"
+          # RFC 7643 Section 4.1.2: User.groups is read-only
+          # RFC 7644 Section 3.5.2: Return 400 with scimType="mutability"
+          raise TwoPercent::ReadOnlyAttributeError,
+                "Attribute 'groups' is read-only per SCIM RFC 7643. Manage group membership via PATCH /scim/Groups/{id}"
+        end
+      end
     end
   end
 end
