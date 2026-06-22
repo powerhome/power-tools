@@ -35,12 +35,16 @@ module TwoPercent
       scim_hash["id"] ||= SecureRandom.uuid
 
       validated_data = TwoPercent::Scim::Schema.validate_group(scim_hash, require_id: true)
-      scim_group = find_or_initialize_by(scim_id: scim_hash["id"])
-      scim_group.update_from_scim!(resource_type, validated_data, correlation_id: correlation_id)
+      
+      # Wrap in transaction to ensure rollback on member validation failure
+      transaction do
+        scim_group = find_or_initialize_by(scim_id: scim_hash["id"])
+        scim_group.update_from_scim!(resource_type, validated_data, correlation_id: correlation_id)
 
-      scim_group.replace_members(scim_hash["members"]) if scim_hash.key?("members")
+        scim_group.replace_members(scim_hash["members"]) if scim_hash.key?("members")
 
-      scim_group
+        scim_group
+      end
     end
 
     def self.find_by_scim_id(scim_id)

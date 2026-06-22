@@ -220,6 +220,73 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         end.to raise_error(ArgumentError, /schemas attribute is required/)
       end
     end
+
+    context "validation rollback on invalid members" do
+      let!(:valid_user) { create_scim_user(scim_id: "valid-user-1") }
+      let!(:existing_group) { create_scim_group(scim_id: "group-validation", display_name: "Test Group", external_id: "ext-validation") }
+
+      it "rolls back scim_data changes when member validation fails" do
+        # First attempt: add invalid member
+        invalid_member_hash = {
+          "id" => existing_group.scim_id,
+          "externalId" => existing_group.external_id,
+          "displayName" => "Test Group",
+          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+          "members" => [
+            { "value" => "nonexistent-user-1" },
+          ],
+        }
+
+        expect do
+          described_class.upsert_from_scim(resource_type, invalid_member_hash)
+        end.to raise_error(ArgumentError, /Cannot add non-existent users/)
+
+        # Verify scim_data was NOT updated with invalid member
+        existing_group.reload
+        expect(existing_group.scim_data["members"]).to be_nil.or be_empty
+
+        # Second attempt: add different invalid member
+        different_invalid_hash = {
+          "id" => existing_group.scim_id,
+          "externalId" => existing_group.external_id,
+          "displayName" => "Test Group",
+          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+          "members" => [
+            { "value" => "nonexistent-user-2" }, # Different invalid user
+          ],
+        }
+
+        expect do
+          described_class.upsert_from_scim(resource_type, different_invalid_hash)
+        end.to raise_error(ArgumentError, /Cannot add non-existent users.*nonexistent-user-2/)
+
+        # Verify error references NEW member (not old one from first attempt)
+        existing_group.reload
+        expect(existing_group.scim_data["members"]).to be_nil.or be_empty
+      end
+
+      it "rolls back on partial invalid member list" do
+        invalid_mixed_hash = {
+          "id" => existing_group.scim_id,
+          "externalId" => existing_group.external_id,
+          "displayName" => "Test Group",
+          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+          "members" => [
+            { "value" => valid_user.scim_id },       # Valid
+            { "value" => "nonexistent-user-3" },     # Invalid
+          ],
+        }
+
+        expect do
+          described_class.upsert_from_scim(resource_type, invalid_mixed_hash)
+        end.to raise_error(ArgumentError, /Cannot add non-existent users/)
+
+        # Verify NO members were added (transaction rolled back)
+        existing_group.reload
+        expect(existing_group.scim_users).to be_empty
+        expect(existing_group.scim_data["members"]).to be_nil.or be_empty
+      end
+    end
   end
 
   describe ".find_by_scim_id" do
