@@ -327,14 +327,14 @@ module TwoPercent
         next unless path
 
         # Extract base attribute from path (e.g., "groups" from "groups[value eq '123']")
-        base_path = path.split(/[\.\[]/).first
+        base_path = path.split(/[.\[]/).first
 
-        if base_path == "groups"
-          # RFC 7643 Section 4.1.2: User.groups is read-only
-          # RFC 7644 Section 3.5.2: Return 400 with scimType="mutability"
-          raise TwoPercent::ReadOnlyAttributeError,
-                "Attribute 'groups' is read-only per SCIM RFC 7643. Manage group membership via PATCH /scim/Groups/{id}"
-        end
+        next unless base_path == "groups"
+
+        # RFC 7643 Section 4.1.2: User.groups is read-only
+        # RFC 7644 Section 3.5.2: Return 400 with scimType="mutability"
+        raise TwoPercent::ReadOnlyAttributeError,
+              "Attribute 'groups' is read-only per SCIM RFC 7643. Manage group membership via PATCH /scim/Groups/{id}"
       end
     end
   end

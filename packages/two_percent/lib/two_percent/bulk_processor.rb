@@ -173,20 +173,23 @@ module TwoPercent
       operations = patch_request["Operations"] || patch_request[:Operations]
       return unless operations.is_a?(Array)
 
-      operations.each do |operation|
-        path = operation["path"] || operation[:path]
-        next unless path
+      operations.each { |operation| validate_operation_path!(operation) }
+    end
 
-        # Extract base attribute from path (e.g., "groups" from "groups[value eq '123']")
-        base_path = path.split(/[\.\[]/).first
+    # Validate a single PATCH operation path for read-only attributes
+    # @raise [TwoPercent::ReadOnlyAttributeError] if attempting to modify User.groups
+    def validate_operation_path!(operation)
+      path = operation["path"] || operation[:path]
+      return unless path
 
-        if base_path == "groups"
-          # RFC 7643 Section 4.1.2: User.groups is read-only
-          # RFC 7644 Section 3.5.2: Return 400 with scimType="mutability"
-          raise TwoPercent::ReadOnlyAttributeError,
-                "Attribute 'groups' is read-only per SCIM RFC 7643. Manage group membership via PATCH /scim/Groups/{id}"
-        end
-      end
+      # Extract base attribute from path (e.g., "groups" from "groups[value eq '123']")
+      base_path = path.split(/[.\[]/).first
+      return unless base_path == "groups"
+
+      # RFC 7643 Section 4.1.2: User.groups is read-only
+      # RFC 7644 Section 3.5.2: Return 400 with scimType="mutability"
+      raise TwoPercent::ReadOnlyAttributeError,
+            "Attribute 'groups' is read-only per SCIM RFC 7643. Manage group membership via PATCH /scim/Groups/{id}"
     end
   end
 end

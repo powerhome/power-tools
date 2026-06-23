@@ -223,7 +223,9 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
 
     context "validation rollback on invalid members" do
       let!(:valid_user) { create_scim_user(scim_id: "valid-user-1") }
-      let!(:existing_group) { create_scim_group(scim_id: "group-validation", display_name: "Test Group", external_id: "ext-validation") }
+      let!(:existing_group) do
+        create_scim_group(scim_id: "group-validation", display_name: "Test Group", external_id: "ext-validation")
+      end
 
       it "rolls back scim_data changes when member validation fails" do
         # First attempt: add invalid member

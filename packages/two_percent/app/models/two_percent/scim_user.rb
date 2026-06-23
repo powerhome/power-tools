@@ -118,7 +118,7 @@ module TwoPercent
       self.active = core_data.fetch("active", true)
       self.correlation_id = correlation_id
       save!
-      # Note: groups are ignored - manage via PATCH /scim/Groups/{id} instead
+      # NOTE: groups are ignored - manage via PATCH /scim/Groups/{id} instead
     end
 
     # Extracts a nested attribute from the scim_data JSON

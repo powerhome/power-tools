@@ -35,7 +35,7 @@ module TwoPercent
       scim_hash["id"] ||= SecureRandom.uuid
 
       validated_data = TwoPercent::Scim::Schema.validate_group(scim_hash, require_id: true)
-      
+
       # Wrap in transaction to ensure rollback on member validation failure
       transaction do
         scim_group = find_or_initialize_by(scim_id: scim_hash["id"])

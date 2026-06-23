@@ -99,13 +99,13 @@ module TwoPercent
 
         # Special handling for members and groups arrays
         # Note: For User.groups, PATCH is rejected before reaching here (RFC 7643)
-        if ["members", "groups"].include?(last_key)
+        if %w[members groups].include?(last_key)
           if value.nil? || (value.is_a?(Array) && value.empty?)
             # No value or empty array means remove all
             target[last_key] = []
           elsif target[last_key].is_a?(Array)
             # Value provided: remove specific items by filtering
-            values_to_remove = Array(value).map { |v| v["value"] || v[:value] }.compact
+            values_to_remove = Array(value).filter_map { |v| v["value"] || v[:value] }
             target[last_key] = target[last_key].reject do |item|
               item_value = item["value"] || item[:value]
               values_to_remove.include?(item_value)
