@@ -113,9 +113,24 @@ module TwoPercent
       users_to_add = existing_users.where.not(id: existing_user_ids)
       bulk_insert_memberships(users_to_add) if users_to_add.any?
 
-      # Bulk delete removed memberships
-      users_to_remove_ids = scim_users.where.not(scim_id: member_scim_ids).pluck(:id)
-      scim_group_memberships.where(scim_user_id: users_to_remove_ids).delete_all
+      # Rails 6.1+ returns empty result for where.not(column: [])
+      # Must explicitly handle empty array to remove all members
+      if member_scim_ids.empty?
+        scim_group_memberships.delete_all
+      else
+        users_to_remove_ids = scim_users.where.not(scim_id: member_scim_ids).pluck(:id)
+        scim_group_memberships.where(scim_user_id: users_to_remove_ids).delete_all
+      end
+
+      # Maintain invariant: scim_data["members"] always reflects join table
+      self.scim_data["members"] = existing_users.map do |user|
+        {
+          "value" => user.scim_id,
+          "display" => user.display_name,
+          "$ref" => "Users/#{user.scim_id}",
+        }
+      end
+      save!
     end
 
     # Extracts a nested attribute from the scim_data JSON

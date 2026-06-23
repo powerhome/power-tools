@@ -353,6 +353,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
     let!(:user1) { create_scim_user(scim_id: "user-1") }
     let!(:user2) { create_scim_user(scim_id: "user-2") }
     let!(:user3) { create_scim_user(scim_id: "user-3") }
+    let!(:user4) { create_scim_user(scim_id: "user-4") }
 
     context "when adding new members" do
       let(:members_array) do
@@ -424,6 +425,122 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         expect do
           group.replace_members([])
         end.to change { group.scim_group_memberships.count }.from(2).to(0)
+      end
+
+      it "syncs scim_data['members'] to empty array" do
+        group.replace_members([])
+        group.reload
+        expect(group.scim_data["members"]).to eq([])
+      end
+    end
+
+    context "when scim_data['members'] is out of sync with join table" do
+      # Simulates state where join table has members but scim_data["members"] is empty
+      before do
+        TwoPercent::ScimGroupMembership.create!(scim_user: user1, scim_group: group)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user2, scim_group: group)
+
+        group.scim_data["members"] = []
+        group.save!
+      end
+
+      it "syncs scim_data['members'] when adding a new member" do
+        members_array = [
+          { "value" => user1.scim_id },
+          { "value" => user2.scim_id },
+          { "value" => user3.scim_id },
+        ]
+
+        group.replace_members(members_array)
+        group.reload
+
+        expect(group.scim_data["members"].size).to eq(3)
+        member_values = group.scim_data["members"].map { |m| m["value"] }
+        expect(member_values).to contain_exactly(user1.scim_id, user2.scim_id, user3.scim_id)
+      end
+
+      it "syncs scim_data['members'] when removing a member" do
+        members_array = [{ "value" => user1.scim_id }]
+
+        group.replace_members(members_array)
+        group.reload
+
+        expect(group.scim_data["members"].size).to eq(1)
+        expect(group.scim_data["members"].first["value"]).to eq(user1.scim_id)
+      end
+
+      it "syncs scim_data['members'] when removing all members" do
+        group.replace_members([])
+        group.reload
+
+        expect(group.scim_data["members"]).to eq([])
+      end
+    end
+
+    context "complete replacement scenarios" do
+      before do
+        # Start with user1, user2, user3 in the group
+        TwoPercent::ScimGroupMembership.create!(scim_user: user1, scim_group: group)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user2, scim_group: group)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user3, scim_group: group)
+      end
+
+      it "replaces all existing members with entirely new members" do
+        # Replace [user1, user2, user3] with [user4]
+        members_array = [{ "value" => user4.scim_id }]
+
+        group.replace_members(members_array)
+        group.reload
+
+        expect(group.scim_users.count).to eq(1)
+        expect(group.scim_users).to eq([user4])
+        expect(group.scim_users).not_to include(user1, user2, user3)
+
+        # Verify scim_data synced
+        expect(group.scim_data["members"].size).to eq(1)
+        expect(group.scim_data["members"].first["value"]).to eq(user4.scim_id)
+      end
+
+      it "replaces with partial overlap (keeps some, removes some, adds some)" do
+        # Replace [user1, user2, user3] with [user2, user4]
+        # Keeps user2, removes user1 and user3, adds user4
+        members_array = [
+          { "value" => user2.scim_id },
+          { "value" => user4.scim_id },
+        ]
+
+        group.replace_members(members_array)
+        group.reload
+
+        expect(group.scim_users.count).to eq(2)
+        expect(group.scim_users).to contain_exactly(user2, user4)
+        expect(group.scim_users).not_to include(user1, user3)
+
+        # Verify scim_data synced
+        expect(group.scim_data["members"].size).to eq(2)
+        member_values = group.scim_data["members"].map { |m| m["value"] }
+        expect(member_values).to contain_exactly(user2.scim_id, user4.scim_id)
+      end
+
+      it "is idempotent when replacing with same members" do
+        # Replace [user1, user2, user3] with [user1, user2, user3]
+        members_array = [
+          { "value" => user1.scim_id },
+          { "value" => user2.scim_id },
+          { "value" => user3.scim_id },
+        ]
+
+        expect do
+          group.replace_members(members_array)
+        end.not_to change { group.scim_group_memberships.count }
+
+        group.reload
+        expect(group.scim_users).to contain_exactly(user1, user2, user3)
+
+        # Verify scim_data synced even though no changes to join table
+        expect(group.scim_data["members"].size).to eq(3)
+        member_values = group.scim_data["members"].map { |m| m["value"] }
+        expect(member_values).to contain_exactly(user1.scim_id, user2.scim_id, user3.scim_id)
       end
     end
 
