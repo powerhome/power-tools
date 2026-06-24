@@ -64,9 +64,19 @@ module TwoPercent
       # RFC 7643: Validate read-only attributes for User resources
       validate_patch_operations!(resource_type, data) if resource_type == "Users"
 
+      # Get current scim_data
+      current_scim_data = record.scim_data || {}
+
+      # Sync scim_data["members"] from join table for Groups to ensure data consistency
+      # Must happen BEFORE PatchProcessor reads scim_data to ensure PATCH operations
+      # are applied to current members, not stale/empty data
+      if resource_type != "Users"
+        record.reload unless record.scim_users.loaded?
+        current_scim_data["members"] = record.members_for_patch
+      end
+
       # Apply SCIM PATCH operations (RFC 7644 compliance)
       processor = TwoPercent::Scim::PatchProcessor.new(data)
-      current_scim_data = record.scim_data || {}
       patched_data = processor.apply_to_hash(current_scim_data)
 
       # Persist patched data

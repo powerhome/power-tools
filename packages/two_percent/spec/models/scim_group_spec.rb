@@ -60,7 +60,6 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         "id" => "group-123",
         "externalId" => "ext-123",
         "displayName" => "Engineering",
-        "members" => [],
       }
     end
 
@@ -145,6 +144,31 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         group = described_class.upsert_from_scim(resource_type, scim_hash)
 
         expect(group.scim_users.count).to eq(0)
+      end
+
+      it "does not store members in scim_data JSONB" do
+        group = described_class.upsert_from_scim(resource_type, scim_hash_with_members)
+
+        expect(group.scim_users.count).to eq(2)
+        expect(group.scim_data.key?("members")).to be false
+      end
+
+      it "handles members key with nil value" do
+        scim_hash_with_nil = scim_hash.merge("members" => nil)
+
+        group = described_class.upsert_from_scim(resource_type, scim_hash_with_nil)
+
+        expect(group.scim_users.count).to eq(0)
+        expect(group.scim_data.key?("members")).to be false
+      end
+
+      it "handles empty members array" do
+        scim_hash_with_empty = scim_hash.merge("members" => [])
+
+        group = described_class.upsert_from_scim(resource_type, scim_hash_with_empty)
+
+        expect(group.scim_users.count).to eq(0)
+        expect(group.scim_data.key?("members")).to be false
       end
     end
 
@@ -426,12 +450,6 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
           group.replace_members([])
         end.to change { group.scim_group_memberships.count }.from(2).to(0)
       end
-
-      it "syncs scim_data['members'] to empty array" do
-        group.replace_members([])
-        group.reload
-        expect(group.scim_data["members"]).to eq([])
-      end
     end
 
     context "when scim_data['members'] is out of sync with join table" do
@@ -444,7 +462,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         group.save!
       end
 
-      it "syncs scim_data['members'] when adding a new member" do
+      it "syncs join table when adding a new member" do
         members_array = [
           { "value" => user1.scim_id },
           { "value" => user2.scim_id },
@@ -454,26 +472,28 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         group.replace_members(members_array)
         group.reload
 
-        expect(group.scim_data["members"].size).to eq(3)
-        member_values = group.scim_data["members"].map { |m| m["value"] }
-        expect(member_values).to contain_exactly(user1.scim_id, user2.scim_id, user3.scim_id)
+        expect(group.scim_users.count).to eq(3)
+        member_scim_ids = group.scim_users.pluck(:scim_id)
+        expect(member_scim_ids).to contain_exactly(user1.scim_id, user2.scim_id, user3.scim_id)
       end
 
-      it "syncs scim_data['members'] when removing a member" do
+      it "syncs join table when removing a member" do
         members_array = [{ "value" => user1.scim_id }]
 
         group.replace_members(members_array)
         group.reload
 
-        expect(group.scim_data["members"].size).to eq(1)
-        expect(group.scim_data["members"].first["value"]).to eq(user1.scim_id)
+        expect(group.scim_users.count).to eq(1)
+        expect(group.scim_users.first.scim_id).to eq(user1.scim_id)
       end
 
-      it "syncs scim_data['members'] when removing all members" do
+      it "does not modify scim_data when removing all members" do
         group.replace_members([])
         group.reload
 
+        # scim_data remains unchanged from before block (still [])
         expect(group.scim_data["members"]).to eq([])
+        expect(group.scim_users.count).to eq(0)
       end
     end
 
@@ -495,10 +515,6 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         expect(group.scim_users.count).to eq(1)
         expect(group.scim_users).to eq([user4])
         expect(group.scim_users).not_to include(user1, user2, user3)
-
-        # Verify scim_data synced
-        expect(group.scim_data["members"].size).to eq(1)
-        expect(group.scim_data["members"].first["value"]).to eq(user4.scim_id)
       end
 
       it "replaces with partial overlap (keeps some, removes some, adds some)" do
@@ -515,11 +531,6 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         expect(group.scim_users.count).to eq(2)
         expect(group.scim_users).to contain_exactly(user2, user4)
         expect(group.scim_users).not_to include(user1, user3)
-
-        # Verify scim_data synced
-        expect(group.scim_data["members"].size).to eq(2)
-        member_values = group.scim_data["members"].map { |m| m["value"] }
-        expect(member_values).to contain_exactly(user2.scim_id, user4.scim_id)
       end
 
       it "is idempotent when replacing with same members" do
@@ -536,11 +547,6 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
 
         group.reload
         expect(group.scim_users).to contain_exactly(user1, user2, user3)
-
-        # Verify scim_data synced even though no changes to join table
-        expect(group.scim_data["members"].size).to eq(3)
-        member_values = group.scim_data["members"].map { |m| m["value"] }
-        expect(member_values).to contain_exactly(user1.scim_id, user2.scim_id, user3.scim_id)
       end
     end
 
@@ -662,7 +668,6 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       "id" => scim_id,
       "externalId" => external_id,
       "displayName" => display_name,
-      "members" => [],
     }
 
     full_attributes = {
@@ -687,7 +692,6 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       "id" => scim_id,
       "externalId" => external_id,
       "displayName" => display_name,
-      "members" => [],
     }
 
     full_attributes = {

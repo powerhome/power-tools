@@ -235,7 +235,6 @@ RSpec.describe "SCIM API", type: :request do
       "id" => scim_id,
       "externalId" => external_id,
       "displayName" => display_name,
-      "members" => [],
     }
 
     full_attributes = {
@@ -1048,7 +1047,7 @@ RSpec.describe "SCIM API", type: :request do
         expect(group_with_stale_scim_data.scim_users).to contain_exactly(user3, user4)
       end
 
-      it "syncs scim_data with join table after operations" do
+      it "syncs join table after operations" do
         add_operations = {
           schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
           Operations: [
@@ -1059,10 +1058,52 @@ RSpec.describe "SCIM API", type: :request do
         patch "/scim/Groups/group-stale-data", headers: headers, params: add_operations.to_json
 
         group_with_stale_scim_data.reload
-        # Verify scim_data is now synced with join table
-        expect(group_with_stale_scim_data.scim_data["members"].size).to eq(4)
-        member_values = group_with_stale_scim_data.scim_data["members"].map { |m| m["value"] }
-        expect(member_values).to contain_exactly(user1.scim_id, user2.scim_id, user3.scim_id, user4.scim_id)
+        # Verify join table has all members
+        expect(group_with_stale_scim_data.scim_users.count).to eq(4)
+        member_scim_ids = group_with_stale_scim_data.scim_users.pluck(:scim_id)
+        expect(member_scim_ids).to contain_exactly(user1.scim_id, user2.scim_id, user3.scim_id, user4.scim_id)
+      end
+    end
+
+    context "when scim_data['members'] has never been set" do
+      let!(:group_without_scim_members) do
+        group = create_scim_group(scim_id: "group-no-members")
+        # scim_data["members"] is nil/absent (never set)
+        group.scim_users = [user1, user2]
+        group.save!
+        group
+      end
+
+      it "PATCH add works when scim_data['members'] is nil" do
+        add_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            { op: "add", path: "members", value: [{ value: user3.scim_id }] },
+          ],
+        }
+
+        patch "/scim/Groups/group-no-members", headers: headers, params: add_operations.to_json
+
+        expect(response).to have_http_status(:ok)
+        group_without_scim_members.reload
+        expect(group_without_scim_members.scim_users.count).to eq(3)
+        expect(group_without_scim_members.scim_users).to include(user1, user2, user3)
+      end
+
+      it "PATCH remove works when scim_data['members'] is nil" do
+        remove_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            { op: "remove", path: "members", value: [{ value: user2.scim_id }] },
+          ],
+        }
+
+        patch "/scim/Groups/group-no-members", headers: headers, params: remove_operations.to_json
+
+        expect(response).to have_http_status(:ok)
+        group_without_scim_members.reload
+        expect(group_without_scim_members.scim_users.count).to eq(1)
+        expect(group_without_scim_members.scim_users).to contain_exactly(user1)
       end
     end
   end
@@ -1866,7 +1907,6 @@ RSpec.describe "SCIM API", type: :request do
         "id" => scim_id,
         "externalId" => external_id,
         "displayName" => display_name,
-        "members" => [],
       },
     }
     TwoPercent::ScimGroup.create!(full_attributes)

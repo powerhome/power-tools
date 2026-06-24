@@ -190,7 +190,6 @@ RSpec.describe TwoPercent::ScimGroupMembership, type: :model do
       "id" => scim_id,
       "externalId" => external_id,
       "displayName" => display_name,
-      "members" => [],
     }
 
     full_attributes = {

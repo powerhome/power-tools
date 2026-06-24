@@ -34,6 +34,9 @@ module TwoPercent
       scim_hash = scim_hash.dup
       scim_hash["id"] ||= SecureRandom.uuid
 
+      # Extract members before validation to prevent storage in scim_data JSONB
+      members = scim_hash.delete("members")
+
       validated_data = TwoPercent::Scim::Schema.validate_group(scim_hash, require_id: true)
 
       # Wrap in transaction to ensure rollback on member validation failure
@@ -41,7 +44,8 @@ module TwoPercent
         scim_group = find_or_initialize_by(scim_id: scim_hash["id"])
         scim_group.update_from_scim!(resource_type, validated_data, correlation_id: correlation_id)
 
-        scim_group.replace_members(scim_hash["members"]) if scim_hash.key?("members")
+        # Sync members to join table only (never stored in scim_data)
+        scim_group.replace_members(members) if members
 
         scim_group
       end
@@ -119,7 +123,6 @@ module TwoPercent
       bulk_insert_memberships(users_to_add) if users_to_add.any?
 
       remove_memberships_not_in(member_scim_ids)
-      sync_scim_data_members(existing_users)
       save!
     end
 
@@ -206,14 +209,6 @@ module TwoPercent
         users_to_remove_ids = scim_users.where.not(scim_id: member_scim_ids).pluck(:id)
         scim_group_memberships.where(scim_user_id: users_to_remove_ids).delete_all
       end
-    end
-
-    # Sync scim_data["members"] to match join table state
-    # Maintains invariant that scim_data always reflects current members
-    #
-    # @param existing_users [ActiveRecord::Relation] Users who should be members
-    def sync_scim_data_members(existing_users)
-      scim_data["members"] = existing_users.pluck(:scim_id).map { |id| { "value" => id } }
     end
   end
 end
