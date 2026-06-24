@@ -61,16 +61,21 @@ module TwoPercent
 
     # Extracts domain attributes for publishing in domain events
     #
-    # Returns key attributes for event payloads.
+    # Returns key attributes for event payloads, including members if association is loaded.
     # @return [Hash] Domain attributes
     def to_domain_attributes
-      {
+      attrs = {
         scim_id: scim_id,
         external_id: external_id,
         display_name: display_name,
         resource_type: resource_type,
         active: active,
       }.compact
+
+      # Include members if association is loaded (for membership sync)
+      attrs[:members] = scim_users.map { |user| { scim_id: user.scim_id } } if scim_users.loaded?
+
+      attrs
     end
 
     # Returns full SCIM representation for HTTP responses
