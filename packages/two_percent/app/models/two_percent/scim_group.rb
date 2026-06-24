@@ -129,6 +129,19 @@ module TwoPercent
       scim_data.dig(*keys)
     end
 
+    # Build SCIM members representation from join table
+    #
+    # @return [Array<Hash>] Array of member references
+    def members_representation
+      scim_users.map do |user|
+        {
+          "value" => user.scim_id,
+          "display" => user.display_name,
+          "$ref" => "Users/#{user.scim_id}",
+        }
+      end
+    end
+
   private
 
     # Validates that all user IDs exist in the database
@@ -189,19 +202,6 @@ module TwoPercent
     # @param existing_users [ActiveRecord::Relation] Users who should be members
     def sync_scim_data_members(existing_users)
       scim_data["members"] = existing_users.map do |user|
-        {
-          "value" => user.scim_id,
-          "display" => user.display_name,
-          "$ref" => "Users/#{user.scim_id}",
-        }
-      end
-    end
-
-    # Build SCIM members representation
-    #
-    # @return [Array<Hash>] Array of member references
-    def members_representation
-      scim_users.map do |user|
         {
           "value" => user.scim_id,
           "display" => user.display_name,

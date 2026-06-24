@@ -979,6 +979,92 @@ RSpec.describe "SCIM API", type: :request do
         expect(published_events).to be_empty
       end
     end
+
+    context "when scim_data is out of sync with join table" do
+      # Simulates scenario where scim_data["members"] is empty/stale but join table has members
+      # This can happen due to direct database manipulation, bugs, or inconsistent state
+      let!(:user3) { create_scim_user(scim_id: "user-3", display_name: "Charlie") }
+      let!(:user4) { create_scim_user(scim_id: "user-4", display_name: "Diana") }
+      let!(:group_with_stale_scim_data) do
+        group = create_scim_group(
+          scim_id: "group-stale-data",
+          display_name: "Group With Stale Data"
+        )
+        # Set up join table with existing members
+        group.scim_users = [user1, user2, user3]
+        group.save!
+
+        # Simulate stale scim_data (empty despite join table having members)
+        group.scim_data["members"] = []
+        group.save!
+        group
+      end
+
+      it "PATCH add preserves existing members when scim_data is stale" do
+        add_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            { op: "add", path: "members", value: [{ value: user4.scim_id }] },
+          ],
+        }
+
+        patch "/scim/Groups/group-stale-data", headers: headers, params: add_operations.to_json
+
+        group_with_stale_scim_data.reload
+        # Expected: Preserves existing members [user1, user2, user3] and adds user4
+        expect(group_with_stale_scim_data.scim_users.count).to eq(4)
+        expect(group_with_stale_scim_data.scim_users).to contain_exactly(user1, user2, user3, user4)
+      end
+
+      it "PATCH remove works correctly when scim_data is stale" do
+        remove_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            { op: "remove", path: "members", value: [{ value: user2.scim_id }] },
+          ],
+        }
+
+        patch "/scim/Groups/group-stale-data", headers: headers, params: remove_operations.to_json
+
+        group_with_stale_scim_data.reload
+        # Expected: Removes user2, keeps others
+        expect(group_with_stale_scim_data.scim_users.count).to eq(2)
+        expect(group_with_stale_scim_data.scim_users).to contain_exactly(user1, user3)
+      end
+
+      it "PATCH replace works correctly when scim_data is stale" do
+        replace_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            { op: "replace", path: "members", value: [{ value: user3.scim_id }, { value: user4.scim_id }] },
+          ],
+        }
+
+        patch "/scim/Groups/group-stale-data", headers: headers, params: replace_operations.to_json
+
+        group_with_stale_scim_data.reload
+        # Expected: Replaces all with new set [user3, user4]
+        expect(group_with_stale_scim_data.scim_users.count).to eq(2)
+        expect(group_with_stale_scim_data.scim_users).to contain_exactly(user3, user4)
+      end
+
+      it "syncs scim_data with join table after operations" do
+        add_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            { op: "add", path: "members", value: [{ value: user4.scim_id }] },
+          ],
+        }
+
+        patch "/scim/Groups/group-stale-data", headers: headers, params: add_operations.to_json
+
+        group_with_stale_scim_data.reload
+        # Verify scim_data is now synced with join table
+        expect(group_with_stale_scim_data.scim_data["members"].size).to eq(4)
+        member_values = group_with_stale_scim_data.scim_data["members"].map { |m| m["value"] }
+        expect(member_values).to contain_exactly(user1.scim_id, user2.scim_id, user3.scim_id, user4.scim_id)
+      end
+    end
   end
 
   # ========== PUT /scim/Users/:id (Replace User) ==========
