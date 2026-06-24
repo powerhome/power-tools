@@ -45,8 +45,8 @@ module TwoPercent
         patched_data["id"] = params[:id] # Ensure ID is present
         updated_record = persist_scim_record(patched_data)
 
-        # Reload with associations for domain event and response (skip if already loaded)
-        updated_record = reload_with_members(updated_record) unless group_resource? && updated_record.scim_users.loaded?
+        # Reload members if needed for response
+        updated_record = reload_with_members(updated_record) if should_reload_members?(updated_record)
 
         # Publish domain event with final state
         publish_updated_event(updated_record)
@@ -264,6 +264,15 @@ module TwoPercent
     # Reload record with associations (users load groups, groups load members)
     def reload_with_members(record)
       model_class.includes(association_name).find(record.id)
+    end
+
+    # Check if members should be reloaded for PATCH response
+    # Skip reload if: not a group, members already loaded, or config disables it
+    def should_reload_members?(record)
+      return false unless group_resource?
+      return false if record.scim_users.loaded?
+
+      TwoPercent.config.include_members_in_patch_response
     end
 
     # Build base query scope with optional filtering

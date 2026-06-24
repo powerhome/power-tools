@@ -147,16 +147,20 @@ module TwoPercent
     end
 
     # Build SCIM members representation from join table
+    # Optimized to bypass ActiveRecord and load only needed columns
     #
     # @return [Array<Hash>] Array of member references
     def members_representation
-      scim_users.map do |user|
-        {
-          "value" => user.scim_id,
-          "display" => user.display_name,
-          "$ref" => "Users/#{user.scim_id}",
-        }
-      end
+      scim_group_memberships
+        .joins(:scim_user)
+        .pluck("two_percent_scim_users.scim_id", "two_percent_scim_users.display_name")
+        .map do |scim_id, display_name|
+          {
+            "value" => scim_id,
+            "display" => display_name,
+            "$ref" => "Users/#{scim_id}",
+          }
+        end
     end
 
     # Build members array with value field only
