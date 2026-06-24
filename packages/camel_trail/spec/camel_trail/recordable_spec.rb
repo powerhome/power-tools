@@ -65,4 +65,43 @@ RSpec.describe CamelTrail::Recordable do
 
     expect(last_truck_history).to eql []
   end
+
+  describe "activity, note, and skip hooks" do
+    it "records a custom activity from camel_trail_activity_for_save" do
+      vehicle = TrailHookVehicle.create!(
+        name: "V",
+        price: 1,
+        activity: "scheduled"
+      )
+      last = CamelTrail.for(vehicle).first
+
+      expect(last.activity).to eql "scheduled"
+    end
+
+    it "records a note from camel_trail_note_for_save" do
+      vehicle = TrailHookVehicle.create!(
+        name: "V",
+        price: 1,
+        note: "User merged rows"
+      )
+      last = CamelTrail.for(vehicle).first
+
+      expect(last.note).to eql "User merged rows"
+    end
+
+    it "uses default activity when the hook falls back to the default" do
+      vehicle = TrailHookVehicle.create!(name: "V", price: 1)
+      last = CamelTrail.for(vehicle).first
+
+      expect(last.activity).to eql "created"
+    end
+
+    it "skips automatic record when skip_camel_trail_auto_record? is true" do
+      vehicle = TrailHookVehicle.new(name: "V", price: 1)
+      vehicle.skip_camel_trail = true
+      vehicle.save!
+
+      expect(CamelTrail.for(vehicle)).to eql []
+    end
+  end
 end
