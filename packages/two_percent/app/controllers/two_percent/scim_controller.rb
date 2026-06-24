@@ -30,7 +30,7 @@ module TwoPercent
         # are applied to current members, not stale/empty data
         if group_resource?
           record = reload_with_members(record) unless record.scim_users.loaded?
-          record.scim_data["members"] = record.members_representation
+          record.scim_data["members"] = record.members_for_patch
         end
 
         # Validate RFC 7643 read-only attributes before processing
@@ -45,8 +45,8 @@ module TwoPercent
         patched_data["id"] = params[:id] # Ensure ID is present
         updated_record = persist_scim_record(patched_data)
 
-        # Reload with associations for domain event and response
-        updated_record = reload_with_members(updated_record)
+        # Reload with associations for domain event and response (skip if already loaded)
+        updated_record = reload_with_members(updated_record) unless group_resource? && updated_record.scim_users.loaded?
 
         # Publish domain event with final state
         publish_updated_event(updated_record)
