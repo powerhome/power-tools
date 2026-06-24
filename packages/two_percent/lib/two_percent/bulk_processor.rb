@@ -50,52 +50,25 @@ module TwoPercent
     end
 
     def persist_create(resource_type, data)
-      if resource_type == "Users"
-        TwoPercent::ScimUser.upsert_from_scim(data, correlation_id: @correlation_id)
-      else
-        TwoPercent::ScimGroup.upsert_from_scim(resource_type, data, correlation_id: @correlation_id)
-      end
+      upsert_record(resource_type, data)
     end
 
     def persist_patch(resource_type, id, data)
-      # PATCH - apply operations to existing resource
       record = find_record(resource_type, id)
-
-      # RFC 7643: Validate read-only attributes for User resources
       validate_patch_operations!(resource_type, data) if resource_type == "Users"
 
-      # Get current scim_data
-      current_scim_data = record.scim_data || {}
+      current_scim_data = prepare_scim_data_for_patch(record, resource_type)
 
-      # Sync scim_data["members"] from join table for Groups to ensure data consistency
-      # Must happen BEFORE PatchProcessor reads scim_data to ensure PATCH operations
-      # are applied to current members, not stale/empty data
-      if resource_type != "Users"
-        record.reload unless record.scim_users.loaded?
-        current_scim_data["members"] = record.members_for_patch
-      end
-
-      # Apply SCIM PATCH operations (RFC 7644 compliance)
       processor = TwoPercent::Scim::PatchProcessor.new(data)
       patched_data = processor.apply_to_hash(current_scim_data)
+      patched_data["id"] = id
 
-      # Persist patched data
-      patched_data["id"] = id # Ensure ID is present
-      if resource_type == "Users"
-        TwoPercent::ScimUser.upsert_from_scim(patched_data, correlation_id: @correlation_id)
-      else
-        TwoPercent::ScimGroup.upsert_from_scim(resource_type, patched_data, correlation_id: @correlation_id)
-      end
+      upsert_record(resource_type, patched_data)
     end
 
     def persist_update(resource_type, id, data)
-      # PUT - replace entire resource
       data_with_id = data.merge("id" => id)
-      if resource_type == "Users"
-        TwoPercent::ScimUser.upsert_from_scim(data_with_id, correlation_id: @correlation_id)
-      else
-        TwoPercent::ScimGroup.upsert_from_scim(resource_type, data_with_id, correlation_id: @correlation_id)
-      end
+      upsert_record(resource_type, data_with_id)
     end
 
     def persist_delete(resource_type, id)
@@ -159,6 +132,26 @@ module TwoPercent
           resource_type: resource_type,
           correlation_id: @correlation_id
         )
+      end
+    end
+
+    def prepare_scim_data_for_patch(record, resource_type)
+      current_scim_data = record.scim_data || {}
+      return current_scim_data if resource_type == "Users"
+
+      # Sync scim_data["members"] from join table for Groups to ensure data consistency
+      # Must happen BEFORE PatchProcessor reads scim_data to ensure PATCH operations
+      # are applied to current members, not stale/empty data
+      record.reload unless record.scim_users.loaded?
+      current_scim_data["members"] = record.members_for_patch
+      current_scim_data
+    end
+
+    def upsert_record(resource_type, data)
+      if resource_type == "Users"
+        TwoPercent::ScimUser.upsert_from_scim(data, correlation_id: @correlation_id)
+      else
+        TwoPercent::ScimGroup.upsert_from_scim(resource_type, data, correlation_id: @correlation_id)
       end
     end
 
