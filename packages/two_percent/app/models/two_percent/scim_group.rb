@@ -113,23 +113,8 @@ module TwoPercent
       users_to_add = existing_users.where.not(id: existing_user_ids)
       bulk_insert_memberships(users_to_add) if users_to_add.any?
 
-      # Rails 6.1+ returns empty result for where.not(column: [])
-      # Must explicitly handle empty array to remove all members
-      if member_scim_ids.empty?
-        scim_group_memberships.delete_all
-      else
-        users_to_remove_ids = scim_users.where.not(scim_id: member_scim_ids).pluck(:id)
-        scim_group_memberships.where(scim_user_id: users_to_remove_ids).delete_all
-      end
-
-      # Maintain invariant: scim_data["members"] always reflects join table
-      self.scim_data["members"] = existing_users.map do |user|
-        {
-          "value" => user.scim_id,
-          "display" => user.display_name,
-          "$ref" => "Users/#{user.scim_id}",
-        }
-      end
+      remove_memberships_not_in(member_scim_ids)
+      sync_scim_data_members(existing_users)
       save!
     end
 
@@ -181,6 +166,35 @@ module TwoPercent
         membership_records,
         unique_by: %i[scim_user_id scim_group_id]
       )
+    end
+
+    # Remove memberships for users not in the provided list
+    # Handles Rails 6.1+ empty array behavior for where.not
+    #
+    # @param member_scim_ids [Array<String>] SCIM IDs of users to keep
+    def remove_memberships_not_in(member_scim_ids)
+      # Rails 6.1+ returns empty result for where.not(column: [])
+      # Must explicitly handle empty array to remove all members
+      if member_scim_ids.empty?
+        scim_group_memberships.delete_all
+      else
+        users_to_remove_ids = scim_users.where.not(scim_id: member_scim_ids).pluck(:id)
+        scim_group_memberships.where(scim_user_id: users_to_remove_ids).delete_all
+      end
+    end
+
+    # Sync scim_data["members"] to match join table state
+    # Maintains invariant that scim_data always reflects current members
+    #
+    # @param existing_users [ActiveRecord::Relation] Users who should be members
+    def sync_scim_data_members(existing_users)
+      scim_data["members"] = existing_users.map do |user|
+        {
+          "value" => user.scim_id,
+          "display" => user.display_name,
+          "$ref" => "Users/#{user.scim_id}",
+        }
+      end
     end
 
     # Build SCIM members representation

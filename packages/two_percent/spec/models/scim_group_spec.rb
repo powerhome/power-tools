@@ -532,7 +532,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
 
         expect do
           group.replace_members(members_array)
-        end.not_to change { group.scim_group_memberships.count }
+        end.not_to(change { group.scim_group_memberships.count })
 
         group.reload
         expect(group.scim_users).to contain_exactly(user1, user2, user3)
