@@ -28,9 +28,7 @@ module TwoPercent
         # Sync scim_data["members"] from join table for Groups to ensure data consistency
         # Must happen BEFORE PatchProcessor reads scim_data to ensure PATCH operations
         # are applied to current members, not stale/empty data
-        if group_resource?
-          record.scim_data["members"] = record.members_for_patch
-        end
+        record.scim_data["members"] = record.members_for_patch if group_resource?
 
         # Validate RFC 7643 read-only attributes before processing
         validate_patch_operations!(scim_params) if user_resource?
