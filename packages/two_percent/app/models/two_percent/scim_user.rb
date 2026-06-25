@@ -50,22 +50,19 @@ module TwoPercent
 
     # Extracts domain attributes for publishing in domain events
     #
-    # Returns key attributes for event payloads.
-    # Includes associated group memberships if loaded.
+    # Returns key attributes for event payloads (thin events - no associations).
+    # Group memberships are queried separately by consumers who need them.
     #
     # @return [Hash] Domain attributes
     def to_domain_attributes
-      attributes = {
+      {
         scim_id: scim_id,
         external_id: external_id,
         user_name: user_name,
         display_name: display_name,
         email: email,
         active: active,
-      }
-
-      attributes[:groups] = group_memberships_attributes if scim_groups.loaded? || scim_groups.any?
-      attributes.compact
+      }.compact
     end
 
     # Returns full SCIM representation for HTTP responses

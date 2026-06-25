@@ -142,7 +142,7 @@ module TwoPercent
       # Sync scim_data["members"] from join table for Groups to ensure data consistency
       # Must happen BEFORE PatchProcessor reads scim_data to ensure PATCH operations
       # are applied to current members, not stale/empty data
-      record.reload unless record.scim_users.loaded?
+
       current_scim_data["members"] = record.members_for_patch
       current_scim_data
     end

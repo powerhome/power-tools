@@ -242,11 +242,10 @@ RSpec.describe TwoPercent::ScimUser, type: :model do
       )
     end
 
-    it "includes group memberships" do
+    it "does not include group memberships (thin events)" do
       attributes = user.to_domain_attributes
 
-      expect(attributes[:groups]).to be_an(Array)
-      expect(attributes[:groups].first).to include(:scim_id, :display_name, :resource_type)
+      expect(attributes).not_to have_key(:groups)
     end
   end
 
