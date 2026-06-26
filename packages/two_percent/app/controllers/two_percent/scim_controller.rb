@@ -2,6 +2,8 @@
 
 module TwoPercent
   class ScimController < ApplicationController
+    include TwoPercent::ValidatesUserGroupsPatch
+
     def create
       record = with_scim_logging("create") do
         # Persist to two_percent tables first (validates SCIM schema)
@@ -31,7 +33,7 @@ module TwoPercent
         record.scim_data["members"] = record.members_for_patch if group_resource?
 
         # Validate RFC 7643 read-only attributes before processing
-        validate_patch_operations!(scim_params) if user_resource?
+        validate_patch_operations!(params[:resource_type], scim_params) if user_resource?
 
         # Apply SCIM PATCH operations (RFC 7644 compliance)
         processor = TwoPercent::Scim::PatchProcessor.new(scim_params)
@@ -328,39 +330,6 @@ module TwoPercent
 
     def association_name
       user_resource? ? :scim_groups : :scim_users
-    end
-
-    # Validate PATCH operations against RFC 7643 read-only attributes
-    # @raise [TwoPercent::ReadOnlyAttributeError] if attempting to modify read-only User.groups
-    def validate_patch_operations!(patch_request)
-      patch_request = patch_request.with_indifferent_access
-      operations = patch_request[:Operations]
-      return unless operations.is_a?(Array)
-
-      operations.each do |operation|
-        operation = operation.with_indifferent_access
-        path = operation[:path]
-        value = operation[:value]
-
-        # Check path-based operations (e.g., {op: "add", path: "groups", value: [...]})
-        if path
-          base_path = path.split(/[.\[]/).first
-          raise_groups_read_only_error if base_path == "groups"
-        end
-
-        # Check pathless operations (e.g., {op: "replace", value: {active: true, groups: [...]}})
-        if value.is_a?(Hash)
-          value = value.with_indifferent_access
-          raise_groups_read_only_error if value[:groups]
-        end
-      end
-    end
-
-    def raise_groups_read_only_error
-      # RFC 7643 Section 4.1.2: User.groups is read-only
-      # RFC 7644 Section 3.5.2: Return 400 with scimType="mutability"
-      raise TwoPercent::ReadOnlyAttributeError,
-            "Attribute 'groups' is read-only per SCIM RFC 7643. Manage group membership via PATCH /scim/Groups/{id}"
     end
   end
 end

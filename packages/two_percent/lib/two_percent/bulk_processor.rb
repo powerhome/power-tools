@@ -2,6 +2,8 @@
 
 module TwoPercent
   class BulkProcessor
+    include TwoPercent::ValidatesUserGroupsPatch
+
     def initialize(operations, correlation_id: nil)
       @operations = operations.map(&:with_indifferent_access)
       @correlation_id = correlation_id
@@ -166,42 +168,6 @@ module TwoPercent
       raise ActiveRecord::RecordNotFound, "Resource \"#{scim_id}\" not found" unless record
 
       record
-    end
-
-    # Validate PATCH operations against RFC 7643 read-only attributes
-    # @raise [TwoPercent::ReadOnlyAttributeError] if attempting to modify read-only User.groups
-    def validate_patch_operations!(resource_type, patch_request)
-      return unless resource_type == "Users"
-
-      patch_request = patch_request.with_indifferent_access
-      operations = patch_request[:Operations]
-      return unless operations.is_a?(Array)
-
-      operations.each { |operation| validate_operation_path!(operation.with_indifferent_access) }
-    end
-
-    # Validate a single PATCH operation path for read-only attributes
-    # @raise [TwoPercent::ReadOnlyAttributeError] if attempting to modify User.groups
-    def validate_operation_path!(operation)
-      path = operation[:path]
-      value = operation[:value]
-
-      # Check path-based operations (e.g., {op: "add", path: "groups", value: [...]})
-      if path
-        base_path = path.split(/[.\[]/).first
-        raise_groups_read_only_error if base_path == "groups"
-      end
-
-      # Check pathless operations (e.g., {op: "replace", value: {active: true, groups: [...]}})
-      if value.is_a?(Hash)
-        value = value.with_indifferent_access
-        raise_groups_read_only_error if value[:groups]
-      end
-    end
-
-    def raise_groups_read_only_error
-      raise TwoPercent::ReadOnlyAttributeError,
-            "Attribute 'groups' is read-only per SCIM RFC 7643. Manage group membership via PATCH /scim/Groups/{id}"
     end
   end
 end
