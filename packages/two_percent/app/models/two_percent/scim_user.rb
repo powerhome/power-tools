@@ -131,8 +131,9 @@ module TwoPercent
     # @param groups_data [Array<Hash>] Array of group references with "value" (scim_id)
     # @example
     #   sync_groups([{"value" => "group-123", "display" => "Engineering"}])
+    #   sync_groups([]) # Clears all group memberships
     def sync_groups(groups_data)
-      return if groups_data.blank?
+      return if groups_data.nil?
 
       group_ids = groups_data.filter_map { |g| g["value"] }
       groups = TwoPercent::ScimGroup.where(scim_id: group_ids)

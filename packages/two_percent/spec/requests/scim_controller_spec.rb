@@ -224,6 +224,24 @@ RSpec.describe "SCIM API", type: :request do
         expect(user.scim_data).to have_key("groups")
         expect(user.scim_data["groups"]).to be_an(Array)
       end
+
+      it "clears group memberships when groups is an empty array" do
+        # First create user with groups
+        post "/scim/Users", params: scim_user_with_groups.to_json, headers: headers
+        user = TwoPercent::ScimUser.last
+        expect(user.scim_groups.count).to eq(1)
+
+        # Then update with empty groups array to clear memberships
+        scim_user_no_groups = scim_user_payload.merge(
+          id: user.scim_id,
+          groups: []
+        )
+        put "/scim/Users/#{user.scim_id}", params: scim_user_no_groups.to_json, headers: headers
+
+        expect(response).to have_http_status(:ok)
+        user.reload
+        expect(user.scim_groups.count).to eq(0)
+      end
     end
   end
 
