@@ -33,7 +33,7 @@ module Consent
     end
 
     def <=>(other)
-      key <=> other.key
+      key.to_s <=> other.key.to_s
     end
   end
 end
