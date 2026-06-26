@@ -97,9 +97,8 @@ module TwoPercent
         target = navigate_to_parent(hash, keys[0..-2])
         last_key = keys.last
 
-        # Special handling for members and groups arrays
-        # Note: For User.groups, PATCH is rejected before reaching here (RFC 7643)
-        if %w[members groups].include?(last_key)
+        # Special handling for members array on Group resources
+        if last_key == "members"
           if value.nil? || (value.is_a?(Array) && value.empty?)
             # No value or empty array means remove all
             target[last_key] = []
