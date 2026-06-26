@@ -182,7 +182,7 @@ RSpec.describe "SCIM API", type: :request do
       end
     end
 
-    context "when groups attribute is present in request (RFC 7643 read-only)" do
+    context "when groups attribute is present in request (intentional RFC deviation for client compatibility)" do
       let!(:test_group) do
         create_scim_group(
           scim_id: "group-999",
@@ -197,28 +197,32 @@ RSpec.describe "SCIM API", type: :request do
         )
       end
 
-      it "silently ignores groups attribute per RFC 7644 Section 3.3" do
+      it "syncs group memberships from groups attribute (intentional RFC deviation)" do
         post "/scim/Users", params: scim_user_with_groups.to_json, headers: headers
 
         expect(response).to have_http_status(:created)
         json_response = JSON.parse(response.body)
-        # groups should be empty or absent since not set via Group.members
-        expect(json_response["groups"] || []).to be_empty
+        # groups should be populated from the request
+        expect(json_response["groups"]).to be_an(Array)
+        expect(json_response["groups"].length).to eq(1)
+        expect(json_response["groups"].first["value"]).to eq("group-999")
       end
 
-      it "does not create group memberships from POST request" do
+      it "creates group memberships from POST request" do
         post "/scim/Users", params: scim_user_with_groups.to_json, headers: headers
 
         user = TwoPercent::ScimUser.last
         user.reload
-        expect(user.scim_groups.count).to eq(0)
+        expect(user.scim_groups.count).to eq(1)
+        expect(user.scim_groups.first.scim_id).to eq("group-999")
       end
 
-      it "does not store groups in scim_data" do
+      it "stores groups in scim_data" do
         post "/scim/Users", params: scim_user_with_groups.to_json, headers: headers
 
         user = TwoPercent::ScimUser.last
-        expect(user.scim_data).not_to have_key("groups")
+        expect(user.scim_data).to have_key("groups")
+        expect(user.scim_data["groups"]).to be_an(Array)
       end
     end
   end
@@ -1198,7 +1202,7 @@ RSpec.describe "SCIM API", type: :request do
       end
     end
 
-    context "when groups attribute is present in request (RFC 7643 read-only)" do
+    context "when groups attribute is present in request (intentional RFC deviation for client compatibility)" do
       let!(:existing_user) do
         create_scim_user(scim_id: "user-with-group-attempt", display_name: "Test User")
       end
@@ -1218,27 +1222,31 @@ RSpec.describe "SCIM API", type: :request do
         )
       end
 
-      it "silently ignores groups attribute per RFC 7644 Section 3.5.1" do
+      it "syncs group memberships from groups attribute (intentional RFC deviation)" do
         put "/scim/Users/user-with-group-attempt", headers: headers, params: user_payload_with_groups.to_json
 
         expect(response).to have_http_status(:ok)
         json_response = JSON.parse(response.body)
-        # groups should be empty since not set via Group.members
-        expect(json_response["groups"] || []).to be_empty
+        # groups should be populated from the request
+        expect(json_response["groups"]).to be_an(Array)
+        expect(json_response["groups"].length).to eq(1)
+        expect(json_response["groups"].first["value"]).to eq("group-888")
       end
 
-      it "does not create group memberships from PUT request" do
+      it "creates group memberships from PUT request" do
         put "/scim/Users/user-with-group-attempt", headers: headers, params: user_payload_with_groups.to_json
 
         existing_user.reload
-        expect(existing_user.scim_groups.count).to eq(0)
+        expect(existing_user.scim_groups.count).to eq(1)
+        expect(existing_user.scim_groups.first.scim_id).to eq("group-888")
       end
 
-      it "does not store groups in scim_data" do
+      it "stores groups in scim_data" do
         put "/scim/Users/user-with-group-attempt", headers: headers, params: user_payload_with_groups.to_json
 
         existing_user.reload
-        expect(existing_user.scim_data).not_to have_key("groups")
+        expect(existing_user.scim_data).to have_key("groups")
+        expect(existing_user.scim_data["groups"]).to be_an(Array)
       end
     end
   end

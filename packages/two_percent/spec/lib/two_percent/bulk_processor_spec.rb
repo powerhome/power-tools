@@ -673,7 +673,7 @@ RSpec.describe TwoPercent::BulkProcessor do
       end
     end
 
-    describe "RFC 7643: User.groups read-only compliance" do
+    describe "User.groups syncing (intentional RFC deviation for client compatibility)" do
       let!(:test_group) do
         TwoPercent::ScimGroup.upsert_from_scim("Groups", {
                                                  "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
@@ -694,16 +694,16 @@ RSpec.describe TwoPercent::BulkProcessor do
       end
 
       context "POST operations" do
-        it "silently ignores groups attribute per RFC 7644 Section 3.3" do
+        it "syncs groups attribute from bulk POST (intentional RFC deviation)" do
           operations = [
             {
               method: "POST",
               path: "/Users",
               data: {
                 "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
-                "externalId" => "post-ignore-#{SecureRandom.hex(4)}",
-                "userName" => "post.ignore@example.com",
-                "displayName" => "Post Ignore Groups",
+                "externalId" => "post-sync-#{SecureRandom.hex(4)}",
+                "userName" => "post.sync@example.com",
+                "displayName" => "Post Sync Groups",
                 "active" => true,
                 "groups" => [{ "value" => test_group.scim_id, "display" => test_group.display_name }],
               },
@@ -715,29 +715,30 @@ RSpec.describe TwoPercent::BulkProcessor do
           processor = described_class.new(operations, correlation_id: correlation_id)
           processor.dispatch
 
-          user = TwoPercent::ScimUser.find_by(user_name: "post.ignore@example.com")
+          user = TwoPercent::ScimUser.find_by(user_name: "post.sync@example.com")
           expect(user).to be_present
 
-          # Groups should not be set from POST
+          # Groups should be set from POST
           user.reload
-          expect(user.scim_groups.count).to eq(0)
+          expect(user.scim_groups.count).to eq(1)
+          expect(user.scim_groups.first.scim_id).to eq(test_group.scim_id)
 
-          # Groups should not be stored in scim_data
-          expect(user.scim_data).not_to have_key("groups")
+          # Groups should be stored in scim_data
+          expect(user.scim_data).to have_key("groups")
         end
       end
 
       context "PUT operations" do
-        it "silently ignores groups attribute per RFC 7644 Section 3.5.1" do
+        it "syncs groups attribute from bulk PUT (intentional RFC deviation)" do
           operations = [
             {
               method: "PUT",
               path: "/Users/#{existing_user.scim_id}",
               data: {
                 "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
-                "externalId" => "put-ignore-#{SecureRandom.hex(4)}",
-                "userName" => "put.ignore@example.com",
-                "displayName" => "Put Ignore Groups",
+                "externalId" => "put-sync-#{SecureRandom.hex(4)}",
+                "userName" => "put.sync@example.com",
+                "displayName" => "Put Sync Groups",
                 "active" => true,
                 "groups" => [{ "value" => test_group.scim_id, "display" => test_group.display_name }],
               },
@@ -750,13 +751,14 @@ RSpec.describe TwoPercent::BulkProcessor do
           processor.dispatch
 
           existing_user.reload
-          expect(existing_user.display_name).to eq("Put Ignore Groups")
+          expect(existing_user.display_name).to eq("Put Sync Groups")
 
-          # Groups should not be set from PUT
-          expect(existing_user.scim_groups.count).to eq(0)
+          # Groups should be set from PUT
+          expect(existing_user.scim_groups.count).to eq(1)
+          expect(existing_user.scim_groups.first.scim_id).to eq(test_group.scim_id)
 
-          # Groups should not be stored in scim_data
-          expect(existing_user.scim_data).not_to have_key("groups")
+          # Groups should be stored in scim_data
+          expect(existing_user.scim_data).to have_key("groups")
         end
       end
 

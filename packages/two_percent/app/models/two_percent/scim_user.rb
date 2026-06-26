@@ -99,13 +99,18 @@ module TwoPercent
       end
     end
 
+    # Updates user attributes from validated SCIM data
+    #
+    # NOTE: This method processes the User.groups array from the request payload
+    # and syncs group memberships, which is a deviation from strict RFC 7643 compliance
+    # (User.groups is specified as read-only in Section 4.1.2). This behavior is
+    # intentionally maintained for compatibility with existing SCIM clients that rely
+    # on this functionality for bulk sync operations.
+    #
+    # @param validated_data [Hash] Validated SCIM data with :core and :extensions keys
+    # @param correlation_id [String, nil] Optional correlation ID for tracking
     def update_from_scim!(validated_data, correlation_id: nil)
       core_data = validated_data[:core]
-
-      # RFC 7644 Sections 3.3 & 3.5.1: Silently ignore read-only attributes
-      # User.groups is read-only per RFC 7643 Section 4.1.2
-      core_data = core_data.except("groups")
-
       self.scim_data = core_data.merge(validated_data[:extensions])
       self.scim_id = core_data["id"]
       self.external_id = core_data["externalId"]
@@ -115,7 +120,23 @@ module TwoPercent
       self.active = core_data.fetch("active", true)
       self.correlation_id = correlation_id
       save!
-      # NOTE: groups are ignored - manage via PATCH /scim/Groups/{id} instead
+      sync_groups(core_data["groups"]) if core_data["groups"]
+    end
+
+    # Syncs user's group memberships from SCIM groups array
+    #
+    # Accepts a groups array from SCIM User payload and updates associations.
+    # This enables bulk sync operations where clients send User.groups arrays.
+    #
+    # @param groups_data [Array<Hash>] Array of group references with "value" (scim_id)
+    # @example
+    #   sync_groups([{"value" => "group-123", "display" => "Engineering"}])
+    def sync_groups(groups_data)
+      return if groups_data.blank?
+
+      group_ids = groups_data.filter_map { |g| g["value"] }
+      groups = TwoPercent::ScimGroup.where(scim_id: group_ids)
+      self.scim_groups = groups
     end
 
     # Extracts a nested attribute from the scim_data JSON
