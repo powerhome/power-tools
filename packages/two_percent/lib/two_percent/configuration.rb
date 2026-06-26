@@ -87,18 +87,18 @@ module TwoPercent
   config_accessor :correlation_id_header, default: "X-Correlation-Id"
 
   #
-  #
-  # Performance optimization: Include members in PATCH responses
+  # Performance optimization: Skip members in Group PATCH responses
   # RFC 7644 compliance (PATCH responses SHOULD return full resource)
   #
-  # For large groups, loading members can impact performance.
-  # Set to false to skip member loading in PATCH responses:
+  # For Groups with large member lists, loading members can impact performance.
+  # Set to false to skip member loading in Group PATCH responses only:
   #
   #   TwoPercent.configure do |config|
   #     config.include_members_in_patch_response = false
   #   end
   #
-  # GET requests always include members regardless of this setting.
+  # User PATCH responses always include groups. GET requests always include
+  # members/groups regardless of this setting.
   #
   config_accessor :include_members_in_patch_response, default: true
 
