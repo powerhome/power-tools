@@ -513,6 +513,49 @@ RSpec.describe "SCIM API", type: :request do
 
         expect(published_events).to be_empty
       end
+
+      it "rejects pathless PATCH replace with groups in value" do
+        pathless_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "replace",
+              value: {
+                active: true,
+                groups: [{ value: "group-999" }],
+              },
+            },
+          ],
+        }
+
+        patch "/scim/Users/user-456", headers: headers, params: pathless_operations.to_json
+
+        expect(response).to have_http_status(:bad_request)
+        json_response = JSON.parse(response.body)
+        expect(json_response["scimType"]).to eq("mutability")
+        expect(json_response["detail"]).to include("read-only")
+      end
+
+      it "rejects pathless PATCH add with groups in value" do
+        pathless_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "add",
+              value: {
+                groups: [{ value: "group-999" }],
+              },
+            },
+          ],
+        }
+
+        patch "/scim/Users/user-456", headers: headers, params: pathless_operations.to_json
+
+        expect(response).to have_http_status(:bad_request)
+        json_response = JSON.parse(response.body)
+        expect(json_response["scimType"]).to eq("mutability")
+        expect(json_response["detail"]).to include("read-only")
+      end
     end
 
     context "when user does not exist" do

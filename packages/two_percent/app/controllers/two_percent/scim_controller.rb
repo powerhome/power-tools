@@ -333,23 +333,34 @@ module TwoPercent
     # Validate PATCH operations against RFC 7643 read-only attributes
     # @raise [TwoPercent::ReadOnlyAttributeError] if attempting to modify read-only User.groups
     def validate_patch_operations!(patch_request)
-      operations = patch_request["Operations"] || patch_request[:Operations]
+      patch_request = patch_request.with_indifferent_access
+      operations = patch_request[:Operations]
       return unless operations.is_a?(Array)
 
       operations.each do |operation|
-        path = operation["path"] || operation[:path]
-        next unless path
+        operation = operation.with_indifferent_access
+        path = operation[:path]
+        value = operation[:value]
 
-        # Extract base attribute from path (e.g., "groups" from "groups[value eq '123']")
-        base_path = path.split(/[.\[]/).first
+        # Check path-based operations (e.g., {op: "add", path: "groups", value: [...]})
+        if path
+          base_path = path.split(/[.\[]/).first
+          raise_groups_read_only_error if base_path == "groups"
+        end
 
-        next unless base_path == "groups"
-
-        # RFC 7643 Section 4.1.2: User.groups is read-only
-        # RFC 7644 Section 3.5.2: Return 400 with scimType="mutability"
-        raise TwoPercent::ReadOnlyAttributeError,
-              "Attribute 'groups' is read-only per SCIM RFC 7643. Manage group membership via PATCH /scim/Groups/{id}"
+        # Check pathless operations (e.g., {op: "replace", value: {active: true, groups: [...]}})
+        if value.is_a?(Hash)
+          value = value.with_indifferent_access
+          raise_groups_read_only_error if value[:groups]
+        end
       end
+    end
+
+    def raise_groups_read_only_error
+      # RFC 7643 Section 4.1.2: User.groups is read-only
+      # RFC 7644 Section 3.5.2: Return 400 with scimType="mutability"
+      raise TwoPercent::ReadOnlyAttributeError,
+            "Attribute 'groups' is read-only per SCIM RFC 7643. Manage group membership via PATCH /scim/Groups/{id}"
     end
   end
 end

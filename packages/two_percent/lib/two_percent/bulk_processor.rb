@@ -184,14 +184,22 @@ module TwoPercent
     # @raise [TwoPercent::ReadOnlyAttributeError] if attempting to modify User.groups
     def validate_operation_path!(operation)
       path = operation[:path]
-      return unless path
+      value = operation[:value]
 
-      # Extract base attribute from path (e.g., "groups" from "groups[value eq '123']")
-      base_path = path.split(/[.\[]/).first
-      return unless base_path == "groups"
+      # Check path-based operations (e.g., {op: "add", path: "groups", value: [...]})
+      if path
+        base_path = path.split(/[.\[]/).first
+        raise_groups_read_only_error if base_path == "groups"
+      end
 
-      # RFC 7643 Section 4.1.2: User.groups is read-only
-      # RFC 7644 Section 3.5.2: Return 400 with scimType="mutability"
+      # Check pathless operations (e.g., {op: "replace", value: {active: true, groups: [...]}})
+      if value.is_a?(Hash)
+        value = value.with_indifferent_access
+        raise_groups_read_only_error if value[:groups]
+      end
+    end
+
+    def raise_groups_read_only_error
       raise TwoPercent::ReadOnlyAttributeError,
             "Attribute 'groups' is read-only per SCIM RFC 7643. Manage group membership via PATCH /scim/Groups/{id}"
     end

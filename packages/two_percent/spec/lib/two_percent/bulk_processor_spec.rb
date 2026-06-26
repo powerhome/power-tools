@@ -863,6 +863,59 @@ RSpec.describe TwoPercent::BulkProcessor do
           existing_user.reload
           expect(existing_user.display_name).to eq("Patched Display Name")
         end
+
+        it "raises ReadOnlyAttributeError for pathless PATCH replace with groups in value" do
+          operations = [
+            {
+              method: "PATCH",
+              path: "/Users/#{existing_user.scim_id}",
+              data: {
+                "schemas" => ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+                "Operations" => [
+                  {
+                    "op" => "replace",
+                    "value" => {
+                      "active" => true,
+                      "groups" => [{ "value" => test_group.scim_id }],
+                    },
+                  },
+                ],
+              },
+            },
+          ]
+
+          processor = described_class.new(operations, correlation_id: correlation_id)
+
+          expect do
+            processor.dispatch
+          end.to raise_error(TwoPercent::ReadOnlyAttributeError, /Attribute 'groups' is read-only/)
+        end
+
+        it "raises ReadOnlyAttributeError for pathless PATCH add with groups in value" do
+          operations = [
+            {
+              method: "PATCH",
+              path: "/Users/#{existing_user.scim_id}",
+              data: {
+                "schemas" => ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+                "Operations" => [
+                  {
+                    "op" => "add",
+                    "value" => {
+                      "groups" => [{ "value" => test_group.scim_id }],
+                    },
+                  },
+                ],
+              },
+            },
+          ]
+
+          processor = described_class.new(operations, correlation_id: correlation_id)
+
+          expect do
+            processor.dispatch
+          end.to raise_error(TwoPercent::ReadOnlyAttributeError, /Attribute 'groups' is read-only/)
+        end
       end
 
       context "Group operations (control test)" do
