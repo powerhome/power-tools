@@ -44,8 +44,16 @@ module TwoPercent
         patched_data["id"] = params[:id] # Ensure ID is present
         updated_record = persist_scim_record(patched_data)
 
-        # Reload members if needed for response
-        updated_record = reload_with_members(updated_record) if should_reload_members?(updated_record)
+        # Reload associations for response
+        # Users: always reload to get fresh groups from join table (cheap - few groups per user)
+        # Groups: conditionally reload to include members (expensive - can be thousands of users)
+        # rubocop:disable Lint/DuplicateBranch
+        if user_resource?
+          updated_record = reload_with_members(updated_record)
+        elsif should_reload_members?(updated_record)
+          updated_record = reload_with_members(updated_record)
+        end
+        # rubocop:enable Lint/DuplicateBranch
 
         # Publish domain event with final state
         publish_updated_event(updated_record)
@@ -265,8 +273,9 @@ module TwoPercent
       model_class.includes(association_name).find(record.id)
     end
 
-    # Check if members should be reloaded for PATCH response
-    # Skip reload if: not a group, members already loaded, or config disables it
+    # Check if group members should be reloaded for PATCH response
+    # Only applies to groups - users always reload via separate check
+    # Skip reload if: members already loaded, or config disables it
     def should_reload_members?(record)
       return false unless group_resource?
       return false if record.scim_users.loaded?

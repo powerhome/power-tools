@@ -30,9 +30,13 @@ module TwoPercent
       scim_hash = scim_hash.dup
       scim_hash["id"] ||= SecureRandom.uuid
 
+      # Extract groups before validation to prevent storage in scim_data JSONB
+      # Groups are synced to join table only (single source of truth)
+      groups = scim_hash.delete("groups")
+
       validated_data = TwoPercent::Scim::Schema.validate_user(scim_hash, require_id: true)
       scim_user = find_or_initialize_by(scim_id: scim_hash["id"])
-      scim_user.update_from_scim!(validated_data, correlation_id: correlation_id)
+      scim_user.update_from_scim!(validated_data, groups, correlation_id: correlation_id)
       scim_user
     end
 
@@ -79,6 +83,7 @@ module TwoPercent
       )
 
       # Build groups dynamically from join table (RFC 7643: User.groups is read-only)
+      # Single source of truth is join table - only included when association is loaded
       representation["groups"] = groups_representation if scim_groups.loaded?
 
       representation
@@ -108,8 +113,9 @@ module TwoPercent
     # on this functionality for bulk sync operations.
     #
     # @param validated_data [Hash] Validated SCIM data with :core and :extensions keys
+    # @param groups_data [Array<Hash>, nil] Groups array extracted before validation
     # @param correlation_id [String, nil] Optional correlation ID for tracking
-    def update_from_scim!(validated_data, correlation_id: nil)
+    def update_from_scim!(validated_data, groups_data, correlation_id: nil)
       core_data = validated_data[:core]
       self.scim_data = core_data.merge(validated_data[:extensions])
       self.scim_id = core_data["id"]
@@ -120,7 +126,8 @@ module TwoPercent
       self.active = core_data.fetch("active", true)
       self.correlation_id = correlation_id
       save!
-      sync_groups(core_data["groups"]) if core_data["groups"]
+      # Sync groups to join table only (never stored in scim_data)
+      sync_groups(groups_data) if groups_data
     end
 
     # Syncs user's group memberships from SCIM groups array

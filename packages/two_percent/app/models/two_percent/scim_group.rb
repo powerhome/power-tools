@@ -127,8 +127,6 @@ module TwoPercent
 
       # Only remove members that need removing
       remove_members_by_scim_id(scim_ids_to_remove) if scim_ids_to_remove.any?
-
-      save!
     end
 
     # Extracts a nested attribute from the scim_data JSON

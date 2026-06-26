@@ -217,12 +217,11 @@ RSpec.describe "SCIM API", type: :request do
         expect(user.scim_groups.first.scim_id).to eq("group-999")
       end
 
-      it "stores groups in scim_data" do
+      it "does not store groups in scim_data (single source of truth: join table)" do
         post "/scim/Users", params: scim_user_with_groups.to_json, headers: headers
 
         user = TwoPercent::ScimUser.last
-        expect(user.scim_data).to have_key("groups")
-        expect(user.scim_data["groups"]).to be_an(Array)
+        expect(user.scim_data).not_to have_key("groups")
       end
 
       it "clears group memberships when groups is an empty array" do
@@ -1302,12 +1301,11 @@ RSpec.describe "SCIM API", type: :request do
         expect(existing_user.scim_groups.first.scim_id).to eq("group-888")
       end
 
-      it "stores groups in scim_data" do
+      it "does not store groups in scim_data (single source of truth: join table)" do
         put "/scim/Users/user-with-group-attempt", headers: headers, params: user_payload_with_groups.to_json
 
         existing_user.reload
-        expect(existing_user.scim_data).to have_key("groups")
-        expect(existing_user.scim_data["groups"]).to be_an(Array)
+        expect(existing_user.scim_data).not_to have_key("groups")
       end
     end
   end

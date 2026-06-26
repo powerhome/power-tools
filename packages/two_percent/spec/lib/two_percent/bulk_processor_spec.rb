@@ -723,8 +723,8 @@ RSpec.describe TwoPercent::BulkProcessor do
           expect(user.scim_groups.count).to eq(1)
           expect(user.scim_groups.first.scim_id).to eq(test_group.scim_id)
 
-          # Groups should be stored in scim_data
-          expect(user.scim_data).to have_key("groups")
+          # Groups should NOT be stored in scim_data (single source of truth: join table)
+          expect(user.scim_data).not_to have_key("groups")
         end
       end
 
@@ -757,8 +757,8 @@ RSpec.describe TwoPercent::BulkProcessor do
           expect(existing_user.scim_groups.count).to eq(1)
           expect(existing_user.scim_groups.first.scim_id).to eq(test_group.scim_id)
 
-          # Groups should be stored in scim_data
-          expect(existing_user.scim_data).to have_key("groups")
+          # Groups should NOT be stored in scim_data (single source of truth: join table)
+          expect(existing_user.scim_data).not_to have_key("groups")
         end
       end
 
