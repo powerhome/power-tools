@@ -3,7 +3,7 @@
 module TwoPercent
   class BulkProcessor
     def initialize(operations, correlation_id: nil)
-      @operations = operations.map { |op| op.with_indifferent_access }
+      @operations = operations.map(&:with_indifferent_access)
       @correlation_id = correlation_id
     end
 

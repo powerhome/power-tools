@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [1.3.0]- 2026-06-26
+
 - **BREAKING - Thin Domain Events**: Removed association data from domain events
   - User events (`UserCreated`, `UserUpdated`) no longer include `groups` array in `user_attributes`
   - Group events (`GroupCreated`, `GroupUpdated`) no longer include `members` array in `group_attributes`
