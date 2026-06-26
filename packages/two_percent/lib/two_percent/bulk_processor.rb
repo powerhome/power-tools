@@ -3,7 +3,7 @@
 module TwoPercent
   class BulkProcessor
     def initialize(operations, correlation_id: nil)
-      @operations = operations
+      @operations = operations.map { |op| op.with_indifferent_access }
       @correlation_id = correlation_id
     end
 
@@ -173,16 +173,17 @@ module TwoPercent
     def validate_patch_operations!(resource_type, patch_request)
       return unless resource_type == "Users"
 
-      operations = patch_request["Operations"] || patch_request[:Operations]
+      patch_request = patch_request.with_indifferent_access
+      operations = patch_request[:Operations]
       return unless operations.is_a?(Array)
 
-      operations.each { |operation| validate_operation_path!(operation) }
+      operations.each { |operation| validate_operation_path!(operation.with_indifferent_access) }
     end
 
     # Validate a single PATCH operation path for read-only attributes
     # @raise [TwoPercent::ReadOnlyAttributeError] if attempting to modify User.groups
     def validate_operation_path!(operation)
-      path = operation["path"] || operation[:path]
+      path = operation[:path]
       return unless path
 
       # Extract base attribute from path (e.g., "groups" from "groups[value eq '123']")
