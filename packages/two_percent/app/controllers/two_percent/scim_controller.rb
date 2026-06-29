@@ -47,9 +47,7 @@ module TwoPercent
         # Reload associations for response
         # Users: always reload (cheap - few groups per user)
         # Groups: conditionally reload based on config (expensive - thousands of members)
-        if user_resource? || should_reload_members?(updated_record)
-          updated_record = reload_with_members(updated_record)
-        end
+        updated_record = reload_with_members(updated_record) if user_resource? || should_reload_members?(updated_record)
 
         # Publish domain event with final state
         publish_updated_event(updated_record)
