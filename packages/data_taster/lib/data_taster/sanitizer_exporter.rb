@@ -11,12 +11,12 @@ module DataTaster
     end
 
     def export_sanitized_rows(collection, &write_insert)
-      export_context = ExportContext.new(table_name, custom_selections, insert_table_name: insert_table_name)
       query_result = export_source.query(collection.export_select_sql)
 
       columns = query_result.fields
       return if columns.empty?
 
+      export_context = build_export_context(columns, query_result)
       process_export_in_batches(export_context, columns, query_result, &write_insert)
     end
 
@@ -50,6 +50,16 @@ module DataTaster
 
     def export_source
       DataTaster.config.source
+    end
+
+    def build_export_context(columns, query_result)
+      column_types = columns.zip(query_result.field_types).to_h.transform_keys(&:to_s)
+      ExportContext.new(
+        table_name,
+        custom_selections,
+        insert_table_name: insert_table_name,
+        column_types: column_types
+      )
     end
   end
 end

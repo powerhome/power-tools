@@ -69,6 +69,7 @@ RSpec.describe DataTaster::FileOutput do
     let(:query_result) do
       result = instance_double("Mysql2::Result")
       allow(result).to receive(:fields).and_return(%w[id email])
+      allow(result).to receive(:field_types).and_return(%w[longlong varchar(255)])
       allow(result).to receive(:each) { |&block| rows.each(&block) }
       result
     end
@@ -112,6 +113,7 @@ RSpec.describe DataTaster::FileOutput do
       let(:query_result) do
         result = instance_double("Mysql2::Result")
         allow(result).to receive(:fields).and_return(["id"])
+        allow(result).to receive(:field_types).and_return(["longlong"])
         allow(result).to receive(:each) { |&block| rows.each(&block) }
         result
       end

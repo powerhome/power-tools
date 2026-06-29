@@ -4,12 +4,15 @@ require "bigdecimal"
 require "date"
 
 module DataTaster
-  # Necessary to format Ruby values for use as MySQL INSERT literal fragments
+  # Necessary to format Ruby values (the non sanitized values) for use as MySQL INSERT literal fragments
   module SqlLiteral
-    def self.format(client, value)
+    BINARY_COLUMN_TYPE = /\A(?:tiny|medium|long)?blob|varbinary|binary|bit|geometry/i
+    TEXT_COLUMN_TYPE = /\Ajson|(?:var)?char|(?:tiny|medium|long)?text|enum|set/i
+
+    def self.format(client, value, column_type: nil)
       case value
       when String
-        format_string_value(client, value)
+        format_string_value(client, value, column_type: column_type)
       when nil, true, false, Integer, Float, BigDecimal
         format_scalar(value)
       when Time, DateTime, Date
@@ -52,13 +55,48 @@ module DataTaster
     end
     private_class_method :format_escaped_date
 
-    def self.format_string_value(client, value)
-      if value.encoding == Encoding::ASCII_8BIT
+    def self.format_string_value(client, value, column_type: nil)
+      if is_binary_column?(value, column_type)
         "X'#{value.unpack1('H*')}'"
       else
-        "'#{client.escape(value)}'"
+        "'#{client.escape(encode_as_text(value))}'"
       end
     end
     private_class_method :format_string_value
+
+    def self.is_binary_column?(value, column_type)
+      return true if binary_column_type?(column_type)
+      return false if text_column_type?(column_type)
+
+      value.encoding == Encoding::ASCII_8BIT && !utf8_text?(value)
+    end
+    private_class_method :is_binary_column?
+
+    def self.binary_column_type?(column_type)
+      return false if column_type.nil?
+
+      column_type.to_s.match?(BINARY_COLUMN_TYPE)
+    end
+    private_class_method :binary_column_type?
+
+    def self.text_column_type?(column_type)
+      return false if column_type.nil?
+
+      column_type.to_s.match?(TEXT_COLUMN_TYPE)
+    end
+    private_class_method :text_column_type?
+
+    def self.utf8_text?(value)
+      value.dup.force_encoding(Encoding::UTF_8).valid_encoding?
+    end
+    private_class_method :utf8_text?
+
+    def self.encode_as_text(value)
+      return value unless value.encoding == Encoding::ASCII_8BIT
+
+      candidate = value.dup.force_encoding(Encoding::UTF_8)
+      candidate.valid_encoding? ? candidate : value
+    end
+    private_class_method :encode_as_text
   end
 end

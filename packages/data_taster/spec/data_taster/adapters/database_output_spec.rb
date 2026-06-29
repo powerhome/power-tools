@@ -69,6 +69,7 @@ RSpec.describe DataTaster::DatabaseOutput do
       let(:query_result) do
         result = instance_double("Mysql2::Result")
         allow(result).to receive(:fields).and_return(%w[id email])
+        allow(result).to receive(:field_types).and_return(%w[longlong varchar(255)])
         allow(result).to receive(:each) { |&block| [{ "id" => 1, "email" => "a@example.com" }].each(&block) }
         result
       end

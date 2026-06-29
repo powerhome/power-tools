@@ -30,15 +30,15 @@ module DataTaster
       sql
     end
 
-    def insert_value_expression(row, client)
+    def insert_value_expression(row, client, column_types: {})
       return DataTaster::SKIP_CODE if value == DataTaster::SKIP_CODE
 
       if sanitize_function?
-        wash_values(value.to_s, row, client)
+        wash_values(value.to_s, row, client, column_types)
       elsif value.blank?
         "NULL"
       else
-        DataTaster::SqlLiteral.format(client, value)
+        DataTaster::SqlLiteral.format(client, value, column_type: column_types[column_name.to_s])
       end
     end
 
@@ -46,14 +46,15 @@ module DataTaster
 
     attr_reader :table_name, :column_name, :value
 
-    def wash_values(expression, row, client)
+    def wash_values(expression, row, client, column_types = {})
       result = expression.dup
-      identifiers = row.keys.map(&:to_s).grep(/\A[a-zA-Z_][a-zA-Z0-9_]*\z/)
-      identifiers.sort_by! { |k| -k.size }
-      identifiers.each do |key|
+      row.keys.map(&:to_s).grep(/\A[a-zA-Z_][a-zA-Z0-9_]*\z/).sort_by { |k| -k.size }.each do |key|
         next unless result.match?(/\b#{Regexp.escape(key)}\b/)
 
-        result.gsub!(/\b#{Regexp.escape(key)}\b/, SqlLiteral.format(client, row[key]))
+        result.gsub!(
+          /\b#{Regexp.escape(key)}\b/,
+          SqlLiteral.format(client, row[key], column_type: column_types[key])
+        )
       end
       result
     end

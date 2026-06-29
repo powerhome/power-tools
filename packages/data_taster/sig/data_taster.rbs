@@ -39,7 +39,7 @@ module DataTaster
 
   class ExportContext
     def self.quote_ident: (String | Symbol name) -> String
-    def initialize: (String table_name, Hash[String, untyped]? sanitize, ?insert_table_name: String?) -> void
+    def initialize: (String table_name, Hash[String, untyped]? sanitize, ?insert_table_name: String?, ?column_types: Hash[String, String]) -> void
     def insert_table_name: () -> String
     def format_row_tuple: (Array[String | Symbol] columns, Hash[String, untyped] row, untyped client) -> String
   end
