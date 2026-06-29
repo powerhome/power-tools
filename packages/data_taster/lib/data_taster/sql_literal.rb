@@ -56,7 +56,7 @@ module DataTaster
     private_class_method :format_escaped_date
 
     def self.format_string_value(client, value, column_type: nil)
-      if is_binary_column?(value, column_type)
+      if binary_column?(value, column_type)
         "X'#{value.unpack1('H*')}'"
       else
         "'#{client.escape(encode_as_text(value))}'"
@@ -64,13 +64,13 @@ module DataTaster
     end
     private_class_method :format_string_value
 
-    def self.is_binary_column?(value, column_type)
+    def self.binary_column?(value, column_type)
       return true if binary_column_type?(column_type)
       return false if text_column_type?(column_type)
 
       value.encoding == Encoding::ASCII_8BIT && !utf8_text?(value)
     end
-    private_class_method :is_binary_column?
+    private_class_method :binary_column?
 
     def self.binary_column_type?(column_type)
       return false if column_type.nil?
