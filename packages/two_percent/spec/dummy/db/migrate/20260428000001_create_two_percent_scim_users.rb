@@ -15,7 +15,7 @@ class CreateTwoPercentScimUsers < ActiveRecord::Migration[7.0]
       t.timestamps
 
       t.index :scim_id, unique: true
-      t.index :external_id
+      t.index :external_id, unique: true
       t.index :user_name
       t.index :email
       t.index :active
