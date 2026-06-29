@@ -10,7 +10,7 @@ module TwoPercent
     has_many :scim_groups, through: :scim_group_memberships
 
     validates :scim_id, presence: true, uniqueness: true
-    validates :external_id, presence: true
+    validates :external_id, presence: true, uniqueness: true
     validates :scim_data, presence: true
 
     scope :active, -> { where(active: true) }
