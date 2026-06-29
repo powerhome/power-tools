@@ -45,15 +45,11 @@ module TwoPercent
         updated_record = persist_scim_record(patched_data)
 
         # Reload associations for response
-        # Users: always reload to get fresh groups from join table (cheap - few groups per user)
-        # Groups: conditionally reload to include members (expensive - can be thousands of users)
-        # rubocop:disable Lint/DuplicateBranch
-        if user_resource?
-          updated_record = reload_with_members(updated_record)
-        elsif should_reload_members?(updated_record)
+        # Users: always reload (cheap - few groups per user)
+        # Groups: conditionally reload based on config (expensive - thousands of members)
+        if user_resource? || should_reload_members?(updated_record)
           updated_record = reload_with_members(updated_record)
         end
-        # rubocop:enable Lint/DuplicateBranch
 
         # Publish domain event with final state
         publish_updated_event(updated_record)
