@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_04_28_000003) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_02_000002) do
   create_table "two_percent_scim_group_memberships", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "scim_group_id", null: false
@@ -33,8 +33,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_000003) do
     t.datetime "updated_at", null: false
     t.index ["active"], name: "index_two_percent_scim_groups_on_active"
     t.index ["correlation_id"], name: "index_two_percent_scim_groups_on_correlation_id"
-    t.index ["external_id"], name: "index_two_percent_scim_groups_on_external_id"
-    t.index ["resource_type", "external_id"], name: "index_scim_groups_on_resource_and_external_id"
+    t.index ["resource_type", "external_id"], name: "index_scim_groups_on_resource_and_external_id", unique: true
     t.index ["resource_type"], name: "index_two_percent_scim_groups_on_resource_type"
     t.index ["scim_id"], name: "index_two_percent_scim_groups_on_scim_id", unique: true
   end
@@ -53,7 +52,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_000003) do
     t.index ["active"], name: "index_two_percent_scim_users_on_active"
     t.index ["correlation_id"], name: "index_two_percent_scim_users_on_correlation_id"
     t.index ["email"], name: "index_two_percent_scim_users_on_email"
-    t.index ["external_id"], name: "index_two_percent_scim_users_on_external_id"
+    t.index ["external_id"], name: "index_two_percent_scim_users_on_external_id", unique: true
     t.index ["scim_id"], name: "index_two_percent_scim_users_on_scim_id", unique: true
     t.index ["user_name"], name: "index_two_percent_scim_users_on_user_name"
   end
