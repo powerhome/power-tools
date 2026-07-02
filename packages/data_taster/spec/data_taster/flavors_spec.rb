@@ -7,22 +7,9 @@ require "active_support/testing/time_helpers"
 RSpec.describe DataTaster::Flavors do
   include DatabaseHelper
 
-  let(:source_client_stub) { double("client") }
-  let(:working_client_stub) { double("client") }
-
-  def stub_config(
-    months: nil,
-    list: "test",
-    source_client: source_client_stub,
-    working_client: working_client_stub,
-    include_insert: false
-  )
+  def stub_config(months: nil, list: "test")
     allow(DataTaster).to receive(:config).and_return(
-      double("config", months: months,
-                       list: list,
-                       source_client: source_client,
-                       working_client: working_client,
-                       include_insert: include_insert)
+      double("config", months: months, list: list)
     )
   end
 
