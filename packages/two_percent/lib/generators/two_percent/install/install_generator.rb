@@ -32,6 +32,16 @@ module TwoPercent
           "create_two_percent_scim_group_memberships.rb.erb",
           "db/migrate/create_two_percent_scim_group_memberships.rb"
         )
+
+        migration_template(
+          "add_unique_index_to_scim_users_external_id.rb.erb",
+          "db/migrate/add_unique_index_to_scim_users_external_id.rb"
+        )
+
+        migration_template(
+          "add_unique_composite_index_to_scim_groups.rb.erb",
+          "db/migrate/add_unique_composite_index_to_scim_groups.rb"
+        )
       end
 
       def copy_initializer
