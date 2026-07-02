@@ -14,7 +14,8 @@ class CreateTwoPercentScimGroups < ActiveRecord::Migration[7.0]
       t.timestamps
 
       t.index :scim_id, unique: true
-      t.index [:resource_type, :external_id], name: "index_scim_groups_on_resource_and_external_id", unique: true
+      t.index :external_id
+      t.index [:resource_type, :external_id], name: "index_scim_groups_on_resource_and_external_id"
       t.index :resource_type
       t.index :active
       t.index :correlation_id
