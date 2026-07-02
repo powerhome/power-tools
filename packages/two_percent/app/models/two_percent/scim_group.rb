@@ -10,7 +10,7 @@ module TwoPercent
     has_many :scim_users, through: :scim_group_memberships
 
     validates :scim_id, presence: true, uniqueness: true
-    validates :external_id, presence: true
+    validates :external_id, presence: true, uniqueness: { scope: :resource_type }
     validates :display_name, presence: true
     validates :resource_type, presence: true
     validates :scim_data, presence: true
@@ -34,13 +34,21 @@ module TwoPercent
       scim_hash = scim_hash.dup
       scim_hash["id"] ||= SecureRandom.uuid
 
+      # Extract members before validation to prevent storage in scim_data JSONB
+      members = scim_hash.delete("members")
+
       validated_data = TwoPercent::Scim::Schema.validate_group(scim_hash, require_id: true)
-      scim_group = find_or_initialize_by(scim_id: scim_hash["id"])
-      scim_group.update_from_scim!(resource_type, validated_data, correlation_id: correlation_id)
 
-      scim_group.replace_members(scim_hash["members"]) if scim_hash.key?("members")
+      # Wrap in transaction to ensure rollback on member validation failure
+      transaction do
+        scim_group = find_or_initialize_by(scim_id: scim_hash["id"])
+        scim_group.update_from_scim!(resource_type, validated_data, correlation_id: correlation_id)
 
-      scim_group
+        # Sync members to join table only (never stored in scim_data)
+        scim_group.replace_members(members) if members
+
+        scim_group
+      end
     end
 
     def self.find_by_scim_id(scim_id)
@@ -58,6 +66,7 @@ module TwoPercent
     # Extracts domain attributes for publishing in domain events
     #
     # Returns key attributes for event payloads.
+    # Members are NOT included - consumers should query TwoPercent models directly for current state.
     # @return [Hash] Domain attributes
     def to_domain_attributes
       {
@@ -103,15 +112,21 @@ module TwoPercent
 
     def replace_members(members_array)
       member_scim_ids = members_array.filter_map { |m| m["value"] }
-      existing_users = validate_users_exist!(member_scim_ids)
-      existing_user_ids = scim_group_memberships.pluck(:scim_user_id)
 
-      users_to_add = existing_users.where.not(id: existing_user_ids)
-      bulk_insert_memberships(users_to_add) if users_to_add.any?
+      # Get current member scim_ids efficiently (just IDs, no full records)
+      current_member_scim_ids = scim_group_memberships
+                                .joins(:scim_user)
+                                .pluck("two_percent_scim_users.scim_id")
 
-      # Bulk delete removed memberships
-      users_to_remove_ids = scim_users.where.not(scim_id: member_scim_ids).pluck(:id)
-      scim_group_memberships.where(scim_user_id: users_to_remove_ids).delete_all
+      # Calculate diff in Ruby (cheap for ID arrays)
+      scim_ids_to_add = member_scim_ids - current_member_scim_ids
+      scim_ids_to_remove = current_member_scim_ids - member_scim_ids
+
+      # Only validate and add NEW members (not existing ones)
+      add_members_by_scim_id(scim_ids_to_add) if scim_ids_to_add.any?
+
+      # Only remove members that need removing
+      remove_members_by_scim_id(scim_ids_to_remove) if scim_ids_to_remove.any?
     end
 
     # Extracts a nested attribute from the scim_data JSON
@@ -125,30 +140,80 @@ module TwoPercent
       scim_data.dig(*keys)
     end
 
+    # Build SCIM members representation from join table
+    # Optimized to bypass ActiveRecord and load only needed columns
+    #
+    # @return [Array<Hash>] Array of member references
+    def members_representation
+      scim_group_memberships
+        .joins(:scim_user)
+        .pluck("two_percent_scim_users.scim_id", "two_percent_scim_users.display_name")
+        .map do |scim_id, display_name|
+          {
+            "value" => scim_id,
+            "display" => display_name,
+            "$ref" => "Users/#{scim_id}",
+          }
+        end
+    end
+
+    # Build members array with value field only (for PatchProcessor)
+    # Uses pluck to avoid loading full AR objects
+    #
+    # @return [Array<Hash>] Array of member values
+    def members_for_patch
+      scim_group_memberships
+        .joins(:scim_user)
+        .pluck("two_percent_scim_users.scim_id")
+        .map { |id| { "value" => id } }
+    end
+
   private
 
-    # Validates that all user IDs exist in the database
+    # Add members by SCIM IDs, validating they exist
     #
-    # @param member_scim_ids [Array<String>] Array of SCIM user IDs to validate
+    # @param scim_ids_to_add [Array<String>] SCIM IDs of users to add
+    def add_members_by_scim_id(scim_ids_to_add)
+      return if scim_ids_to_add.empty?
+
+      users_to_add = validate_and_fetch_users(scim_ids_to_add)
+      bulk_insert_new_memberships(users_to_add)
+    end
+
+    # Remove members by SCIM IDs (direct, no JOIN needed)
+    #
+    # @param scim_ids_to_remove [Array<String>] SCIM IDs of users to remove
+    def remove_members_by_scim_id(scim_ids_to_remove)
+      return if scim_ids_to_remove.empty?
+
+      # Direct delete using SCIM IDs via subquery
+      scim_group_memberships
+        .where(scim_user_id: TwoPercent::ScimUser.where(scim_id: scim_ids_to_remove).select(:id))
+        .delete_all
+    end
+
+    # Validate users exist and return them
+    #
+    # @param scim_ids [Array<String>] SCIM IDs to validate
     # @return [ActiveRecord::Relation] The existing users
     # @raise [ArgumentError] If any users do not exist
-    def validate_users_exist!(member_scim_ids)
-      existing_users = TwoPercent::ScimUser.where(scim_id: member_scim_ids)
-      missing_ids = member_scim_ids - existing_users.pluck(:scim_id)
+    def validate_and_fetch_users(scim_ids)
+      users = TwoPercent::ScimUser.where(scim_id: scim_ids)
+      missing_ids = scim_ids - users.pluck(:scim_id)
 
       if missing_ids.any?
         raise ArgumentError,
               "Cannot add non-existent users to group: #{missing_ids.join(', ')}"
       end
 
-      existing_users
+      users
     end
 
-    # Bulk insert memberships for performance
+    # Bulk insert memberships for the given users
     #
-    # @param users_to_add [ActiveRecord::Relation] Users to add as members
-    def bulk_insert_memberships(users_to_add)
-      membership_records = users_to_add.pluck(:id).map do |user_id|
+    # @param users [ActiveRecord::Relation] Users to add as members
+    def bulk_insert_new_memberships(users)
+      membership_records = users.pluck(:id).map do |user_id|
         {
           scim_user_id: user_id,
           scim_group_id: id,
@@ -157,24 +222,10 @@ module TwoPercent
         }
       end
 
-      # Skip duplicates (handles race conditions and migration scenarios)
       TwoPercent::ScimGroupMembership.insert_all(
         membership_records,
         unique_by: %i[scim_user_id scim_group_id]
       )
-    end
-
-    # Build SCIM members representation
-    #
-    # @return [Array<Hash>] Array of member references
-    def members_representation
-      scim_users.map do |user|
-        {
-          "value" => user.scim_id,
-          "display" => user.display_name,
-          "$ref" => "Users/#{user.scim_id}",
-        }
-      end
     end
   end
 end

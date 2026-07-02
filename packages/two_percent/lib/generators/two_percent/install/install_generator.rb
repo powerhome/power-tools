@@ -18,20 +18,11 @@ module TwoPercent
       end
 
       def copy_migrations
-        migration_template(
-          "create_two_percent_scim_users.rb.erb",
-          "db/migrate/create_two_percent_scim_users.rb"
-        )
-
-        migration_template(
-          "create_two_percent_scim_groups.rb.erb",
-          "db/migrate/create_two_percent_scim_groups.rb"
-        )
-
-        migration_template(
-          "create_two_percent_scim_group_memberships.rb.erb",
-          "db/migrate/create_two_percent_scim_group_memberships.rb"
-        )
+        copy_users_migration
+        copy_groups_migration
+        copy_memberships_migration
+        copy_users_index_migration
+        copy_groups_index_migration
       end
 
       def copy_initializer
@@ -40,6 +31,43 @@ module TwoPercent
 
       def show_readme
         readme "INSTALL_README" if behavior == :invoke
+      end
+
+    private
+
+      def copy_users_migration
+        migration_template(
+          "create_two_percent_scim_users.rb.erb",
+          "db/migrate/create_two_percent_scim_users.rb"
+        )
+      end
+
+      def copy_groups_migration
+        migration_template(
+          "create_two_percent_scim_groups.rb.erb",
+          "db/migrate/create_two_percent_scim_groups.rb"
+        )
+      end
+
+      def copy_memberships_migration
+        migration_template(
+          "create_two_percent_scim_group_memberships.rb.erb",
+          "db/migrate/create_two_percent_scim_group_memberships.rb"
+        )
+      end
+
+      def copy_users_index_migration
+        migration_template(
+          "add_unique_index_to_scim_users_external_id.rb.erb",
+          "db/migrate/add_unique_index_to_scim_users_external_id.rb"
+        )
+      end
+
+      def copy_groups_index_migration
+        migration_template(
+          "add_unique_composite_index_to_scim_groups.rb.erb",
+          "db/migrate/add_unique_composite_index_to_scim_groups.rb"
+        )
       end
     end
   end

@@ -1,5 +1,17 @@
 ## [Unreleased]
 
+## [1.3.0]- 2026-06-26
+
+- **BREAKING - Thin Domain Events**: Removed association data from domain events
+  - User events (`UserCreated`, `UserUpdated`) no longer include `groups` array in `user_attributes`
+  - Group events (`GroupCreated`, `GroupUpdated`) no longer include `members` array in `group_attributes`
+- **Performance - Group Membership Updates**: Optimized `ScimGroup.replace_members` for large groups (10k+ members)
+  - Calculates diff (members to add/remove) before validation
+  - Only validates NEW members instead of all existing members
+- **Configuration**: New `config.include_members_in_patch_response` option (default: `true`)
+  - Set to `false` to exclude `members` array from PATCH Group response bodies for improved performance
+  - Useful when SCIM clients don't need member data in response (reduces payload size and query overhead)
+
 ## [1.2.0] - 2026-06-17
 
 - **Simplify ScimGroupMembership**: Removed correlation_id from join table (tracking remains on ScimGroup and ScimUser)

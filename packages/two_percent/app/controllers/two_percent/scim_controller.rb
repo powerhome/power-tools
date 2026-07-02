@@ -2,6 +2,8 @@
 
 module TwoPercent
   class ScimController < ApplicationController
+    include TwoPercent::ValidatesUserGroupsPatch
+
     def create
       record = with_scim_logging("create") do
         # Persist to two_percent tables first (validates SCIM schema)
@@ -25,6 +27,14 @@ module TwoPercent
         # Find existing record
         record = find_scim_record(params[:id])
 
+        # Sync scim_data["members"] from join table for Groups to ensure data consistency
+        # Must happen BEFORE PatchProcessor reads scim_data to ensure PATCH operations
+        # are applied to current members, not stale/empty data
+        record.scim_data["members"] = record.members_for_patch if group_resource?
+
+        # Validate RFC 7643 read-only attributes before processing
+        validate_patch_operations!(params[:resource_type], scim_params) if user_resource?
+
         # Apply SCIM PATCH operations (RFC 7644 compliance)
         processor = TwoPercent::Scim::PatchProcessor.new(scim_params)
         current_scim_data = record.scim_data || {}
@@ -34,8 +44,10 @@ module TwoPercent
         patched_data["id"] = params[:id] # Ensure ID is present
         updated_record = persist_scim_record(patched_data)
 
-        # Reload with associations for domain event and response
-        updated_record = reload_with_members(updated_record)
+        # Reload associations for response
+        # Users: always reload (cheap - few groups per user)
+        # Groups: conditionally reload based on config (expensive - thousands of members)
+        updated_record = reload_with_members(updated_record) if user_resource? || should_reload_members?(updated_record)
 
         # Publish domain event with final state
         publish_updated_event(updated_record)
@@ -253,6 +265,16 @@ module TwoPercent
     # Reload record with associations (users load groups, groups load members)
     def reload_with_members(record)
       model_class.includes(association_name).find(record.id)
+    end
+
+    # Check if group members should be reloaded for PATCH response
+    # Only applies to groups - users always reload via separate check
+    # Skip reload if: members already loaded, or config disables it
+    def should_reload_members?(record)
+      return false unless group_resource?
+      return false if record.scim_users.loaded?
+
+      TwoPercent.config.include_members_in_patch_response
     end
 
     # Build base query scope with optional filtering

@@ -24,6 +24,9 @@ TwoPercent is a SCIM 2.0 (System for Cross-domain Identity Management) Rails Eng
 - ❌ Discovery endpoints (RFC 7642): /ServiceProviderConfig, /ResourceTypes, /Schemas
 - ❌ Full RFC 7643 schema validation
 
+**RFC 7643 Deviations (Intentional):**
+- ⚠️ **User.groups is writable**: RFC 7643 Section 4.1.2 specifies User.groups as read-only, but TwoPercent accepts `groups` arrays in POST/PUT User operations to support bulk sync workflows from existing SCIM clients. Group memberships are synced automatically via `ScimUser.sync_groups`. PATCH operations on User.groups are correctly rejected per RFC. For strict RFC compliance, manage memberships exclusively via `PATCH /Groups/{id}` operations.
+
 **Note:** The current release supports full CRUD operations for IdP provisioning, including read operations with RFC 7644-compliant ListResponse format. Advanced filtering and discovery endpoints are on the roadmap for future releases.
 
 ## Architecture

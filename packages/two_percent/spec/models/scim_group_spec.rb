@@ -60,7 +60,6 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         "id" => "group-123",
         "externalId" => "ext-123",
         "displayName" => "Engineering",
-        "members" => [],
       }
     end
 
@@ -146,6 +145,31 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
 
         expect(group.scim_users.count).to eq(0)
       end
+
+      it "does not store members in scim_data JSONB" do
+        group = described_class.upsert_from_scim(resource_type, scim_hash_with_members)
+
+        expect(group.scim_users.count).to eq(2)
+        expect(group.scim_data.key?("members")).to be false
+      end
+
+      it "handles members key with nil value" do
+        scim_hash_with_nil = scim_hash.merge("members" => nil)
+
+        group = described_class.upsert_from_scim(resource_type, scim_hash_with_nil)
+
+        expect(group.scim_users.count).to eq(0)
+        expect(group.scim_data.key?("members")).to be false
+      end
+
+      it "handles empty members array" do
+        scim_hash_with_empty = scim_hash.merge("members" => [])
+
+        group = described_class.upsert_from_scim(resource_type, scim_hash_with_empty)
+
+        expect(group.scim_users.count).to eq(0)
+        expect(group.scim_data.key?("members")).to be false
+      end
     end
 
     context "with correlation_id" do
@@ -220,6 +244,75 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         end.to raise_error(ArgumentError, /schemas attribute is required/)
       end
     end
+
+    context "validation rollback on invalid members" do
+      let!(:valid_user) { create_scim_user(scim_id: "valid-user-1") }
+      let!(:existing_group) do
+        create_scim_group(scim_id: "group-validation", display_name: "Test Group", external_id: "ext-validation")
+      end
+
+      it "rolls back scim_data changes when member validation fails" do
+        # First attempt: add invalid member
+        invalid_member_hash = {
+          "id" => existing_group.scim_id,
+          "externalId" => existing_group.external_id,
+          "displayName" => "Test Group",
+          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+          "members" => [
+            { "value" => "nonexistent-user-1" },
+          ],
+        }
+
+        expect do
+          described_class.upsert_from_scim(resource_type, invalid_member_hash)
+        end.to raise_error(ArgumentError, /Cannot add non-existent users/)
+
+        # Verify scim_data was NOT updated with invalid member
+        existing_group.reload
+        expect(existing_group.scim_data["members"]).to be_nil.or be_empty
+
+        # Second attempt: add different invalid member
+        different_invalid_hash = {
+          "id" => existing_group.scim_id,
+          "externalId" => existing_group.external_id,
+          "displayName" => "Test Group",
+          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+          "members" => [
+            { "value" => "nonexistent-user-2" }, # Different invalid user
+          ],
+        }
+
+        expect do
+          described_class.upsert_from_scim(resource_type, different_invalid_hash)
+        end.to raise_error(ArgumentError, /Cannot add non-existent users.*nonexistent-user-2/)
+
+        # Verify error references NEW member (not old one from first attempt)
+        existing_group.reload
+        expect(existing_group.scim_data["members"]).to be_nil.or be_empty
+      end
+
+      it "rolls back on partial invalid member list" do
+        invalid_mixed_hash = {
+          "id" => existing_group.scim_id,
+          "externalId" => existing_group.external_id,
+          "displayName" => "Test Group",
+          "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+          "members" => [
+            { "value" => valid_user.scim_id },       # Valid
+            { "value" => "nonexistent-user-3" },     # Invalid
+          ],
+        }
+
+        expect do
+          described_class.upsert_from_scim(resource_type, invalid_mixed_hash)
+        end.to raise_error(ArgumentError, /Cannot add non-existent users/)
+
+        # Verify NO members were added (transaction rolled back)
+        existing_group.reload
+        expect(existing_group.scim_users).to be_empty
+        expect(existing_group.scim_data["members"]).to be_nil.or be_empty
+      end
+    end
   end
 
   describe ".find_by_scim_id" do
@@ -284,6 +377,7 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
     let!(:user1) { create_scim_user(scim_id: "user-1") }
     let!(:user2) { create_scim_user(scim_id: "user-2") }
     let!(:user3) { create_scim_user(scim_id: "user-3") }
+    let!(:user4) { create_scim_user(scim_id: "user-4") }
 
     context "when adding new members" do
       let(:members_array) do
@@ -355,6 +449,104 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
         expect do
           group.replace_members([])
         end.to change { group.scim_group_memberships.count }.from(2).to(0)
+      end
+    end
+
+    context "when scim_data['members'] is out of sync with join table" do
+      # Simulates state where join table has members but scim_data["members"] is empty
+      before do
+        TwoPercent::ScimGroupMembership.create!(scim_user: user1, scim_group: group)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user2, scim_group: group)
+
+        group.scim_data["members"] = []
+        group.save!
+      end
+
+      it "syncs join table when adding a new member" do
+        members_array = [
+          { "value" => user1.scim_id },
+          { "value" => user2.scim_id },
+          { "value" => user3.scim_id },
+        ]
+
+        group.replace_members(members_array)
+        group.reload
+
+        expect(group.scim_users.count).to eq(3)
+        member_scim_ids = group.scim_users.pluck(:scim_id)
+        expect(member_scim_ids).to contain_exactly(user1.scim_id, user2.scim_id, user3.scim_id)
+      end
+
+      it "syncs join table when removing a member" do
+        members_array = [{ "value" => user1.scim_id }]
+
+        group.replace_members(members_array)
+        group.reload
+
+        expect(group.scim_users.count).to eq(1)
+        expect(group.scim_users.first.scim_id).to eq(user1.scim_id)
+      end
+
+      it "does not modify scim_data when removing all members" do
+        group.replace_members([])
+        group.reload
+
+        # scim_data remains unchanged from before block (still [])
+        expect(group.scim_data["members"]).to eq([])
+        expect(group.scim_users.count).to eq(0)
+      end
+    end
+
+    context "complete replacement scenarios" do
+      before do
+        # Start with user1, user2, user3 in the group
+        TwoPercent::ScimGroupMembership.create!(scim_user: user1, scim_group: group)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user2, scim_group: group)
+        TwoPercent::ScimGroupMembership.create!(scim_user: user3, scim_group: group)
+      end
+
+      it "replaces all existing members with entirely new members" do
+        # Replace [user1, user2, user3] with [user4]
+        members_array = [{ "value" => user4.scim_id }]
+
+        group.replace_members(members_array)
+        group.reload
+
+        expect(group.scim_users.count).to eq(1)
+        expect(group.scim_users).to eq([user4])
+        expect(group.scim_users).not_to include(user1, user2, user3)
+      end
+
+      it "replaces with partial overlap (keeps some, removes some, adds some)" do
+        # Replace [user1, user2, user3] with [user2, user4]
+        # Keeps user2, removes user1 and user3, adds user4
+        members_array = [
+          { "value" => user2.scim_id },
+          { "value" => user4.scim_id },
+        ]
+
+        group.replace_members(members_array)
+        group.reload
+
+        expect(group.scim_users.count).to eq(2)
+        expect(group.scim_users).to contain_exactly(user2, user4)
+        expect(group.scim_users).not_to include(user1, user3)
+      end
+
+      it "is idempotent when replacing with same members" do
+        # Replace [user1, user2, user3] with [user1, user2, user3]
+        members_array = [
+          { "value" => user1.scim_id },
+          { "value" => user2.scim_id },
+          { "value" => user3.scim_id },
+        ]
+
+        expect do
+          group.replace_members(members_array)
+        end.not_to(change { group.scim_group_memberships.count })
+
+        group.reload
+        expect(group.scim_users).to contain_exactly(user1, user2, user3)
       end
     end
 
@@ -476,7 +668,6 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       "id" => scim_id,
       "externalId" => external_id,
       "displayName" => display_name,
-      "members" => [],
     }
 
     full_attributes = {
@@ -501,7 +692,6 @@ RSpec.describe TwoPercent::ScimGroup, type: :model do
       "id" => scim_id,
       "externalId" => external_id,
       "displayName" => display_name,
-      "members" => [],
     }
 
     full_attributes = {

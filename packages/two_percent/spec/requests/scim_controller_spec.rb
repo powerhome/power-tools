@@ -181,6 +181,91 @@ RSpec.describe "SCIM API", type: :request do
         end.not_to(change { published_events.size })
       end
     end
+
+    context "when groups attribute is present in request (intentional RFC deviation for client compatibility)" do
+      let!(:test_group) do
+        create_scim_group(
+          scim_id: "group-999",
+          display_name: "Test Group",
+          resource_type: "Groups"
+        )
+      end
+
+      let(:scim_user_with_groups) do
+        scim_user_payload.merge(
+          groups: [{ value: "group-999", display: "Test Group" }]
+        )
+      end
+
+      it "syncs group memberships from groups attribute (intentional RFC deviation)" do
+        post "/scim/Users", params: scim_user_with_groups.to_json, headers: headers
+
+        expect(response).to have_http_status(:created)
+        json_response = JSON.parse(response.body)
+        # groups should be populated from the request
+        expect(json_response["groups"]).to be_an(Array)
+        expect(json_response["groups"].length).to eq(1)
+        expect(json_response["groups"].first["value"]).to eq("group-999")
+      end
+
+      it "creates group memberships from POST request" do
+        post "/scim/Users", params: scim_user_with_groups.to_json, headers: headers
+
+        user = TwoPercent::ScimUser.last
+        user.reload
+        expect(user.scim_groups.count).to eq(1)
+        expect(user.scim_groups.first.scim_id).to eq("group-999")
+      end
+
+      it "does not store groups in scim_data (single source of truth: join table)" do
+        post "/scim/Users", params: scim_user_with_groups.to_json, headers: headers
+
+        user = TwoPercent::ScimUser.last
+        expect(user.scim_data).not_to have_key("groups")
+      end
+
+      it "clears group memberships when groups is an empty array" do
+        # First create user with groups
+        post "/scim/Users", params: scim_user_with_groups.to_json, headers: headers
+        user = TwoPercent::ScimUser.last
+        expect(user.scim_groups.count).to eq(1)
+
+        # Then update with empty groups array to clear memberships
+        scim_user_no_groups = scim_user_payload.merge(
+          id: user.scim_id,
+          groups: []
+        )
+        put "/scim/Users/#{user.scim_id}", params: scim_user_no_groups.to_json, headers: headers
+
+        expect(response).to have_http_status(:ok)
+        user.reload
+        expect(user.scim_groups.count).to eq(0)
+      end
+    end
+  end
+
+  # Helper method for creating test groups
+  def create_scim_group(attributes = {})
+    scim_id = attributes[:scim_id] || "group-#{SecureRandom.hex(4)}"
+    external_id = attributes[:external_id] || "ext-#{SecureRandom.hex(4)}"
+    display_name = attributes[:display_name] || "Test Group"
+    resource_type = attributes[:resource_type] || "Groups"
+
+    default_scim_data = {
+      "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+      "id" => scim_id,
+      "externalId" => external_id,
+      "displayName" => display_name,
+    }
+
+    full_attributes = {
+      scim_id: scim_id,
+      external_id: external_id,
+      display_name: display_name,
+      resource_type: resource_type,
+      scim_data: attributes[:scim_data] || default_scim_data,
+    }
+    TwoPercent::ScimGroup.create!(full_attributes)
   end
 
   # ========== POST /scim/Groups (Create Group) ==========
@@ -361,6 +446,135 @@ RSpec.describe "SCIM API", type: :request do
       end
     end
 
+    context "when attempting to modify groups attribute (RFC 7643 read-only)" do
+      let!(:test_group) do
+        create_scim_group(
+          scim_id: "group-999",
+          display_name: "Test Group",
+          resource_type: "Groups"
+        )
+      end
+
+      it "rejects PATCH add operation with 400 mutability error" do
+        add_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "add",
+              path: "groups",
+              value: [{ value: "group-999" }],
+            },
+          ],
+        }
+
+        patch "/scim/Users/user-456", headers: headers, params: add_operations.to_json
+
+        expect(response).to have_http_status(:bad_request)
+        json_response = JSON.parse(response.body)
+        expect(json_response["scimType"]).to eq("mutability")
+        expect(json_response["detail"]).to include("read-only")
+      end
+
+      it "rejects PATCH remove operation with 400 mutability error" do
+        remove_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "remove",
+              path: "groups[value eq \"group-999\"]",
+            },
+          ],
+        }
+
+        patch "/scim/Users/user-456", headers: headers, params: remove_operations.to_json
+
+        expect(response).to have_http_status(:bad_request)
+        json_response = JSON.parse(response.body)
+        expect(json_response["scimType"]).to eq("mutability")
+        expect(json_response["detail"]).to include("read-only")
+      end
+
+      it "rejects PATCH replace operation with 400 mutability error" do
+        replace_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "replace",
+              path: "groups",
+              value: [{ value: "group-999" }],
+            },
+          ],
+        }
+
+        patch "/scim/Users/user-456", headers: headers, params: replace_operations.to_json
+
+        expect(response).to have_http_status(:bad_request)
+        json_response = JSON.parse(response.body)
+        expect(json_response["scimType"]).to eq("mutability")
+        expect(json_response["detail"]).to include("read-only")
+      end
+
+      it "does not publish domain events when groups modification is rejected" do
+        add_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "add",
+              path: "groups",
+              value: [{ value: "group-999" }],
+            },
+          ],
+        }
+
+        patch "/scim/Users/user-456", headers: headers, params: add_operations.to_json
+
+        expect(published_events).to be_empty
+      end
+
+      it "rejects pathless PATCH replace with groups in value" do
+        pathless_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "replace",
+              value: {
+                active: true,
+                groups: [{ value: "group-999" }],
+              },
+            },
+          ],
+        }
+
+        patch "/scim/Users/user-456", headers: headers, params: pathless_operations.to_json
+
+        expect(response).to have_http_status(:bad_request)
+        json_response = JSON.parse(response.body)
+        expect(json_response["scimType"]).to eq("mutability")
+        expect(json_response["detail"]).to include("read-only")
+      end
+
+      it "rejects pathless PATCH add with groups in value" do
+        pathless_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "add",
+              value: {
+                groups: [{ value: "group-999" }],
+              },
+            },
+          ],
+        }
+
+        patch "/scim/Users/user-456", headers: headers, params: pathless_operations.to_json
+
+        expect(response).to have_http_status(:bad_request)
+        json_response = JSON.parse(response.body)
+        expect(json_response["scimType"]).to eq("mutability")
+        expect(json_response["detail"]).to include("read-only")
+      end
+    end
+
     context "when user does not exist" do
       it "returns 404 Not Found" do
         patch "/scim/Users/nonexistent", headers: headers, params: patch_operations.to_json
@@ -450,6 +664,113 @@ RSpec.describe "SCIM API", type: :request do
       end
     end
 
+    context "adding members to group with existing members (verify append not replace)" do
+      let!(:group_with_members) do
+        group = create_scim_group(scim_id: "group-789", display_name: "Existing Group")
+        group.scim_users = [user1, user2]
+        group.save!
+        # Update scim_data to reflect current members
+        group.scim_data["members"] = [
+          { "value" => user1.scim_id, "type" => "User" },
+          { "value" => user2.scim_id, "type" => "User" },
+        ]
+        group.save!
+        group
+      end
+
+      let(:add_third_member_operations) do
+        {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "add",
+              path: "members",
+              value: [{ value: user3.scim_id }],
+            },
+          ],
+        }
+      end
+
+      it "appends new member (does not replace existing)" do
+        patch "/scim/Groups/group-789", headers: headers, params: add_third_member_operations.to_json
+
+        group_with_members.reload
+        expect(group_with_members.scim_users.count).to eq(3)
+        expect(group_with_members.scim_users).to contain_exactly(user1, user2, user3)
+      end
+
+      it "returns SCIM representation with all members" do
+        patch "/scim/Groups/group-789", headers: headers, params: add_third_member_operations.to_json
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["members"].size).to eq(3)
+        member_ids = json_response["members"].map { |m| m["value"] }
+        expect(member_ids).to contain_exactly(user1.scim_id, user2.scim_id, user3.scim_id)
+      end
+    end
+
+    context "replacing members" do
+      let!(:group_with_members) do
+        group = create_scim_group(scim_id: "group-replace", display_name: "Replace Group")
+        group.scim_users = [user1, user2]
+        group.save!
+        group.scim_data["members"] = [
+          { "value" => user1.scim_id, "type" => "User" },
+          { "value" => user2.scim_id, "type" => "User" },
+        ]
+        group.save!
+        group
+      end
+
+      let(:replace_members_operations) do
+        {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "replace",
+              path: "members",
+              value: [
+                { value: user3.scim_id },
+                { value: user1.scim_id },
+              ],
+            },
+          ],
+        }
+      end
+
+      it "replaces all members with new set" do
+        patch "/scim/Groups/group-replace", headers: headers, params: replace_members_operations.to_json
+
+        group_with_members.reload
+        expect(group_with_members.scim_users.count).to eq(2)
+        expect(group_with_members.scim_users).to contain_exactly(user1, user3)
+        expect(group_with_members.scim_users).not_to include(user2)
+      end
+
+      it "returns SCIM representation with replaced members" do
+        patch "/scim/Groups/group-replace", headers: headers, params: replace_members_operations.to_json
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["members"].size).to eq(2)
+        member_ids = json_response["members"].map { |m| m["value"] }
+        expect(member_ids).to contain_exactly(user1.scim_id, user3.scim_id)
+      end
+
+      it "can replace with empty array" do
+        empty_replace_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            { op: "replace", path: "members", value: [] },
+          ],
+        }
+
+        patch "/scim/Groups/group-replace", headers: headers, params: empty_replace_operations.to_json
+
+        group_with_members.reload
+        expect(group_with_members.scim_users).to be_empty
+      end
+    end
+
     context "with single remove operation" do
       before do
         # Add members first
@@ -498,6 +819,104 @@ RSpec.describe "SCIM API", type: :request do
 
         json_response = JSON.parse(response.body)
         expect(json_response["members"]).to eq([])
+      end
+    end
+
+    context "removing specific member (with value)" do
+      let!(:user3) { create_scim_user(scim_id: "user-3", display_name: "Charlie") }
+      let!(:existing_group_with_members) do
+        group = create_scim_group(
+          scim_id: "group-456",
+          display_name: "Test Group"
+        )
+        group.scim_users = [user1, user2, user3]
+        group.save!
+        # Update scim_data to reflect current members
+        group.scim_data["members"] = [
+          { "value" => user1.scim_id, "type" => "User" },
+          { "value" => user2.scim_id, "type" => "User" },
+          { "value" => user3.scim_id, "type" => "User" },
+        ]
+        group.save!
+        group
+      end
+
+      let(:remove_specific_member_operations) do
+        {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "remove",
+              path: "members",
+              value: [{ value: user2.scim_id }],
+            },
+          ],
+        }
+      end
+
+      it "removes only the specified member (keeps others)" do
+        patch "/scim/Groups/group-456", headers: headers, params: remove_specific_member_operations.to_json
+
+        existing_group_with_members.reload
+        expect(existing_group_with_members.scim_users.count).to eq(2)
+        expect(existing_group_with_members.scim_users).to include(user1, user3)
+        expect(existing_group_with_members.scim_users).not_to include(user2)
+      end
+
+      it "returns SCIM representation with remaining members" do
+        patch "/scim/Groups/group-456", headers: headers, params: remove_specific_member_operations.to_json
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["members"].size).to eq(2)
+        member_ids = json_response["members"].map { |m| m["value"] }
+        expect(member_ids).to contain_exactly(user1.scim_id, user3.scim_id)
+      end
+
+      it "is idempotent when removing non-existent member" do
+        operations_with_nonexistent = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "remove",
+              path: "members",
+              value: [{ value: "user-999-nonexistent" }],
+            },
+          ],
+        }
+
+        patch "/scim/Groups/group-456", headers: headers, params: operations_with_nonexistent.to_json
+
+        existing_group_with_members.reload
+        expect(existing_group_with_members.scim_users.count).to eq(3)
+        expect(existing_group_with_members.scim_users).to contain_exactly(user1, user2, user3)
+      end
+
+      it "removes multiple members in one operation" do
+        operations_remove_multiple = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            {
+              op: "remove",
+              path: "members",
+              value: [
+                { value: user1.scim_id },
+                { value: user3.scim_id },
+              ],
+            },
+          ],
+        }
+
+        patch "/scim/Groups/group-456", headers: headers, params: operations_remove_multiple.to_json
+
+        existing_group_with_members.reload
+        expect(existing_group_with_members.scim_users.count).to eq(1)
+        expect(existing_group_with_members.scim_users).to contain_exactly(user2)
+      end
+
+      it "returns 200 OK" do
+        patch "/scim/Groups/group-456", headers: headers, params: remove_specific_member_operations.to_json
+
+        expect(response).to have_http_status(:ok)
       end
     end
 
@@ -623,6 +1042,134 @@ RSpec.describe "SCIM API", type: :request do
         expect(published_events).to be_empty
       end
     end
+
+    context "when scim_data is out of sync with join table" do
+      # Simulates scenario where scim_data["members"] is empty/stale but join table has members
+      # This can happen due to direct database manipulation, bugs, or inconsistent state
+      let!(:user3) { create_scim_user(scim_id: "user-3", display_name: "Charlie") }
+      let!(:user4) { create_scim_user(scim_id: "user-4", display_name: "Diana") }
+      let!(:group_with_stale_scim_data) do
+        group = create_scim_group(
+          scim_id: "group-stale-data",
+          display_name: "Group With Stale Data"
+        )
+        # Set up join table with existing members
+        group.scim_users = [user1, user2, user3]
+        group.save!
+
+        # Simulate stale scim_data (empty despite join table having members)
+        group.scim_data["members"] = []
+        group.save!
+        group
+      end
+
+      it "PATCH add preserves existing members when scim_data is stale" do
+        add_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            { op: "add", path: "members", value: [{ value: user4.scim_id }] },
+          ],
+        }
+
+        patch "/scim/Groups/group-stale-data", headers: headers, params: add_operations.to_json
+
+        group_with_stale_scim_data.reload
+        # Expected: Preserves existing members [user1, user2, user3] and adds user4
+        expect(group_with_stale_scim_data.scim_users.count).to eq(4)
+        expect(group_with_stale_scim_data.scim_users).to contain_exactly(user1, user2, user3, user4)
+      end
+
+      it "PATCH remove works correctly when scim_data is stale" do
+        remove_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            { op: "remove", path: "members", value: [{ value: user2.scim_id }] },
+          ],
+        }
+
+        patch "/scim/Groups/group-stale-data", headers: headers, params: remove_operations.to_json
+
+        group_with_stale_scim_data.reload
+        # Expected: Removes user2, keeps others
+        expect(group_with_stale_scim_data.scim_users.count).to eq(2)
+        expect(group_with_stale_scim_data.scim_users).to contain_exactly(user1, user3)
+      end
+
+      it "PATCH replace works correctly when scim_data is stale" do
+        replace_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            { op: "replace", path: "members", value: [{ value: user3.scim_id }, { value: user4.scim_id }] },
+          ],
+        }
+
+        patch "/scim/Groups/group-stale-data", headers: headers, params: replace_operations.to_json
+
+        group_with_stale_scim_data.reload
+        # Expected: Replaces all with new set [user3, user4]
+        expect(group_with_stale_scim_data.scim_users.count).to eq(2)
+        expect(group_with_stale_scim_data.scim_users).to contain_exactly(user3, user4)
+      end
+
+      it "syncs join table after operations" do
+        add_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            { op: "add", path: "members", value: [{ value: user4.scim_id }] },
+          ],
+        }
+
+        patch "/scim/Groups/group-stale-data", headers: headers, params: add_operations.to_json
+
+        group_with_stale_scim_data.reload
+        # Verify join table has all members
+        expect(group_with_stale_scim_data.scim_users.count).to eq(4)
+        member_scim_ids = group_with_stale_scim_data.scim_users.pluck(:scim_id)
+        expect(member_scim_ids).to contain_exactly(user1.scim_id, user2.scim_id, user3.scim_id, user4.scim_id)
+      end
+    end
+
+    context "when scim_data['members'] has never been set" do
+      let!(:group_without_scim_members) do
+        group = create_scim_group(scim_id: "group-no-members")
+        # scim_data["members"] is nil/absent (never set)
+        group.scim_users = [user1, user2]
+        group.save!
+        group
+      end
+
+      it "PATCH add works when scim_data['members'] is nil" do
+        add_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            { op: "add", path: "members", value: [{ value: user3.scim_id }] },
+          ],
+        }
+
+        patch "/scim/Groups/group-no-members", headers: headers, params: add_operations.to_json
+
+        expect(response).to have_http_status(:ok)
+        group_without_scim_members.reload
+        expect(group_without_scim_members.scim_users.count).to eq(3)
+        expect(group_without_scim_members.scim_users).to include(user1, user2, user3)
+      end
+
+      it "PATCH remove works when scim_data['members'] is nil" do
+        remove_operations = {
+          schemas: ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+          Operations: [
+            { op: "remove", path: "members", value: [{ value: user2.scim_id }] },
+          ],
+        }
+
+        patch "/scim/Groups/group-no-members", headers: headers, params: remove_operations.to_json
+
+        expect(response).to have_http_status(:ok)
+        group_without_scim_members.reload
+        expect(group_without_scim_members.scim_users.count).to eq(1)
+        expect(group_without_scim_members.scim_users).to contain_exactly(user1)
+      end
+    end
   end
 
   # ========== PUT /scim/Users/:id (Replace User) ==========
@@ -712,6 +1259,53 @@ RSpec.describe "SCIM API", type: :request do
 
         event = published_events.first
         expect(event).to be_a(TwoPercent::Domain::Events::UserUpdated)
+      end
+    end
+
+    context "when groups attribute is present in request (intentional RFC deviation for client compatibility)" do
+      let!(:existing_user) do
+        create_scim_user(scim_id: "user-with-group-attempt", display_name: "Test User")
+      end
+
+      let!(:test_group) do
+        create_scim_group(
+          scim_id: "group-888",
+          display_name: "Attempted Group",
+          resource_type: "Groups"
+        )
+      end
+
+      let(:user_payload_with_groups) do
+        full_user_payload.merge(
+          id: "user-with-group-attempt",
+          groups: [{ value: "group-888", display: "Attempted Group" }]
+        )
+      end
+
+      it "syncs group memberships from groups attribute (intentional RFC deviation)" do
+        put "/scim/Users/user-with-group-attempt", headers: headers, params: user_payload_with_groups.to_json
+
+        expect(response).to have_http_status(:ok)
+        json_response = JSON.parse(response.body)
+        # groups should be populated from the request
+        expect(json_response["groups"]).to be_an(Array)
+        expect(json_response["groups"].length).to eq(1)
+        expect(json_response["groups"].first["value"]).to eq("group-888")
+      end
+
+      it "creates group memberships from PUT request" do
+        put "/scim/Users/user-with-group-attempt", headers: headers, params: user_payload_with_groups.to_json
+
+        existing_user.reload
+        expect(existing_user.scim_groups.count).to eq(1)
+        expect(existing_user.scim_groups.first.scim_id).to eq("group-888")
+      end
+
+      it "does not store groups in scim_data (single source of truth: join table)" do
+        put "/scim/Users/user-with-group-attempt", headers: headers, params: user_payload_with_groups.to_json
+
+        existing_user.reload
+        expect(existing_user.scim_data).not_to have_key("groups")
       end
     end
   end
@@ -1380,7 +1974,6 @@ RSpec.describe "SCIM API", type: :request do
         "id" => scim_id,
         "externalId" => external_id,
         "displayName" => display_name,
-        "members" => [],
       },
     }
     TwoPercent::ScimGroup.create!(full_attributes)
