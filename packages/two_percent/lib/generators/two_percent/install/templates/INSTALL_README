@@ -1,0 +1,84 @@
+===============================================================================
+  TwoPercent SCIM Integration Installed Successfully!
+===============================================================================
+
+Next Steps:
+
+1. Run migrations to create SCIM tables:
+
+   rails db:migrate
+
+2. Configure authentication in config/initializers/two_percent.rb:
+
+   Replace the NotImplementedError with your authentication logic
+   (bearer token, BasicAuth, API key, etc.)
+
+3. Mount SCIM routes in config/routes.rb:
+
+   mount TwoPercent::Engine => "/scim"
+
+   Or mount at a custom path:
+   mount TwoPercent::Engine => "/api/scim/v2"
+
+4. Subscribe to domain events:
+
+   TwoPercent publishes domain events when SCIM resources change:
+
+   - TwoPercent::Domain::Events::UserCreated
+   - TwoPercent::Domain::Events::UserUpdated
+   - TwoPercent::Domain::Events::UserDeleted
+   - TwoPercent::Domain::Events::GroupCreated
+   - TwoPercent::Domain::Events::GroupUpdated
+   - TwoPercent::Domain::Events::GroupDeleted
+
+   Subscribe using ActiveSupport::Notifications or integrate using the
+   Syncable concern (see step 5)
+
+5. (Option A) Subscribe to events manually:
+
+   ActiveSupport::Notifications.subscribe(/TwoPercent::Domain::Events/) do |name, start, finish, id, payload|
+     event = payload[:event]
+     case event
+     when TwoPercent::Domain::Events::UserCreated
+       User.create!(scim_id: event.user_attributes[:scim_id], ...)
+     when TwoPercent::Domain::Events::UserUpdated
+       user = User.find_by(scim_id: event.user_attributes[:scim_id])
+       user&.update!(event.user_attributes.slice(...))
+     end
+   end
+
+6. (Option B) Use Syncable concern for automatic sync:
+
+   class User < ApplicationRecord
+     include TwoPercent::Syncable
+
+     syncable_as :user, scim_id_column: :scim_id do |scim_attrs|
+       {
+         first_name: scim_attrs.dig(:name, :givenName),
+         last_name: scim_attrs.dig(:name, :familyName),
+         email: scim_attrs[:email],
+         active: scim_attrs[:active]
+       }
+     end
+   end
+
+   Then subscribe to events:
+   ActiveSupport::Notifications.subscribe(/TwoPercent::Domain::Events/) do |name, start, finish, id, payload|
+     event = payload[:event]
+     User.sync_from_scim_event(event) if event.is_a?(TwoPercent::Domain::Events::Base)
+   end
+
+7. (Option C) Query SCIM models directly:
+
+   scim_user = TwoPercent::ScimUser.find_by_scim_id("user-123")
+   attrs = scim_user.to_domain_attributes
+   email = scim_user.scim_data["email"]
+
+===============================================================================
+
+For detailed documentation and examples, see:
+https://github.com/powerhome/power-tools/tree/main/packages/two_percent
+
+Questions or issues? Open an issue on GitHub.
+
+===============================================================================

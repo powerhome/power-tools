@@ -1,6 +1,17 @@
 ## [Unreleased]
 
+### [2.6.1] - 2026-06-26
+
+- Fixed an issue where view and action comparisons did not work unless we converted their keys to strings. [#444](https://github.com/powerhome/power-tools/pull/444)
+
+### [2.6.0] - 2026-06-15
+
+- Changed permission checksum calculation to use permission data rather than permission file contents. [#438](https://github.com/powerhome/power-tools/pull/438)
+
+### [2.5.0] - 2026-05-27
+
 - Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
+- Added a `PermissionDefinitionPayload.generate` method to generate a payload hash of an application's permission defintions. [#433](https://github.com/powerhome/power-tools/pull/433)
 
 ### [2.4.0] - 2026-02-04
 - Adds ability to verify and synchronize permission definitions across environments using deterministic checksums [#387](https://github.com/powerhome/power-tools/pull/387)
