@@ -1,10 +1,44 @@
 # frozen_string_literal: true
 
-RSpec.configure do |config|
-  config.before(:each) do
-    # several class instance variables are set and memoized, so this lets us reset them between tests
-    DataTaster.instance_variables.each do |variable|
-      DataTaster.remove_instance_variable(variable) if DataTaster.instance_variable_defined?(variable)
+require "spec_helper"
+
+module ConfigHelper
+  def configure_data_taster(**options)
+    DataTaster.reset!
+    DataTaster.setup(**data_taster_setup_options(options))
+  end
+
+  def default_config_list
+    [File.join(__dir__, "..", "fixtures", "data_taster_export_tables.yml")]
+  end
+
+private
+
+  def data_taster_setup_options(options)
+    {
+      source: mysql_source(options.fetch(:source_client) { source_db_client }),
+      output: data_taster_output(options),
+      months: options[:months],
+      list: options[:list] || default_config_list,
+    }
+  end
+
+  def mysql_source(source_client)
+    DataTaster::MysqlSource.new(source_client: source_client)
+  end
+
+  def data_taster_output(options)
+    if options[:path]
+      DataTaster::FileOutput.new(
+        path: options[:path],
+        target_database: options.fetch(:target_database) { dump_db_name }
+      )
+    else
+      DataTaster::DatabaseOutput.new(target_client: options.fetch(:target_client) { dump_db_client })
     end
   end
+end
+
+RSpec.configure do |config|
+  config.include ConfigHelper
 end

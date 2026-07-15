@@ -2,12 +2,12 @@
 
 module DataTaster
   class Sanitizer
-    # Ensures the given tables are cleaned of
-    # information deemed sensitive
+    BATCH_SIZE = SanitizerExporter::BATCH_SIZE
+
+    # Ensures the given tables are cleaned of information deemed sensitive
     def initialize(table_name, custom_selections)
       @table_name = table_name
       @custom_selections = custom_selections || {}
-      @include_insert = DataTaster.config.include_insert
     end
 
     def clean!
@@ -23,15 +23,31 @@ module DataTaster
       end
     end
 
+    def sanitization_rules
+      return {} if skippable_table?
+
+      default_selections.merge(custom_selections).each_with_object({}) do |(column_name, sanitized_value), memo|
+        next if sanitized_value == DataTaster::SKIP_CODE
+
+        memo[column_name.to_s] = sanitized_value
+      end
+    end
+
+    def export_sanitized_rows(collection, insert_table_name:, &write_insert)
+      SanitizerExporter.new(table_name, custom_selections, insert_table_name: insert_table_name)
+                       .export_sanitized_rows(collection, &write_insert)
+    end
+
   private
 
-    attr_reader :table_name, :custom_selections, :include_insert
+    attr_reader :table_name, :custom_selections
 
     def process(sql)
       return if sql == DataTaster::SKIP_CODE
-      return sql unless include_insert
+      return sql unless output.run_sanitization?
 
-      DataTaster.safe_execute(sql)
+      output.write_statement(sql)
+      sql
     rescue => e
       raise e, e.message + context_warning
     end
@@ -46,6 +62,10 @@ module DataTaster
         *****
 
       WARNING
+    end
+
+    def output
+      DataTaster.config.output
     end
 
     def skippable_table?
