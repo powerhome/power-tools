@@ -6,9 +6,8 @@ module DataTaster
 
     def sample!
       start_export
-
       process_export
-
+    ensure
       finish_export
     end
 
@@ -48,6 +47,8 @@ module DataTaster
     end
 
     def finish_export
+      return unless @io && !@io.closed?
+
       @io.puts "SET FOREIGN_KEY_CHECKS=1;"
       @io.close
     end

@@ -37,6 +37,7 @@ module DataTaster
   end
 
   def self.setup(source:, output:, months: nil, list: nil)
+    @confection = nil
     self.config = Config.new(
       source,
       output,
