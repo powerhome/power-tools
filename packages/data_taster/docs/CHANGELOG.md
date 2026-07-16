@@ -1,6 +1,18 @@
 ## [Unreleased]
 
-## [0.5.0] - 2026-07-08
+### Dependencies and platform support
+
+- Update rainbow to v3.x [#372](https://github.com/powerhome/power-tools/pull/372)
+- Update yard to 0.9.38 to address [Cross-site Scripting vulnerability](https://github.com/powerhome/power-tools/security/dependabot/544) [#394](https://github.com/powerhome/power-tools/pull/394)
+- Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
+- Remove more Rails 6.0 config handling
+- Standardize all libs to support ruby 3.0, ruby 3.3 x rails 6.1 through rails 7.2 [#359](https://github.com/powerhome/power-tools/pull/359)
+- Lock activesupport requirement to ~> 7.0.8
+- Setup test environment and add simple specs
+- Fix issue reading database config to support Rails 6.0
+- Add more specs, including actual run of a dump for default sanitization
+
+## [0.5.1] - 2026-07-16
 
 ### Breaking changes
 
@@ -29,17 +41,9 @@
 
 - Correctly treat JSON column values as quoted strings instead of binary hex literals
 
-### Dependencies and platform support
+## [0.5.0] - 2026-07-08
 
-- Update rainbow to v3.x [#372](https://github.com/powerhome/power-tools/pull/372)
-- Update yard to 0.9.38 to address [Cross-site Scripting vulnerability](https://github.com/powerhome/power-tools/security/dependabot/544) [#394](https://github.com/powerhome/power-tools/pull/394)
-- Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
-- Remove more Rails 6.0 config handling
-- Standardize all libs to support ruby 3.0, ruby 3.3 x rails 6.1 through rails 7.2 [#359](https://github.com/powerhome/power-tools/pull/359)
-- Lock activesupport requirement to ~> 7.0.8
-- Setup test environment and add simple specs
-- Fix issue reading database config to support Rails 6.0
-- Add more specs, including actual run of a dump for default sanitization
+- Published in the wrong order and produced errors. Use 0.5.1 instead.
 
 ## [0.4.3] - 2025-07-28
 
