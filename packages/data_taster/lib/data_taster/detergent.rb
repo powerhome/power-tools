@@ -30,9 +30,34 @@ module DataTaster
       sql
     end
 
+    def insert_value_expression(row, client, column_types: {})
+      return DataTaster::SKIP_CODE if value == DataTaster::SKIP_CODE
+
+      if sanitize_function?
+        wash_values(value.to_s, row, client, column_types)
+      elsif value.blank?
+        "NULL"
+      else
+        DataTaster::SqlLiteral.format(client, value, column_type: column_types[column_name.to_s])
+      end
+    end
+
   private
 
     attr_reader :table_name, :column_name, :value
+
+    def wash_values(expression, row, client, column_types = {})
+      result = expression.dup
+      row.keys.map(&:to_s).grep(/\A[a-zA-Z_][a-zA-Z0-9_]*\z/).sort_by { |k| -k.size }.each do |key|
+        next unless result.match?(/\b#{Regexp.escape(key)}\b/)
+
+        result.gsub!(
+          /\b#{Regexp.escape(key)}\b/,
+          SqlLiteral.format(client, row[key], column_type: column_types[key])
+        )
+      end
+      result
+    end
 
     def parse_value(given_value)
       # yml files can't hold custom-set dates, they have to be converted to strings
@@ -59,7 +84,7 @@ module DataTaster
 
     def sql_for_uncast_value
       <<-SQL.squish
-        UPDATE #{working_db}.#{table_name}
+        UPDATE #{qualified_table_name}
         SET #{column_name} = #{value}
         WHERE #{column_name} IS NOT NULL
         AND #{column_name} <> #{value}
@@ -68,7 +93,7 @@ module DataTaster
 
     def sql_for_date_value
       <<-SQL.squish
-        UPDATE #{working_db}.#{table_name}
+        UPDATE #{qualified_table_name}
         SET #{column_name} = '#{value}'
         WHERE #{column_name} IS NOT NULL
       SQL
@@ -76,7 +101,7 @@ module DataTaster
 
     def sql_for_nil_value
       <<-SQL.squish
-        UPDATE #{working_db}.#{table_name}
+        UPDATE #{qualified_table_name}
         SET #{column_name} = NULL
         WHERE #{column_name} IS NOT NULL
       SQL
@@ -84,15 +109,15 @@ module DataTaster
 
     def sql_for_cast_value
       <<-SQL.squish
-        UPDATE #{working_db}.#{table_name}
+        UPDATE #{qualified_table_name}
         SET #{column_name} = '#{value}'
         WHERE #{column_name} IS NOT NULL
         AND #{column_name} <> ''
       SQL
     end
 
-    def working_db
-      DataTaster.config.working_client.query_options[:database]
+    def qualified_table_name
+      DataTaster.config.output.qualified_table_name(table_name)
     end
   end
 end
