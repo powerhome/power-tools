@@ -1,13 +1,13 @@
 PATH
   remote: ../../nitro_config
   specs:
-    nitro_config (0.2.0)
-      activesupport (>= 6.0.6.1, < 8)
+    nitro_config (0.3.0)
+      activesupport (>= 7.1, < 8.2)
 
 PATH
   remote: ../../rubocop-powerhome
   specs:
-    rubocop-powerhome (0.6.1)
+    rubocop-powerhome (0.7.0)
       rubocop (= 1.82.1)
       rubocop-performance
       rubocop-rails
@@ -17,7 +17,7 @@ PATH
 PATH
   remote: ..
   specs:
-    dep_shield (0.3.1)
+    dep_shield (0.4.0)
       nitro_config
       sentry-ruby (>= 5.5.0)
 
@@ -104,7 +104,7 @@ GEM
     ast (2.4.3)
     base64 (0.3.0)
     benchmark (0.5.0)
-    bigdecimal (4.1.1)
+    bigdecimal (4.1.2)
     builder (3.3.0)
     cgi (0.5.1)
     combustion (1.5.0)

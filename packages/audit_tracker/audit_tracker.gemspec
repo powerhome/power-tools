@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "activerecord", ">= 6.1", "< 8"
+  spec.add_development_dependency "activerecord", ">= 7.1.5.2", "< 8.2"
   spec.add_development_dependency "appraisal", "~> 2.5.0"
   spec.add_development_dependency "combustion", "~> 1.3"
   spec.add_development_dependency "shoulda-matchers", "~> 5.1.0"

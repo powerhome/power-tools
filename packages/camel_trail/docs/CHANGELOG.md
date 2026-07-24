@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [1.3.0] - 2026-07-30
+
+[HFH-4410 - Bump powertools for Rails 8.1.3 V2](https://github.com/powerhome/power-tools/pull/426)
+
+- Add support for Rails 8+ for Nitro and Runway compatability
+
 ## [1.2.1] - 2026-06-24
 
 - Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)

@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [2.5.0] - 2026-07-30
+
+[HFH-4410 - Bump powertools for Rails 8.1.3](https://github.com/powerhome/power-tools/pull/426)
+
+- Add support for Rails 8+ for Nitro and Runway compatability
+
 ### [2.6.1] - 2026-06-26
 
 - Fixed an issue where view and action comparisons did not work unless we converted their keys to strings. [#444](https://github.com/powerhome/power-tools/pull/444)
@@ -14,6 +20,7 @@
 - Added a `PermissionDefinitionPayload.generate` method to generate a payload hash of an application's permission defintions. [#433](https://github.com/powerhome/power-tools/pull/433)
 
 ### [2.4.0] - 2026-02-04
+
 - Adds ability to verify and synchronize permission definitions across environments using deterministic checksums [#387](https://github.com/powerhome/power-tools/pull/387)
 
 ## [2.3.0] - 2025-10-29
