@@ -25,15 +25,11 @@ require "rspec/rails"
 # Rails.root.glob('spec/support/**/*.rb').sort_by(&:to_s).each { |f| require f }
 
 RSpec.configure do |config|
-  # Remove this line to enable support for ActiveRecord
-  config.use_active_record = false
+  # Enable ActiveRecord support for model specs
+  config.use_active_record = true
 
-  # If you enable ActiveRecord support you should uncomment these lines,
-  # note if you'd prefer not to run each example within a transaction, you
-  # should set use_transactional_fixtures to false.
-  #
-  # config.fixture_path = Rails.root.join('spec/fixtures')
-  # config.use_transactional_fixtures = true
+  # Run each example within a transaction
+  config.use_transactional_fixtures = true
 
   # RSpec Rails uses metadata to mix in different behaviours to your tests,
   # for example enabling you to call `get` and `post` in request specs. e.g.:
@@ -55,5 +51,13 @@ RSpec.configure do |config|
   # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
-  # config.filter_gems_from_backtrace("gem name")
+  # config.filter_gems_from_bactraces("gem name")
+end
+
+# Configure Shoulda Matchers
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
 end

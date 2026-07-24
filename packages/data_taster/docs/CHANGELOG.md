@@ -8,6 +8,8 @@
 - Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
 - Update Rails version to 7.2.3.1 for Active Storage CVE [#402](https://github.com/powerhome/power-tools/pull/402)
 
+### Dependencies and platform support
+
 - Update rainbow to v3.x [#372](https://github.com/powerhome/power-tools/pull/372)
 - Update yard to 0.9.38 to address [Cross-site Scripting vulnerability](https://github.com/powerhome/power-tools/security/dependabot/544) [#394](https://github.com/powerhome/power-tools/pull/394)
 - Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
@@ -21,7 +23,40 @@
 - Fix issue reading database config to support Rails 6.0
 - Add more specs, including actual run of a dump for default sanitization
 
-## [0.4.3] - 2025-07-28 [Unreleased]
+## [0.5.1] - 2026-07-16
+
+### Breaking changes
+
+- Replace `DataTaster.config(source_client:, working_client:, include_insert:, ...)` with `DataTaster.setup(source:, output:, months:, list:)`
+- Configure exports with a `MysqlSource` and an output adapter (`DatabaseOutput` or `FileOutput`) instead of raw MySQL clients
+- Remove `include_insert` — export behavior is determined by the output adapter
+- Remove `DataTaster::Sample` and `DataTaster.safe_execute` — export logic now lives in output adapters
+
+### Added
+
+- **SQL file export**: `FileOutput` writes sanitized INSERT statements to a SQL file without mutating a target database
+- **Adapter architecture**: `MysqlSource`, `Output`, `DatabaseOutput`, and `FileOutput` separate source reads from export destination
+- **Inline sanitization on export**: Both file and database exports apply sanitization rules while building INSERT statements via `SanitizerExporter`, `ExportContext`, and `SqlLiteral`
+- **`DataTaster.reset!`**: Clears configuration and confection between runs
+- **`SqlLiteral`**: Formats Ruby values as MySQL literals with correct handling for JSON, binary/blob, temporal, and scalar types
+- Expanded test coverage for adapters, SQL literals, and integration flows
+
+### Changed
+
+- Database export (`DatabaseOutput`) inserts sanitized rows directly and still runs post-export UPDATE sanitization
+- File export only includes tables defined in confection keys
+- Default `schema_migrations` confection entry is provided by `DatabaseOutput` only
+- Move row-expression sanitization (`wash_values`) into `Detergent`
+
+### Fixed
+
+- Correctly treat JSON column values as quoted strings instead of binary hex literals
+
+## [0.5.0] - 2026-07-08
+
+- Published in the wrong order and produced errors. Use 0.5.1 instead.
+
+## [0.4.3] - 2025-07-28
 
 ## [0.4.2] - 2025-02-27
 

@@ -25,4 +25,7 @@ RSpec.configure do |config|
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
   config.use_transactional_fixtures = true
+  config.after(:each) do
+    Consent.default_views.clear
+  end
 end

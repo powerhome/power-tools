@@ -52,4 +52,55 @@ module TwoPercent
   # `TwoPercent.logger` will default to Rails.logger
   #
   config_accessor :logger
+
+  #
+  # Group resource types that TwoPercent will accept and process.
+  # Defaults to ["Groups"] which is the standard SCIM 2.0 group resource type.
+  #
+  # To support additional company-specific group types (like Departments, Territories),
+  # add them to this array in your initializer:
+  #
+  #   TwoPercent.configure do |config|
+  #     config.group_resource_types = %w[Groups Departments Territories]
+  #   end
+  #
+  # All configured types will:
+  # - Accept POST/PUT/PATCH/DELETE/GET operations at /scim/:resource_type
+  # - Store data in the same scim_groups table with resource_type column
+  # - Publish domain events with the resource_type included
+  #
+  config_accessor :group_resource_types do
+    %w[Groups]
+  end
+
+  #
+  # HTTP header name for correlation ID tracking
+  # Defaults to "X-Correlation-Id" (common microservices pattern)
+  # Set to your IdP's correlation header (e.g., "SCIM-Request-ID")
+  #
+  # I.e.:
+  #
+  #   TwoPercent.configure do |config|
+  #     config.correlation_id_header = "SCIM-Request-ID"
+  #   end
+  #
+  config_accessor :correlation_id_header, default: "X-Correlation-Id"
+
+  #
+  # Performance optimization: Skip members in Group PATCH responses
+  # RFC 7644 compliance (PATCH responses SHOULD return full resource)
+  #
+  # For Groups with large member lists, loading members can impact performance.
+  # Set to false to skip member loading in Group PATCH responses only:
+  #
+  #   TwoPercent.configure do |config|
+  #     config.include_members_in_patch_response = false
+  #   end
+  #
+  # User PATCH responses always include groups. GET requests always include
+  # members/groups regardless of this setting.
+  #
+  config_accessor :include_members_in_patch_response, default: true
+
+  class ConfigurationError < StandardError; end
 end

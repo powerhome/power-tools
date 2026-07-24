@@ -4,14 +4,74 @@ require "spec_helper"
 require "data_taster/detergent"
 
 RSpec.describe DataTaster::Detergent do
-  let(:source_client_stub) { double("client") }
-  let(:working_client_stub) { double("client") }
-  let(:config_stub) { double("config", working_client: working_client_stub) }
+  let(:output_stub) do
+    double(
+      "output",
+      target_database: "test_db",
+      run_sanitization?: true,
+      qualified_table_name: "test_db.users"
+    )
+  end
+  let(:config_stub) { double("config", output: output_stub) }
 
   before do
     allow(DataTaster).to receive(:config).and_return(config_stub)
-    allow(working_client_stub).to receive(:query_options).and_return(database: "test_db")
     allow(DataTaster).to receive(:logger).and_return(double("logger", info: nil))
+  end
+
+  describe "#wash_values" do
+    let(:client) { double("client", escape: ->(s) { s }) }
+    let(:detergent) { described_class.new("users", "email", "CONCAT(id)") }
+
+    it "replaces longer identifier names before shorter ones" do
+      row = { "id" => 1, "identity" => 99 }
+      expression = "CONCAT(id, '-', identity)"
+
+      expect(detergent.send(:wash_values, expression, row, client)).to eq("CONCAT(1, '-', 99)")
+    end
+
+    it "leaves non-identifier tokens unchanged" do
+      row = { "id" => 5 }
+      expression = "CONCAT('users_', id, '@nitrophrg.com')"
+
+      expect(detergent.send(:wash_values, expression, row, client)).to eq("CONCAT('users_', 5, '@nitrophrg.com')")
+    end
+  end
+
+  describe "#insert_value_expression" do
+    let(:client) { double("client") }
+
+    before do
+      allow(client).to receive(:escape) { |s| s }
+    end
+
+    it "returns a literal SQL string for plain masked values" do
+      detergent = described_class.new("users", "ssn", "111111111")
+      row = { "id" => 1, "ssn" => "123-45-6789" }
+
+      expect(detergent.insert_value_expression(row, client)).to eq("'111111111'")
+    end
+
+    it "replaces row identifiers inside function expressions" do
+      detergent = described_class.new("users", "email", "CONCAT('users_', id, '@nitrophrg.com')")
+      row = { "id" => 1, "email" => "secret@example.com" }
+
+      expect(detergent.insert_value_expression(row, client)).to eq("CONCAT('users_', 1, '@nitrophrg.com')")
+    end
+
+    it "returns NULL for blank replacement values" do
+      detergent = described_class.new("users", "encrypted_password", "")
+      row = { "id" => 1, "encrypted_password" => "x" }
+
+      expect(detergent.insert_value_expression(row, client)).to eq("NULL")
+    end
+
+    it "returns skip code when value is skip code" do
+      detergent = described_class.new("users", "email", DataTaster::SKIP_CODE)
+      row = { "id" => 1 }
+
+      expect(detergent.insert_value_expression(row, client)).to eq(DataTaster::SKIP_CODE)
+    end
   end
 
   describe "#deliver" do
@@ -68,6 +128,25 @@ RSpec.describe DataTaster::Detergent do
       result = detergent.deliver
 
       expect(result).to eq(DataTaster::SKIP_CODE)
+    end
+
+    context "when output is SQL file (not database export)" do
+      let(:output_stub) do
+        double(
+          "output",
+          target_database: "test_db",
+          run_sanitization?: false,
+          qualified_table_name: "`users`"
+        )
+      end
+
+      it "uses only the quoted table name in UPDATE statements" do
+        detergent = described_class.new("users", "email", "test@example.com")
+        result = detergent.deliver
+
+        expect(result).to include("UPDATE `users`")
+        expect(result).not_to include("UPDATE test_db.users")
+      end
     end
   end
 end

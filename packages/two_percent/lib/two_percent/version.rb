@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module TwoPercent
-  VERSION = "0.6.0"
+  VERSION = "1.3.0"
 end

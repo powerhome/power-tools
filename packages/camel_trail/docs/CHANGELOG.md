@@ -1,13 +1,17 @@
 ## [Unreleased]
 
-## [1.3.0] - 2026-05-12
+## [1.3.0] - 2026-07-30
 
 [HFH-4410 - Bump powertools for Rails 8.1.3 V2](https://github.com/powerhome/power-tools/pull/426)
 
-- Upgrade Rails to 8.1.3 for Nitro and Runway compatability
+- Add support for Rails 8+ for Nitro and Runway compatability
+
+## [1.2.1] - 2026-06-24
+
 - Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
 - Update yard to 0.9.38 to address [Cross-site Scripting vulnerability](https://github.com/powerhome/power-tools/security/dependabot/544) [#394](https://github.com/powerhome/power-tools/pull/394)
 - Update Rails version to 7.2.3.1 for Active Storage CVE [#402](https://github.com/powerhome/power-tools/pull/402)
+- Expose the notes and activity fields to be saved as any value [#410](https://github.com/powerhome/power-tools/pull/410)
 
 ## [1.2.0] - 2025-07-31
 
