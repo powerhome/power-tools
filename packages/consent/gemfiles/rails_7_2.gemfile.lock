@@ -341,7 +341,7 @@ DEPENDENCIES
   rspec (~> 3.0)
   rspec-rails (~> 6.1.5)
   rubocop-powerhome!
-  sqlite3 (~> 2.9)
+  sqlite3 (>= 1.4, < 3.0)
 
 BUNDLED WITH
    2.5.23
