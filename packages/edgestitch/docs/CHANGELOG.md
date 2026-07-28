@@ -1,6 +1,6 @@
 ## [Unreleased]
 
-## [0.6.0] - 2026-05-12
+## [0.6.0] - 2026-07-28
 
 [HFH-4410 - Bump powertools for Rails 8.1.3 V2](https://github.com/powerhome/power-tools/pull/426)
 
