@@ -12,7 +12,6 @@ module DataTaster
     def initialize(table_name)
       @table_name = table_name
       @ingredients = DataTaster.confection[table_name]
-      @include_insert = DataTaster.config.include_insert
     end
 
     def assemble
@@ -26,9 +25,16 @@ module DataTaster
       end
     end
 
+    def export_select_sql
+      <<-SQL.squish
+        SELECT * FROM #{source_db}.#{table_name}
+        WHERE #{where_clause}
+      SQL
+    end
+
   private
 
-    attr_reader :table_name, :ingredients, :include_insert
+    attr_reader :table_name, :ingredients
 
     def skippable?
       table_name.downcase.match(/^_/) ||
@@ -36,14 +42,7 @@ module DataTaster
     end
 
     def selection
-      insert = include_insert ? "INSERT INTO #{working_db}.#{table_name}" : ""
-
-      sql = <<-SQL.squish
-        #{insert}
-        SELECT * FROM #{source_db}.#{table_name}
-        WHERE #{where_clause}
-      SQL
-
+      sql = export_select_sql
       DataTaster.logger.info(sql)
       sql
     end
@@ -64,11 +63,7 @@ module DataTaster
     end
 
     def source_db
-      @source_db ||= DataTaster.config.source_client.query_options[:database]
-    end
-
-    def working_db
-      @working_db ||= DataTaster.config.working_client.query_options[:database]
+      @source_db ||= DataTaster.config.source.database
     end
   end
 end

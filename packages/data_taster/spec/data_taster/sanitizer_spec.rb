@@ -8,24 +8,51 @@ RSpec.describe DataTaster::Sanitizer do
 
   let(:confection_stub) { double("confection") }
 
-  def stub_config(include_insert: false)
-    DataTaster.config(
-      source_client: source_db_client,
-      working_client: dump_db_client,
-      include_insert: include_insert
-    )
+  def stub_config
+    configure_data_taster
   end
 
   before do
     allow(DataTaster).to receive(:confection).and_return(confection_stub)
   end
 
-  describe "#clean!" do
+  describe "#sanitization_rules" do
     context "when table is skippable" do
+      it "returns an empty hash when confection is blank" do
+        stub_config
+        allow(confection_stub).to receive(:[]).with("users").and_return(nil)
+
+        expect(described_class.new("users", {}).sanitization_rules).to eq({})
+      end
+    end
+
+    context "when table is not skippable" do
       before do
-        allow(DataTaster).to receive(:safe_execute).and_return(true)
+        allow(confection_stub).to receive(:[]).with("users").and_return("some_config")
       end
 
+      it "returns column names mapped to sanitization specs" do
+        stub_config
+
+        rules = described_class.new("users", {}).sanitization_rules
+
+        expect(rules).to be_a(Hash)
+        expect(rules["email"]).to include("CONCAT")
+        expect(rules["encrypted_password"]).to eq("")
+      end
+
+      it "omits columns whose value is skip code" do
+        stub_config
+        rules = described_class.new("users", { "ssn" => DataTaster::SKIP_CODE }).sanitization_rules
+
+        expect(rules).not_to have_key("ssn")
+        expect(rules).to have_key("encrypted_password")
+      end
+    end
+  end
+
+  describe "#clean!" do
+    context "when table is skippable" do
       it "returns early when confection is blank" do
         stub_config
         allow(confection_stub).to receive(:[]).with("users").and_return(nil)
@@ -52,44 +79,20 @@ RSpec.describe DataTaster::Sanitizer do
         allow(confection_stub).to receive(:[]).with("users").and_return("some_config")
       end
 
-      it "processes default selections when include_insert is false" do
+      it "executes default sanitization SQL on database export" do
         stub_config
-        allow(DataTaster).to receive(:safe_execute).and_return(true)
+        expect(DataTaster.config.output).to receive(:write_statement)
+          .with(include("UPDATE test_dump.users"))
+          .at_least(:once)
+          .and_return(true)
         sanitizer = described_class.new("users", {})
 
-        result = sanitizer.clean!
-
-        expect(result).to be_an(Array)
-        expect(result).not_to be_empty
-
-        # Check that we get SQL for columns that match default patterns
-        sql_statements = result.join(" ")
-        expect(sql_statements).to include("UPDATE test_dump.users")
-
-        # encrypted pattern
-        expect(sql_statements).to include("SET encrypted_password = NULL")
-
-        # ssn|passport|license patterns
-        expect(sql_statements).to include("SET ssn = '111111111'")
-        expect(sql_statements).to include("SET passport_number = '111111111'")
-        expect(sql_statements).to include("SET license_number = '111111111'")
-
-        # dob|birth patterns
-        expect(sql_statements).to include("SET date_of_birth = '#{Date.current - 29.years}'")
-        expect(sql_statements).to include("SET dob = '#{Date.current - 29.years}'")
-
-        # note|body patterns
-        expect(sql_statements).to include("SET notes = 'Redacted for privacy'")
-        expect(sql_statements).to include("SET body = 'Redacted for privacy'")
-
-        # compensation|income patterns
-        expect(sql_statements).to include("SET compensation = 999999")
-        expect(sql_statements).to include("SET income = 999999")
+        sanitizer.clean!
       end
 
       it "processes custom selections that override defaults" do
         stub_config
-        allow(DataTaster).to receive(:safe_execute).and_return(true)
+        allow(DataTaster.config.output).to receive(:write_statement).and_return(true)
         custom_selections = { "ssn" => "custom_ssn_value" }
         sanitizer = described_class.new("users", custom_selections)
 
@@ -105,18 +108,10 @@ RSpec.describe DataTaster::Sanitizer do
         expect(sql_statements).to include("SET notes = 'Redacted for privacy'")
       end
 
-      it "executes SQL when include_insert is true" do
-        stub_config(include_insert: true)
-
-        expect(DataTaster).to receive(:safe_execute).with(include("UPDATE")).at_least(:once).and_return(true)
-        sanitizer = described_class.new("users", {})
-
-        sanitizer.clean!
-      end
-
       it "handles errors and adds context warning" do
-        stub_config(include_insert: true)
-        allow(DataTaster).to receive(:safe_execute).and_raise(StandardError.new("Database error"))
+        stub_config
+        allow(DataTaster.config.output).to receive(:write_statement)
+          .and_raise(StandardError.new("Database error"))
 
         sanitizer = described_class.new("users", {})
 
@@ -128,7 +123,7 @@ RSpec.describe DataTaster::Sanitizer do
 
       it "skips processing when SQL is skip code" do
         stub_config
-        allow(DataTaster).to receive(:safe_execute).and_return(true)
+        allow(DataTaster.config.output).to receive(:write_statement).and_return(true)
         custom_selections = { "ssn" => DataTaster::SKIP_CODE }
         sanitizer = described_class.new("users", custom_selections)
 

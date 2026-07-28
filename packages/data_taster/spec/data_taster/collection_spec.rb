@@ -11,11 +11,7 @@ RSpec.describe DataTaster::Collection do
     months: nil,
     list: [test_yaml_path]
   )
-    DataTaster.config(months: months,
-                      list: list,
-                      source_client: source_db_client,
-                      working_client: dump_db_client,
-                      include_insert: false)
+    configure_data_taster(months: months, list: list)
   end
 
   it "has '1 == 1' where clause for full table dump tables" do
@@ -23,6 +19,18 @@ RSpec.describe DataTaster::Collection do
 
     result = DataTaster::Collection.new("projects").assemble
 
-    expect(result[:select]).to eq("SELECT * FROM #{source_db_name}.projects WHERE 1 = 1")
+    expect(result[:select]).to eq(
+      "SELECT * FROM #{source_db_name}.projects WHERE 1 = 1"
+    )
+  end
+
+  describe "#export_select_sql" do
+    it "returns a plain SELECT from source_db with the confection WHERE clause" do
+      stub_config
+
+      sql = DataTaster::Collection.new("projects").export_select_sql
+
+      expect(sql).to eq("SELECT * FROM #{source_db_name}.projects WHERE 1 = 1")
+    end
   end
 end

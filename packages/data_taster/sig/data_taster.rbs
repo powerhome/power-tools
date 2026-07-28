@@ -1,4 +1,69 @@
 module DataTaster
   VERSION: String
-  # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+  SKIP_CODE: String
+
+  type export_mode = :file | :database
+
+  def self.setup: (source: MysqlSource, output: Output, ?months: Integer?, ?list: Array[String]?) -> void
+  def self.config: () -> Config
+  def self.config=: (Config?) -> void
+  def self.sample!: () -> void
+  def self.reset!: () -> void
+  def self.confection: () -> Hash[String, untyped]
+  def self.logger: () -> ::Logger
+  def self.logger=: (::Logger) -> void
+  class MysqlSource
+    attr_reader source_client: untyped
+
+    def initialize: (source_client: untyped) -> void
+    def query: (String sql) -> untyped
+    def database: () -> String
+    def table_names: () -> Array[String]
+  end
+
+  class Output
+    def initialize: (**untyped) -> void
+    def sample!: () -> void
+    def export_mode: () -> export_mode
+    def target_database: () -> String
+    def qualified_table_name: (String table_name) -> String
+    def write_statement: (String sql) -> void
+    def write_raw: (String line) -> void
+  end
+
+  class DatabaseOutput < Output
+    attr_reader target_client: untyped
+
+    def import_table: (Collection collection, String table_name) -> void
+  end
+
+  class ExportContext
+    def self.quote_ident: (String | Symbol name) -> String
+    def initialize: (String table_name, Hash[String, untyped]? sanitize, ?insert_table_name: String?, ?column_types: Hash[String, String]) -> void
+    def insert_table_name: () -> String
+    def format_row_tuple: (Array[String | Symbol] columns, Hash[String, untyped] row, untyped client) -> String
+  end
+
+  class Sanitizer
+    BATCH_SIZE: Integer
+    def export_sanitized_rows: (Collection collection, insert_table_name: String) { (String header, String values) -> void } -> void
+  end
+
+  class FileOutput < Output
+    attr_reader path: String
+    attr_reader target_database: String
+  end
+
+  class Collection
+    def initialize: (String table_name) -> void
+    def assemble: () -> Hash[Symbol, untyped]
+    def export_select_sql: () -> String
+  end
+
+  Config = struct {
+    source: MysqlSource,
+    output: Output,
+    months: Integer?,
+    list: Array[String],
+  }
 end
