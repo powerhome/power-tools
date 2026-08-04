@@ -517,8 +517,8 @@ RSpec.describe TwoPercent::BulkProcessor do
       end
     end
 
-    describe "transaction rollback on error" do
-      it "rolls back operation if event publishing fails" do
+    describe "event publishing after commit" do
+      it "persists the record even if event publishing fails" do
         allow(TwoPercent::Domain::Events::UserCreated).to receive(:create).and_raise(StandardError, "Event system down")
 
         operations = [
@@ -541,8 +541,10 @@ RSpec.describe TwoPercent::BulkProcessor do
           processor.dispatch
         end.to raise_error(StandardError, "Event system down")
 
-        # Verify rollback - user should not exist
-        expect(TwoPercent::ScimUser.find_by(user_name: "rollback@example.com")).to be_nil
+        # Publishing now happens AFTER the row is committed, so a publish failure
+        # no longer un-does the write. This is deliberate: subscribers observe events
+        # only for rows that are already persisted and visible.
+        expect(TwoPercent::ScimUser.find_by(user_name: "rollback@example.com")).to be_present
       end
     end
 
