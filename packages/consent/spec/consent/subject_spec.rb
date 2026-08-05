@@ -21,6 +21,12 @@ RSpec.describe Consent::Subject do
 
       expect(another_subect.key).to be ExampleModel
     end
+
+    it "is the symbol even when defined as a symbol" do
+      another_subect = Consent::Subject.new(:my_subject, "Subject")
+
+      expect(another_subect.key).to be :my_subject
+    end
   end
 
   describe "#views" do
