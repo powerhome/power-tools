@@ -3,12 +3,24 @@
 require "spec_helper"
 
 RSpec.describe Consent::Subject do
-  subject { Consent::Subject.new(:subject, "Subject") }
+  subject { Consent::Subject.new(ExampleModel, "Subject") }
   let(:view) { Consent::View.new(:view, "View") }
   let(:action) { Consent::Action.new(subject, :action, "Action") }
   before do
     Consent.default_views[:view] = view
     subject.actions << action
+  end
+
+  describe "#key" do
+    it "is a lazily loaded reference to the actual subject" do
+      expect(subject.key).to be ExampleModel
+    end
+
+    it "is the model even when defined as a string" do
+      another_subect = Consent::Subject.new("ExampleModel", "Subject")
+
+      expect(another_subect.key).to be ExampleModel
+    end
   end
 
   describe "#views" do
@@ -20,7 +32,7 @@ RSpec.describe Consent::Subject do
   describe "#to_permission_payload" do
     it "returns the correct hash" do
       expect(subject.to_permission_payload).to eq({
-                                                    subject: :subject,
+                                                    subject: ExampleModel,
                                                     label: "Subject",
                                                     actions: [action.to_permission_payload],
                                                     views: [view.to_permission_payload],
