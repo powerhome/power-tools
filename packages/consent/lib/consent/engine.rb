@@ -10,10 +10,6 @@ module Consent
       config.consent = Consent::Reloader.new(default_path)
     end
 
-    config.after_initialize do |app|
-      app.config.consent.execute
-    end
-
     initializer "consent.reloader" do |app|
       app.reloaders << config.consent
       ActiveSupport::Dependencies.autoload_paths -= config.consent.paths
