@@ -2,6 +2,7 @@
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "wayfinding"
+require "wayfinding/rspec"
 require "pry-byebug"
 
 require_relative "support/fake_engine"
@@ -23,6 +24,4 @@ RSpec.configure do |config|
 
   config.expect_with(:rspec) { |expectations| expectations.syntax = :expect }
   config.mock_with(:rspec) { |mocks| mocks.syntax = :expect }
-
-  config.before { Wayfinding.reset! }
 end
