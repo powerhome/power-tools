@@ -24,7 +24,7 @@ initializer.
 ```ruby
 Wayfinding.register(
   name: :home,
-  engine: -> { Projects::Engine },
+  engine: -> { Homes::Engine },
   helper: :home_path
 )
 ```
@@ -37,7 +37,7 @@ For anything that isn't a bare helper call, pass a block. It is `instance_exec`'
 `url_helpers`, so it never repeats the engine prefix.
 
 ```ruby
-Wayfinding.register(name: :lead_source, engine: -> { Marketing::Engine }) do |lead_source|
+Wayfinding.register(name: :lead_source, engine: -> { EstimateAppointments::Engine }) do |lead_source|
   lead_source_path(lead_source)
 end
 ```
@@ -51,7 +51,7 @@ Wayfinding.path_for(:home, home, current_tab: "Projects")
 # => "/homes/17?current_tab=Projects"
 
 Wayfinding.url_for(:home, home)
-# => "https://nitro.example/homes/17"
+# => "https://base.com/homes/17"
 ```
 
 Looking up an unregistered destination raises `Wayfinding::UnregisteredDestination`, listing what is
@@ -68,10 +68,10 @@ Wayfinding.define_kind(:report, requires: %i[label description action subject])
 Wayfinding.register(
   name: :installer_pay_report,
   kind: :report,
-  engine: -> { Accounting::Engine },
+  engine: -> { Installations::Engine },
   helper: :installer_pay_reports_path,
   action: :view_installer_pay_report,
-  subject: -> { ProjectTask },
+  subject: -> { InstallTask },
   label: "Installer Pay Report",
   description: "Breaks down Materials, Equipment, and Labor to pay installers"
 )
@@ -83,7 +83,7 @@ A destination with no kind is just a path: resolvable by `path_for`, invisible t
 kind does not remove point lookup, so `path_for(:installer_pay_report)` still works.
 
 `requires:` may name any field. Validation asserts presence only and never resolves callables, so a
-lazily registered `subject: -> { ProjectTask }` passes without autoloading the model.
+lazily registered `subject: -> { InstallTask }` passes without autoloading the model.
 
 ### Destination metadata
 
