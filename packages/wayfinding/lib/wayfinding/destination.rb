@@ -28,13 +28,13 @@ module Wayfinding
     def value_for(key) = resolve(self[key])
 
     def path(*, **params)
-      return resolver_result(*, **params) unless @helper
+      return resolver_result(:path, *, **params) unless @helper
 
       url_helpers.public_send(@helper, *, **params)
     end
 
     def url(*, **params)
-      raise Error, "#{name.inspect} was registered with a block; url is only derivable from `helper:`" unless @helper
+      return resolver_result(:url, *, **params) unless @helper
 
       unless @helper.to_s.end_with?("_path")
         raise Error, "#{name.inspect} declares helper #{@helper.inspect}, which does not end in `_path`"
@@ -49,10 +49,11 @@ module Wayfinding
 
   private
 
-    def resolver_result(*, **)
+    def resolver_result(mode, *, **)
       return @resolver.call(*, **) unless @engine
 
-      url_helpers.instance_exec(*, **, &@resolver)
+      context = mode == :url ? UrlResolverContext.new(url_helpers) : url_helpers
+      context.instance_exec(*, **, &@resolver)
     end
 
     def url_helpers

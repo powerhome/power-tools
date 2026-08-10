@@ -40,11 +40,13 @@ RSpec.describe Wayfinding do
         .to eq("https://nitro.test/homes/17?current_tab=Projects")
     end
 
-    it "raises when the destination was registered with a block" do
-      described_class.register(name: :home, engine: -> { FakeEngine }) { |home| home_path(home) }
+    it "maps path helper calls in a block to their url variants" do
+      described_class.register(name: :home, engine: -> { FakeEngine }) do |home, **params|
+        home_path(home, **params)
+      end
 
-      expect { described_class.url_for(:home, 17) }
-        .to raise_error(Wayfinding::Error, /url is only derivable from `helper:`/)
+      expect(described_class.url_for(:home, 17, current_tab: "Projects"))
+        .to eq("https://nitro.test/homes/17?current_tab=Projects")
     end
 
     it "raises when the helper does not end in _path" do

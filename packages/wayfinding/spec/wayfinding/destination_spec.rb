@@ -16,6 +16,7 @@ RSpec.describe Wayfinding::Destination do
       Wayfinding.register(name: :external) { |id| "https://elsewhere.test/#{id}" }
 
       expect(Wayfinding.path_for(:external, 4)).to eq("https://elsewhere.test/4")
+      expect(Wayfinding.url_for(:external, 4)).to eq("https://elsewhere.test/4")
     end
   end
 

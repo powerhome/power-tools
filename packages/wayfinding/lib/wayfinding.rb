@@ -2,6 +2,7 @@
 
 require "wayfinding/errors"
 require "wayfinding/kind"
+require "wayfinding/url_resolver_context"
 require "wayfinding/destination"
 require "wayfinding/destination_list"
 require "wayfinding/version"

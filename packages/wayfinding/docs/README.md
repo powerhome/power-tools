@@ -42,6 +42,10 @@ Wayfinding.register(name: :lead_source, engine: -> { EstimateAppointments::Engin
 end
 ```
 
+`url_for` evaluates an engine-backed block with calls ending in `_path` mapped to the corresponding
+`_url` helper. Arbitrary strings cannot be converted, so a block that needs both lookup forms must build
+its result from route helpers rather than hardcoding a path.
+
 Omit `engine:` and the block is called plainly, for destinations that are not Rails routes at all.
 
 ## Looking up
