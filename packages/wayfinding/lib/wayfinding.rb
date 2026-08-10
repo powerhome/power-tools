@@ -29,20 +29,15 @@ module Wayfinding
 
     def kinds = @kinds ||= {}
 
-    # rubocop:disable Metrics/ParameterLists
-    def register(name:, engine: nil, kind: nil, helper: nil, action: nil,
-                 subject: nil, label: nil, description: nil, **attributes, &resolver)
+    def register(name:, engine: nil, kind: nil, helper: nil, **attributes, &resolver)
       validate_resolution!(name, engine, helper, resolver)
-      validate_ability!(name, action, subject)
-      validate_kind!(name, kind, action: action, subject: subject, label: label,
-                                 description: description, **attributes)
+      validate_all_or_none!(name, attributes, %i[action subject])
+      validate_kind!(name, kind, **attributes)
 
       destinations[name.to_sym] = Destination.new(
-        name: name, engine: engine, kind: kind, helper: helper, action: action,
-        subject: subject, label: label, description: description, resolver: resolver, **attributes
+        name: name, engine: engine, kind: kind, helper: helper, resolver: resolver, **attributes
       )
     end
-    # rubocop:enable Metrics/ParameterLists
 
     def path_for(name, *, **params) = fetch(name).path(*, **params)
 
@@ -100,12 +95,14 @@ module Wayfinding
       raise InvalidDestination, "#{name.inspect} declares `helper:` without an `engine:`" if helper && engine.nil?
     end
 
-    def validate_ability!(name, action, subject)
-      return if action.nil? == subject.nil?
+    def validate_all_or_none!(name, attributes, fields)
+      supplied = fields.reject { |field| attributes[field].nil? }
+      return if supplied.empty? || supplied.length == fields.length
 
+      missing = fields - supplied
       raise InvalidDestination,
-            "#{name.inspect} declares #{action ? '`action:` without `subject:`' : '`subject:` without `action:`'}; " \
-            "an ability check needs both"
+            "#{name.inspect} must declare #{fields.map { |field| "`#{field}:`" }.join(' and ')} together; " \
+            "missing #{missing.map { |field| "`#{field}:`" }.join(', ')}"
     end
 
     def validate_kind!(name, kind, **given)

@@ -21,12 +21,6 @@ Rails/HelperInstanceVariable:
   Exclude:
     - 'lib/wayfinding.rb'
 
-# A value object's keyword constructor reads better as one assignment per field
-# than split across private setters.
-Metrics/MethodLength:
-  Exclude:
-    - 'lib/wayfinding/destination.rb'
-
 Rails/EnvironmentVariableAccess:
   Exclude:
     - 'spec/spec_helper.rb'

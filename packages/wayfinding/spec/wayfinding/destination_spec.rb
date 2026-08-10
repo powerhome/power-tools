@@ -22,33 +22,30 @@ RSpec.describe Wayfinding::Destination do
   describe "metadata" do
     subject(:destination) { Wayfinding.fetch(:report) }
 
-    it "resolves callable labels and descriptions" do
+    it "stores every field without interpretation" do
+      label = -> { "Installer Pay" }
       Wayfinding.register(
         name: :report, engine: -> { FakeEngine }, helper: :installer_pay_reports_path,
-        label: -> { "Installer Pay" }, description: -> { "Materials, equipment, labor" }
+        label: label, foo: "bar"
       )
 
-      expect(destination.label).to eq("Installer Pay")
-      expect(destination.description).to eq("Materials, equipment, labor")
+      expect(destination[:label]).to be(label)
+      expect(destination[:foo]).to eq("bar")
     end
 
-    it "passes plain values through untouched" do
+    it "resolves any callable field lazily through value_for" do
+      resolved = false
       Wayfinding.register(
         name: :report, engine: -> { FakeEngine }, helper: :installer_pay_reports_path,
-        label: "Installer Pay", description: "Materials, equipment, labor"
+        foo: -> {
+          resolved = true
+          "bar"
+        }
       )
 
-      expect(destination.label).to eq("Installer Pay")
-      expect(destination.description).to eq("Materials, equipment, labor")
-    end
-
-    it "falls back to the label when no description is given" do
-      Wayfinding.register(
-        name: :report, engine: -> { FakeEngine }, helper: :installer_pay_reports_path,
-        label: "Installer Pay"
-      )
-
-      expect(destination.description).to eq("Installer Pay")
+      expect(resolved).to be(false)
+      expect(destination.value_for(:foo)).to eq("bar")
+      expect(resolved).to be(true)
     end
 
     it "resolves a callable subject lazily, only when read" do
@@ -77,12 +74,9 @@ RSpec.describe Wayfinding::Destination do
       )
     end
 
-    it "reads inert attributes the gem never interprets" do
+    it "reads arbitrary attributes" do
       expect(destination[:data]).to eq(confirm: "Are you sure?")
       expect(destination[:foo]).to eq("bar")
-    end
-
-    it "reads behavioral fields by name" do
       expect(destination[:label]).to eq("Installer Pay")
     end
 

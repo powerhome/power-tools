@@ -82,23 +82,29 @@ Wayfinding.of_kind(:report).accessible_by(current_ability)
 A destination with no kind is just a path: resolvable by `path_for`, invisible to `of_kind`. Declaring a
 kind does not remove point lookup, so `path_for(:installer_pay_report)` still works.
 
-`requires:` may name any field, including ones Wayfinding gives no behavior to. Validation asserts
-presence only and never resolves callables, so a lazily registered `subject: -> { ProjectTask }` passes
-without autoloading the model.
+`requires:` may name any field. Validation asserts presence only and never resolves callables, so a
+lazily registered `subject: -> { ProjectTask }` passes without autoloading the model.
 
-### Fields Wayfinding gives behavior to
+### Destination metadata
 
-| Field | Behavior |
-|---|---|
-| `action` + `subject` | Feed `accessible_by(ability)` via `ability.can?(action, subject)` |
-| `label` | Resolved if callable |
-| `description` | Resolved if callable; falls back to `label` |
-
-Every other keyword is stored inert and read back with `#[]`:
+Every keyword other than the routing structure is application metadata. It is stored without
+interpretation and read with `#[]`:
 
 ```ruby
-Wayfinding.fetch(:installer_pay_report)[:data]
+destination = Wayfinding.fetch(:installer_pay_report)
+destination[:label]
+destination[:data]
 ```
+
+Resolve any callable field lazily with `#value_for`:
+
+```ruby
+destination.value_for(:label)
+```
+
+`action` and `subject` are metadata with one additional invariant: if either is supplied, both must be.
+`accessible_by(ability)` reads that pair and calls `ability.can?(action, subject)`. Display policy, such as
+falling back from a missing description to a label, belongs to the consuming application.
 
 ## Verifying
 

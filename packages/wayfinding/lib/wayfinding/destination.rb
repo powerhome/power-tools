@@ -1,48 +1,31 @@
 # frozen_string_literal: true
 
 module Wayfinding
-  # A named, engine-scoped URL resolver, optionally declaring a kind that
-  # requires an ability check and display metadata.
-  #
-  # Fields Wayfinding gives behavior to: +action+ and +subject+ feed
-  # +accessible_by+; +label+ and +description+ are resolved if callable, and
-  # +description+ falls back to +label+. Every other field is stored inert and
-  # read back through #[].
+  # A named, engine-scoped URL resolver with arbitrary application metadata.
+  # Metadata is stored without interpretation and read through #[]. Any field
+  # can be resolved lazily through #value_for.
   class Destination
-    BEHAVIORAL_FIELDS = %i[action subject label description].freeze
-
-    attr_reader :name, :kind, :action, :attributes
+    attr_reader :name, :kind, :attributes
 
     # rubocop:disable Metrics/ParameterLists
-    def initialize(name:, engine: nil, kind: nil, helper: nil, action: nil,
-                   subject: nil, label: nil, description: nil, resolver: nil, **attributes)
+    def initialize(name:, engine: nil, kind: nil, helper: nil, resolver: nil, **attributes)
       @name = name.to_sym
       @engine = engine
       @kind = kind&.to_sym
       @helper = helper&.to_sym
-      @action = action
-      @subject = subject
-      @label = label
-      @description = description
       @resolver = resolver
       @attributes = attributes.freeze
       freeze
     end
     # rubocop:enable Metrics/ParameterLists
 
-    def subject = resolve(@subject)
+    def action = self[:action]
 
-    def label = resolve(@label)
+    def subject = value_for(:subject)
 
-    def description = resolve(@description) || label
+    def [](key) = attributes[key.to_sym]
 
-    # Inert attributes, plus the behavioral fields by name.
-    def [](key)
-      key = key.to_sym
-      return public_send(key) if BEHAVIORAL_FIELDS.include?(key)
-
-      attributes[key]
-    end
+    def value_for(key) = resolve(self[key])
 
     def path(*, **params)
       return resolver_result(*, **params) unless @helper

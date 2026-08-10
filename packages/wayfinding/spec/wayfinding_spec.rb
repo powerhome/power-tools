@@ -81,12 +81,12 @@ RSpec.describe Wayfinding do
 
     it "raises when action is given without subject" do
       expect { register_home(action: :read) }
-        .to raise_error(Wayfinding::InvalidDestination, /`action:` without `subject:`/)
+        .to raise_error(Wayfinding::InvalidDestination, /`action:` and `subject:` together; missing `subject:`/)
     end
 
     it "raises when subject is given without action" do
       expect { register_home(subject: -> { Object }) }
-        .to raise_error(Wayfinding::InvalidDestination, /`subject:` without `action:`/)
+        .to raise_error(Wayfinding::InvalidDestination, /`action:` and `subject:` together; missing `action:`/)
     end
   end
 
