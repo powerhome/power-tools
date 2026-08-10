@@ -1,0 +1,32 @@
+require:
+  - rubocop-powerhome
+
+AllCops:
+  TargetRubyVersion: 3.2
+
+Rails/ActionFilter:
+  Enabled: false
+
+Rails/ActionOrder:
+  Enabled: false
+
+# Concerns Rails.root.join, which this gem never does. It also crashes on the
+# interpolated URL paths this gem is built to produce.
+Rails/FilePath:
+  Enabled: false
+
+# Wayfinding is a plain Ruby module, not a Rails helper. Its registry state is
+# module-level by design.
+Rails/HelperInstanceVariable:
+  Exclude:
+    - 'lib/wayfinding.rb'
+
+# A value object's keyword constructor reads better as one assignment per field
+# than split across private setters.
+Metrics/MethodLength:
+  Exclude:
+    - 'lib/wayfinding/destination.rb'
+
+Rails/EnvironmentVariableAccess:
+  Exclude:
+    - 'spec/spec_helper.rb'
