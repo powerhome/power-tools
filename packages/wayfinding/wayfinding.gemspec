@@ -18,8 +18,6 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "docs/README.md"]
   s.require_paths = ["lib"]
 
-  s.add_dependency "rails", ">= 7.1"
-
   s.add_development_dependency "appraisal", "~> 2.5.0"
   s.add_development_dependency "bundler", "~> 2.1"
   s.add_development_dependency "license_finder", "~> 7.0"

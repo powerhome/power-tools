@@ -12,7 +12,6 @@ PATH
   remote: ..
   specs:
     wayfinding (0.0.1)
-      rails (>= 7.1)
 
 GEM
   remote: https://rubygems.org/
