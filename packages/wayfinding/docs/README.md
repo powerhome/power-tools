@@ -1,0 +1,124 @@
+# Wayfinding
+
+Cross-application URL resolution.
+
+Wayfinding is a global registry of named destinations. Any component can link to any page without
+declaring a dependency on the component that owns the route.
+
+Links are not functionality. No component should acquire a dependency because it renders an anchor tag.
+
+## Why
+
+Without a registry, a component that wants to link to another component's page has three bad options:
+reach into that engine's `url_helpers` directly, depend on the owning component just for the link, or
+hardcode the path. All three make the URL's owner unable to move it, and the third breaks silently.
+
+Wayfinding gives one accessor and one registration. Moving a route becomes a one-line change to the
+registration; every call site is untouched.
+
+## Registering
+
+Registration is configuration, so every argument is a keyword and order never matters. Register from an
+initializer.
+
+```ruby
+Wayfinding.register(
+  name: :home,
+  engine: -> { Projects::Engine },
+  helper: :home_path
+)
+```
+
+`engine:` accepts a lambda or the constant. Prefer the lambda so the engine is resolved lazily.
+
+`helper:` is the common form. Wayfinding derives the `_url` variant from it, so `url_for` costs nothing.
+
+For anything that isn't a bare helper call, pass a block. It is `instance_exec`'d against the engine's
+`url_helpers`, so it never repeats the engine prefix.
+
+```ruby
+Wayfinding.register(name: :lead_source, engine: -> { Marketing::Engine }) do |lead_source|
+  lead_source_path(lead_source)
+end
+```
+
+Omit `engine:` and the block is called plainly, for destinations that are not Rails routes at all.
+
+## Looking up
+
+```ruby
+Wayfinding.path_for(:home, home, current_tab: "Projects")
+# => "/homes/17?current_tab=Projects"
+
+Wayfinding.url_for(:home, home)
+# => "https://nitro.example/homes/17"
+```
+
+Looking up an unregistered destination raises `Wayfinding::UnregisteredDestination`, listing what is
+registered. There is no null object and no production fallback: a missing registration is a boot-state
+bug, not a runtime condition.
+
+## Kinds
+
+A kind is a named field contract. Applications define kinds; Wayfinding only enforces them.
+
+```ruby
+Wayfinding.define_kind(:report, requires: %i[label description action subject])
+
+Wayfinding.register(
+  name: :installer_pay_report,
+  kind: :report,
+  engine: -> { Accounting::Engine },
+  helper: :installer_pay_reports_path,
+  action: :view_installer_pay_report,
+  subject: -> { ProjectTask },
+  label: "Installer Pay Report",
+  description: "Breaks down Materials, Equipment, and Labor to pay installers"
+)
+
+Wayfinding.of_kind(:report).accessible_by(current_ability)
+```
+
+A destination with no kind is just a path: resolvable by `path_for`, invisible to `of_kind`. Declaring a
+kind does not remove point lookup, so `path_for(:installer_pay_report)` still works.
+
+`requires:` may name any field, including ones Wayfinding gives no behavior to. Validation asserts
+presence only and never resolves callables, so a lazily registered `subject: -> { ProjectTask }` passes
+without autoloading the model.
+
+### Fields Wayfinding gives behavior to
+
+| Field | Behavior |
+|---|---|
+| `action` + `subject` | Feed `accessible_by(ability)` via `ability.can?(action, subject)` |
+| `label` | Resolved if callable |
+| `description` | Resolved if callable; falls back to `label` |
+
+Every other keyword is stored inert and read back with `#[]`:
+
+```ruby
+Wayfinding.fetch(:installer_pay_report)[:data]
+```
+
+## Verifying
+
+Assert at boot that every expected destination is registered, so a dropped registration fails the boot
+rather than rendering a broken link.
+
+```ruby
+Wayfinding.verify!(%i[home installer_pay_report])
+```
+
+## Testing
+
+```ruby
+require "wayfinding/rspec"
+```
+
+Each example runs inside `Wayfinding.preserve!`, so anything registered in a spec is rolled back. Use
+`stub_destination` rather than mocking Wayfinding itself.
+
+```ruby
+stub_destination(:home, "/homes/1")
+stub_destination(:home) { |home| "/homes/#{home.id}" }
+```
