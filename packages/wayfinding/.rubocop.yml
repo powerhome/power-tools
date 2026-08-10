@@ -4,23 +4,5 @@ require:
 AllCops:
   TargetRubyVersion: 3.2
 
-Rails/ActionFilter:
+Rails:
   Enabled: false
-
-Rails/ActionOrder:
-  Enabled: false
-
-# Concerns Rails.root.join, which this gem never does. It also crashes on the
-# interpolated URL paths this gem is built to produce.
-Rails/FilePath:
-  Enabled: false
-
-# Wayfinding is a plain Ruby module, not a Rails helper. Its registry state is
-# module-level by design.
-Rails/HelperInstanceVariable:
-  Exclude:
-    - 'lib/wayfinding.rb'
-
-Rails/EnvironmentVariableAccess:
-  Exclude:
-    - 'spec/spec_helper.rb'
