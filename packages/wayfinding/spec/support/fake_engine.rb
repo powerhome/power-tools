@@ -23,6 +23,10 @@ class FakeEngine
     def url_helpers = @url_helpers ||= UrlHelpers.new
   end
 
+  # Rails engine classes are Rack endpoints, so they are callable even though
+  # they are not lazy engine resolvers.
+  def self.call(_env) = raise "the engine constant must not be called"
+
   def self.routes = @routes ||= Routes.new
 end
 

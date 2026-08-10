@@ -61,7 +61,7 @@ module Wayfinding
     end
 
     def engine
-      @engine.respond_to?(:call) ? @engine.call : @engine
+      @engine.is_a?(Proc) ? @engine.call : @engine
     end
 
   private

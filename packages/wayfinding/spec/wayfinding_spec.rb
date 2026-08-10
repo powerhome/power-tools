@@ -17,7 +17,7 @@ RSpec.describe Wayfinding do
         .to eq("/homes/17?current_tab=Projects")
     end
 
-    it "accepts an engine constant as well as a lambda" do
+    it "accepts a Rack-callable engine constant as well as a lambda" do
       register_home(engine: FakeEngine)
 
       expect(described_class.path_for(:home, 17)).to eq("/homes/17")
