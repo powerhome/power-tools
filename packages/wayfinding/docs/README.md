@@ -33,8 +33,9 @@ Wayfinding.register(
 
 `helper:` is the common form. Wayfinding derives the corresponding `_url` helper for `url_for`.
 
-For anything that is not a bare helper call, pass a block. Wayfinding evaluates it against the engine's
-`url_helpers`, so the block does not repeat the engine prefix.
+For anything that is not a bare helper call, pass a block. Within the block, `self` is the engine's
+`url_helpers` object. That lets the resolver call `results_path(...)` directly instead of repeating
+`Search::Engine.routes.url_helpers.results_path(...)`.
 
 ```ruby
 Wayfinding.register(name: :search_results, engine: -> { Search::Engine }) do |query|
