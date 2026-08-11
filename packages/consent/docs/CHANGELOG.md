@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+### [2.7.0] - 2026-08-11
+
+- Lazily load model subjects [#447](https://github.com/powerhome/power-tools/pull/447)
+
 ### [2.6.1] - 2026-06-26
 
 - Fixed an issue where view and action comparisons did not work unless we converted their keys to strings. [#444](https://github.com/powerhome/power-tools/pull/444)
