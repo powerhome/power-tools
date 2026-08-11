@@ -79,6 +79,7 @@ RSpec.describe Wayfinding::Kind do
   describe "Wayfinding.of_kind" do
     before do
       Wayfinding.define_kind(:report, requires: %i[label])
+      Wayfinding.define_kind(:dashboard, requires: %i[label])
       Wayfinding.register(name: :home, engine: -> { FakeEngine }, helper: :home_path)
       Wayfinding.register(
         name: :pay_report, kind: :report, engine: -> { FakeEngine }, helper: :installer_pay_reports_path,
@@ -91,6 +92,9 @@ RSpec.describe Wayfinding::Kind do
       Wayfinding.register(
         name: :unguarded_report, kind: :report, engine: -> { FakeEngine }, helper: :legacy_home, label: "Unguarded"
       )
+      Wayfinding.register(
+        name: :sales_dashboard, kind: :dashboard, engine: -> { FakeEngine }, helper: :legacy_home, label: "Sales"
+      )
     end
 
     it "returns only destinations of that kind" do
@@ -100,6 +104,10 @@ RSpec.describe Wayfinding::Kind do
 
     it "excludes destinations with no kind" do
       expect(Wayfinding.of_kind(:report).map(&:name)).not_to include(:home)
+    end
+
+    it "excludes destinations of another kind" do
+      expect(Wayfinding.of_kind(:report).map(&:name)).not_to include(:sales_dashboard)
     end
 
     it "still resolves a kinded destination by point lookup" do
