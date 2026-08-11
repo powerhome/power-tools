@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Minimal stand-in for a Rails engine. Wayfinding only ever reaches for
-# engine.routes.url_helpers, so booting Rails to exercise it would be waste.
+# Minimal stand-in for a Rails engine in fast unit specs. Appraisal integration
+# specs exercise the same behavior against a real Rails::Engine.
 class FakeEngine
   class UrlHelpers
     def home_path(home, **params)

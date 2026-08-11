@@ -4,6 +4,13 @@ require "spec_helper"
 
 RSpec.describe Wayfinding::Destination do
   describe "resolution" do
+    it "calls a helper on the engine's url helpers" do
+      Wayfinding.register(name: :home, engine: -> { FakeEngine }, helper: :home_path)
+
+      expect(Wayfinding.path_for(:home, 9, tab: "activity")).to eq("/homes/9?tab=activity")
+      expect(Wayfinding.url_for(:home, 9, tab: "activity")).to eq("https://nitro.test/homes/9?tab=activity")
+    end
+
     it "instance_execs a block against the engine's url helpers" do
       Wayfinding.register(name: :lead_source, engine: -> { FakeEngine }) do |lead_source|
         lead_source_path(lead_source)
