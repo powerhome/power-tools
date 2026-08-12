@@ -1,6 +1,6 @@
 ## [Unreleased]
 
-## [0.0.1]
+## [0.0.1] - 2026-08-12
 
 - Initial release: a global registry of named destinations, so any component can link to any page
   without depending on the component that owns the route.
