@@ -15,7 +15,12 @@ Gem::Specification.new do |s|
   s.license = "MIT"
   s.required_ruby_version = ">= 3.2"
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "docs/README.md"]
+  s.metadata["homepage_uri"] = s.homepage
+  s.metadata["source_code_uri"] = "#{s.homepage}/tree/main/packages/wayfinding"
+  s.metadata["changelog_uri"] = "#{s.homepage}/blob/main/packages/wayfinding/docs/CHANGELOG.md"
+  s.metadata["rubygems_mfa_required"] = "true"
+
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "docs/CHANGELOG.md", "docs/README.md"]
   s.require_paths = ["lib"]
 
   s.add_development_dependency "appraisal", "~> 2.5.0"
@@ -28,5 +33,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", "~> 3.0"
   s.add_development_dependency "simplecov", "0.15.1"
   s.add_development_dependency "yard", "0.9.38"
-  s.metadata["rubygems_mfa_required"] = "true"
 end
