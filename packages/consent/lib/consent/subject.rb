@@ -12,7 +12,7 @@ module Consent
     end
 
     def key
-      Consent::SubjectCoder.load(@raw_key)
+      @key ||= Consent::SubjectCoder.load(@raw_key)
     end
 
     def to_permission_payload
