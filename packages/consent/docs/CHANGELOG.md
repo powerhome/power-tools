@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+### [2.7.1] - 2026-08-17
+
+- Memoize subject key resolution [#450](https://github.com/powerhome/power-tools/pull/450)
+
 ### [2.7.0] - 2026-08-11
 
 - Lazily load model subjects [#447](https://github.com/powerhome/power-tools/pull/447)
