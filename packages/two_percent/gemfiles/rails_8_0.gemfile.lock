@@ -261,6 +261,10 @@ GEM
       rubocop (~> 1.81)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
+    shoulda-matchers (6.5.0)
+      activesupport (>= 5.2.0)
+    sqlite3 (2.9.6-arm64-darwin)
+    sqlite3 (2.9.6-x86_64-linux-gnu)
     stringio (3.2.0)
     thor (1.5.0)
     timeout (0.6.1)
@@ -289,6 +293,8 @@ DEPENDENCIES
   rails (= 8.0.5)
   rspec-rails (~> 8.0.1)
   rubocop-powerhome!
+  shoulda-matchers (~> 6.0)
+  sqlite3 (~> 2.4)
   two_percent!
 
 BUNDLED WITH
