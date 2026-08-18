@@ -11,7 +11,7 @@ PATH
 PATH
   remote: ..
   specs:
-    consent (2.5.0)
+    consent (2.7.1)
       cancancan (= 3.2.1)
 
 GEM
@@ -334,6 +334,7 @@ PLATFORMS
   arm-linux-musl
   arm64-darwin
   x86_64-darwin
+  x86_64-linux
   x86_64-linux-gnu
   x86_64-linux-musl
 
