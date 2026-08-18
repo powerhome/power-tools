@@ -13,17 +13,21 @@ module TwoPercent
       @operations.each do |operation|
         resource_type, id = parse_path(operation[:path])
 
-        # Persist data to two_percent tables first (wrapped in transaction for bulk integrity)
+        # Persist data to two_percent tables first (wrapped in transaction for bulk integrity).
+        # The transaction commits when this block closes.
+        record = nil
         ActiveRecord::Base.transaction do
           record = persist_bulk_operation(operation[:method], resource_type, id, operation[:data])
-
-          # Publish domain events based on operation
-          # Note: DELETE operations don't return a record, but still need to publish events
-          if record || operation[:method] == "DELETE"
-            publish_domain_event(operation[:method], resource_type, record,
-                                 id)
-          end
         end
+
+        # Publish domain events only AFTER the transaction commits, so any subscriber
+        # that reacts to the event can rely on the persisted row being visible.
+        # Publishing is intentionally outside the transaction: a publish failure no
+        # longer rolls back the write.
+        # Note: DELETE operations don't return a record, but still need to publish events.
+        next unless record || operation[:method] == "DELETE"
+
+        publish_domain_event(operation[:method], resource_type, record, id)
       end
     end
 

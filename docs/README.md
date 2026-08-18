@@ -30,6 +30,10 @@ Consent provides permission-based authorization.
 
 Helping ruby developers implement easy patterns.
 
+[data_conduit](https://github.com/powerhome/power-tools/blob/main/packages/data_conduit/docs/README.md) 💎
+
+Ruby data warehouse connector library that provides a standardized interface for querying different data warehouse engines.
+
 [data_taster](https://github.com/powerhome/power-tools/blob/main/packages/data_taster/docs/README.md) 💎
 
 Delicious and sanitized data samples for development and testing.
@@ -38,13 +42,13 @@ Delicious and sanitized data samples for development and testing.
 
 Enable alerts about deprecated features & prevent new ones from being introduced.
 
-[data_conduit](https://github.com/powerhome/power-tools/blob/main/packages/data_conduit/docs/README.md) 💎
-
- Ruby data warehouse connector library that provides a standardized interface for querying different data warehouse engines.
-
 [edgestitch](https://github.com/powerhome/power-tools/blob/main/packages/edgestitch/docs/README.md) 💎
 
 Edgestitch allows engines to define partial structure-self.sql files to be stitched into a single structure.sql file by the umbrella application.
+
+[@powerhome/eslint-config](https://github.com/powerhome/power-tools/blob/main/packages/eslint-config/docs/README.md) ☕️
+
+Shared eslint-config and Prettier formatting from Power Home Remodeling.
 
 [lumberaxe](https://github.com/powerhome/power-tools/blob/main/packages/lumberaxe/docs/README.md) 💎
 
@@ -58,14 +62,6 @@ When included in a Rails application, NitroConfig loads the configuration file a
 
 Rails-like sanitization hooks to be applied to OpenStruct fields.
 
-[@powerhome/eslint-config](https://github.com/powerhome/power-tools/blob/main/packages/eslint-config/docs/README.md) ☕️
-
-Shared eslint-config and Prettier formatting from Power Home Remodeling.
-
-[two_percent](https://github.com/powerhome/power-tools/blob/main/packages/two_percent/docs/README.md) 💎
-
-A thin SCIM interface that fire scim write events to observers.
-
 [rabbet](https://github.com/powerhome/power-tools/blob/main/packages/rabbet/docs/README.md) 💎
 
 A shared layout so that your suite of applications can have the same look and feel.
@@ -77,6 +73,14 @@ This gem is focused on providing Cops to support a healthy cobra app development
 [rubocop-powerhome](https://github.com/powerhome/power-tools/blob/main/packages/rubocop-powerhome/docs/README.md) 💎
 
 This gem is focused on providing standard rubocop configuration for Power Home Remodeling ruby apps. See more in [`rubocop-powerhome`](../packages/rubocop-powerhome).
+
+[two_percent](https://github.com/powerhome/power-tools/blob/main/packages/two_percent/docs/README.md) 💎
+
+A thin SCIM interface that fires SCIM write events to observers.
+
+[wayfinding](https://github.com/powerhome/power-tools/blob/main/packages/wayfinding/docs/README.md) 💎
+
+Wayfinding provides cross-application URL resolution through a global registry of named destinations.
 
 ## Installation 🛠
 

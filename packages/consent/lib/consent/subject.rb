@@ -2,13 +2,17 @@
 
 module Consent
   class Subject # :nodoc:
-    attr_reader :key, :label, :actions, :views
+    attr_reader :label, :actions, :views
 
     def initialize(key, label)
-      @key = key
+      @raw_key = key.respond_to?(:name) ? key.name : key
       @label = label
       @actions = []
       @views = Consent.default_views.clone
+    end
+
+    def key
+      @key ||= Consent::SubjectCoder.load(@raw_key)
     end
 
     def to_permission_payload

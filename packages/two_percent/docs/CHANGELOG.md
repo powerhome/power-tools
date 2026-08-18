@@ -5,6 +5,10 @@
 - Upgrade Rails to 8.1.3 for Nitro and Runway compatability
 - Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
 
+## [1.3.1] - 2026-07-28
+
+- **Bugfix - Publish bulk domain events after commit**: `BulkProcessor` now publishes domain events *after* the persisting transaction commits rather than inside it, so an event-driven subscriber can no longer run before the source row is committed and visible (a race that dropped downstream projections under bulk/full-sync load). Publishing is intentionally decoupled from persistence: a publish failure no longer rolls back the write.
+
 ## [1.3.0]- 2026-06-26
 
 - **BREAKING - Thin Domain Events**: Removed association data from domain events

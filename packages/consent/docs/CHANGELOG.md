@@ -1,10 +1,14 @@
 ## [Unreleased]
 
-## [2.5.0] - 2026-07-28
+- Add support for Rails 8+ [#426](https://github.com/powerhome/power-tools/pull/426)
 
-[HFH-4410 - Bump powertools for Rails 8.1.3](https://github.com/powerhome/power-tools/pull/426)
+### [2.7.1] - 2026-08-17
 
-- Add support for Rails 8+ for Nitro and Runway compatability
+- Memoize subject key resolution [#450](https://github.com/powerhome/power-tools/pull/450)
+
+### [2.7.0] - 2026-08-11
+
+- Lazily load model subjects [#447](https://github.com/powerhome/power-tools/pull/447)
 
 ### [2.6.1] - 2026-06-26
 
