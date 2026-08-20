@@ -1,7 +1,7 @@
 PATH
   remote: ../rubocop-powerhome
   specs:
-    rubocop-powerhome (0.6.1)
+    rubocop-powerhome (0.7.0)
       rubocop (= 1.82.1)
       rubocop-performance
       rubocop-rails
@@ -11,9 +11,9 @@ PATH
 PATH
   remote: .
   specs:
-    aether_observatory (1.1.0)
-      activemodel (>= 6.1)
-      activesupport (>= 6.1)
+    aether_observatory (1.2.0)
+      activemodel (>= 7.1)
+      activesupport (>= 7.1)
 
 GEM
   remote: https://rubygems.org/

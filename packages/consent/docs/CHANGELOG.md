@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Add support for Rails 8+ [#426](https://github.com/powerhome/power-tools/pull/426)
+
 ### [2.7.1] - 2026-08-17
 
 - Memoize subject key resolution [#450](https://github.com/powerhome/power-tools/pull/450)
@@ -22,6 +24,7 @@
 - Added a `PermissionDefinitionPayload.generate` method to generate a payload hash of an application's permission defintions. [#433](https://github.com/powerhome/power-tools/pull/433)
 
 ### [2.4.0] - 2026-02-04
+
 - Adds ability to verify and synchronize permission definitions across environments using deterministic checksums [#387](https://github.com/powerhome/power-tools/pull/387)
 
 ## [2.3.0] - 2025-10-29

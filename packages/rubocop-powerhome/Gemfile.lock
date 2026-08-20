@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rubocop-powerhome (0.6.1)
+    rubocop-powerhome (0.7.0)
       rubocop (= 1.82.1)
       rubocop-performance
       rubocop-rails
@@ -301,7 +301,7 @@ DEPENDENCIES
   license_finder (~> 7.0)
   pry (>= 0.14.2)
   pry-byebug (= 3.10.1)
-  rails (>= 6.0.6.1, < 8)
+  rails (>= 7.1, < 8.2)
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop-powerhome!

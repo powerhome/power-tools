@@ -5,7 +5,7 @@ require "bundler"
 Bundler.require :default, :development
 require "dep_shield/railtie"
 
-Combustion.initialize! :all
+Combustion.initialize! :action_controller
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

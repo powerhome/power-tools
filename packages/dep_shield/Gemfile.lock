@@ -1,13 +1,13 @@
 PATH
   remote: ../nitro_config
   specs:
-    nitro_config (0.2.0)
-      activesupport (>= 6.0.6.1, < 8)
+    nitro_config (0.3.0)
+      activesupport (>= 7.1, < 8.2)
 
 PATH
   remote: ../rubocop-powerhome
   specs:
-    rubocop-powerhome (0.6.1)
+    rubocop-powerhome (0.7.0)
       rubocop (= 1.82.1)
       rubocop-performance
       rubocop-rails
@@ -17,7 +17,7 @@ PATH
 PATH
   remote: .
   specs:
-    dep_shield (0.3.1)
+    dep_shield (0.4.0)
       nitro_config
       sentry-ruby (>= 5.5.0)
 
@@ -314,7 +314,7 @@ DEPENDENCIES
   dep_shield!
   license_finder (>= 7.0)
   nitro_config!
-  rails (<= 7.2.3.1)
+  rails (>= 7.1)
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop-powerhome!

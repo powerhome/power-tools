@@ -1,7 +1,7 @@
 PATH
   remote: ../../rubocop-powerhome
   specs:
-    rubocop-powerhome (0.6.1)
+    rubocop-powerhome (0.7.0)
       rubocop (= 1.82.1)
       rubocop-performance
       rubocop-rails
@@ -11,7 +11,7 @@ PATH
 PATH
   remote: ..
   specs:
-    audit_tracker (0.1.1)
+    audit_tracker (0.2.0)
 
 GEM
   remote: https://rubygems.org/
@@ -328,7 +328,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  activerecord (>= 6.1, < 8)
+  activerecord (>= 7.1.5.2, < 8.2)
   appraisal (~> 2.5.0)
   audit_tracker!
   combustion (~> 1.3)

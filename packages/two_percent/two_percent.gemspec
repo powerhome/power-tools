@@ -26,5 +26,5 @@ Gem::Specification.new do |spec|
   spec.metadata["rubygems_mfa_required"] = "true"
 
   spec.add_dependency "aether_observatory", ">= 1.0"
-  spec.add_dependency "rails", ">= 6.1"
+  spec.add_dependency "rails", ">= 7.1"
 end
