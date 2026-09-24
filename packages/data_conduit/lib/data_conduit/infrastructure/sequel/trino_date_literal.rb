@@ -5,6 +5,8 @@ require "date"
 require "active_support"
 require "active_support/time"
 
+# Renders date and time values as Trino literals. Only extend Trino datasets with this
+# (see TrinoRepository#build_query) so other Sequel connections in the process are unaffected.
 module TrinoDateLiteral
   ISO_TS = "%F %T.%6N" # => "YYYY-MM-DD hh:mm:ss.ffffff"
 
@@ -21,5 +23,3 @@ private
     "TIMESTAMP '#{value.strftime(ISO_TS)}'"
   end
 end
-
-Sequel::Dataset.prepend(TrinoDateLiteral)

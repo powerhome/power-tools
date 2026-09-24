@@ -74,6 +74,31 @@ RSpec.describe DataConduit::Adapters::TrinoRepository do
         expect(sql).to eq("SELECT * FROM #{table_name} WHERE (status = 'active')")
       end
     end
+
+    context "when a condition value is a Date" do
+      let(:conditions) { { created_on: Date.new(2026, 1, 2) } }
+
+      it "renders a Trino DATE literal" do
+        sql = repository.send(:build_query)
+        expect(sql).to eq("SELECT * FROM #{table_name} WHERE (created_on = DATE '2026-01-02')")
+      end
+    end
+
+    context "when a condition value is a Time" do
+      let(:conditions) { { created_at: Time.utc(2026, 1, 2, 3, 4, 5) } }
+
+      it "renders a Trino TIMESTAMP literal" do
+        sql = repository.send(:build_query)
+        expect(sql).to eq("SELECT * FROM #{table_name} WHERE (created_at = TIMESTAMP '2026-01-02 03:04:05.000000')")
+      end
+    end
+
+    it "does not change date literals for other Sequel datasets" do
+      repository.send(:build_query)
+
+      sql = Sequel.mock.from(:other).where(created_at: Time.utc(2026, 1, 2, 3, 4, 5)).sql
+      expect(sql).not_to include("TIMESTAMP")
+    end
   end
 
   describe ".tables(config)" do

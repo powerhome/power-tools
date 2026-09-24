@@ -21,10 +21,10 @@ Gem::Specification.new do |spec|
   spec.files = Dir["{lib}/**/*", "README.md", "LICENSE.txt"]
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "activesupport", "7.2.3.1"
+  spec.add_dependency "activesupport", ">= 7.1.5.2", "< 8.2"
   spec.add_dependency "rest-client", "~> 2.1"
   spec.add_dependency "securerandom", ">= 0.2.2"
-  spec.add_dependency "sequel", "~> 5.90.0"
+  spec.add_dependency "sequel", "~> 5.90"
 
   spec.add_development_dependency "appraisal", "2.5.0"
   spec.add_development_dependency "license_finder", "7.2.1"
