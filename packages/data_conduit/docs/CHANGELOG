@@ -1,6 +1,10 @@
 ## [Unreleased]
 
+## [0.2.2] - 2026-09-24
+
 - Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
+- Allow any Sequel 5.x from 5.90 and ActiveSupport 7.1.5.2 through 8.1
+- Apply Trino date/time literals only to Trino datasets instead of patching `Sequel::Dataset` globally
 
 ## [0.2.1] - 2026-01-19
 

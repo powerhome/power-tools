@@ -75,6 +75,7 @@ module DataConduit
       # We use Sequel.mock so that no actual connection is made.
       def build_query
         db = Sequel.mock
+        db.extend_datasets(TrinoDateLiteral)
         dataset = db.from(Sequel.identifier(table_name)).select_all
 
         if conditions
