@@ -31,6 +31,15 @@ module ActiveRecord
           adapter.singleton_class.prepend(TypeMap)
           adapter.prepend(SchemaStatements)
           adapter.prepend(Quoting)
+          install_into_migrations
+        end
+
+        def install_into_migrations
+          mysql = ConnectionAdapters::MySQL
+          mysql::TableDefinition.prepend(TableDefinition)
+          mysql::TableDefinition.include(ColumnMethods)
+          mysql::Table.include(ColumnMethods)
+          mysql::SchemaCreation.prepend(SchemaCreation)
         end
       end
     end

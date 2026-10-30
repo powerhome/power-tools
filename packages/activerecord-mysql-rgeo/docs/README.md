@@ -103,6 +103,42 @@ Place.select("ST_Centroid(area) AS center").first.center
 
 They are registered for the `trilogy` and `mysql2` adapters only.
 
+### Migrations
+
+```ruby
+create_table :places do |t|
+  t.st_point :location, srid: 3857, null: false
+  t.geography :area                       # GEOMETRY, SRID 4326, geographic
+  t.multi_polygon :zones, has_z: true
+  t.spatial :shape, type: :st_polygon
+  t.index :location, using: :gist         # SPATIAL INDEX
+end
+
+add_column :places, :entrance, :st_point, srid: 3857
+add_index :places, :entrance, using: :gist
+```
+
+Column helpers: `geometry`, `geography`, `point` / `st_point`,
+`polygon` / `st_polygon`, `line_string`, `multi_point`, `multi_line_string`,
+`multi_polygon`, `geometry_collection` and `spatial` (with `type:`). The same
+names work with `t.column` and `add_column`. Options:
+
+- `srid:` sets the column's `SRID` attribute. Without it, columns get SRID 0,
+  and geographic columns SRID 4326.
+- `geographic:`, `has_z:` and `has_m:` are kept as markers in the column
+  comment (see [Spatial column details](#spatial-column-details)).
+- `limit:` also takes these options as a hash, the way `schema.rb` writes them:
+  `t.geometry :location, limit: { srid: 4326, type: "st_point", geographic: true }`.
+- `default:` takes WKT or an RGeo geometry. MySQL can't give spatial columns a
+  literal default, so it is kept in the column comment and Active Record
+  applies it to new models. It is saved with new records only when partial
+  inserts are off, as they are in applications on Rails 7.0 defaults or later.
+
+`using: :gist` creates a `SPATIAL INDEX`. MySQL only indexes `NOT NULL`
+spatial columns, so `add_index` makes a nullable column `NOT NULL` first.
+`change_column`, `change_column_null` and `change_column_comment` keep a
+spatial column's type, SRID and markers.
+
 ## Migrating from activerecord-mysql2rgeo-adapter
 
 > This guide grows as features are ported. It lists every difference found so
@@ -122,6 +158,12 @@ They are registered for the `trilogy` and `mysql2` adapters only.
   registered `:st_point` and the others for every adapter; this gem registers
   them for `trilogy` and `mysql2`, so they don't clash with another spatial
   adapter, such as PostGIS, in the same application.
+- **`t.column :name, :geography` works.** The upstream gem created a
+  `GEOGRAPHY` column, which MySQL doesn't have; this gem creates a geographic
+  `GEOMETRY` column, as `t.geography` does.
+- **`change_column`, `change_column_null` and `change_column_comment` work on
+  spatial columns.** In the upstream gem they generated invalid SQL unless
+  given the spatial type and options again.
 
 ## Development
 

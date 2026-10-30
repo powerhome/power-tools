@@ -13,11 +13,16 @@ module ActiveRecord
 
     autoload :AttributeTypes
     autoload :ColumnMetadata
+    autoload :ColumnMethods
     autoload :GeometryParser
     autoload :Installer
     autoload :Quoting
+    autoload :SchemaCreation
     autoload :SchemaStatements
     autoload :SpatialColumn
+    autoload :SpatialColumnOptions
+    autoload :SpatialDefault
+    autoload :TableDefinition
     autoload :TypeMap
 
     module Type # :nodoc:

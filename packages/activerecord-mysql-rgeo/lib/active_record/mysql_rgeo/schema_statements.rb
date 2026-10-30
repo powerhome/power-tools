@@ -5,7 +5,23 @@ module ActiveRecord
     # Spatial additions to the MySQL adapters' schema statements. Prepended to
     # AbstractMysqlAdapter; every method leaves non-spatial columns to Rails.
     module SchemaStatements # :nodoc:
+      # <tt>using: :gist</tt> creates a spatial index. MySQL only indexes
+      # NOT NULL spatial columns, so nullable ones are made NOT NULL first,
+      # as activerecord-mysql2rgeo-adapter does.
+      # https://github.com/rails/rails/blob/v7.2.4/activerecord/lib/active_record/connection_adapters/abstract_mysql_adapter.rb#L456
+      def add_index(table_name, column_name, **options)
+        make_spatial_columns_not_null(table_name, column_name) if options[:using].to_s == "gist"
+        super
+      end
+
     private
+
+      def make_spatial_columns_not_null(table_name, column_names)
+        Array(column_names).each do |name|
+          column = columns(table_name).find { |c| c.name == name.to_s }
+          change_column_null(table_name, name, false) if column.is_a?(SpatialColumn) && column.null
+        end
+      end
 
       # Rails builds a column from each row of SHOW FULL FIELDS here:
       # https://github.com/rails/rails/blob/v7.2.4/activerecord/lib/active_record/connection_adapters/mysql/schema_statements.rb#L184
@@ -23,7 +39,8 @@ module ActiveRecord
           column,
           sql_type_metadata: spatial_type_metadata(column, sql_type),
           cast_type: lookup_cast_type(sql_type),
-          comment: metadata.comment
+          comment: metadata.comment,
+          default: column.default.nil? ? metadata.default : column.default
         )
       end
 

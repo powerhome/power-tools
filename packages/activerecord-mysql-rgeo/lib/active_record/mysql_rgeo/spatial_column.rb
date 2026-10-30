@@ -23,8 +23,8 @@ module ActiveRecord
       end
 
       # A copy of +column+ with spatial type metadata.
-      def self.from(column, sql_type_metadata:, cast_type:, comment:)
-        arguments = [column.name, column.default, sql_type_metadata, column.null, column.default_function]
+      def self.from(column, sql_type_metadata:, cast_type:, comment:, default:)
+        arguments = [column.name, default, sql_type_metadata, column.null, column.default_function]
         arguments.insert(1, cast_type) if COLUMN_TAKES_CAST_TYPE
         new(*arguments, collation: column.collation, comment: comment)
       end

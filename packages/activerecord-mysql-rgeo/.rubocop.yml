@@ -45,3 +45,13 @@ Naming/PredicatePrefix:
   AllowedMethods:
     - has_z
     - has_m
+
+# Rails' schema creation dispatches to visit_<ClassName> methods.
+Naming/MethodName:
+  AllowedPatterns:
+    - '\Avisit_'
+
+# SchemaCreation overrides visit_IndexDefinition with Rails' own signature.
+Style/OptionalBooleanParameter:
+  AllowedMethods:
+    - visit_IndexDefinition
