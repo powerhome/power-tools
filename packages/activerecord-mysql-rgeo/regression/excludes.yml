@@ -1,0 +1,50 @@
+# Active Record tests skipped by `rake regression`.
+#
+# It holds two kinds of tests:
+#
+# - Tests that also fail without this gem (REGRESSION_BASELINE=1, same SEED).
+#   A test that passes on the baseline and fails with the gem is a regression
+#   to fix, never something to skip.
+# - Tests that check how plain Rails treats spatial columns, which this gem
+#   changes on purpose. Say so in the reason.
+#
+# Each entry has the `tests` it skips and the `reason`, and may narrow where it
+# applies with `adapters` (default: every driver) and an `activerecord` version
+# requirement (default: every version).
+
+- tests:
+    - ConnectionTest#test_character_set_connection_is_configured
+  adapters: [trilogy]
+  reason: The trilogy gem does not support the cp932 encoding this test connects with.
+
+- tests:
+    - ActiveRecord::ConnectionAdapters::ConnectionHandlersMultiDbTest#test_switching_connections_with_database_url
+  reason: Loads the PostgreSQL adapter from a postgres:// URL, which needs the pg gem.
+
+- tests:
+    - "ActiveRecord::StatementInvalidTest#test_statement_and_binds_are_set_on_select"
+  activerecord: "~> 7.2.0"
+  reason: >-
+    Passes Minitest::Mock objects as binds, which Active Record 7.2's log
+    subscriber recurses on until SystemStackError. Passes on later versions.
+
+- tests:
+    - "WarningsTest#test_db_warnings_action_:raise_on_warning"
+    - "WarningsTest#test_db_warnings_action_:log_on_warning"
+    - "WarningsTest#test_db_warnings_action_:report_on_warning"
+    - "WarningsTest#test_db_warnings_action_custom_proc_on_warning"
+    - "WarningsTest#test_db_warnings_action_allows_a_list_of_codes_to_ignore"
+    - "WarningsTest#test_db_warnings_action_allows_a_list_of_warnings_to_ignore"
+    - "WarningsTest#test_db_warnings_action_handles_when_warning_count_does_not_match_returned_warnings"
+  adapters: [mysql2]
+  activerecord: "~> 7.2.0"
+  reason: >-
+    mysql2 0.5.7's Client#affected_rows raises inside Active Record 7.2's
+    warning handling. Passes on later versions.
+
+- tests:
+    - SpatialTypeTest#test_POINT_and_MULTIPOINT_columns_are_not_misreported_as_integers
+  activerecord: ">= 8.2.0.alpha"
+  reason: >-
+    Changed on purpose: checks that plain Rails gives spatial columns no type,
+    while this gem gives them the :geometry type.

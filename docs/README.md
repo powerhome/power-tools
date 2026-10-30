@@ -6,6 +6,10 @@ At [Power Home Remodeling](https://powerhrg.com/), we have created foundational 
 
 power-tools currently contains the following packages (marked for release to rubygems 💎 or npm ☕️):
 
+[activerecord-mysql-rgeo](https://github.com/powerhome/power-tools/blob/main/packages/activerecord-mysql-rgeo/docs/README.md) 💎
+
+activerecord-mysql-rgeo adds RGeo-backed spatial support to Rails' own MySQL adapters (trilogy and mysql2). A drop-in replacement for activerecord-mysql2rgeo-adapter.
+
 [aether_observatory](https://github.com/powerhome/power-tools/blob/main/packages/aether_observatory/docs/README.md) 💎
 
 AetherObservatory provides an event broadcast and subscription system based around ActiveSupport::Notifications.

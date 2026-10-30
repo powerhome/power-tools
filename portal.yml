@@ -300,3 +300,20 @@ spec:
   system: power-application-framework
   lifecycle: production
   subcomponentOf: power-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: activerecord-mysql-rgeo
+  title: activerecord-mysql-rgeo
+  description: >-
+    RGeo-backed spatial support for Rails' own MySQL adapters (trilogy and
+    mysql2). A drop-in replacement for activerecord-mysql2rgeo-adapter.
+  annotations:
+    backstage.io/techdocs-ref: dir:packages/activerecord-mysql-rgeo
+spec:
+  type: library
+  owner: heroes-for-hire
+  system: power-application-framework
+  lifecycle: experimental
+  subcomponentOf: power-tools
