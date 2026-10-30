@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "open3"
+require "spec_helper"
 
 RSpec.describe ActiveRecord::MysqlRgeo do
   it "has a version number" do

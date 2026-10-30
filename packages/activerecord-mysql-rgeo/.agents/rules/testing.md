@@ -41,5 +41,7 @@ a spec that reproduces the bug.
   RSpec before porting the code. They describe the behaviour we must keep.
 - **Leave the database clean.** Specs create the tables they need and drop them
   afterwards, so they can run in any order.
+- **Start every spec file with `require "spec_helper"`.** The repository ignores
+  `.rspec`, so CI never sees a local `--require spec_helper`.
 - Use one `describe` per class or behaviour, `context` for "when …", and say the
   outcome in the example name. Prefer `expect(...).to` with explicit matchers.
