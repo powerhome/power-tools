@@ -142,7 +142,8 @@ MYSQL_PORT=3307 bundle exec rake
   (`regression:trilogy`, `regression:mysql2`), with this gem loaded. It shows
   the gem leaves non-spatial behaviour exactly as Rails ships it. The tests are
   checked out from the Rails repository into `tmp/rails/` at the tag matching
-  the bundled Active Record.
+  the bundled Active Record. Some of those tests set legacy time zone names
+  such as `US/Eastern`; on Debian and Ubuntu, install `tzdata-legacy`.
 - RuboCop.
 
 `regression/excludes.yml` lists the Active Record tests that are skipped, with
