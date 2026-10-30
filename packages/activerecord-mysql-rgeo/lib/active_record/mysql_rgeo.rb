@@ -11,8 +11,11 @@ module ActiveRecord
   module MysqlRgeo
     extend ActiveSupport::Autoload
 
+    autoload :ColumnMetadata
     autoload :GeometryParser
     autoload :Installer
+    autoload :SchemaStatements
+    autoload :SpatialColumn
     autoload :TypeMap
 
     module Type # :nodoc:

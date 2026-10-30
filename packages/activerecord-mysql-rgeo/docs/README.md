@@ -45,6 +45,45 @@ place.location.srid  # => 4326
 
 SRID 4326 values are read longitude first, the order MySQL stores them in.
 
+### Spatial column details
+
+Spatial columns are `ActiveRecord::MysqlRgeo::SpatialColumn`s. Besides the
+usual column API, they report the column's geometric type, its SRID (from the
+column's `SRID` attribute, 0 when it has none) and whether it is geographic or
+has Z or M coordinates:
+
+```ruby
+column = Place.columns_hash["location"]
+column.sql_type        # => "geometry(Point,3857)"
+column.geometric_type  # => RGeo::Feature::Point
+column.srid            # => 3857
+column.geographic?     # => false
+column.limit           # => { type: "st_point", srid: 3857 }
+```
+
+MySQL has no column attribute for "geographic", Z or M, so these are kept as
+markers in the column comment (`mysql2rgeo:geographic`, `mysql2rgeo:has_z`,
+`mysql2rgeo:has_m`), the format activerecord-mysql2rgeo-adapter writes.
+`column.comment` returns the comment without them. Assigning WKT to an
+attribute uses the column's SRID, and geographic columns use a geographic
+factory.
+
+Other columns are built exactly as Rails builds them.
+
+## Migrating from activerecord-mysql2rgeo-adapter
+
+> This guide grows as features are ported. It lists every difference found so
+> far.
+
+- **Non-spatial columns are plain `MySQL::Column`s.** The upstream gem built a
+  `SpatialColumn` for every column, so `column.spatial?` and `column.srid`
+  answered for any column. Check `column.type == :geometry` instead.
+- **`GEOMETRYCOLLECTION` columns are spatial.** MySQL 8 reports them as
+  `geomcollection`, which the upstream gem didn't recognise, so their values
+  loaded as binary strings. They now load as RGeo geometry collections.
+- **Comments of columns with spatial defaults no longer show stray hex.** The
+  upstream gem left the hex of the default's marker in `column.comment`.
+
 ## Development
 
 The specs need a MySQL server. By default they connect to `root:root@127.0.0.1:3306`,

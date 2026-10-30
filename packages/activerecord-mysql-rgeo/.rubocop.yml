@@ -39,3 +39,9 @@ Metrics/ParameterLists:
 Rails/ApplicationRecord:
   Exclude:
     - "spec/**/*"
+
+# SpatialColumn keeps activerecord-mysql2rgeo-adapter's method names.
+Naming/PredicatePrefix:
+  AllowedMethods:
+    - has_z
+    - has_m

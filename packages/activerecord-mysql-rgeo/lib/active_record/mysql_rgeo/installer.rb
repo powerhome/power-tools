@@ -26,6 +26,7 @@ module ActiveRecord
           return if adapter.singleton_class.include?(TypeMap)
 
           adapter.singleton_class.prepend(TypeMap)
+          adapter.prepend(SchemaStatements)
         end
       end
     end
