@@ -67,7 +67,10 @@ RSpec.describe "Writing spatial values" do
             "((20.0 20.0, 20.0 30.0, 30.0 30.0, 30.0 20.0, 20.0 20.0)))"
       record = place.create!(areas: wkt)
 
-      expect(place.find(record.id).areas).to have_attributes(srid: 0, as_text: wkt)
+      areas = place.find(record.id).areas
+
+      # Compare through the same factory: GEOS and pure-Ruby factories format WKT differently.
+      expect(areas).to have_attributes(srid: 0, as_text: areas.factory.parse_wkt(wkt).as_text)
     end
 
     it "lets a generic geometry column hold any geometric type" do
