@@ -34,3 +34,8 @@ Metrics/ParameterLists:
     # Type::Spatial.new keeps activerecord-mysql2rgeo-adapter's keyword
     # arguments, so code that builds the type keeps working.
     - "lib/active_record/mysql_rgeo/type/spatial.rb"
+
+# A gem has no ApplicationRecord; specs define models on ActiveRecord::Base.
+Rails/ApplicationRecord:
+  Exclude:
+    - "spec/**/*"

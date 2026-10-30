@@ -18,7 +18,9 @@ a spec that reproduces the bug.
   everything it must not change. A failure here is a regression in the gem
   until shown otherwise: rerun the failing test with `REGRESSION_BASELINE=1`
   (gem not loaded). Only a test that fails on the baseline too may go in
-  `regression/excludes.yml`, with its reason and the drivers it affects.
+  `regression/excludes.yml`, with its reason and the drivers it affects. The
+  one other kind allowed there is a test that checks how plain Rails treats
+  spatial columns, which this gem changes on purpose; its reason says so.
 - `rake` runs both, plus RuboCop. All of it must pass before committing.
 
 ## What to test and how

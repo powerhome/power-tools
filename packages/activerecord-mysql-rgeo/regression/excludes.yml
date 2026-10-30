@@ -1,8 +1,12 @@
 # Active Record tests skipped by `rake regression`.
 #
-# Only list tests that also fail without this gem (REGRESSION_BASELINE=1, same
-# SEED): a test that passes on the baseline and fails with the gem is a
-# regression to fix, never something to skip.
+# It holds two kinds of tests:
+#
+# - Tests that also fail without this gem (REGRESSION_BASELINE=1, same SEED).
+#   A test that passes on the baseline and fails with the gem is a regression
+#   to fix, never something to skip.
+# - Tests that check how plain Rails treats spatial columns, which this gem
+#   changes on purpose. Say so in the reason.
 #
 # Each entry has the `tests` it skips and the `reason`, and may narrow where it
 # applies with `adapters` (default: every driver) and an `activerecord` version
@@ -37,3 +41,10 @@
   reason: >-
     mysql2 0.5.7's Client#affected_rows raises inside Active Record 7.2's
     warning handling. Passes on later versions.
+
+- tests:
+    - SpatialTypeTest#test_POINT_and_MULTIPOINT_columns_are_not_misreported_as_integers
+  activerecord: ">= 8.2.0.alpha"
+  reason: >-
+    Changed on purpose: checks that plain Rails gives spatial columns no type,
+    while this gem gives them the :geometry type.

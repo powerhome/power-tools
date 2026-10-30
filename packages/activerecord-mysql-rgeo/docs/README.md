@@ -28,6 +28,23 @@ gem "activerecord-mysql-rgeo"
 gem "trilogy" # or "mysql2"
 ```
 
+## Usage
+
+### Reading spatial columns
+
+Columns of MySQL's spatial types (`GEOMETRY`, `POINT`, `LINESTRING`, `POLYGON`,
+`MULTIPOINT`, `MULTILINESTRING`, `MULTIPOLYGON` and `GEOMETRYCOLLECTION`) load
+as RGeo geometries. Each value keeps the SRID it was stored with, and is built
+by the factory `RGeo::ActiveRecord::SpatialFactoryStore` picks for the column:
+
+```ruby
+place = Place.find(1)
+place.location       # => #<RGeo::Geos::CAPIPointImpl "POINT (-122.0 47.0)">
+place.location.srid  # => 4326
+```
+
+SRID 4326 values are read longitude first, the order MySQL stores them in.
+
 ## Development
 
 The specs need a MySQL server. By default they connect to `root:root@127.0.0.1:3306`,
@@ -51,8 +68,10 @@ MYSQL_PORT=3307 bundle exec rake
 - RuboCop.
 
 `regression/excludes.yml` lists the Active Record tests that are skipped, with
-the reason for each. Only tests that also fail without this gem belong there;
-run the suite with `REGRESSION_BASELINE=1` to check:
+the reason for each. It holds two kinds of tests: tests that also fail without
+this gem, and tests that check how plain Rails treats spatial columns, which
+this gem changes on purpose. Run the suite with `REGRESSION_BASELINE=1` to see
+which tests fail without the gem:
 
 ```sh
 REGRESSION_BASELINE=1 MYSQL_PORT=3307 bundle exec rake regression:trilogy

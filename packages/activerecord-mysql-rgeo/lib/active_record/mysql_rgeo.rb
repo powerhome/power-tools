@@ -12,6 +12,8 @@ module ActiveRecord
     extend ActiveSupport::Autoload
 
     autoload :GeometryParser
+    autoload :Installer
+    autoload :TypeMap
 
     module Type # :nodoc:
       extend ActiveSupport::Autoload
@@ -20,3 +22,6 @@ module ActiveRecord
     end
   end
 end
+
+ActiveSupport.on_load(:active_record_trilogyadapter) { ActiveRecord::MysqlRgeo::Installer.install(self) }
+ActiveSupport.on_load(:active_record_mysql2adapter) { ActiveRecord::MysqlRgeo::Installer.install(self) }
