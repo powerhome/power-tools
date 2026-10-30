@@ -1,20 +1,28 @@
 require:
   - rubocop-powerhome
 
+# rubocop-powerhome replaces RuboCop's default configuration, which drops these
+# extensions' own defaults and makes some of their cops crash. Loading them as
+# plugins restores their defaults.
+plugins:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rake
+  - rubocop-rspec
+
 AllCops:
   TargetRubyVersion: 3.3
-
-# Both crash on this gem's code with the rubocop-rails version in use.
-Rails/ActionFilter:
-  Enabled: false
-
-Rails/FilePath:
-  Enabled: false
 
 Rails/EnvironmentVariableAccess:
   Exclude:
     - "Rakefile"
+    - "regression/**/*"
     - "spec/**/*"
+
+# There is no Rails app, so no :environment task to depend on.
+Rails/RakeEnvironment:
+  Exclude:
+    - "rakelib/**/*"
 
 Naming/FileName:
   Exclude:
