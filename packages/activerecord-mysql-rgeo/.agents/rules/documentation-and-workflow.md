@@ -27,8 +27,9 @@ examples must make sense to anyone using it:
 
 ## Build
 
-- `bundle exec rake` is the whole CI: specs on trilogy, specs on mysql2, then
-  RuboCop. It must pass before every commit.
+- `bundle exec rake` is the whole CI: `rake spec` (the gem's specs on trilogy
+  and mysql2), `rake regression` (Active Record's test suite on both drivers,
+  with the gem loaded), then RuboCop. It must pass before every commit.
 - CI runs `.github/workflows/activerecord-mysql-rgeo.yml` through the shared
   `powerhome/github-actions-workflows` ruby-gem workflow, for every appraisal and
   Ruby version listed there. Adding or dropping a Rails or Ruby version means

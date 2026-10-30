@@ -11,6 +11,16 @@ Every change starts with a failing spec.
 Commit the spec together with the code that makes it pass. A bug fix starts with
 a spec that reproduces the bug.
 
+## Two suites
+
+- `rake spec`: this gem's RSpec specs, for the spatial behaviour it adds.
+- `rake regression`: Active Record's own test suite with the gem loaded, for
+  everything it must not change. A failure here is a regression in the gem
+  until shown otherwise: rerun the failing test with `REGRESSION_BASELINE=1`
+  (gem not loaded). Only a test that fails on the baseline too may go in
+  `regression/excludes.yml`, with its reason and the drivers it affects.
+- `rake` runs both, plus RuboCop. All of it must pass before committing.
+
 ## What to test and how
 
 - **Hit a real MySQL server.** This gem changes how Active Record talks to MySQL,

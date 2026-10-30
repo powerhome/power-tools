@@ -40,8 +40,23 @@ docker run -d --name activerecord-mysql-rgeo-mysql -p 3307:3306 -e MYSQL_ROOT_PA
 MYSQL_PORT=3307 bundle exec rake
 ```
 
-`bundle exec rake` runs the whole build: the specs once per driver
-(`rake spec:trilogy`, `rake spec:mysql2`) and RuboCop.
+`bundle exec rake` runs the whole build:
+
+- `rake spec`: the gem's own specs, once per driver (`spec:trilogy`, `spec:mysql2`).
+- `rake regression`: Active Record's own test suite, once per driver
+  (`regression:trilogy`, `regression:mysql2`), with this gem loaded. It shows
+  the gem leaves non-spatial behaviour exactly as Rails ships it. The tests are
+  checked out from the Rails repository into `tmp/rails/` at the tag matching
+  the bundled Active Record.
+- RuboCop.
+
+`regression/excludes.yml` lists the Active Record tests that are skipped, with
+the reason for each. Only tests that also fail without this gem belong there;
+run the suite with `REGRESSION_BASELINE=1` to check:
+
+```sh
+REGRESSION_BASELINE=1 MYSQL_PORT=3307 bundle exec rake regression:trilogy
+```
 
 Each supported Active Record version has an [Appraisal](https://github.com/thoughtbot/appraisal)
 gemfile under `gemfiles/`. To run the build against one of them:

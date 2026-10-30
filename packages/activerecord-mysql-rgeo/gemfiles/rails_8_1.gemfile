@@ -5,10 +5,15 @@
 source "https://rubygems.org"
 
 gem "activerecord", "~> 8.1.0"
+gem "bcrypt"
+gem "minitest-mock"
+gem "msgpack"
 gem "mysql2", "~> 0.5"
+gem "railties"
 gem "rake", "~> 13.0"
 gem "rspec", "~> 3.13"
 gem "rubocop-powerhome", path: "../../rubocop-powerhome"
+gem "sqlite3"
 gem "trilogy", "~> 2.9"
 
 gemspec path: "../"

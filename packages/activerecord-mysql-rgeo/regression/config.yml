@@ -1,0 +1,27 @@
+# Active Record test suite connections (ARCONFIG), mirroring Rails'
+# activerecord/test/config.example.yml for the MySQL drivers. Settings come from
+# the same MYSQL_* variables as the gem's own specs.
+<% server = <<~YAML
+     host: "#{ENV.fetch('MYSQL_HOST', '127.0.0.1')}"
+     port: #{Integer(ENV.fetch('MYSQL_PORT', '3306'))}
+     username: "#{ENV.fetch('MYSQL_USER', 'root')}"
+     password: "#{ENV.fetch('MYSQL_PASSWORD', 'root')}"
+     prepared_statements: false
+   YAML
+   server = server.gsub(/^/, "      ") %>
+default_connection: trilogy
+
+connections:
+<% %w[trilogy mysql2].each do |adapter| %>
+  <%= adapter %>:
+    arunit:
+<%= server %>
+      encoding: utf8mb4
+      collation: utf8mb4_unicode_ci
+      variables:
+        time_zone: "+00:00"
+    arunit2:
+<%= server %>
+      encoding: utf8mb4
+      collation: utf8mb4_general_ci
+<% end %>
