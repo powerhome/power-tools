@@ -18,3 +18,6 @@ gem "minitest-mock"
 gem "msgpack"
 gem "railties"
 gem "sqlite3"
+# Some tests use legacy zone names such as "EST", which newer OS tzdata
+# packages leave out. Bundling the zone data makes the suite independent of it.
+gem "tzinfo-data"
