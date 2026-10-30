@@ -28,3 +28,9 @@ Naming/FileName:
   Exclude:
     # Named after the gem so Bundler.require loads it.
     - "lib/activerecord-mysql-rgeo.rb"
+
+Metrics/ParameterLists:
+  Exclude:
+    # Type::Spatial.new keeps activerecord-mysql2rgeo-adapter's keyword
+    # arguments, so code that builds the type keeps working.
+    - "lib/active_record/mysql_rgeo/type/spatial.rb"

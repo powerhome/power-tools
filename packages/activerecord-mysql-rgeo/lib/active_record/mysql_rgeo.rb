@@ -9,5 +9,14 @@ module ActiveRecord
   # Adds RGeo-backed spatial support to Active Record's built-in MySQL
   # adapters (trilogy and mysql2).
   module MysqlRgeo
+    extend ActiveSupport::Autoload
+
+    autoload :GeometryParser
+
+    module Type # :nodoc:
+      extend ActiveSupport::Autoload
+
+      autoload :Spatial
+    end
   end
 end
