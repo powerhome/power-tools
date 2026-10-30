@@ -70,6 +70,39 @@ factory.
 
 Other columns are built exactly as Rails builds them.
 
+### Writing spatial values
+
+Assign an RGeo geometry, or WKT, EWKT, WKB or EWKB, and save:
+
+```ruby
+place.location = "POINT(-122 47)"
+place.location = RGeo::Geographic.spherical_factory(srid: 4326).point(-122, 47)
+place.save!
+Place.where(location: place.location)
+```
+
+Values are written as `ST_GeomFromText(wkt, srid)`, with longitude first for
+SRID 4326. A column with SRID 0 takes geometries of any SRID and stores them
+with SRID 0. Text that is not a geometry is saved as `NULL`; any other value
+that is not a geometry raises `ArgumentError`.
+
+### Spatial attribute types
+
+The attribute API knows `:st_point`, `:st_polygon`, `:line_string`,
+`:multi_point`, `:multi_line_string` and `:multi_polygon`, with the `srid:`,
+`geographic:`, `has_z:` and `has_m:` options. Use them for virtual attributes
+or for spatial columns selected under another name:
+
+```ruby
+class Place < ApplicationRecord
+  attribute :center, :st_point, srid: 3857
+end
+
+Place.select("ST_Centroid(area) AS center").first.center
+```
+
+They are registered for the `trilogy` and `mysql2` adapters only.
+
 ## Migrating from activerecord-mysql2rgeo-adapter
 
 > This guide grows as features are ported. It lists every difference found so
@@ -83,6 +116,12 @@ Other columns are built exactly as Rails builds them.
   loaded as binary strings. They now load as RGeo geometry collections.
 - **Comments of columns with spatial defaults no longer show stray hex.** The
   upstream gem left the hex of the default's marker in `column.comment`.
+- **Writing a value that is not a geometry raises `ArgumentError`.** The
+  upstream gem raised a `RuntimeError` ("maybe should raise").
+- **Spatial attribute types are registered per adapter.** The upstream gem
+  registered `:st_point` and the others for every adapter; this gem registers
+  them for `trilogy` and `mysql2`, so they don't clash with another spatial
+  adapter, such as PostGIS, in the same application.
 
 ## Development
 

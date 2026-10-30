@@ -9,11 +9,14 @@ module ActiveRecord
       MUTEX = Mutex.new
 
       class << self
-        def install(adapter_class)
+        # +adapter+ is the name database.yml uses for +adapter_class+, which
+        # the attribute API looks types up by.
+        def install(adapter_class, adapter:)
           MUTEX.synchronize do
             install_into_abstract_mysql_adapter
             # Rails built this adapter's TYPE_MAP before running its load hook.
             TypeMap.register(adapter_class::TYPE_MAP) unless TypeMap.registered?(adapter_class::TYPE_MAP)
+            AttributeTypes.register(adapter)
           end
         end
 
@@ -27,6 +30,7 @@ module ActiveRecord
 
           adapter.singleton_class.prepend(TypeMap)
           adapter.prepend(SchemaStatements)
+          adapter.prepend(Quoting)
         end
       end
     end

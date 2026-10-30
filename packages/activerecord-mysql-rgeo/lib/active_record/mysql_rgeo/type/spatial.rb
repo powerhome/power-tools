@@ -77,7 +77,25 @@ module ActiveRecord
           RGeo::Feature::Geometry
         end
 
+        # Returns the RGeo geometry to write. Columns with SRID 0 take
+        # geometries of any SRID, cast to the column's factory.
+        def serialize(value)
+          return if value.nil?
+
+          geometry = cast_value(value)
+          return cast_to_column_srid(geometry) if RGeo::Feature::Geometry.check_type(geometry)
+
+          raise ArgumentError, "#{value.inspect} is not a geometry. Assign an RGeo geometry, or WKT, " \
+                               "EWKT, WKB or EWKB that describes one."
+        end
+
       private
+
+        def cast_to_column_srid(geometry)
+          return geometry if @geographic || !@srid.to_i.zero? || geometry.srid == @srid
+
+          RGeo::Feature.cast(geometry, factory: spatial_factory, project: true)
+        end
 
         def cast_value(value)
           return value unless value.is_a?(::String)

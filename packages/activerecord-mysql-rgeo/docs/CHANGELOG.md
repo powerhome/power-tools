@@ -6,3 +6,6 @@
 - Spatial columns report their geometric type, SRID, and geographic, Z and M
   settings; comments are returned without activerecord-mysql2rgeo-adapter's
   `mysql2rgeo:*` markers
+- Save RGeo geometries, WKT, EWKT, WKB and EWKB to spatial columns, and query
+  by them
+- Spatial attribute types (`attribute :center, :st_point, srid: 3857`)

@@ -11,9 +11,11 @@ module ActiveRecord
   module MysqlRgeo
     extend ActiveSupport::Autoload
 
+    autoload :AttributeTypes
     autoload :ColumnMetadata
     autoload :GeometryParser
     autoload :Installer
+    autoload :Quoting
     autoload :SchemaStatements
     autoload :SpatialColumn
     autoload :TypeMap
@@ -26,5 +28,9 @@ module ActiveRecord
   end
 end
 
-ActiveSupport.on_load(:active_record_trilogyadapter) { ActiveRecord::MysqlRgeo::Installer.install(self) }
-ActiveSupport.on_load(:active_record_mysql2adapter) { ActiveRecord::MysqlRgeo::Installer.install(self) }
+ActiveSupport.on_load(:active_record_trilogyadapter) do
+  ActiveRecord::MysqlRgeo::Installer.install(self, adapter: :trilogy)
+end
+ActiveSupport.on_load(:active_record_mysql2adapter) do
+  ActiveRecord::MysqlRgeo::Installer.install(self, adapter: :mysql2)
+end
