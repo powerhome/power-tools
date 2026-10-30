@@ -1,5 +1,16 @@
 # Documentation and workflow
 
+## Write for the public
+
+This is an open-source gem. Docs, specs, code comments, commit messages and
+examples must make sense to anyone using it:
+
+- Don't name or describe internal applications, teams or infrastructure. Use
+  generic examples (`Place`, `places.location`, "an app that ...").
+- The migration guide covers every upstream line people may be coming from
+  (see `drop-in-replacement.md`), not one application's setup. App-specific
+  rollout plans belong in that application's repository.
+
 ## Keep the docs current in the same commit
 
 - `docs/README.md` is the user guide: requirements, installation, usage,

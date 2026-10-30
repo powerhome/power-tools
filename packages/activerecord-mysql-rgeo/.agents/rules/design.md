@@ -21,8 +21,8 @@ an adapter. Keep it that way.
   Rails class elsewhere is not allowed.
 - **Always call `super`.** Overrides decide whether to handle the spatial case;
   otherwise they return `super` unchanged. Non-spatial columns, types and SQL
-  must behave exactly as in plain Rails. Other gems (departure, nitro_mysql)
-  prepend into the same classes.
+  must behave exactly as in plain Rails. Other gems (departure, for example)
+  and applications prepend into the same classes.
 - **Keep the effect global but small.** Loading the gem changes every MySQL
   connection in the process, so a patch only acts when it sees spatial data
   (spatial column types, RGeo values, spatial index options).

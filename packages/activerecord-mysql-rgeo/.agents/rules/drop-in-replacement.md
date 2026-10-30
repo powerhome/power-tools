@@ -2,8 +2,14 @@
 
 Applications must be able to swap `activerecord-mysql2rgeo-adapter` for this gem
 by changing the Gemfile, without data migrations and with no or minimal code
-changes. Upstream reference: https://github.com/stadia/activerecord-mysql2rgeo-adapter
-(version 9.1.0; the 7.2.x line for Active Record 7.2).
+changes. Upstream reference: https://github.com/stadia/activerecord-mysql2rgeo-adapter.
+
+Behaviour matches the latest upstream release (9.1.0). Apps may come from any
+upstream line, so the migration guide is organised by the upstream version
+range the reader is on (for example 7.x, 8.x, 9.x). For each range it lists
+what changes for them, including upstream changes they never upgraded to
+(9.0.0's raw-String Arel change, the `mysql2rgeo:*` comment markers and
+`SRID` column attribute added after 7.2.0). Every such difference has a spec.
 
 ## Must stay identical
 
