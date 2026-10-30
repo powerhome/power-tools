@@ -1,0 +1,22 @@
+require:
+  - rubocop-powerhome
+
+AllCops:
+  TargetRubyVersion: 3.3
+
+# Both crash on this gem's code with the rubocop-rails version in use.
+Rails/ActionFilter:
+  Enabled: false
+
+Rails/FilePath:
+  Enabled: false
+
+Rails/EnvironmentVariableAccess:
+  Exclude:
+    - "Rakefile"
+    - "spec/**/*"
+
+Naming/FileName:
+  Exclude:
+    # Named after the gem so Bundler.require loads it.
+    - "lib/activerecord-mysql-rgeo.rb"

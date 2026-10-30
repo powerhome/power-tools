@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+require "bundler/gem_tasks"
+require "rspec/core/rake_task"
+require "rubocop/rake_task"
+
+namespace :spec do
+  %w[trilogy mysql2].each do |adapter|
+    desc "Run the specs against the #{adapter} adapter"
+    RSpec::Core::RakeTask.new(adapter) do
+      ENV["DB_ADAPTER"] = adapter
+    end
+  end
+end
+
+desc "Run the specs against every supported adapter"
+task spec: %w[spec:trilogy spec:mysql2]
+
+RuboCop::RakeTask.new
+
+task default: %i[spec rubocop]

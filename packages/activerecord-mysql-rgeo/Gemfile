@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gemspec
+
+# Both drivers are development-only: the specs run against each of them.
+gem "mysql2", "~> 0.5"
+gem "trilogy", "~> 2.9"
+
+gem "rake", "~> 13.0"
+gem "rspec", "~> 3.13"
+gem "rubocop-powerhome", path: "../rubocop-powerhome"
