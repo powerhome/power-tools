@@ -89,6 +89,12 @@ module ActiveRecord
                                "EWKT, WKB or EWKB that describes one."
         end
 
+        # schema.rb writes defaults as WKT. The generator formats coordinates
+        # the same way whichever factory built the geometry.
+        def type_cast_for_schema(value)
+          RGeo::WKRep::WKTGenerator.new(tag_format: :wkt11, convert_case: :upper).generate(value).inspect
+        end
+
       private
 
         def cast_to_column_srid(geometry)

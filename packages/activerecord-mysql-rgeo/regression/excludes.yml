@@ -48,3 +48,10 @@
   reason: >-
     Changed on purpose: checks that plain Rails gives spatial columns no type,
     while this gem gives them the :geometry type.
+
+- tests:
+    - "TrilogyAdapterTest#test_#native_database_types_answers_known_types"
+  adapters: [trilogy]
+  reason: >-
+    Changed on purpose: checks that native_database_types is exactly Rails'
+    list, while this gem adds the spatial types the schema dumper needs.

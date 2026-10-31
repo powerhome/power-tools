@@ -16,8 +16,10 @@ module ActiveRecord
     autoload :ColumnMethods
     autoload :GeometryParser
     autoload :Installer
+    autoload :NativeDatabaseTypes
     autoload :Quoting
     autoload :SchemaCreation
+    autoload :SchemaDumper
     autoload :SchemaStatements
     autoload :SpatialColumn
     autoload :SpatialColumnOptions

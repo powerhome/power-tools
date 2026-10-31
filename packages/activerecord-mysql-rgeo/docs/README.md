@@ -139,7 +139,28 @@ spatial columns, so `add_index` makes a nullable column `NOT NULL` first.
 `change_column`, `change_column_null` and `change_column_comment` keep a
 spatial column's type, SRID and markers.
 
+### schema.rb
+
+Spatial columns and indexes are dumped in activerecord-mysql2rgeo-adapter's
+format, and load back into the same table:
+
+```ruby
+create_table "places", force: :cascade do |t|
+  t.geometry "location", limit: {type: "st_point", srid: 3857}, null: false
+  t.geometry "coordinates", limit: {type: "st_point", srid: 4326, geographic: true}
+  t.geometry "origin", limit: {type: "st_point", srid: 3857}, default: "POINT (1.0 2.0)"
+  t.index ["location"], name: "index_places_on_location", using: :gist, type: :spatial
+end
+```
+
+Defaults are written as WKT.
+
 ## Migrating from activerecord-mysql2rgeo-adapter
+
+Tables created with activerecord-mysql2rgeo-adapter 9.1.0 and with this gem
+are the same, column for column, and a `schema.rb` dumped by one loads with the
+other. After switching gems, run `bin/rails db:schema:dump`; the only change
+should be in spatial defaults (see below).
 
 > This guide grows as features are ported. It lists every difference found so
 > far.
@@ -164,6 +185,14 @@ spatial column's type, SRID and markers.
 - **`change_column`, `change_column_null` and `change_column_comment` work on
   spatial columns.** In the upstream gem they generated invalid SQL unless
   given the spatial type and options again.
+- **`schema.rb` writes spatial defaults as WKT.** The upstream gem wrote
+  `default: #<RGeo::...>`, which Ruby reads as a comment, so the line swallowed
+  the next one, and it added the default's hex as the column `comment:`. A
+  `schema.rb` with spatial defaults dumped by the upstream gem doesn't load
+  correctly with either gem; dump it again after switching.
+- **`connection.indexes` reports spatial indexes as Rails does.** Their `type`
+  is `:spatial` and `using` is `nil`; the upstream gem reported
+  `using: :gist`. `schema.rb` still writes `using: :gist`.
 
 ## Development
 

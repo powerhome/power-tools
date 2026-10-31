@@ -12,3 +12,5 @@
 - Spatial migrations: column helpers (`t.st_point`, `t.geography`, ...), the
   `SRID` attribute, `geographic:`, `has_z:`, `has_m:` and `default:` kept in
   the column comment, and spatial indexes with `using: :gist`
+- `schema.rb` dumps spatial columns and indexes in activerecord-mysql2rgeo-adapter's
+  format, with spatial defaults as WKT, and loads them back into the same table

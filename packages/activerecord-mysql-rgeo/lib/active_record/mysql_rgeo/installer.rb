@@ -31,6 +31,7 @@ module ActiveRecord
           adapter.singleton_class.prepend(TypeMap)
           adapter.prepend(SchemaStatements)
           adapter.prepend(Quoting)
+          (NativeDatabaseTypes::CLASS_METHOD ? adapter.singleton_class : adapter).prepend(NativeDatabaseTypes)
           install_into_migrations
         end
 
@@ -40,6 +41,7 @@ module ActiveRecord
           mysql::TableDefinition.include(ColumnMethods)
           mysql::Table.include(ColumnMethods)
           mysql::SchemaCreation.prepend(SchemaCreation)
+          mysql::SchemaDumper.prepend(SchemaDumper)
         end
       end
     end
