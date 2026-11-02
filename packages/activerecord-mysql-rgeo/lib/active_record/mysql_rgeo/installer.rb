@@ -13,6 +13,7 @@ module ActiveRecord
         # the attribute API looks types up by.
         def install(adapter_class, adapter:)
           MUTEX.synchronize do
+            ConflictingGemError.check!
             install_into_abstract_mysql_adapter
             # Rails built this adapter's TYPE_MAP before running its load hook.
             TypeMap.register(adapter_class::TYPE_MAP) unless TypeMap.registered?(adapter_class::TYPE_MAP)
@@ -31,6 +32,7 @@ module ActiveRecord
           adapter.singleton_class.prepend(TypeMap)
           adapter.prepend(SchemaStatements)
           adapter.prepend(Quoting)
+          ConnectionAdapters::MySQL::Column.include(Column)
           (NativeDatabaseTypes::CLASS_METHOD ? adapter.singleton_class : adapter).prepend(NativeDatabaseTypes)
           install_into_migrations
           install_into_arel

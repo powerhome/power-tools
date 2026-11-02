@@ -21,3 +21,12 @@
 - Migration guide: switching from activerecord-mysql2rgeo-adapter means
   changing `adapter: mysql2rgeo` to `trilogy` or `mysql2` in `database.yml`;
   there is no `mysql2rgeo` adapter
+- Every MySQL column answers `spatial?`, as activerecord-mysql2rgeo-adapter's
+  columns did
+- `ActiveRecord::Type::Spatial` and
+  `ActiveRecord::ConnectionAdapters::Mysql2Rgeo::OID::Spatial` are deprecated
+  names of `ActiveRecord::MysqlRgeo::Type::Spatial`
+- `ActiveRecord::MysqlRgeo.deprecator`, registered in Rails applications'
+  deprecators
+- Raise `ActiveRecord::MysqlRgeo::ConflictingGemError` when
+  activerecord-mysql2rgeo-adapter is loaded too

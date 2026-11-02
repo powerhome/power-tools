@@ -13,8 +13,11 @@ module ActiveRecord
 
     autoload :ArelVisitor
     autoload :AttributeTypes
+    autoload :Column
     autoload :ColumnMetadata
     autoload :ColumnMethods
+    autoload :ConflictingGemError
+    autoload :DeprecatedConstants
     autoload :GeometryParser
     autoload :Installer
     autoload :NativeDatabaseTypes
@@ -34,7 +37,21 @@ module ActiveRecord
 
       autoload :Spatial
     end
+
+    # Warns about this gem's deprecated APIs. Rails applications list it in
+    # Rails.application.deprecators.
+    def self.deprecator
+      @deprecator ||= ActiveSupport::Deprecation.new("1.0", "activerecord-mysql-rgeo")
+    end
   end
+end
+
+ActiveSupport.on_load(:before_initialize) do
+  deprecators[:activerecord_mysql_rgeo] = ActiveRecord::MysqlRgeo.deprecator
+end
+ActiveSupport.on_load(:active_record) do
+  ActiveRecord::MysqlRgeo::ConflictingGemError.check!
+  ActiveRecord::MysqlRgeo::DeprecatedConstants.define
 end
 
 ActiveSupport.on_load(:active_record_trilogyadapter) do

@@ -68,7 +68,8 @@ markers in the column comment (`mysql2rgeo:geographic`, `mysql2rgeo:has_z`,
 attribute uses the column's SRID, and geographic columns use a geographic
 factory.
 
-Other columns are built exactly as Rails builds them.
+Other columns are built exactly as Rails builds them, and answer
+`spatial?` with `false`.
 
 ### Writing spatial values
 
@@ -194,6 +195,13 @@ end
 
 Defaults are written as WKT.
 
+### Deprecations
+
+Deprecation warnings go through `ActiveRecord::MysqlRgeo.deprecator`. In a
+Rails application it is registered in `Rails.application.deprecators`, so
+`config.active_support.deprecation` and the other deprecation settings apply
+to it.
+
 ## Migrating from activerecord-mysql2rgeo-adapter
 
 Tables created with activerecord-mysql2rgeo-adapter 9.1.0 and with this gem
@@ -207,6 +215,13 @@ other. To switch:
    there is no `mysql2rgeo` adapter.
 3. Run `bin/rails db:schema:dump`. The only change should be in spatial
    defaults (see below).
+4. If you keep a schema cache (`db/schema_cache.yml`), dump it again with
+   `bin/rails db:schema:cache:dump`, or delete it. A cache dumped by the
+   upstream gem names its column classes, so loading it fails with
+   "undefined class/module ActiveRecord::ConnectionAdapters::Mysql2Rgeo::".
+
+The two gems can't be loaded together: if activerecord-mysql2rgeo-adapter is
+still loaded, this gem raises `ActiveRecord::MysqlRgeo::ConflictingGemError`.
 
 > This guide grows as features are ported. It lists every difference found so
 > far.
@@ -214,8 +229,17 @@ other. To switch:
 - **`connection.adapter_name` is the driver's.** It returns `"Trilogy"` or
   `"Mysql2"` instead of `"Mysql2Rgeo"`. Update code that checks it.
 - **Non-spatial columns are plain `MySQL::Column`s.** The upstream gem built a
-  `SpatialColumn` for every column, so `column.spatial?` and `column.srid`
-  answered for any column. Check `column.type == :geometry` instead.
+  `SpatialColumn` for every column. Every column still answers `spatial?`, but
+  only spatial columns answer `srid`, `geographic?`, `has_z?`, `has_m?` and
+  `geometric_type`; check `column.spatial?` first.
+- **The spatial type is `ActiveRecord::MysqlRgeo::Type::Spatial`.**
+  `ActiveRecord::Type::Spatial` and
+  `ActiveRecord::ConnectionAdapters::Mysql2Rgeo::OID::Spatial` still work, with
+  a deprecation warning. The upstream gem's other classes were internal and
+  are gone: `ActiveRecord::ConnectionAdapters::Mysql2RgeoAdapter` (check
+  `connection.adapter_name`, or `is_a?(ActiveRecord::ConnectionAdapters::AbstractMysqlAdapter)`),
+  `Arel::Visitors::Mysql2Rgeo`, and the rest of
+  `ActiveRecord::ConnectionAdapters::Mysql2Rgeo`.
 - **`GEOMETRYCOLLECTION` columns are spatial.** MySQL 8 reports them as
   `geomcollection`, which the upstream gem didn't recognise, so their values
   loaded as binary strings. They now load as RGeo geometry collections.

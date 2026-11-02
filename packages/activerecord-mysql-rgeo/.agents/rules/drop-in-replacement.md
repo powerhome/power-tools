@@ -25,14 +25,16 @@ what changes for them, including upstream changes they never upgraded to
   options, and `add_index ..., using: :gist`.
 - **`schema.rb` output.** A schema dumped with the upstream gem must load with
   this one, and dumping again must produce the same file.
-- **Ruby API:** `ActiveRecord::Type::Spatial`, RGeo values on model attributes,
+- **Ruby API:** the spatial type, RGeo values on model attributes,
   WKT/WKB string assignment, Arel spatial nodes (`st_distance_sphere`, ...),
   `RGeo::ActiveRecord::SpatialFactoryStore` configuration.
-- **Public constants.** Keep the upstream names
-  (`ActiveRecord::ConnectionAdapters::Mysql2Rgeo::*`, `Arel::Visitors::Mysql2Rgeo`,
-  `ActiveRecord::ConnectionAdapters::Mysql2Rgeo::OID::Spatial`) available as
-  aliases of the new ones, and mark them for deprecation rather than removing
-  them.
+- **Constants that may be stored or referenced.** Keep an upstream constant
+  only if data refers to it or application code plausibly does:
+  `ActiveRecord::Type::Spatial` and
+  `ActiveRecord::ConnectionAdapters::Mysql2Rgeo::OID::Spatial` stay, as
+  deprecated aliases. Internal (`:nodoc:`) upstream classes are not kept. Files
+  that name upstream classes and can be regenerated, such as a schema cache,
+  are regenerated (a documented step in the migration guide).
 
 ## Allowed differences
 
