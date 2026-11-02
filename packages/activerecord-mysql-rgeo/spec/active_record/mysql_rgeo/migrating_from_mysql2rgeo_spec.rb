@@ -42,6 +42,41 @@ RSpec.describe "Migrating from activerecord-mysql2rgeo-adapter" do
     end
   end
 
+  describe "SRID 4326 rows written by upstream 7.2 and earlier" do
+    let(:place) do
+      Class.new(ActiveRecord::Base) do
+        self.table_name = "places"
+
+        def self.name = "Place"
+      end
+    end
+
+    before do
+      ActiveRecord::Base.with_connection do |connection|
+        connection.create_table(:places, force: true) { |t| t.st_point :coordinates, srid: 4326 }
+        # Upstream 7.2 sent longitude-first values without an axis order, so
+        # MySQL read them latitude first.
+        connection.execute("INSERT INTO places (coordinates) VALUES (ST_GeomFromText('POINT(10 20)', 4326))")
+      end
+    end
+
+    after do
+      ActiveRecord::Base.with_connection { |connection| connection.drop_table(:places, if_exists: true) }
+    end
+
+    it "reads them swapped, as upstream 7.2 did" do
+      expect(place.first.coordinates).to have_attributes(x: 20.0, y: 10.0)
+    end
+
+    it "reads them longitude first after the ST_SwapXY fix in the migration guide" do
+      ActiveRecord::Base.with_connection do |connection|
+        connection.execute("UPDATE places SET coordinates = ST_SwapXY(coordinates) WHERE coordinates IS NOT NULL")
+      end
+
+      expect(place.first.coordinates).to have_attributes(x: 10.0, y: 20.0)
+    end
+  end
+
   describe "deprecated constants" do
     let(:deprecations) { [] }
     let(:deprecator) { ActiveRecord::MysqlRgeo.deprecator }

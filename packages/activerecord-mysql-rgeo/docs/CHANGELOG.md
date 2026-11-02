@@ -32,3 +32,6 @@
   activerecord-mysql2rgeo-adapter is loaded too
 - The schema cache keeps spatial columns, including in Active Record 8.2's JSON
   format
+- Migration guide covers upgrading from every activerecord-mysql2rgeo-adapter
+  line, including fixing SRID 4326 rows that 7.2 and earlier stored latitude
+  first

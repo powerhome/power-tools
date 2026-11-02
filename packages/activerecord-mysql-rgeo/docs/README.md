@@ -1,24 +1,21 @@
-# activerecord-mysql-rgeo
+# activerecord-mysql-rgeo 🌍
 
-Spatial support for Active Record's built-in MySQL adapters, backed by
-[RGeo](https://github.com/rgeo/rgeo).
+Spatial columns for Rails' own MySQL adapters, powered by [RGeo](https://github.com/rgeo/rgeo).
 
-Unlike [activerecord-mysql2rgeo-adapter](https://github.com/stadia/activerecord-mysql2rgeo-adapter),
-this gem is not a separate database adapter. It extends the adapters that ship
-with Rails, so your application keeps `adapter: trilogy` or `adapter: mysql2`
-and gains spatial columns, migrations and queries on the same connection.
-
-> **Status:** under development. The spatial features are being ported from
-> activerecord-mysql2rgeo-adapter; this page lists what is available today.
+[activerecord-mysql2rgeo-adapter](https://github.com/stadia/activerecord-mysql2rgeo-adapter)
+is a whole database adapter: you switch to `adapter: mysql2rgeo` and you're
+tied to the mysql2 driver. This gem isn't an adapter. It teaches the adapters
+Rails already ships, `trilogy` and `mysql2`, to speak spatial. Keep your
+adapter, keep your connection, get points and polygons.
 
 ## Requirements
 
 - Ruby 3.3+
 - Active Record 7.2, 8.0, 8.1 or edge
-- MySQL 8.0 or 8.4 (MariaDB is not supported)
-- One MySQL driver: [trilogy](https://github.com/trilogy-libraries/trilogy) or
-  [mysql2](https://github.com/brianmario/mysql2). This gem depends on neither;
-  keep the one your application already uses.
+- MySQL 8.0 or 8.4 (not MariaDB)
+- [trilogy](https://github.com/trilogy-libraries/trilogy) or
+  [mysql2](https://github.com/brianmario/mysql2). Bring your own; this gem
+  depends on neither.
 
 ## Installation
 
@@ -28,14 +25,16 @@ gem "activerecord-mysql-rgeo"
 gem "trilogy" # or "mysql2"
 ```
 
+That's it. `database.yml` stays `adapter: trilogy` (or `mysql2`).
+
 ## Usage
 
-### Reading spatial columns
+### Reading
 
-Columns of MySQL's spatial types (`GEOMETRY`, `POINT`, `LINESTRING`, `POLYGON`,
-`MULTIPOINT`, `MULTILINESTRING`, `MULTIPOLYGON` and `GEOMETRYCOLLECTION`) load
-as RGeo geometries. Each value keeps the SRID it was stored with, and is built
-by the factory `RGeo::ActiveRecord::SpatialFactoryStore` picks for the column:
+Spatial columns (`GEOMETRY`, `POINT`, `LINESTRING`, `POLYGON`, `MULTIPOINT`,
+`MULTILINESTRING`, `MULTIPOLYGON`, `GEOMETRYCOLLECTION`) load as RGeo
+geometries, built by `RGeo::ActiveRecord::SpatialFactoryStore` (geographic
+columns get a geographic factory):
 
 ```ruby
 place = Place.find(1)
@@ -43,60 +42,74 @@ place.location       # => #<RGeo::Geos::CAPIPointImpl "POINT (-122.0 47.0)">
 place.location.srid  # => 4326
 ```
 
-SRID 4326 values are read longitude first, the order MySQL stores them in.
-
-### Spatial column details
-
-Spatial columns are `ActiveRecord::MysqlRgeo::SpatialColumn`s. Besides the
-usual column API, they report the column's geometric type, its SRID (from the
-column's `SRID` attribute, 0 when it has none) and whether it is geographic or
-has Z or M coordinates:
+Spatial columns know a few more things than regular ones:
 
 ```ruby
 column = Place.columns_hash["location"]
+column.spatial?        # => true (false on every other column)
 column.sql_type        # => "geometry(Point,3857)"
 column.geometric_type  # => RGeo::Feature::Point
-column.srid            # => 3857
+column.srid            # => 3857 (0 without an SRID attribute)
 column.geographic?     # => false
+column.has_z?          # => false
+column.has_m?          # => false
 column.limit           # => { type: "st_point", srid: 3857 }
 ```
 
-MySQL has no column attribute for "geographic", Z or M, so these are kept as
-markers in the column comment (`mysql2rgeo:geographic`, `mysql2rgeo:has_z`,
-`mysql2rgeo:has_m`), the format activerecord-mysql2rgeo-adapter writes.
-`column.comment` returns the comment without them. Assigning WKT to an
-attribute uses the column's SRID, and geographic columns use a geographic
-factory.
+### Writing
 
-Other columns are built exactly as Rails builds them, and answer
-`spatial?` with `false`.
-
-The schema cache (`bin/rails db:schema:cache:dump`) keeps spatial columns in
-every format Active Record writes: YAML, Marshal, and JSON on Active Record
-8.2.
-
-### Writing spatial values
-
-Assign an RGeo geometry, or WKT, EWKT, WKB or EWKB, and save:
+Assign an RGeo geometry, WKT, EWKT, WKB or EWKB:
 
 ```ruby
 place.location = "POINT(-122 47)"
 place.location = RGeo::Geographic.spherical_factory(srid: 4326).point(-122, 47)
 place.save!
-Place.where(location: place.location)
 ```
 
-Values are written as `ST_GeomFromText(wkt, srid)`, with longitude first for
-SRID 4326. A column with SRID 0 takes geometries of any SRID and stores them
-with SRID 0. Text that is not a geometry is saved as `NULL`; any other value
-that is not a geometry raises `ArgumentError`.
+- WKT without an SRID takes the column's.
+- SRID 4326 is longitude first, like WKT.
+- SRID 0 columns take geometries of any SRID and store them as SRID 0.
+- Text that isn't a geometry saves `NULL`. Anything else that isn't a geometry
+  raises `ArgumentError`.
 
-### Spatial attribute types
+### Queries
 
-The attribute API knows `:st_point`, `:st_polygon`, `:line_string`,
-`:multi_point`, `:multi_line_string` and `:multi_polygon`, with the `srid:`,
-`geographic:`, `has_z:` and `has_m:` options. Use them for virtual attributes
-or for spatial columns selected under another name:
+Exact matches:
+
+```ruby
+Place.where(location: factory.point(-122, 47))
+Place.where(location: "SRID=3857;POINT(-122 47)")
+```
+
+Spatial functions, from [rgeo-activerecord](https://github.com/rgeo/rgeo-activerecord)
+(`st_distance`, `st_contains`, `st_within`, `st_intersects`, `st_length`, ...)
+plus `st_distance_sphere` from this gem:
+
+```ruby
+places = Place.arel_table
+
+Place.where(places[:area].st_contains(factory.point(-122, 47)))
+Place.where(places[:location].st_distance("SRID=3857;POINT(-122 47)").lt(100))
+Place.where(places[:coordinates].st_distance_sphere(point).lt(500))      # meters
+Place.where(places[:coordinates].st_distance_sphere(point, 1).lt(0.01))  # custom radius
+Place.where(Arel.spatial(point).st_distance_sphere(places[:coordinates]).lt(500))
+```
+
+Arguments can be geometries, bounding boxes, WKT, EWKT, attributes or other
+spatial functions. Geometries work in SQL fragments too:
+
+```ruby
+Place.where("ST_Distance_Sphere(coordinates, ?) < 500", point)
+```
+
+Strings are WKT only as spatial function arguments. Anywhere else in Arel,
+wrap them: `Arel.spatial("POINT(1 2)")`.
+
+### Attribute types
+
+`:st_point`, `:st_polygon`, `:line_string`, `:multi_point`,
+`:multi_line_string` and `:multi_polygon`, with `srid:`, `geographic:`,
+`has_z:` and `has_m:`. Handy for virtual attributes and computed columns:
 
 ```ruby
 class Place < ApplicationRecord
@@ -106,46 +119,7 @@ end
 Place.select("ST_Centroid(area) AS center").first.center
 ```
 
-They are registered for the `trilogy` and `mysql2` adapters only.
-
-### Queries
-
-`where` takes geometries, WKT and EWKT, and finds the records whose value is
-exactly the same:
-
-```ruby
-Place.where(location: factory.point(-122, 47))
-Place.where(location: "SRID=3857;POINT(-122 47)")
-```
-
-To ask spatial questions, such as which points are within an area, use the
-spatial functions [rgeo-activerecord](https://github.com/rgeo/rgeo-activerecord)
-adds to Arel attributes (`st_distance`, `st_contains`, `st_within`,
-`st_intersects`, `st_length` and others), and `st_distance_sphere`, which this
-gem adds for MySQL's `ST_Distance_Sphere`:
-
-```ruby
-places = Place.arel_table
-
-Place.where(places[:area].st_contains(factory.point(-122, 47)))
-Place.where(places[:location].st_distance("SRID=3857;POINT(-122 47)").lt(100))
-Place.where(places[:coordinates].st_distance_sphere(point).lt(500)) # meters
-Place.where(Arel.spatial(point).st_distance_sphere(places[:coordinates]).lt(500))
-```
-
-Their arguments can be geometries, bounding boxes
-(`RGeo::Cartesian::BoundingBox`), WKT or EWKT, other spatial functions and
-attributes. Geometries keep their SRID, and SRID 4326 values are sent longitude
-first. `st_distance_sphere` takes the sphere's radius as an optional second
-argument. In SQL fragments, geometries are quoted the same way:
-
-```ruby
-Place.where("ST_Distance_Sphere(coordinates, ?) < 500", point)
-```
-
-A string is only read as WKT when it is a spatial function's argument.
-Anywhere else in Arel, such as in an `Arel::Nodes::NamedFunction`, Arel rejects
-it; pass a geometry or wrap the WKT in `Arel.spatial` instead.
+Registered for `trilogy` and `mysql2` only.
 
 ### Migrations
 
@@ -162,31 +136,24 @@ add_column :places, :entrance, :st_point, srid: 3857
 add_index :places, :entrance, using: :gist
 ```
 
-Column helpers: `geometry`, `geography`, `point` / `st_point`,
-`polygon` / `st_polygon`, `line_string`, `multi_point`, `multi_line_string`,
-`multi_polygon`, `geometry_collection` and `spatial` (with `type:`). The same
-names work with `t.column` and `add_column`. Options:
+Helpers: `geometry`, `geography`, `point` / `st_point`, `polygon` /
+`st_polygon`, `line_string`, `multi_point`, `multi_line_string`,
+`multi_polygon`, `geometry_collection` and `spatial` (with `type:`). They work
+with `t.column` and `add_column` too.
 
-- `srid:` sets the column's `SRID` attribute. Without it, columns get SRID 0,
-  and geographic columns SRID 4326.
-- `geographic:`, `has_z:` and `has_m:` are kept as markers in the column
-  comment (see [Spatial column details](#spatial-column-details)).
-- `limit:` also takes these options as a hash, the way `schema.rb` writes them:
-  `t.geometry :location, limit: { srid: 4326, type: "st_point", geographic: true }`.
-- `default:` takes WKT or an RGeo geometry. MySQL can't give spatial columns a
-  literal default, so it is kept in the column comment and Active Record
-  applies it to new models. It is saved with new records only when partial
-  inserts are off, as they are in applications on Rails 7.0 defaults or later.
+| Option | Does |
+|---|---|
+| `srid:` | Sets the column's `SRID`. Default: 0, or 4326 for geographic columns. |
+| `geographic:`, `has_z:`, `has_m:` | Stored as markers in the column comment (`mysql2rgeo:geographic`, ...). `column.comment` hides them. |
+| `default:` | WKT or a geometry. Stored in the column comment, applied to new records. Saved only with partial inserts off (the default since Rails 7.0). |
+| `limit:` | The options above as a hash, the way `schema.rb` writes them. |
 
-`using: :gist` creates a `SPATIAL INDEX`. MySQL only indexes `NOT NULL`
-spatial columns, so `add_index` makes a nullable column `NOT NULL` first.
-`change_column`, `change_column_null` and `change_column_comment` keep a
-spatial column's type, SRID and markers.
+- `using: :gist` makes a `SPATIAL INDEX`. MySQL needs `NOT NULL` for those, so
+  `add_index` sets it.
+- `change_column`, `change_column_null` and `change_column_comment` keep the
+  column's spatial type, SRID and markers.
 
 ### schema.rb
-
-Spatial columns and indexes are dumped in activerecord-mysql2rgeo-adapter's
-format, and load back into the same table:
 
 ```ruby
 create_table "places", force: :cascade do |t|
@@ -197,121 +164,130 @@ create_table "places", force: :cascade do |t|
 end
 ```
 
-Defaults are written as WKT.
+Same format as activerecord-mysql2rgeo-adapter. The schema cache keeps spatial
+columns too, in YAML, Marshal and (Active Record 8.2) JSON.
 
 ### Deprecations
 
-Deprecation warnings go through `ActiveRecord::MysqlRgeo.deprecator`. In a
-Rails application it is registered in `Rails.application.deprecators`, so
-`config.active_support.deprecation` and the other deprecation settings apply
-to it.
+Warnings go through `ActiveRecord::MysqlRgeo.deprecator`, which Rails apps
+register in `Rails.application.deprecators`.
 
 ## Migrating from activerecord-mysql2rgeo-adapter
 
-Tables created with activerecord-mysql2rgeo-adapter 9.1.0 and with this gem
-are the same, column for column, and a `schema.rb` dumped by one loads with the
-other. To switch:
+Your data stays put: same columns, same comment markers, same `schema.rb`.
 
-1. Replace `activerecord-mysql2rgeo-adapter` with `activerecord-mysql-rgeo` in
-   your Gemfile, and add a driver: `trilogy` (recommended) or `mysql2`.
-2. In `database.yml` (and any `DATABASE_URL`), change `adapter: mysql2rgeo` to
-   `adapter: trilogy` or `adapter: mysql2`. This gem is not an adapter, so
-   there is no `mysql2rgeo` adapter.
-3. Run `bin/rails db:schema:dump`. The only change should be in spatial
-   defaults (see below).
-4. If you keep a schema cache (`db/schema_cache.yml`), dump it again with
-   `bin/rails db:schema:cache:dump`, or delete it. A cache dumped by the
-   upstream gem names its column classes, so loading it fails with
-   "undefined class/module ActiveRecord::ConnectionAdapters::Mysql2Rgeo::".
+1. Gemfile: swap `activerecord-mysql2rgeo-adapter` for `activerecord-mysql-rgeo`,
+   and add `trilogy` (recommended) or `mysql2`.
+2. `database.yml` and `DATABASE_URL`: change `adapter: mysql2rgeo` to
+   `trilogy` or `mysql2`.
+3. Run `bin/rails db:schema:dump` and commit the diff.
+4. Have a `db/schema_cache.yml`? Run `bin/rails db:schema:cache:dump`, or
+   delete it. The old one fails to load with "undefined class/module
+   ActiveRecord::ConnectionAdapters::Mysql2Rgeo::".
 
-The two gems can't be loaded together: if activerecord-mysql2rgeo-adapter is
-still loaded, this gem raises `ActiveRecord::MysqlRgeo::ConflictingGemError`.
+Then check the list for your version. Loading both gems raises
+`ActiveRecord::MysqlRgeo::ConflictingGemError`.
 
-> This guide grows as features are ported. It lists every difference found so
-> far.
+### Every version
 
-- **`connection.adapter_name` is the driver's.** It returns `"Trilogy"` or
-  `"Mysql2"` instead of `"Mysql2Rgeo"`. Update code that checks it.
-- **Non-spatial columns are plain `MySQL::Column`s.** The upstream gem built a
-  `SpatialColumn` for every column. Every column still answers `spatial?`, but
-  only spatial columns answer `srid`, `geographic?`, `has_z?`, `has_m?` and
-  `geometric_type`; check `column.spatial?` first.
-- **The spatial type is `ActiveRecord::MysqlRgeo::Type::Spatial`.**
+- `connection.adapter_name` is `"Trilogy"` or `"Mysql2"`, not `"Mysql2Rgeo"`.
+- Non-spatial columns are plain `ActiveRecord::ConnectionAdapters::MySQL::Column`s.
+  They answer `spatial?` (`false`), but not `srid`, `geographic?`, `has_z?`,
+  `has_m?` or `geometric_type`.
+- The spatial type is `ActiveRecord::MysqlRgeo::Type::Spatial`.
   `ActiveRecord::Type::Spatial` and
   `ActiveRecord::ConnectionAdapters::Mysql2Rgeo::OID::Spatial` still work, with
-  a deprecation warning. The upstream gem's other classes were internal and
-  are gone: `ActiveRecord::ConnectionAdapters::Mysql2RgeoAdapter` (check
-  `connection.adapter_name`, or `is_a?(ActiveRecord::ConnectionAdapters::AbstractMysqlAdapter)`),
-  `Arel::Visitors::Mysql2Rgeo`, and the rest of
+  a deprecation warning.
+- Gone: `ActiveRecord::ConnectionAdapters::Mysql2RgeoAdapter` (check
+  `adapter_name`, or `is_a?(ActiveRecord::ConnectionAdapters::AbstractMysqlAdapter)`),
+  `Arel::Visitors::Mysql2Rgeo` and the rest of
   `ActiveRecord::ConnectionAdapters::Mysql2Rgeo`.
-- **`GEOMETRYCOLLECTION` columns are spatial.** MySQL 8 reports them as
-  `geomcollection`, which the upstream gem didn't recognise, so their values
-  loaded as binary strings. They now load as RGeo geometry collections.
-- **Comments of columns with spatial defaults no longer show stray hex.** The
-  upstream gem left the hex of the default's marker in `column.comment`.
-- **Writing a value that is not a geometry raises `ArgumentError`.** The
-  upstream gem raised a `RuntimeError` ("maybe should raise").
-- **Spatial attribute types are registered per adapter.** The upstream gem
-  registered `:st_point` and the others for every adapter; this gem registers
-  them for `trilogy` and `mysql2`, so they don't clash with another spatial
-  adapter, such as PostGIS, in the same application.
-- **`t.column :name, :geography` works.** The upstream gem created a
-  `GEOGRAPHY` column, which MySQL doesn't have; this gem creates a geographic
-  `GEOMETRY` column, as `t.geography` does.
-- **`change_column`, `change_column_null` and `change_column_comment` work on
-  spatial columns.** In the upstream gem they generated invalid SQL unless
-  given the spatial type and options again.
-- **`schema.rb` writes spatial defaults as WKT.** The upstream gem wrote
-  `default: #<RGeo::...>`, which Ruby reads as a comment, so the line swallowed
-  the next one, and it added the default's hex as the column `comment:`. A
-  `schema.rb` with spatial defaults dumped by the upstream gem doesn't load
-  correctly with either gem; dump it again after switching.
-- **`connection.indexes` reports spatial indexes as Rails does.** Their `type`
-  is `:spatial` and `using` is `nil`; the upstream gem reported
-  `using: :gist`. `schema.rb` still writes `using: :gist`.
-- **`st_distance_sphere` takes a radius.** In the upstream gem 9.x, passing
-  the second argument raised `Arel::Visitors::UnsupportedVisitError`.
-- **Coming from an upstream version before 9.0: strings in Arel nodes are not
-  WKT.** Upstream 9.0 stopped reading a string as WKT outside spatial function
-  arguments, and this gem does the same: a string in an
-  `Arel::Nodes::NamedFunction` raises `Arel::Visitors::UnsupportedVisitError`.
-  Pass an RGeo geometry or wrap the WKT in `Arel.spatial`.
+- Writing something that isn't a geometry raises `ArgumentError`, not
+  `RuntimeError`.
+- Spatial attribute types (`:st_point`, ...) exist for `trilogy` and `mysql2`
+  only, so they don't clash with PostGIS in the same app.
+- `connection.indexes` reports spatial indexes as Rails does: `type: :spatial`,
+  `using: nil`. `schema.rb` still writes `using: :gist`.
+
+Fixed along the way:
+
+- `GEOMETRYCOLLECTION` columns load as geometries, not binary strings.
+- `column.comment` no longer shows the hex of a spatial default.
+- `t.column :name, :geography` makes a geographic `GEOMETRY` column, like
+  `t.geography`.
+- `change_column`, `change_column_null` and `change_column_comment` work on
+  spatial columns without repeating the spatial options.
+- `schema.rb` writes spatial defaults as WKT. The old gem wrote them as
+  `#<RGeo::...>`, which broke the file. Step 3 fixes it.
+- `st_distance_sphere(point, radius)` works. The old gem raised
+  `Arel::Visitors::UnsupportedVisitError`.
+
+### Coming from 8.x or earlier
+
+- Strings in Arel nodes aren't WKT any more (the old gem changed this in 9.0):
+  `Arel::Nodes::NamedFunction.new("ST_IsValid", ["POINT(1 2)"])` raises
+  `Arel::Visitors::UnsupportedVisitError`. Pass a geometry, or
+  `Arel.spatial("POINT(1 2)")`.
+
+### Coming from 7.2 or earlier
+
+Everything in the 8.x list, plus:
+
+- **SRID 4326 values were stored swapped**, latitude first, and longitudes
+  beyond ±90 raised errors. This gem stores them longitude first. Old rows read
+  back exactly as before, swapped. Fix them once, when you switch:
+
+  ```sql
+  UPDATE places SET coordinates = ST_SwapXY(coordinates) WHERE coordinates IS NOT NULL;
+  ```
+
+- `geographic:`, `has_z:`, `has_m:` and spatial `default:` now stick: they're
+  stored in the column comment. Columns you already have read the same as
+  before (not geographic, no Z or M). To mark one:
+
+  ```ruby
+  change_column :places, :coordinates, :st_point, srid: 4326, geographic: true
+  ```
+
+- `geographic: true` gives SRID 4326 unless you pass `srid:`. It used to give 0.
+- New columns always get an `SRID` attribute, `SRID 0` included, so MySQL
+  rejects values with another SRID in them. That includes tables created by
+  `db:schema:load`. Existing columns don't change.
+- `add_index ..., using: :gist` works and makes a `SPATIAL INDEX`.
+  `type: :spatial` still works too.
+- The `schema.rb` diff from step 3 includes `type: "st_point"` (was `"point"`),
+  `type: "st_polygon"` (was `"polygon"`) and `using: :gist` on spatial indexes.
 
 ## Development
 
-The specs need a MySQL server. By default they connect to `root:root@127.0.0.1:3306`,
-which matches the MySQL server preinstalled on GitHub's Ubuntu runners. Override
-it with `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD` and
-`MYSQL_DATABASE`. For example, with Docker:
+The specs need MySQL. They connect to `root:root@127.0.0.1:3306` (what
+GitHub's Ubuntu runners have) unless you set `MYSQL_HOST`, `MYSQL_PORT`,
+`MYSQL_USER`, `MYSQL_PASSWORD` or `MYSQL_DATABASE`. With Docker:
 
 ```sh
 docker run -d --name activerecord-mysql-rgeo-mysql -p 3307:3306 -e MYSQL_ROOT_PASSWORD=root mysql:8.0
 MYSQL_PORT=3307 bundle exec rake
 ```
 
-`bundle exec rake` runs the whole build:
+`bundle exec rake` runs everything:
 
-- `rake spec`: the gem's own specs, once per driver (`spec:trilogy`, `spec:mysql2`).
-- `rake regression`: Active Record's own test suite, once per driver
-  (`regression:trilogy`, `regression:mysql2`), with this gem loaded. It shows
-  the gem leaves non-spatial behaviour exactly as Rails ships it. The tests are
-  checked out from the Rails repository into `tmp/rails/` at the tag matching
-  the bundled Active Record. Some of those tests set legacy time zone names
-  such as `US/Eastern`; on Debian and Ubuntu, install `tzdata-legacy`.
+- `rake spec`: this gem's specs, on trilogy and on mysql2.
+- `rake regression`: Active Record's own test suite with this gem loaded, on
+  both drivers. It's checked out into `tmp/rails/` at the bundled Active
+  Record's version. Some tests need legacy time zones; on Debian and Ubuntu,
+  install `tzdata-legacy`.
 - RuboCop.
 
-`regression/excludes.yml` lists the Active Record tests that are skipped, with
-the reason for each. It holds two kinds of tests: tests that also fail without
-this gem, and tests that check how plain Rails treats spatial columns, which
-this gem changes on purpose. Run the suite with `REGRESSION_BASELINE=1` to see
-which tests fail without the gem:
+`regression/excludes.yml` lists the skipped Active Record tests and why: either
+they fail without this gem too, or they check how plain Rails treats spatial
+columns, which this gem changes on purpose. See what fails without the gem:
 
 ```sh
 REGRESSION_BASELINE=1 MYSQL_PORT=3307 bundle exec rake regression:trilogy
 ```
 
-Each supported Active Record version has an [Appraisal](https://github.com/thoughtbot/appraisal)
-gemfile under `gemfiles/`. To run the build against one of them:
+Run the build on one Active Record version with
+[Appraisal](https://github.com/thoughtbot/appraisal):
 
 ```sh
 bundle exec appraisal rails-7-2 rake
@@ -319,5 +295,5 @@ bundle exec appraisal rails-7-2 rake
 
 ## License
 
-BSD-3-Clause. Portions are derived from activerecord-mysql2rgeo-adapter; see
+BSD-3-Clause. Parts come from activerecord-mysql2rgeo-adapter; see
 [LICENSE.txt](../LICENSE.txt).

@@ -11,6 +11,19 @@ examples must make sense to anyone using it:
   (see `drop-in-replacement.md`), not one application's setup. App-specific
   rollout plans belong in that application's repository.
 
+## Style
+
+The README is simple, fun and direct. Short and complete beats thorough and
+long.
+
+- Say what to do and what changes. Don't explain why the code works the way it
+  does; comments and commit messages are the place for that.
+- Contrasting this gem's approach with activerecord-mysql2rgeo-adapter's is
+  welcome.
+- Migration steps and differences: one direct line each, nothing lost. Group
+  differences by the upstream version they affect.
+- Prefer examples, lists and tables over paragraphs.
+
 ## Keep the docs current in the same commit
 
 - `docs/README.md` is the user guide: requirements, installation, usage,
