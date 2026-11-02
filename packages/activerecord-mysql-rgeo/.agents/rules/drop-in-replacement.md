@@ -1,8 +1,8 @@
 # Drop-in replacement for activerecord-mysql2rgeo-adapter
 
 Applications must be able to swap `activerecord-mysql2rgeo-adapter` for this gem
-by changing the Gemfile, without data migrations and with no or minimal code
-changes. Upstream reference: https://github.com/stadia/activerecord-mysql2rgeo-adapter.
+by changing the Gemfile and configuration (`database.yml`), without data
+migrations and with no or minimal code changes. Upstream reference: https://github.com/stadia/activerecord-mysql2rgeo-adapter.
 
 Behaviour matches the latest upstream release (9.1.0). Apps may come from any
 upstream line, so the migration guide is organised by the upstream version
@@ -19,8 +19,6 @@ what changes for them, including upstream changes they never upgraded to
   spatial index DDL, and how geometries are encoded (WKT/WKB, SRID 4326 axis
   order). Existing databases must read back exactly as before, and new writes
   must be readable by the upstream gem.
-- **`adapter: mysql2rgeo` keeps working.** It is registered as an alias of
-  Rails' `Mysql2Adapter`. Document `trilogy` as the recommended replacement.
 - **Migration DSL:** `t.geometry`, `t.geography`, `t.st_point`, `t.point`,
   `t.line_string`, `t.polygon`, `t.multi_*`, `t.geometry_collection`,
   `t.spatial type: ...`, the `srid:`, `geographic:`, `has_z:`, `has_m:`
@@ -40,7 +38,10 @@ what changes for them, including upstream changes they never upgraded to
 
 Only differences that come from no longer being a separate adapter, such as
 `connection.adapter_name` returning `"Trilogy"` / `"Mysql2"` instead of
-`"Mysql2Rgeo"`. Each one must be:
+`"Mysql2Rgeo"`, and `adapter: mysql2rgeo` in `database.yml` becoming
+`adapter: trilogy` (recommended) or `adapter: mysql2`. There is no
+`mysql2rgeo` adapter: configuration changes are fine, deep code changes are
+not. Each one must be:
 
 - listed in the README's "Migrating from activerecord-mysql2rgeo-adapter"
   section, with what to do about it;

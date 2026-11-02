@@ -198,12 +198,21 @@ Defaults are written as WKT.
 
 Tables created with activerecord-mysql2rgeo-adapter 9.1.0 and with this gem
 are the same, column for column, and a `schema.rb` dumped by one loads with the
-other. After switching gems, run `bin/rails db:schema:dump`; the only change
-should be in spatial defaults (see below).
+other. To switch:
+
+1. Replace `activerecord-mysql2rgeo-adapter` with `activerecord-mysql-rgeo` in
+   your Gemfile, and add a driver: `trilogy` (recommended) or `mysql2`.
+2. In `database.yml` (and any `DATABASE_URL`), change `adapter: mysql2rgeo` to
+   `adapter: trilogy` or `adapter: mysql2`. This gem is not an adapter, so
+   there is no `mysql2rgeo` adapter.
+3. Run `bin/rails db:schema:dump`. The only change should be in spatial
+   defaults (see below).
 
 > This guide grows as features are ported. It lists every difference found so
 > far.
 
+- **`connection.adapter_name` is the driver's.** It returns `"Trilogy"` or
+  `"Mysql2"` instead of `"Mysql2Rgeo"`. Update code that checks it.
 - **Non-spatial columns are plain `MySQL::Column`s.** The upstream gem built a
   `SpatialColumn` for every column, so `column.spatial?` and `column.srid`
   answered for any column. Check `column.type == :geometry` instead.

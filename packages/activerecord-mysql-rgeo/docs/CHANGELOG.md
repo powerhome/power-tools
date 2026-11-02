@@ -18,3 +18,6 @@
   `st_contains`, ...) take geometries, bounding boxes, WKT and EWKT on MySQL,
   with SRID 4326 values sent longitude first, and `st_distance_sphere` (with an
   optional radius) calls `ST_Distance_Sphere`
+- Migration guide: switching from activerecord-mysql2rgeo-adapter means
+  changing `adapter: mysql2rgeo` to `trilogy` or `mysql2` in `database.yml`;
+  there is no `mysql2rgeo` adapter
