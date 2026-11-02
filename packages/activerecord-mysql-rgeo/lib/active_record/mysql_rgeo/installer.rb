@@ -36,6 +36,7 @@ module ActiveRecord
           (NativeDatabaseTypes::CLASS_METHOD ? adapter.singleton_class : adapter).prepend(NativeDatabaseTypes)
           install_into_migrations
           install_into_arel
+          JsonSchemaCache.register
         end
 
         def install_into_arel

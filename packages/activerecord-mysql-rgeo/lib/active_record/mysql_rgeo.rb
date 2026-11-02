@@ -20,6 +20,7 @@ module ActiveRecord
     autoload :DeprecatedConstants
     autoload :GeometryParser
     autoload :Installer
+    autoload :JsonSchemaCache
     autoload :NativeDatabaseTypes
     autoload :Quoting
     autoload :SchemaCreation

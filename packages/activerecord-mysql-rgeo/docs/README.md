@@ -71,6 +71,10 @@ factory.
 Other columns are built exactly as Rails builds them, and answer
 `spatial?` with `false`.
 
+The schema cache (`bin/rails db:schema:cache:dump`) keeps spatial columns in
+every format Active Record writes: YAML, Marshal, and JSON on Active Record
+8.2.
+
 ### Writing spatial values
 
 Assign an RGeo geometry, or WKT, EWKT, WKB or EWKB, and save:

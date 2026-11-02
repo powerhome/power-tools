@@ -95,6 +95,18 @@ module ActiveRecord
           RGeo::WKRep::WKTGenerator.new(tag_format: :wkt11, convert_case: :upper).generate(value).inspect
         end
 
+        # What Active Record's JSON schema cache keeps of this type.
+        SCHEMA_JSON_ATTRIBUTES = %w[sql_type geo_type srid has_z has_m geographic].freeze
+
+        def as_schema_json # :nodoc:
+          SCHEMA_JSON_ATTRIBUTES.index_with { |name| instance_variable_get(:"@#{name}") }
+        end
+
+        def init_from_schema_json(coder, _references) # :nodoc:
+          SCHEMA_JSON_ATTRIBUTES.each { |name| instance_variable_set(:"@#{name}", coder[name]) }
+          freeze
+        end
+
       private
 
         def cast_to_column_srid(geometry)

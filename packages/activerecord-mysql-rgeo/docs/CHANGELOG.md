@@ -30,3 +30,5 @@
   deprecators
 - Raise `ActiveRecord::MysqlRgeo::ConflictingGemError` when
   activerecord-mysql2rgeo-adapter is loaded too
+- The schema cache keeps spatial columns, including in Active Record 8.2's JSON
+  format
