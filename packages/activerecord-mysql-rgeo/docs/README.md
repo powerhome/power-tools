@@ -103,6 +103,45 @@ Place.select("ST_Centroid(area) AS center").first.center
 
 They are registered for the `trilogy` and `mysql2` adapters only.
 
+### Queries
+
+`where` takes geometries, WKT and EWKT, and finds the records whose value is
+exactly the same:
+
+```ruby
+Place.where(location: factory.point(-122, 47))
+Place.where(location: "SRID=3857;POINT(-122 47)")
+```
+
+To ask spatial questions, such as which points are within an area, use the
+spatial functions [rgeo-activerecord](https://github.com/rgeo/rgeo-activerecord)
+adds to Arel attributes (`st_distance`, `st_contains`, `st_within`,
+`st_intersects`, `st_length` and others), and `st_distance_sphere`, which this
+gem adds for MySQL's `ST_Distance_Sphere`:
+
+```ruby
+places = Place.arel_table
+
+Place.where(places[:area].st_contains(factory.point(-122, 47)))
+Place.where(places[:location].st_distance("SRID=3857;POINT(-122 47)").lt(100))
+Place.where(places[:coordinates].st_distance_sphere(point).lt(500)) # meters
+Place.where(Arel.spatial(point).st_distance_sphere(places[:coordinates]).lt(500))
+```
+
+Their arguments can be geometries, bounding boxes
+(`RGeo::Cartesian::BoundingBox`), WKT or EWKT, other spatial functions and
+attributes. Geometries keep their SRID, and SRID 4326 values are sent longitude
+first. `st_distance_sphere` takes the sphere's radius as an optional second
+argument. In SQL fragments, geometries are quoted the same way:
+
+```ruby
+Place.where("ST_Distance_Sphere(coordinates, ?) < 500", point)
+```
+
+A string is only read as WKT when it is a spatial function's argument.
+Anywhere else in Arel, such as in an `Arel::Nodes::NamedFunction`, Arel rejects
+it; pass a geometry or wrap the WKT in `Arel.spatial` instead.
+
 ### Migrations
 
 ```ruby
@@ -193,6 +232,13 @@ should be in spatial defaults (see below).
 - **`connection.indexes` reports spatial indexes as Rails does.** Their `type`
   is `:spatial` and `using` is `nil`; the upstream gem reported
   `using: :gist`. `schema.rb` still writes `using: :gist`.
+- **`st_distance_sphere` takes a radius.** In the upstream gem 9.x, passing
+  the second argument raised `Arel::Visitors::UnsupportedVisitError`.
+- **Coming from an upstream version before 9.0: strings in Arel nodes are not
+  WKT.** Upstream 9.0 stopped reading a string as WKT outside spatial function
+  arguments, and this gem does the same: a string in an
+  `Arel::Nodes::NamedFunction` raises `Arel::Visitors::UnsupportedVisitError`.
+  Pass an RGeo geometry or wrap the WKT in `Arel.spatial`.
 
 ## Development
 

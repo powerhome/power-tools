@@ -14,3 +14,7 @@
   the column comment, and spatial indexes with `using: :gist`
 - `schema.rb` dumps spatial columns and indexes in activerecord-mysql2rgeo-adapter's
   format, with spatial defaults as WKT, and loads them back into the same table
+- Spatial queries: rgeo-activerecord's Arel spatial functions (`st_distance`,
+  `st_contains`, ...) take geometries, bounding boxes, WKT and EWKT on MySQL,
+  with SRID 4326 values sent longitude first, and `st_distance_sphere` (with an
+  optional radius) calls `ST_Distance_Sphere`

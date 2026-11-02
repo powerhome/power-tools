@@ -11,6 +11,7 @@ module ActiveRecord
   module MysqlRgeo
     extend ActiveSupport::Autoload
 
+    autoload :ArelVisitor
     autoload :AttributeTypes
     autoload :ColumnMetadata
     autoload :ColumnMethods
@@ -24,6 +25,7 @@ module ActiveRecord
     autoload :SpatialColumn
     autoload :SpatialColumnOptions
     autoload :SpatialDefault
+    autoload :SpatialExpressions
     autoload :TableDefinition
     autoload :TypeMap
 

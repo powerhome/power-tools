@@ -7,6 +7,18 @@ module ActiveRecord
     class GeometryParser # :nodoc:
       SRID_PARAMETER = /(?:srid|SRID)=\d*/
 
+      # "SRID=4326;POINT(1 2)" => ["POINT(1 2)", 4326], and SRID 0 for plain
+      # WKT. Like the upstream gem, only the first and last parts are read,
+      # and the last one wins.
+      def self.split_srid(string)
+        return [string, 0] unless string.include?(";")
+
+        srid_parts, wkt_parts = string.split(";").values_at(0, -1).partition do |part|
+          part.match?(SRID_PARAMETER)
+        end
+        [wkt_parts.last, srid_parts.last&.split("=")&.last.to_i]
+      end
+
       # +default_srid+ applies when the string carries no SRID. The block
       # returns the RGeo factory to build a geometry with a given SRID.
       def initialize(default_srid, &factory_for)
@@ -55,24 +67,13 @@ module ActiveRecord
       end
 
       def parse_ewkt(string)
-        wkt, srid = split_srid(string)
+        wkt, srid = GeometryParser.split_srid(string)
         srid = @default_srid if srid.zero?
         RGeo::WKRep::WKTParser.new(@factory_for.call(srid), support_ewkt: true, default_srid: srid).parse(wkt)
       end
 
       def wkb_parser(srid)
         RGeo::WKRep::WKBParser.new(@factory_for.call(srid), support_ewkb: true, default_srid: srid)
-      end
-
-      # "SRID=4326;POINT(1 2)" => ["POINT(1 2)", 4326]. Like the upstream
-      # gem, only the first and last parts are read, and the last one wins.
-      def split_srid(string)
-        return [string, 0] unless string.include?(";")
-
-        srid_parts, wkt_parts = string.split(";").values_at(0, -1).partition do |part|
-          part.match?(SRID_PARAMETER)
-        end
-        [wkt_parts.last, srid_parts.last&.split("=")&.last.to_i]
       end
     end
   end

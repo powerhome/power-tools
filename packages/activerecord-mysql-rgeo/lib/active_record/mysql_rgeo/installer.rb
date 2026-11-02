@@ -33,6 +33,14 @@ module ActiveRecord
           adapter.prepend(Quoting)
           (NativeDatabaseTypes::CLASS_METHOD ? adapter.singleton_class : adapter).prepend(NativeDatabaseTypes)
           install_into_migrations
+          install_into_arel
+        end
+
+        def install_into_arel
+          Arel::Visitors::MySQL.prepend(ArelVisitor)
+          # Ruby adds the methods to Arel attributes, Arel.spatial constants
+          # and spatial functions, which already include SpatialExpressions.
+          RGeo::ActiveRecord::SpatialExpressions.include(SpatialExpressions)
         end
 
         def install_into_migrations
