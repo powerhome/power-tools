@@ -150,8 +150,11 @@ with `t.column` and `add_column` too.
 
 - `using: :gist` makes a `SPATIAL INDEX`. MySQL needs `NOT NULL` for those, so
   `add_index` sets it.
-- `change_column`, `change_column_null` and `change_column_comment` keep the
-  column's spatial type, SRID and markers.
+- `change_column_null` and `change_column_comment` keep the column's spatial
+  type, SRID and markers.
+- `change_column` redefines the column, as in Rails: it keeps the default,
+  `null` and comment, but give it `srid:`, `geographic:`, `has_z:` and
+  `has_m:` again.
 
 ### schema.rb
 
@@ -215,8 +218,8 @@ Fixed along the way:
 - `column.comment` no longer shows the hex of a spatial default.
 - `t.column :name, :geography` makes a geographic `GEOMETRY` column, like
   `t.geography`.
-- `change_column`, `change_column_null` and `change_column_comment` work on
-  spatial columns without repeating the spatial options.
+- `change_column_null` and `change_column_comment` work on spatial columns
+  without repeating the spatial options.
 - `schema.rb` writes spatial defaults as WKT. The old gem wrote them as
   `#<RGeo::...>`, which broke the file. Step 3 fixes it.
 - `st_distance_sphere(point, radius)` works. The old gem raised

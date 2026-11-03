@@ -213,6 +213,32 @@ RSpec.describe "Spatial migrations" do
 
       expect(information_schema(:coordinates)).to include("COLUMN_COMMENT" => "Measured mysql2rgeo:geographic")
     end
+
+    it "changes columns with the SRID and markers given, as activerecord-mysql2rgeo-adapter does" do
+      connection.change_table(:places) { |t| t.st_point :coordinates, srid: 3857, geographic: true }
+      connection.change_column(:places, :coordinates, :st_point)
+
+      expect(information_schema(:coordinates)).to include("SRS_ID" => 0, "COLUMN_COMMENT" => "")
+      expect(column(:coordinates)).to have_attributes(srid: 0, geographic?: false)
+    end
+
+    it "changes columns and keeps the SRID and markers given again" do
+      connection.change_table(:places) { |t| t.st_point :coordinates, srid: 3857, geographic: true }
+      connection.change_column(:places, :coordinates, :st_point, srid: 3857, geographic: true)
+
+      expect(column(:coordinates)).to have_attributes(srid: 3857, geographic?: true)
+    end
+
+    it "changes columns and keeps the default, nullability and comment, as Rails does" do
+      connection.change_table(:places) do |t|
+        t.st_point :origin, srid: 3857, null: false, default: "POINT(1.0 2.0)", comment: "Start"
+      end
+      connection.change_column(:places, :origin, :st_point, srid: 3857)
+
+      expect(information_schema(:origin)).to include("IS_NULLABLE" => "NO")
+      expect(column(:origin)).to have_attributes(comment: "Start")
+      expect(place.new.origin).to have_attributes(x: 1.0, y: 2.0, srid: 3857)
+    end
   end
 
   describe "spatial indexes" do
