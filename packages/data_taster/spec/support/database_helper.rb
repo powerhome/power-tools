@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "active_support/core_ext/module/delegation"
+require "trilogy"
 
 # Helper methods to get database configurations, accounting for changes between rails versions
 module DatabaseHelper
@@ -16,6 +17,10 @@ module DatabaseHelper
 
     def dump_db_client
       @dump_db_client ||= Mysql2::Client.new(test_dump_database_config)
+    end
+
+    def trilogy_dump_db_client
+      @trilogy_dump_db_client ||= Trilogy.new(test_dump_database_config.dup)
     end
 
     def test_dump_database_config
@@ -34,6 +39,10 @@ module DatabaseHelper
       @source_db_client ||= Mysql2::Client.new(test_source_database_config)
     end
 
+    def trilogy_source_db_client
+      @trilogy_source_db_client ||= Trilogy.new(test_source_database_config.dup)
+    end
+
     def test_source_database_config
       ActiveRecord::Base.configurations.configs_for(env_name: Rails.env,
                                                     name: VALUES[:source][:key]).configuration_hash
@@ -45,7 +54,8 @@ module DatabaseHelper
   private_constant :DBConfig
 
   # Methods available for use during specs
-  delegate :dump_db_name, :dump_db_client, :source_db_name, :source_db_client, to: :db_config
+  delegate :dump_db_name, :dump_db_client, :source_db_name, :source_db_client,
+           :trilogy_dump_db_client, :trilogy_source_db_client, to: :db_config
 
   def setup_source_data
     now = Time.current.strftime("%Y-%m-%d %H:%M:%S")

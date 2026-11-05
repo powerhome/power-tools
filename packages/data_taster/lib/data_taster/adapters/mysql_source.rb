@@ -5,7 +5,7 @@ module DataTaster
     attr_reader :source_client
 
     def initialize(source_client:)
-      @source_client = source_client
+      @source_client = Adapters.wrap(source_client)
     end
 
     def query(sql)

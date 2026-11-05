@@ -3,6 +3,7 @@
 require "logger"
 
 module DataTaster
+  autoload :Adapters, "data_taster/adapters"
   autoload :Collection, "data_taster/collection"
   autoload :Confection, "data_taster/confection"
   autoload :DatabaseOutput, "data_taster/adapters/database_output"

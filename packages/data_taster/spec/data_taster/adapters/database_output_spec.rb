@@ -27,6 +27,20 @@ RSpec.describe DataTaster::DatabaseOutput do
     end
   end
 
+  context "with a Trilogy client" do
+    let(:target_client) { trilogy_dump_db_client }
+
+    it "reads the target database from the client connection options" do
+      expect(output.target_database).to eq(dump_db_name)
+    end
+
+    it "runs statements with foreign key checks restored afterwards" do
+      output.write_statement("SELECT 1")
+
+      expect(output.target_client.query("SELECT @@FOREIGN_KEY_CHECKS AS checks").first["checks"]).to eq(1)
+    end
+  end
+
   describe "#qualified_table_name" do
     it "prefixes the table with the target database" do
       expect(output.qualified_table_name("users")).to eq("#{dump_db_name}.users")
