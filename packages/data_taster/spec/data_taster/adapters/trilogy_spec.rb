@@ -2,20 +2,10 @@
 
 require "spec_helper"
 
-RSpec.describe DataTaster::TrilogyClient do
+RSpec.describe DataTaster::Adapters::Trilogy do
   include DatabaseHelper
 
   subject(:client) { described_class.new(trilogy_source_db_client) }
-
-  describe ".wrap" do
-    it "wraps Trilogy connections" do
-      expect(described_class.wrap(trilogy_source_db_client)).to be_a(described_class)
-    end
-
-    it "returns other clients unchanged" do
-      expect(described_class.wrap(source_db_client)).to be(source_db_client)
-    end
-  end
 
   describe "#query" do
     it "yields rows as hashes" do

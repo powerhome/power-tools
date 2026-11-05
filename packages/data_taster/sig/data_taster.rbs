@@ -21,21 +21,24 @@ module DataTaster
     def table_names: () -> Array[String]
   end
 
-  class TrilogyClient
-    class Result
-      include Enumerable[Hash[String, untyped]]
-
-      def initialize: (untyped result) -> void
-      def fields: () -> Array[String]
-      def field_types: () -> Array[String]
-      def each: () { (Hash[String, untyped] row) -> void } -> untyped
-    end
-
+  module Adapters
     def self.wrap: (untyped client) -> untyped
-    def initialize: (untyped client) -> void
-    def query: (String sql) -> Result
-    def query_options: () -> Hash[Symbol, untyped]
-    def escape: (String value) -> String
+
+    class Trilogy
+      class Result
+        include Enumerable[Hash[String, untyped]]
+
+        def initialize: (untyped result) -> void
+        def fields: () -> Array[String]
+        def field_types: () -> Array[String]
+        def each: () { (Hash[String, untyped] row) -> void } -> untyped
+      end
+
+      def initialize: (untyped client) -> void
+      def query: (String sql) -> Result
+      def query_options: () -> Hash[Symbol, untyped]
+      def escape: (String value) -> String
+    end
   end
 
   class Output

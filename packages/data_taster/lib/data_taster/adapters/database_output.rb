@@ -5,7 +5,7 @@ module DataTaster
     attr_reader :target_client
 
     def initialize(target_client:, **options)
-      super(target_client: TrilogyClient.wrap(target_client), **options)
+      super(target_client: Adapters.wrap(target_client), **options)
     end
 
     def sample!

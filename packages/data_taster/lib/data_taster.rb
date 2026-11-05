@@ -3,6 +3,7 @@
 require "logger"
 
 module DataTaster
+  autoload :Adapters, "data_taster/adapters"
   autoload :Collection, "data_taster/collection"
   autoload :Confection, "data_taster/confection"
   autoload :DatabaseOutput, "data_taster/adapters/database_output"
@@ -15,7 +16,6 @@ module DataTaster
   autoload :SanitizerExporter, "data_taster/sanitizer_exporter"
   autoload :Sanitizer, "data_taster/sanitizer"
   autoload :SqlLiteral, "data_taster/sql_literal"
-  autoload :TrilogyClient, "data_taster/adapters/trilogy_client"
 
   SKIP_CODE = "skip_processing"
 
