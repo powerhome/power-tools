@@ -42,32 +42,28 @@ users:
 
 ### `DataTaster.sample!`
 
-DataTaster uses its [Sample](https://github.com/powerhome/power-tools/blob/main/packages/data_taster/lib/data_taster/sample.rb) class to load the yml files, filtered through erb methods provided through its [Flavors](https://github.com/powerhome/power-tools/blob/main/packages/data_taster/lib/data_taster/flavors.rb) class.
+DataTaster loads the yml files through erb methods provided by its [Flavors](https://github.com/powerhome/power-tools/blob/main/packages/data_taster/lib/data_taster/flavors.rb) class.
 
-Before doing so, you'll need to specify a client to use to connect to mysql and make queries. Doing so can be done by calling `DataTaster.config`, like so:
+Before sampling, configure a source to read from and an output to write to with `DataTaster.setup`. Clients can be either `Mysql2::Client` or `Trilogy` connections:
 
 ```ruby
-# Example, using all defaults
-
-    DataTaster.config(
-      source_client: Mysql2::Client.new(db_config),
-      working_client: Mysql2::Client.new(db_config),
-    )
+DataTaster.setup(
+  source: DataTaster::MysqlSource.new(source_client: Trilogy.new(source_config.dup)),
+  output: DataTaster::DatabaseOutput.new(target_client: Trilogy.new(target_config.dup)),
+)
 ```
 
-This method takes several optional arguments for further configuration of data selection. The list of arguments and their defaults can be found at `components/data_taster/lib/data_taster.rb`.
+`setup` also accepts `months:` (how far back `recent_table_updates` looks) and `list:` (the yml files to load, defaulting to every `data_taster_export_tables.yml` under `Rails.root`).
 
-When you are ready to populate your database with the selected data, you can pass `include_insert: true` to this method call so that it returns INSERT statements. Otherwise, it will only return SELECT queries, useful for testing and debugging purposes.
+To write a SQL file instead of loading a database, use `DataTaster::FileOutput.new(path: "dump.sql", target_database: "my_db")` as the output.
 
-Asking for samples without previously configuring db clients will result in errors. However, once you have done so, sampling is easy:
+Once configured, sampling is easy:
 
 ```ruby
-# Example, using all defaults
-
 DataTaster.sample!
 ```
 
-This will select data from the source_client and insert it using the working_client.
+This selects data from the source and writes it, sanitized, to the output.
 
 
  #### Deprecating Tables
