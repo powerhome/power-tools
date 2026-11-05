@@ -4,6 +4,10 @@ module DataTaster
   class DatabaseOutput < Output
     attr_reader :target_client
 
+    def initialize(target_client:, **options)
+      super(target_client: TrilogyClient.wrap(target_client), **options)
+    end
+
     def sample!
       source = DataTaster.config.source
       table_names(source).each do |table_name|
