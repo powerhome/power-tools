@@ -154,7 +154,7 @@ PLATFORMS
 DEPENDENCIES
   aether_observatory!
   appraisal (~> 2.5.0)
-  bundler (~> 2.1)
+  bundler (~> 4.0)
   license_finder (~> 7.0)
   pry (>= 0.14)
   pry-byebug (= 3.10.1)
@@ -165,4 +165,4 @@ DEPENDENCIES
   yard (= 0.9.38)
 
 BUNDLED WITH
-   2.5.23
+   4.0.24

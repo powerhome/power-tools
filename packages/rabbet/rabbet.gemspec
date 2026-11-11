@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", ">= 7.0"
   s.add_dependency "sassc-rails", "2.1.2"
 
-  s.add_development_dependency "bundler", "~> 2.1"
+  s.add_development_dependency "bundler", "~> 4.0"
   s.add_development_dependency "license_finder", "~> 7.0"
   s.add_development_dependency "pry", ">= 0.14"
   s.add_development_dependency "pry-byebug", "3.10.1"
