@@ -30,6 +30,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", "~> 3.0"
   s.add_development_dependency "simplecov", "0.15.1"
   s.add_development_dependency "test-unit", "3.1.5"
-  s.add_development_dependency "yard", "0.9.38"
+  s.add_development_dependency "yard", "0.9.44"
   s.metadata["rubygems_mfa_required"] = "true"
 end
