@@ -141,7 +141,7 @@ GEM
     with_env (1.1.0)
     xml-simple (1.1.9)
       rexml
-    yard (0.9.38)
+    yard (0.9.44)
 
 PLATFORMS
   aarch64-linux-gnu
@@ -165,7 +165,7 @@ DEPENDENCIES
   rubocop-powerhome!
   simplecov (= 0.15.1)
   wayfinding!
-  yard (= 0.9.38)
+  yard (= 0.9.44)
 
 BUNDLED WITH
    2.5.23
