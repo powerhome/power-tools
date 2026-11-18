@@ -10,9 +10,11 @@
 # in deployment mode, so any of them left on the old version fails the build.
 #
 # This rewrites every PATH spec in the packages' lockfiles that points at a
-# package of this repository to the version in .release-please-manifest.json.
-# Given BRANCH, it commits the changed lockfiles to it through the GitHub API,
-# so the commit is signed. That needs GH_TOKEN and GITHUB_REPOSITORY.
+# package of this repository to the version in .release-please-manifest.json,
+# along with that package's line in the CHECKSUMS section Bundler 2.6 and later
+# write. Given BRANCH, it commits the changed lockfiles to it through the
+# GitHub API, so the commit is signed. That needs GH_TOKEN and
+# GITHUB_REPOSITORY.
 
 require "json"
 require "open3"
@@ -27,19 +29,38 @@ gems = JSON.parse(File.read("release-please-config.json"))["packages"]
            .to_h { |path, package| [root.join(path).to_s, [package["package-name"], versions.fetch(path)]] }
 
 lockfiles = Dir["packages/**/{Gemfile,*.gemfile}.lock"].reject { |file| file.include?("/vendor/") }
+
+def pin(line, indent, name, version)
+  line.sub(/\A(#{indent}#{Regexp.escape(name)} \()[^)]*\)\n\z/) { "#{Regexp.last_match(1)}#{version})\n" }
+end
+
 changed = lockfiles.select do |lockfile|
-  remote = nil
+  section = remote = nil
+  pinned = {}
   before = File.read(lockfile)
   after = before.lines.map do |line|
-    remote = nil if line.match?(/\A\S/)
+    if line.match?(/\A\S/)
+      section = line.strip
+      remote = nil
+    end
     remote = root.join(File.dirname(lockfile), Regexp.last_match(1)).to_s if line =~ /\A  remote: (.+)\n\z/
-    name, version = gems[remote]
-    next line unless name
 
-    line.sub(/\A(    #{Regexp.escape(name)} \()[^)]*\)\n\z/) { "#{Regexp.last_match(1)}#{version})\n" }
+    if section == "PATH" && gems.key?(remote)
+      name, version = gems[remote]
+      pinned[name] = version
+      pin(line, "    ", name, version)
+    elsif section == "CHECKSUMS"
+      # Bundler lists path gems in CHECKSUMS without a checksum, after the
+      # PATH sections, so the gems pinned above are known by now.
+      pinned.reduce(line) { |pinned_line, (name, version)| pin(pinned_line, "  ", name, version) }
+    else
+      line
+    end
   end.join
-  File.write(lockfile, after) if after != before
-  after != before
+  next false if after == before
+
+  File.write(lockfile, after)
+  true
 end
 
 if changed.empty?
