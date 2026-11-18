@@ -1,3 +1,5 @@
+# Changelog
+
 ## [Unreleased]
 
 - Add support for Rails 8+ [#426](https://github.com/powerhome/power-tools/pull/426)
