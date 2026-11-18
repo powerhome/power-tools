@@ -11,7 +11,7 @@ PATH
 PATH
   remote: ..
   specs:
-    activerecord-mysql-rgeo (0.1.0)
+    activerecord-mysql-rgeo (1.0.0)
       activerecord (>= 7.2)
       rgeo-activerecord (>= 8.0)
 
@@ -254,7 +254,7 @@ CHECKSUMS
   actionview (7.2.4) sha256=6005a3427881b2e8f509a5f7ed894e66f256410f734f7a227d01c4d3d9cb06a2
   activemodel (7.2.4) sha256=c6a2f2290fdf8728b596fba1fc528e65852c6e015ccc385ddf0f93c455588773
   activerecord (7.2.4) sha256=b3549deb6a4c469e0cb652194cf566b6010f1f1796404b4213d8b47469d411e5
-  activerecord-mysql-rgeo (0.1.0)
+  activerecord-mysql-rgeo (1.0.0)
   activesupport (7.2.4) sha256=b97027b31e111675dba67b86edcd589acc25a0dddf8eecacca18d33a703a0788
   appraisal (2.5.0) sha256=36989221be127913b0dba8d114da2001e6b2dceea7bd4951200eaba764eed3ce
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
