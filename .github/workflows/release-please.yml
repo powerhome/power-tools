@@ -1,0 +1,45 @@
+name: release-please
+
+# Keeps one release pull request open against main for each package with
+# releasable changes. Each bumps the package to its next version, pins it in
+# the package's Gemfile.lock and adds it to the package's changelog, worked out
+# from the Conventional Commit titles merged since its last release. Merging
+# one tags the release <package>-v<version> and creates its GitHub Release, and
+# the tag's push publishes the package through its own workflow. See
+# docs/CONTRIBUTING.md.
+#
+# It runs as the release GitHub App, not GITHUB_TOKEN: a pull request or tag
+# GITHUB_TOKEN creates starts no workflows, so the release pull requests would
+# never get their checks and the tags would never publish the packages. The
+# App's key is in the release environment, which only main can deploy to, so
+# no run from another branch or a tag can read it.
+
+on:
+  push:
+    branches: [main]
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    name: Release pull requests
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Open or update the release pull requests, or tag merged ones
+        id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          token: ${{ steps.app-token.outputs.token }}
