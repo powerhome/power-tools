@@ -14,6 +14,7 @@ module RuboCop
         puts "configuration from #{path}" if ConfigLoader.debug?
         config = ConfigLoader.merge_with_default(config, path)
         ConfigLoader.instance_variable_set(:@default_configuration, config)
+        ConfigObsoletion.files << CONFIG_OBSOLETION
       end
     end
   end

@@ -21,11 +21,6 @@ Cobra/GemRequirement:
   Enabled: true
   VersionAdded: '0.1.0'
 
-Cobra/HelperFilePlacement:
-  Description: 'This cop disallows adding global helpers to the `app/helpers` directory.'
-  Enabled: true
-  VersionAdded: '0.1.0'
-
 Cobra/Inheritance:
   Description: 'Enforce classes inherit from their own modularized parent classes'
   Enabled: true
