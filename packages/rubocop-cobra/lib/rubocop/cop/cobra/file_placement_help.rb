@@ -8,18 +8,19 @@ module RuboCop
         "Do not add top-level files into `%<matcher_path>s`. " \
         "Namespace them like `%<correct_path>s`"
 
+      # True when the file lives in `components/<component>/<matcher>`. The
+      # matcher must sit directly under a component's root, so a `lib/` or
+      # `components/` elsewhere in the path (a parent directory, a component
+      # named `pdf_lib`, `app/lib/`) does not count.
       def applicable_component_path?(path, matcher)
-        in_a_component?(path) && path_contains_matcher?(path, matcher)
+        !component_path_match(path, matcher).nil?
       end
 
       def namespaced_correctly?(path, matcher)
-        potential_component_name = component_name(path, matcher)
-        component_path = File.join(
-          potential_component_name,
-          matcher,
-          potential_component_name
-        )
-        path.include?("#{component_path}/") || path.include?("#{component_path}.rb")
+        match = component_path_match(path, matcher)
+        component = match[:component]
+
+        match[:rest].start_with?("#{component}/") || match[:rest] == "#{component}.rb"
       end
 
       def file_placement_msg(path, matcher)
@@ -31,20 +32,16 @@ module RuboCop
     private
 
       def correct_path(path, matcher)
-        file = path.split(matcher).last
-        "#{matcher}#{component_name(path, matcher)}/#{file}"
+        match = component_path_match(path, matcher)
+        "#{matcher}#{match[:component]}/#{match[:rest]}"
       end
 
       def component_name(path, matcher)
-        path.split(matcher).first.split("/").last
+        component_path_match(path, matcher)[:component]
       end
 
-      def in_a_component?(path)
-        path.include?("components/")
-      end
-
-      def path_contains_matcher?(path, matcher)
-        path.include?(matcher)
+      def component_path_match(path, matcher)
+        %r{\A(?:.*/)?components/(?<component>[^/]+)/#{Regexp.escape(matcher)}(?<rest>.+)\z}.match(path)
       end
     end
   end
