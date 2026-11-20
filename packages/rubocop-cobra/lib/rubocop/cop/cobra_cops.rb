@@ -3,11 +3,13 @@
 module RuboCop
   module Cop
     module Cobra
+      require_relative "cobra/constant_resolution"
       require_relative "cobra/file_placement_help"
 
       require_relative "cobra/command_file_placement"
       require_relative "cobra/controller_file_placement"
       require_relative "cobra/dependency_version"
+      require_relative "cobra/deprecated_constant"
       require_relative "cobra/gem_requirement"
       require_relative "cobra/inheritance"
       require_relative "cobra/job_file_placement"
