@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Fix `rubocop --debug` crashing with `undefined method 'logger' for module RuboCop::Rails`
+
 ## [0.5.0] - 2026-07-28
 
 [HFH-4410 - Bump powertools for Rails 8.1.3 V2](https://github.com/powerhome/power-tools/pull/426)
