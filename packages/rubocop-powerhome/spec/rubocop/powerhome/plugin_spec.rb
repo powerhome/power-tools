@@ -29,8 +29,8 @@ RSpec.describe RuboCop::Powerhome::Plugin do
       expect(config.for_cop("Rails/FilePath")["EnforcedStyle"]).to eq("arguments")
     end
 
-    it "allows long describe and context blocks" do
-      expect(config.for_cop("Metrics/BlockLength")["AllowedMethods"]).to include("describe", "context")
+    it "allows long refine, describe and context blocks" do
+      expect(config.for_cop("Metrics/BlockLength")["AllowedMethods"]).to include("refine", "describe", "context")
     end
 
     it "applies the bundled extensions' own defaults" do

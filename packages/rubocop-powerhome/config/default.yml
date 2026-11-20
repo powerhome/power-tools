@@ -32,7 +32,10 @@ Lint/ScriptPermission:
   Enabled: false
 
 Metrics/BlockLength:
+  # Listing AllowedMethods replaces RuboCop's default rather than merging
+  # with it, so `refine` is repeated here.
   AllowedMethods:
+    - refine
     - describe
     - context
 
