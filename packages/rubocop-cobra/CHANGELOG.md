@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Run the previously skipped `Cobra/DependencyVersion` spec, and reword its message: it applies to every gemspec dependency, not only external components
 - Fix `rubocop --debug` crashing with `undefined method 'logger' for module RuboCop::Rails`
 
 ## [0.5.0] - 2026-07-28

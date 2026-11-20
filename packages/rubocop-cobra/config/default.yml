@@ -12,7 +12,7 @@ Cobra/ControllerFilePlacement:
   VersionAdded: '0.1.0'
 
 Cobra/DependencyVersion:
-  Description: 'External component dependencies should be declared with a version'
+  Description: 'Gemspec dependencies should be declared with a version'
   Enabled: true
   VersionAdded: '0.1.0'
 

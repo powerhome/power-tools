@@ -3,10 +3,19 @@
 module RuboCop
   module Cop
     module Cobra
+      # Requires every gemspec dependency to declare a version requirement.
+      #
+      # @example
+      #   # bad
+      #   spec.add_dependency "some_lib"
+      #
+      #   # good
+      #   spec.add_dependency "some_lib", "1.0.1"
+      #
       class DependencyVersion < RuboCop::Cop::Base
         extend NodePattern::Macros
 
-        MSG = "External component dependencies should be declared with a version"
+        MSG = "Gemspec dependencies should be declared with a version"
 
         def on_new_investigation
           return if processed_source.blank?
