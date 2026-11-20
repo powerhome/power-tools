@@ -25,6 +25,12 @@ RSpec.describe RuboCop::Cop::Cobra::ModelFilePlacement do
 
       expect_no_offenses(source, file_path)
     end
+
+    it "when a parent directory of the checkout is named components" do
+      file_path = "/srv/components/nitro-web/components/my_component/app/models/my_component/foo.rb"
+
+      expect_no_offenses(source, file_path)
+    end
   end
 
   context "registers an offense" do

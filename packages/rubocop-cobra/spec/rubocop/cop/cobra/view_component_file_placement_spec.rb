@@ -25,6 +25,12 @@ RSpec.describe RuboCop::Cop::Cobra::ViewComponentFilePlacement do
 
       expect_no_offenses(source, file_path)
     end
+
+    it "when file is not in a component" do
+      file_path = "app/components/foo_component.rb"
+
+      expect_no_offenses(source, file_path)
+    end
   end
 
   context "registers an offense" do

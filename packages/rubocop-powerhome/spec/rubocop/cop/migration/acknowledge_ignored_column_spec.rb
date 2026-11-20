@@ -54,5 +54,79 @@ RSpec.describe RuboCop::Cop::Migration::AcknowledgeIgnoredColumn, :config do
         end
       RUBY
     end
+
+    it "does not register an offense in a down method" do
+      expect_no_offenses(<<~RUBY)
+        class Example < ActiveRecord::Migration[7.0]
+          def up
+            add_column :users, :settings, :string
+          end
+
+          def down
+            remove_column :users, :settings
+            change_table :users do |t|
+              t.remove :settings
+            end
+          end
+        end
+      RUBY
+    end
+
+    it "does not register an offense in a reversible down block" do
+      expect_no_offenses(<<~RUBY)
+        class Example < ActiveRecord::Migration[7.0]
+          def change
+            reversible do |dir|
+              dir.down { remove_column :users, :settings }
+            end
+          end
+        end
+      RUBY
+    end
+  end
+
+  context "when other column removal methods are used" do
+    let(:message) do
+      "Do not remove a column until it is already ignored in production and all references to it " \
+        "are removed. Once done, remove the 'ignored_columns' from the Model and disable this cop " \
+        "to acknowledge this is safe."
+    end
+
+    [
+      "remove_columns :users, :settings, :prefs",
+      "remove_reference :users, :account",
+      "remove_belongs_to :users, :account",
+      "remove_timestamps :users",
+    ].each do |call|
+      it "registers an offense with #{call.split.first}" do
+        expect_offense(<<~RUBY)
+          class Example < ActiveRecord::Migration[7.0]
+            def change
+              #{call}
+              #{'^' * call.length} #{message}
+            end
+          end
+        RUBY
+      end
+    end
+
+    [
+      "t.remove_references :account",
+      "t.remove_belongs_to :account",
+      "t.remove_timestamps",
+    ].each do |call|
+      it "registers an offense with #{call.split.first} in change_table" do
+        expect_offense(<<~RUBY)
+          class Example < ActiveRecord::Migration[7.0]
+            def change
+              change_table :users do |t|
+                #{call}
+                #{'^' * call.length} #{message}
+              end
+            end
+          end
+        RUBY
+      end
+    end
   end
 end

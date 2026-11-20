@@ -12,17 +12,12 @@ Cobra/ControllerFilePlacement:
   VersionAdded: '0.1.0'
 
 Cobra/DependencyVersion:
-  Description: 'External component dependencies should be declared with a version'
+  Description: 'Gemspec dependencies should be declared with a version'
   Enabled: true
   VersionAdded: '0.1.0'
 
 Cobra/GemRequirement:
   Description: 'Component Gemfile dependencies must specify "require: nil"'
-  Enabled: true
-  VersionAdded: '0.1.0'
-
-Cobra/HelperFilePlacement:
-  Description: 'This cop disallows adding global helpers to the `app/helpers` directory.'
   Enabled: true
   VersionAdded: '0.1.0'
 

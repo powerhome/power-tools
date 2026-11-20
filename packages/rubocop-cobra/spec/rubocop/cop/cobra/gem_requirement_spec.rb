@@ -54,6 +54,27 @@ RSpec.describe RuboCop::Cop::Cobra::GemRequirement do
     RUBY
   end
 
+  it "accepts require: nil alongside other options" do
+    expect_no_offenses(<<~RUBY)
+      source "https://rubygems.org"
+
+      path ".." do
+        gem "nitro_component", require: nil, group: :test
+        gem "other_component", group: :development, require: false
+      end
+    RUBY
+  end
+
+  it "ignores path blocks that do not point at sibling components" do
+    expect_no_offenses(<<~RUBY)
+      source "https://rubygems.org"
+
+      path "components" do
+        gem "nitro_component"
+      end
+    RUBY
+  end
+
   context "registers an offense for component gem dependencies that are required" do
     it "when explicitly specified" do
       expect_offense(<<~RUBY)
@@ -87,6 +108,52 @@ RSpec.describe RuboCop::Cop::Cobra::GemRequirement do
           gem "other_component"
           ^^^^^^^^^^^^^^^^^^^^^ Cobra/GemRequirement: Component Gemfile dependencies must specify 'require: nil'.
           gem "another_component", require: nil
+        end
+      RUBY
+    end
+
+    it "when the path block is the only statement in the Gemfile" do
+      expect_offense(<<~RUBY)
+        path ".." do
+          gem "nitro_component"
+          ^^^^^^^^^^^^^^^^^^^^^ Cobra/GemRequirement: Component Gemfile dependencies must specify 'require: nil'.
+        end
+      RUBY
+    end
+
+    it "when the path block is not the last statement in the Gemfile" do
+      expect_offense(<<~RUBY)
+        source "https://rubygems.org"
+
+        path ".." do
+          gem "other_component"
+          ^^^^^^^^^^^^^^^^^^^^^ Cobra/GemRequirement: Component Gemfile dependencies must specify 'require: nil'.
+        end
+
+        gem "vite_ruby", "3.8.0"
+      RUBY
+    end
+
+    it "when declared inside a group within the path block" do
+      expect_offense(<<~RUBY)
+        source "https://rubygems.org"
+
+        path ".." do
+          group :test do
+            gem "nitro_component"
+            ^^^^^^^^^^^^^^^^^^^^^ Cobra/GemRequirement: Component Gemfile dependencies must specify 'require: nil'.
+          end
+        end
+      RUBY
+    end
+
+    it "when other options are given without require" do
+      expect_offense(<<~RUBY)
+        source "https://rubygems.org"
+
+        path ".." do
+          gem "nitro_component", group: :test
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Cobra/GemRequirement: Component Gemfile dependencies must specify 'require: nil'.
         end
       RUBY
     end

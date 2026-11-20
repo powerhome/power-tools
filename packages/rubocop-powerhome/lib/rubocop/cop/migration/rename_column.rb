@@ -41,11 +41,14 @@ module RuboCop
       #     end
       #   end
       class RenameColumn < RuboCop::Cop::Base
+        include DownDirection
+
         MSG = "Do not rename columns that are in use. It will cause down time in your application " \
               "and is unsafe for pt-online-schema-change."
 
         def on_send(node)
           return unless rename_column?(node)
+          return if in_down_direction?(node)
 
           add_offense(node)
         end
@@ -58,6 +61,8 @@ module RuboCop
           return unless block_arg
 
           rename_calls(node, block_arg.name) do |rename_node|
+            next if in_down_direction?(rename_node)
+
             add_offense(rename_node)
           end
         end
