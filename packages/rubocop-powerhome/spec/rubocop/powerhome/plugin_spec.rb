@@ -29,6 +29,10 @@ RSpec.describe RuboCop::Powerhome::Plugin do
       expect(config.for_cop("Rails/FilePath")["EnforcedStyle"]).to eq("arguments")
     end
 
+    it "allows long describe and context blocks" do
+      expect(config.for_cop("Metrics/BlockLength")["AllowedMethods"]).to include("describe", "context")
+    end
+
     it "applies the bundled extensions' own defaults" do
       expect(config.for_cop("Rails/FilePath")["SupportedStyles"]).to eq(%w[slashes arguments])
       expect(config.for_department("Rake")["Include"]).to include("**/*.rake")

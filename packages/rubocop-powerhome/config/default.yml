@@ -32,7 +32,7 @@ Lint/ScriptPermission:
   Enabled: false
 
 Metrics/BlockLength:
-  IgnoredMethods:
+  AllowedMethods:
     - describe
     - context
 
