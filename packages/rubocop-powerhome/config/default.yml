@@ -1,3 +1,12 @@
+# rubocop-powerhome bundles these extensions. Listing them here loads each
+# one as a RuboCop plugin, so their own default configuration is applied
+# before the overrides below.
+plugins:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rake
+  - rubocop-rspec
+
 AllCops:
   TargetRubyVersion: 3.0
   NewCops: enable
