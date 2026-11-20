@@ -28,13 +28,10 @@ module RuboCop
         PATTERN
 
         def_node_matcher :field_config_with_inline_type_and_block, <<-PATTERN
-        (
-          block
-            (send {nil? _} :field sym ${const array} ...) ...
-            (args)
-            _
-
-        )
+        {
+          (block (send {nil? _} :field sym ${const array} ...) (args) _)
+          ({numblock itblock} (send {nil? _} :field sym ${const array} ...) _ _)
+        }
         PATTERN
 
         def on_block(node) # rubocop:disable Metrics/MethodLength
@@ -52,6 +49,8 @@ module RuboCop
             end
           end
         end
+        alias on_numblock on_block
+        alias on_itblock on_block
 
         def on_send(node) # rubocop:disable Metrics/MethodLength
           # A field call that opens its own block is handled by on_block.

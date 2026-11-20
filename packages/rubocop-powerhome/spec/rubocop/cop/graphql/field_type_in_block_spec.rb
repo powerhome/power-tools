@@ -59,6 +59,50 @@ RSpec.describe RuboCop::Cop::GraphQL::FieldTypeInBlock, :config do
     end
   end
 
+  context "when field type is given inline on a field whose block uses a numbered parameter" do
+    it "registers a single offense and moves the type into the block" do
+      expect_offense(<<~RUBY)
+        class ThingType < Types::BaseObject
+          field :thing, Types::Thing do
+                        ^^^^^^^^^^^^ type configuration can be moved to a block to defer loading the type's file
+            description _1.name
+          end
+        end
+      RUBY
+
+      expect_correction(<<~RUBY)
+        class ThingType < Types::BaseObject
+          field :thing do
+            type Types::Thing
+            description _1.name
+          end
+        end
+      RUBY
+    end
+  end
+
+  context "when field type is given inline on a field whose block uses `it`", :ruby34 do
+    it "registers a single offense and moves the type into the block" do
+      expect_offense(<<~RUBY)
+        class ThingType < Types::BaseObject
+          field :thing, Types::Thing do
+                        ^^^^^^^^^^^^ type configuration can be moved to a block to defer loading the type's file
+            description it.name
+          end
+        end
+      RUBY
+
+      expect_correction(<<~RUBY)
+        class ThingType < Types::BaseObject
+          field :thing do
+            type Types::Thing
+            description it.name
+          end
+        end
+      RUBY
+    end
+  end
+
   context "when field type is in a block with type()" do
     it "does not register an offense with do/end block" do
       expect_no_offenses(<<~RUBY)
