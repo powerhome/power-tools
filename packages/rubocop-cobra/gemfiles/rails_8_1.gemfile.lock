@@ -12,6 +12,7 @@ PATH
   remote: ..
   specs:
     rubocop-cobra (0.5.0)
+      lint_roller (~> 1.1)
       rubocop (= 1.82.1)
       rubocop-powerhome
 

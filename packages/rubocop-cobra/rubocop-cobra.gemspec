@@ -35,9 +35,11 @@ Gem::Specification.new do |spec|
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
 
+  spec.add_dependency "lint_roller", "~> 1.1"
   spec.add_dependency "rubocop", "1.82.1"
   spec.add_dependency "rubocop-powerhome"
   spec.metadata["rubygems_mfa_required"] = "true"
+  spec.metadata["default_lint_roller_plugin"] = "RuboCop::Cobra::Plugin"
 
   spec.add_development_dependency "appraisal", "~> 2.5.0"
   spec.add_development_dependency "license_finder", "~> 7.0"

@@ -12,7 +12,7 @@ module RuboCop
 
     private_constant(:CONFIG_DEFAULT, :CONFIG_OBSOLETION, :PROJECT_ROOT)
 
-    require_relative "cobra/inject"
     require_relative "cobra/version"
+    require_relative "cobra/plugin"
   end
 end
