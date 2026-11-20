@@ -3,6 +3,9 @@ name: activerecord-mysql-rgeo
 on:
   push:
 
+permissions:
+  contents: read
+
 jobs:
   ruby:
     uses: powerhome/github-actions-workflows/.github/workflows/ruby-gem.yml@main
