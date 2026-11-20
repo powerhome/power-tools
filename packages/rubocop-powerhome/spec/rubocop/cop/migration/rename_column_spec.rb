@@ -71,5 +71,19 @@ RSpec.describe RuboCop::Cop::Migration::RenameColumn, :config do
         end
       RUBY
     end
+
+    it "registers an offense in a down block on something other than reversible's argument" do
+      expect_offense(<<~RUBY)
+        class Example < ActiveRecord::Migration[7.0]
+          def change
+            worker = Worker.new
+            worker.down do
+              rename_column :users, :settings, :properties
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Do not rename columns that are in use. It will cause down time in your application and is unsafe for pt-online-schema-change.
+            end
+          end
+        end
+      RUBY
+    end
   end
 end
