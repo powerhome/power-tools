@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Migration cops no longer flag rollbacks (`def down`, `dir.down` in `reversible`), and `Migration/AcknowledgeIgnoredColumn` now covers `remove_columns`, `remove_reference`, `remove_belongs_to`, `remove_timestamps` and their `change_table` forms
 - Fix `GraphQL/FieldTypeInBlock` skipping every field declared inside a block (e.g. `included do`), and fix an undefined variable in one of its error messages
 - Fix `Naming/ViewComponent` skipping classes that inherit from an unqualified `ApplicationComponent`
 - Fix `GraphQL/DefaultNullTrue` missing `null: true` when it is not the first keyword argument

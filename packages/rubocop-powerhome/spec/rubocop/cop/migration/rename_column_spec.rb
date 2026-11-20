@@ -42,5 +42,34 @@ RSpec.describe RuboCop::Cop::Migration::RenameColumn, :config do
         end
       RUBY
     end
+
+    it "does not register an offense in a down method" do
+      expect_no_offenses(<<~RUBY)
+        class Example < ActiveRecord::Migration[7.0]
+          def up
+            add_column :users, :properties, :jsonb
+          end
+
+          def down
+            rename_column :users, :properties, :settings
+            change_table :users do |t|
+              t.rename :properties, :settings
+            end
+          end
+        end
+      RUBY
+    end
+
+    it "does not register an offense in a reversible down block" do
+      expect_no_offenses(<<~RUBY)
+        class Example < ActiveRecord::Migration[7.0]
+          def change
+            reversible do |dir|
+              dir.down { rename_column :users, :properties, :settings }
+            end
+          end
+        end
+      RUBY
+    end
   end
 end
