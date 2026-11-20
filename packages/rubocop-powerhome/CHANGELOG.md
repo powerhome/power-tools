@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Fix `Naming/ViewComponent` skipping classes that inherit from an unqualified `ApplicationComponent`
 - Fix `GraphQL/DefaultNullTrue` missing `null: true` when it is not the first keyword argument
 
 ## [0.7.0] - 2026-07-28
