@@ -16,7 +16,7 @@ module RuboCop
 
         def on_class(node)
           inheritance_constant = node.node_parts[1]
-          inheritance_class = inheritance_constant&.source
+          inheritance_class = inheritance_constant&.source&.delete_prefix("::")
           return unless PROTECTED_GLOBAL_CONSTANTS.include?(inheritance_class)
 
           add_offense(inheritance_constant,

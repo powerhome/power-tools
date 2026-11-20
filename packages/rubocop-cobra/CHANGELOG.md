@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Fix `Cobra/Inheritance` allowing a top-level `::ApplicationRecord` (or other protected constant) with a leading `::`
 - Anchor the file placement cops on `components/<name>/<dir>/`. A `lib/` or `components/` elsewhere in the path (a parent directory, a component named `pdf_lib`, `app/lib/`) no longer triggers false offenses, and `Cobra/ViewComponentFilePlacement` ignores files outside a component
 - Run the previously skipped `Cobra/DependencyVersion` spec, and reword its message: it applies to every gemspec dependency, not only external components
 - Fix `rubocop --debug` crashing with `undefined method 'logger' for module RuboCop::Rails`
