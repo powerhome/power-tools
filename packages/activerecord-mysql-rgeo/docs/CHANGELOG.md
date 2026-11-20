@@ -1,0 +1,37 @@
+## [Unreleased]
+
+- Initial project setup: Active Record 7.2 through edge, trilogy and mysql2
+- Run Active Record's own test suite with the gem loaded (`rake regression`)
+- Spatial columns load as RGeo geometries on trilogy and mysql2
+- Spatial columns report their geometric type, SRID, and geographic, Z and M
+  settings; comments are returned without activerecord-mysql2rgeo-adapter's
+  `mysql2rgeo:*` markers
+- Save RGeo geometries, WKT, EWKT, WKB and EWKB to spatial columns, and query
+  by them
+- Spatial attribute types (`attribute :center, :st_point, srid: 3857`)
+- Spatial migrations: column helpers (`t.st_point`, `t.geography`, ...), the
+  `SRID` attribute, `geographic:`, `has_z:`, `has_m:` and `default:` kept in
+  the column comment, and spatial indexes with `using: :gist`
+- `schema.rb` dumps spatial columns and indexes in activerecord-mysql2rgeo-adapter's
+  format, with spatial defaults as WKT, and loads them back into the same table
+- Spatial queries: rgeo-activerecord's Arel spatial functions (`st_distance`,
+  `st_contains`, ...) take geometries, bounding boxes, WKT and EWKT on MySQL,
+  with SRID 4326 values sent longitude first, and `st_distance_sphere` (with an
+  optional radius) calls `ST_Distance_Sphere`
+- Migration guide: switching from activerecord-mysql2rgeo-adapter means
+  changing `adapter: mysql2rgeo` to `trilogy` or `mysql2` in `database.yml`;
+  there is no `mysql2rgeo` adapter
+- Every MySQL column answers `spatial?`, as activerecord-mysql2rgeo-adapter's
+  columns did
+- `ActiveRecord::Type::Spatial` and
+  `ActiveRecord::ConnectionAdapters::Mysql2Rgeo::OID::Spatial` are deprecated
+  names of `ActiveRecord::MysqlRgeo::Type::Spatial`
+- `ActiveRecord::MysqlRgeo.deprecator`, registered in Rails applications'
+  deprecators
+- Raise `ActiveRecord::MysqlRgeo::ConflictingGemError` when
+  activerecord-mysql2rgeo-adapter is loaded too
+- The schema cache keeps spatial columns, including in Active Record 8.2's JSON
+  format
+- Migration guide covers upgrading from every activerecord-mysql2rgeo-adapter
+  line, including fixing SRID 4326 rows that 7.2 and earlier stored latitude
+  first

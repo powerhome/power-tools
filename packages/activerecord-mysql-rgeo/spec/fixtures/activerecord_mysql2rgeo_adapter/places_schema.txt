@@ -1,0 +1,15 @@
+# schema.rb dump of the same table by activerecord-mysql2rgeo-adapter 9.1.0
+# (Active Record 8.1, Ruby 3.4), as written. Its default: line is broken Ruby.
+  create_table "places", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", comment: "Shown on the map"
+    t.geometry "shape", limit: {type: "geometry", srid: 0}
+    t.geometry "location", limit: {type: "st_point", srid: 3857}, null: false, comment: "Where it is"
+    t.geometry "coordinates", limit: {type: "st_point", srid: 4326, geographic: true}
+    t.geometry "area", limit: {type: "st_polygon", srid: 3857, has_m: true}
+    t.geometry "zones", limit: {type: "multi_polygon", srid: 0}
+    t.geometry "path", limit: {type: "line_string", srid: 3857}
+    t.geometry "stops", limit: {type: "multi_point", srid: 0}
+    t.geometry "routes", limit: {type: "multi_line_string", srid: 0}
+    t.geometry "origin", limit: {type: "st_point", srid: 3857}, default: #<RGeo::Geos::CAPIPointImpl:0x408 "POINT (1 2)">, comment: "0101000000000000000000F03F0000000000000040"
+    t.index ["location"], name: "index_places_on_location", using: :gist, type: :spatial
+  end
