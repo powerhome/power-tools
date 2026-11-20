@@ -38,7 +38,6 @@ module RuboCop
         PATTERN
 
         def on_block(node) # rubocop:disable Metrics/MethodLength
-          ignore_node(node)
           field_config_with_inline_type_and_block(node) do |type_const|
             type_const_str = get_type_argument_str(node, type_const)
             if ignore_inline_type_str?(type_const_str)
@@ -55,7 +54,8 @@ module RuboCop
         end
 
         def on_send(node) # rubocop:disable Metrics/MethodLength
-          return if part_of_ignored_node?(node)
+          # A field call that opens its own block is handled by on_block.
+          return if node.block_node
 
           field_config_with_inline_type(node) do |type_const|
             type_const_str = get_type_argument_str(node, type_const)
@@ -136,7 +136,7 @@ module RuboCop
             if indent_test_idx == 0 # rubocop:disable Style/Next
               raise "Invariant: somehow backtracted to beginning of class " \
                     "when looking for field indent " \
-                    "(source: #{node_source.inspect})"
+                    "(source: #{type_defn_source.inspect})"
             end
           end
           field_indent

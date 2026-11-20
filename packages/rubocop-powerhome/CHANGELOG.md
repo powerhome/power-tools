@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Fix `GraphQL/FieldTypeInBlock` skipping every field declared inside a block (e.g. `included do`), and fix an undefined variable in one of its error messages
 - Fix `Naming/ViewComponent` skipping classes that inherit from an unqualified `ApplicationComponent`
 - Fix `GraphQL/DefaultNullTrue` missing `null: true` when it is not the first keyword argument
 
