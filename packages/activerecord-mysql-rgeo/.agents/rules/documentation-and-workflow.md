@@ -19,7 +19,7 @@ README: simple, fun, direct. Short and complete beats thorough and long.
 ## Docs current in the same commit
 
 - `docs/README.md` (user guide: requirements, installation, usage, configuration, "Migrating from activerecord-mysql2rgeo-adapter"): update with any change to behaviour, options, supported versions or dependencies.
-- `docs/CHANGELOG.md`: entry under `## [Unreleased]` per user-visible change, written for users ("Spatial columns load as RGeo objects on trilogy"), not a commit log.
+- `docs/CHANGELOG.md`: never edited by hand. release-please writes it from PR titles, so each user-visible change is a PR whose title reads as a changelog entry ("feat: load spatial columns as RGeo objects on trilogy"), not a commit log.
 - Public Ruby API has doc comments; private seams link the Rails source they depend on (see `design.md`).
 - Repo-level entries (root `docs/README.md`, `portal.yml`) change when the package's description or status changes.
 
@@ -32,4 +32,5 @@ README: simple, fun, direct. Short and complete beats thorough and long.
 
 - Small, incremental, each green: one behaviour + its specs + docs.
 - Imperative subject <~70 chars, then a body explaining why.
-- Release: bump `ActiveRecord::MysqlRgeo::VERSION` (SemVer), move CHANGELOG entries under the new version, tag `v<version>-activerecord-mysql-rgeo`.
+- PR title: a Conventional Commit (`fix:` patch, `feat:` minor, `feat!:` major; `chore:`, `docs:`, `test:`, ... release nothing).
+- Release: merge the `chore(main): release activerecord-mysql-rgeo <version>` PR release-please keeps open. It bumps `ActiveRecord::MysqlRgeo::VERSION`, the lockfiles and the changelog, and tags `activerecord-mysql-rgeo-v<version>`. Never bump `VERSION` by hand.

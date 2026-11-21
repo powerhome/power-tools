@@ -1,0 +1,81 @@
+name: release-please
+
+# Keeps one release pull request open against main for each package with
+# releasable changes. Each bumps the package to its next version, pins it in
+# the package's Gemfile.lock and adds it to the package's changelog, worked out
+# from the Conventional Commit titles merged since its last release. Merging
+# one tags the release <package>-v<version> and creates its GitHub Release, and
+# the tag's push publishes the package through its own workflow. See
+# docs/CONTRIBUTING.md.
+#
+# It runs as the release GitHub App, not GITHUB_TOKEN: a pull request or tag
+# GITHUB_TOKEN creates starts no workflows, so the release pull requests would
+# never get their checks and the tags would never publish the packages. The
+# App's key is in the release environment, which only main can deploy to, so
+# no run from another branch or a tag can read it.
+#
+# release-please only updates each package's own Gemfile.lock, so a second job
+# pins the new version in the package's Appraisal lockfiles and in the sibling
+# packages that load it by path. See .github/scripts/pin-path-gem-versions.
+
+on:
+  push:
+    branches: [main]
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    name: Release pull requests
+    runs-on: ubuntu-latest
+    environment: release
+    outputs:
+      prs: ${{ steps.release.outputs.prs_created == 'true' && steps.release.outputs.prs || '[]' }}
+    steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Open or update the release pull requests, or tag merged ones
+        id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+  pin-lockfiles:
+    name: Pin ${{ matrix.pr.headBranchName }} in the lockfiles
+    needs: release-please
+    if: needs.release-please.outputs.prs != '[]'
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        pr: ${{ fromJSON(needs.release-please.outputs.prs) }}
+    steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ matrix.pr.headBranchName }}
+          persist-credentials: false
+      - name: Pin the released versions in the lockfiles
+        run: .github/scripts/pin-path-gem-versions "$BRANCH"
+        env:
+          BRANCH: ${{ matrix.pr.headBranchName }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
