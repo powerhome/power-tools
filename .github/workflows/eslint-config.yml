@@ -5,7 +5,7 @@ on:
 
 jobs:
   node:
-    uses: powerhome/github-actions-workflows/.github/workflows/yarn-package.yml@main
+    uses: powerhome/github-actions-workflows/.github/workflows/yarn-package.yml@85caed502d2ad2a435cab710d9901f2ef53d37f2 # main
     with:
       package: ${{ github.workflow }}
       node: '["22", "24"]'
