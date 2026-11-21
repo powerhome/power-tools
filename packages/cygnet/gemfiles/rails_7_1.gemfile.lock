@@ -315,7 +315,7 @@ GEM
     with_env (1.1.0)
     xml-simple (1.1.9)
       rexml
-    yard (0.9.38)
+    yard (0.9.44)
     zeitwerk (2.7.5)
 
 PLATFORMS
@@ -330,7 +330,7 @@ PLATFORMS
 
 DEPENDENCIES
   appraisal (~> 2.5.0)
-  bundler (~> 2.1)
+  bundler (~> 4.0)
   cygnet!
   license_finder (~> 7.0)
   pry (>= 0.14)
@@ -342,7 +342,7 @@ DEPENDENCIES
   rubocop-powerhome!
   simplecov (= 0.15.1)
   test-unit (= 3.1.5)
-  yard (= 0.9.38)
+  yard (= 0.9.44)
 
 BUNDLED WITH
-   2.5.23
+  4.1.0

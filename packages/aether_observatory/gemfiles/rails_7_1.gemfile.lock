@@ -147,7 +147,7 @@ GEM
     with_env (1.1.0)
     xml-simple (1.1.9)
       rexml
-    yard (0.9.38)
+    yard (0.9.44)
 
 PLATFORMS
   aarch64-linux
@@ -162,7 +162,7 @@ DEPENDENCIES
   activesupport (~> 7.1.5.2)
   aether_observatory!
   appraisal (~> 2.5.0)
-  bundler (~> 2.1)
+  bundler (~> 4.0)
   license_finder (~> 7.0)
   pry (>= 0.14)
   pry-byebug (= 3.10.1)
@@ -170,7 +170,7 @@ DEPENDENCIES
   rspec (~> 3.0)
   rubocop-powerhome!
   simplecov (= 0.15.1)
-  yard (= 0.9.38)
+  yard (= 0.9.44)
 
 BUNDLED WITH
-   2.5.23
+  4.1.0
