@@ -3,6 +3,7 @@
 module RuboCop
   module Cop
     module Cobra
+      require_relative "cobra/association_class"
       require_relative "cobra/constant_resolution"
       require_relative "cobra/file_placement_help"
 

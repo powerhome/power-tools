@@ -207,5 +207,123 @@ RSpec.describe RuboCop::Cop::Cobra::DeprecatedConstant, :config do
         end
       RUBY
     end
+
+    it "skips serializer and resource classes, whose DSLs reuse the association names" do
+      expect_no_offenses(<<~RUBY)
+        class HomeSerializer < ActiveModel::Serializer
+          belongs_to :territory
+        end
+
+        class BranchSerializer
+          include JSONAPI::Serializer
+          has_many :territories
+        end
+
+        class BranchResource < ApplicationResource
+          belongs_to :territory
+        end
+      RUBY
+    end
+  end
+
+  context "with names relative to the deprecated constant's namespace" do
+    it "registers an offense for references Ruby or Rails resolve to a namespaced deprecated constant" do
+      expect_offense(<<~RUBY)
+        module CoreModels
+          class Office < ApplicationRecord
+            belongs_to :region
+            ^^^^^^^^^^^^^^^^^^ `belongs_to :region` resolves to the deprecated `CoreModels::Region`. Name the replacement with `class_name: "Directory::Region"`.
+            has_one :home_region, class_name: "Region"
+                                              ^^^^^^^^ Use `Directory::Region` instead of the deprecated `CoreModels::Region`.
+
+            def region_ids
+              Region.pluck(:id)
+              ^^^^^^ Use `Directory::Region` instead of the deprecated `CoreModels::Region`.
+            end
+          end
+        end
+      RUBY
+
+      expect_correction(<<~RUBY)
+        module CoreModels
+          class Office < ApplicationRecord
+            belongs_to :region, class_name: "Directory::Region"
+            has_one :home_region, class_name: "Directory::Region"
+
+            def region_ids
+              Directory::Region.pluck(:id)
+            end
+          end
+        end
+      RUBY
+    end
+
+    it "follows Ruby's lexical lookup for a compact class and Rails' namespace lookup for its associations" do
+      expect_offense(<<~RUBY)
+        class CoreModels::Office < ApplicationRecord
+          belongs_to :region
+          ^^^^^^^^^^^^^^^^^^ `belongs_to :region` resolves to the deprecated `CoreModels::Region`. Name the replacement with `class_name: "Directory::Region"`.
+          Region.first
+        end
+      RUBY
+    end
+
+    it "does not register an offense for unrelated namespaces or the top-level name" do
+      expect_no_offenses(<<~RUBY)
+        Region.first
+        belongs_to :region
+
+        module Sales
+          class Office < ApplicationRecord
+            belongs_to :region
+            Region.first
+          end
+        end
+      RUBY
+    end
+  end
+
+  context "with associations in a concern" do
+    it "registers an offense even inside the replacement's namespace, since the including model is unknown" do
+      expect_offense(<<~RUBY)
+        module Directory
+          module HasTerritory
+            extend ActiveSupport::Concern
+
+            included do
+              belongs_to :territory
+              ^^^^^^^^^^^^^^^^^^^^^ `belongs_to :territory` resolves to the deprecated `Territory`. Name the replacement with `class_name: "Directory::Territory"`.
+              has_many :territories, class_name: "Territory"
+                                                 ^^^^^^^^^^^ Use `Directory::Territory` instead of the deprecated `Territory`.
+            end
+          end
+        end
+      RUBY
+
+      expect_correction(<<~RUBY)
+        module Directory
+          module HasTerritory
+            extend ActiveSupport::Concern
+
+            included do
+              belongs_to :territory, class_name: "Directory::Territory"
+              has_many :territories, class_name: "Directory::Territory"
+            end
+          end
+        end
+      RUBY
+    end
+
+    it "still leaves constant references to Ruby's lexical lookup" do
+      expect_no_offenses(<<~RUBY)
+        module Directory
+          module HasTerritory
+            def territory_ids
+              Territory.pluck(:id)
+            end
+          end
+        end
+      RUBY
+    end
   end
 end
