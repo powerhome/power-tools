@@ -147,7 +147,7 @@ RSpec.describe RuboCop::Cop::Cobra::DeprecatedConstant, :config do
       expect_no_offenses(<<~RUBY)
         module Directory
           class Branch < ApplicationRecord
-            belongs_to :region, class_name: "Territory"
+            belongs_to :territory, class_name: "Territory"
           end
         end
       RUBY
