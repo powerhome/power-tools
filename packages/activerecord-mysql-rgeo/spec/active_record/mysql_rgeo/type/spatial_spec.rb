@@ -33,6 +33,8 @@ RSpec.describe ActiveRecord::MysqlRgeo::Type::Spatial do
       expect(described_class.parse_sql_type("x")).to eq(["x", 0, false, false, false])
       expect(described_class.parse_sql_type("foo")).to eq(["foo", 0, false, false, false])
       expect(described_class.parse_sql_type("foo(A,1234)")).to eq(["foo(A,1234)", 0, false, false, false])
+      expect(described_class.parse_sql_type("prefix geometry(Point,4326)"))
+        .to eq(["prefix geometry(Point,4326)", 0, false, false, false])
     end
   end
 

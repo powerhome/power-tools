@@ -20,7 +20,7 @@ module ActiveRecord
         #   parse_sql_type("geography")             # => ["geography", 0, false, false, true]
         def self.parse_sql_type(sql_type)
           case sql_type
-          when /(geography|geometry)\((.*)\)$/i
+          when /\A(geography|geometry)\((.*)\)\z/i
             parse_type_parameters(Regexp.last_match(2).split(","), Regexp.last_match(1).casecmp?("geography"))
           when /\A(geography|geometry)\z/i
             [Regexp.last_match(1), 0, false, false, Regexp.last_match(1).casecmp?("geography")]
