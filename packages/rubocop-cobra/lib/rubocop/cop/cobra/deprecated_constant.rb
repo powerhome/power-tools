@@ -27,10 +27,11 @@ module RuboCop
       # (names ending in `Serializer` or `Resource`), whose DSLs share the
       # method names but take no `class_name:`.
       #
-      # Names are matched without regard to case, so an association Rails
+      # Association names are matched without regard to case, so one Rails
       # camelizes with an application acronym (`has_many :api_keys` to
-      # `APIKey`) still matches the configured constant. Custom irregular
-      # plurals are not read from the application.
+      # `APIKey`) still matches the configured constant. Constants and strings
+      # match exactly, as Ruby does, so `TERRITORY` is not `Territory`. Custom
+      # irregular plurals are not read from the application.
       #
       # @safety
       #   Autocorrection is unsafe. While the deprecated class still defines
@@ -64,7 +65,7 @@ module RuboCop
       #       Territory.find(id)      # Ruby finds Directory::Territory first
       #     end
       #   end
-      class DeprecatedConstant < RuboCop::Cop::Base
+      class DeprecatedConstant < RuboCop::Cop::Base # rubocop:disable Metrics/ClassLength
         extend AutoCorrector
         include ConstantResolution
         include AssociationClass
@@ -128,9 +129,9 @@ module RuboCop
 
         def check_association(node, method, association_name)
           name = inferred_class_name(method, association_name)
-          return unless possibly_deprecated?(name)
+          return unless possibly_deprecated?(name, ignore_case: true)
 
-          deprecated = rails_target(node, name)
+          deprecated = rails_target(node, name, ignore_case: true)
           return unless deprecated
 
           replacement = deprecated_constants[deprecated]
@@ -145,35 +146,43 @@ module RuboCop
         # The deprecated constant a reference reaches, if any, given the full
         # names Ruby or Rails tries in order. A replacement, or a constant this
         # file defines, exists, so reaching one first means the reference is
-        # already fine. Where the model is not
-        # known (a concern) any candidate may be the one Rails picks, so every
-        # candidate is checked.
-        def deprecated_target(candidates, stop_at_replacement: true)
+        # already fine. Where the model is not known (a concern) any candidate
+        # may be the one Rails picks, so every candidate is checked.
+        def deprecated_target(candidates, stop_at_replacement: true, ignore_case: false)
           reached = candidates.find do |candidate|
-            deprecated_key(candidate) || (stop_at_replacement && known_constants.include?(candidate.downcase))
+            deprecated_key(candidate, ignore_case: ignore_case) ||
+              (stop_at_replacement && known_constant?(candidate, ignore_case: ignore_case))
           end
-          reached && deprecated_key(reached)
+          reached && deprecated_key(reached, ignore_case: ignore_case)
         end
 
-        def rails_target(node, name)
-          deprecated_target(rails_candidates(node, name), stop_at_replacement: model_known?(node))
+        def rails_target(node, name, ignore_case: false)
+          deprecated_target(rails_candidates(node, name),
+                            stop_at_replacement: model_known?(node), ignore_case: ignore_case)
         end
 
         # Cheap pre-check before working out candidates: some deprecated
         # constant must end in this name.
-        def possibly_deprecated?(name)
-          name = name.downcase
-          deprecated_index.each_key.any? { |key| key == name || key.end_with?("::#{name}") }
+        def possibly_deprecated?(name, ignore_case: false)
+          keys = ignore_case ? deprecated_index.keys : deprecated_constants.keys
+          name = name.downcase if ignore_case
+          keys.any? { |key| key == name || key.end_with?("::#{name}") }
         end
 
-        # The configured spelling of a deprecated constant, matched without
-        # regard to case.
-        def deprecated_key(name)
-          deprecated_index[name.downcase]
+        # The configured spelling of a deprecated constant. Only association
+        # names, which Rails camelizes, are matched without regard to case.
+        def deprecated_key(name, ignore_case: false)
+          return deprecated_index[name.downcase] if ignore_case
+
+          name if deprecated_constants.key?(name)
         end
 
         def deprecated_index
           @deprecated_index ||= deprecated_constants.each_key.to_h { |key| [key.downcase, key] }
+        end
+
+        def known_constant?(name, ignore_case: false)
+          known_constants.any? { |known| ignore_case ? known.casecmp?(name) : known == name }
         end
 
         def register(node, name, replacement, &block)
@@ -195,7 +204,7 @@ module RuboCop
         end
 
         def known_constants
-          @known_constants ||= (deprecated_constants.values + defined_constants(processed_source.ast)).map(&:downcase)
+          @known_constants ||= deprecated_constants.values + defined_constants(processed_source.ast)
         end
 
         # The name being defined by `class X` or `module X` is not a use of X.

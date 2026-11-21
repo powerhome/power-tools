@@ -10,6 +10,7 @@ module RuboCop
       module AssociationClass
         COLLECTION_ASSOCIATIONS = %i[has_many has_and_belongs_to_many].freeze
         NON_MODEL_CLASS = /(?:Serializer|Resource)\z/
+        MODEL_PARENT = /(?:Record|ActiveRecord::Base)\z/
 
         # Options that name the class or stop Rails inferring it from the name.
         def explicit_class?(node)
@@ -20,12 +21,19 @@ module RuboCop
 
         # Serializer and API resource DSLs (ActiveModel::Serializers,
         # jsonapi-serializer, Graphiti) borrow the association method names but
-        # do not resolve a class from them or take `class_name:`.
+        # do not resolve a class from them or take `class_name:`. A class counts
+        # when its parent ends in Serializer or Resource, or when its own name
+        # does and its parent is not a model base class, so a model such as
+        # `AdditionalResource < ApplicationRecord` is still checked.
         def non_model_class?(node)
           klass = node.each_ancestor(:class).first
           return false unless klass
 
-          [klass.identifier, klass.parent_class].compact.any? { |name| name.source.match?(NON_MODEL_CLASS) }
+          parent = klass.parent_class&.source
+          return true if parent&.match?(NON_MODEL_CLASS)
+          return false if parent&.match?(MODEL_PARENT)
+
+          klass.identifier.source.match?(NON_MODEL_CLASS)
         end
 
         def options(node)

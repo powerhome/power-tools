@@ -224,6 +224,20 @@ RSpec.describe RuboCop::Cop::Cobra::DeprecatedConstant, :config do
         end
       RUBY
     end
+
+    it "registers an offense in a model whose name ends in Resource or Serializer" do
+      expect_offense(<<~RUBY)
+        class AdditionalResource < ApplicationRecord
+          belongs_to :territory
+          ^^^^^^^^^^^^^^^^^^^^^ `belongs_to :territory` resolves to the deprecated `Territory`. Name the replacement with `class_name: "Directory::Territory"`.
+        end
+
+        class StoredSerializer < ActiveRecord::Base
+          has_many :territories
+          ^^^^^^^^^^^^^^^^^^^^^ `has_many :territories` resolves to the deprecated `Territory`. Name the replacement with `class_name: "Directory::Territory"`.
+        end
+      RUBY
+    end
   end
 
   context "with names relative to the deprecated constant's namespace" do
@@ -370,6 +384,18 @@ RSpec.describe RuboCop::Cop::Cobra::DeprecatedConstant, :config do
         class Account < ApplicationRecord
           has_many :api_keys, class_name: "Auth::APIKey"
         end
+      RUBY
+    end
+
+    it "matches constants and strings exactly, as Ruby does" do
+      expect_no_offenses(<<~RUBY)
+        class ZipImporter < ZipCodesUtil
+          def parse(item)
+            item.match?(APIKEY) || item.match?(ApiKey)
+          end
+        end
+        "APIKEY".constantize
+        has_many :keys, class_name: "ApiKey"
       RUBY
     end
 
