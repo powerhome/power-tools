@@ -304,7 +304,7 @@ GEM
     with_env (1.1.0)
     xml-simple (1.1.9)
       rexml
-    yard (0.9.38)
+    yard (0.9.44)
     zeitwerk (2.7.5)
 
 PLATFORMS
@@ -329,7 +329,7 @@ DEPENDENCIES
   rspec-rails (~> 8.0.1)
   rubocop-powerhome!
   simplecov (= 0.15.1)
-  yard (= 0.9.38)
+  yard (= 0.9.44)
 
 BUNDLED WITH
    2.5.23
