@@ -27,27 +27,6 @@ rubocop-cobra is a [RuboCop plugin](https://docs.rubocop.org/rubocop/plugin_migr
 
 That's it! You can override the standard configuration after that.
 
-### Deprecating a constant
-
-`Cobra/DeprecatedConstant` flags references to constants your application has deprecated, such as a class left behind as a shim after it moved into another component. It does nothing until you list each deprecated constant and its replacement:
-
-```yml
-Cobra/DeprecatedConstant:
-  Constants:
-    Territory: Directory::Territory
-    UserTitle: Directory::Title
-```
-
-It flags constant references, `class_name:` and `constantize` strings, and associations whose class Rails infers from the name (`belongs_to :territory`), and autocorrects each to the replacement. The autocorrect is unsafe, so it only runs with `rubocop -A`: until the deprecated class is a bare shim (`class Territory < Directory::Territory; end`), it may still carry behavior the replacement lacks. It skips references that Ruby or Rails already resolve to the replacement, such as `Territory` inside `module Directory`, and the deprecated class's own definition. Remove an entry once its constant is deleted.
-
-To roll it out gradually, disable it in the components that still own the deprecated constants:
-
-```yml
-# components/core_models/.rubocop.yml
-Cobra/DeprecatedConstant:
-  Enabled: false
-```
-
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

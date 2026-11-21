@@ -117,14 +117,14 @@ RSpec.describe RuboCop::Cop::Cobra::DeprecatedConstant, :config do
   context "with string class names" do
     it "registers an offense and corrects class_name:" do
       expect_offense(<<~RUBY)
-        has_many :regions, class_name: "Territory"
-                                       ^^^^^^^^^^^ Use `Directory::Territory` instead of the deprecated `Territory`.
+        has_many :territories, class_name: "Territory"
+                                           ^^^^^^^^^^^ Use `Directory::Territory` instead of the deprecated `Territory`.
         belongs_to :home_region, class_name: '::Territory', optional: true
                                              ^^^^^^^^^^^^^ Use `Directory::Territory` instead of the deprecated `Territory`.
       RUBY
 
       expect_correction(<<~RUBY)
-        has_many :regions, class_name: "Directory::Territory"
+        has_many :territories, class_name: "Directory::Territory"
         belongs_to :home_region, class_name: 'Directory::Territory', optional: true
       RUBY
     end

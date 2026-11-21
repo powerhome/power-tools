@@ -33,14 +33,14 @@ module RuboCop
       #   Territory.find(id)
       #   ::Territory::STATUSES
       #   belongs_to :territory
-      #   has_many :regions, class_name: "Territory"
+      #   has_many :territories, class_name: "Territory"
       #   "Territory".constantize
       #
       #   # good
       #   Directory::Territory.find(id)
       #   ::Directory::Territory::STATUSES
       #   belongs_to :territory, class_name: "Directory::Territory"
-      #   has_many :regions, class_name: "Directory::Territory"
+      #   has_many :territories, class_name: "Directory::Territory"
       #   "Directory::Territory".constantize
       #
       #   module Directory
