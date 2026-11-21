@@ -65,7 +65,7 @@ module RuboCop
       #       Territory.find(id)      # Ruby finds Directory::Territory first
       #     end
       #   end
-      class DeprecatedConstant < RuboCop::Cop::Base # rubocop:disable Metrics/ClassLength
+      class DeprecatedConstant < RuboCop::Cop::Base
         extend AutoCorrector
         include ConstantResolution
         include AssociationClass
@@ -93,12 +93,12 @@ module RuboCop
           return if class_or_module_name?(node)
 
           name = node.source.gsub(/\s+/, "").delete_prefix("::")
-          return unless possibly_deprecated?(name)
+          return unless deprecations.possibly_deprecated?(name)
 
           deprecated = deprecated_target(node.absolute? ? [name] : ruby_candidates(node, name))
           return unless deprecated
 
-          replacement = deprecated_constants[deprecated]
+          replacement = deprecations.replacement_for(deprecated)
           register(node, deprecated, replacement) do |corrector|
             corrector.replace(node, node.absolute? ? "::#{replacement}" : replacement)
           end
@@ -107,7 +107,7 @@ module RuboCop
         def on_pair(node)
           class_name_string(node) do |string, value|
             name = value.delete_prefix("::")
-            next unless possibly_deprecated?(name)
+            next unless deprecations.possibly_deprecated?(name)
 
             deprecated = value.start_with?("::") ? deprecated_target([name]) : rails_target(node, name)
             register_string(string, deprecated) if deprecated
@@ -129,12 +129,12 @@ module RuboCop
 
         def check_association(node, method, association_name)
           name = inferred_class_name(method, association_name)
-          return unless possibly_deprecated?(name, ignore_case: true)
+          return unless deprecations.possibly_deprecated?(name, ignore_case: true)
 
           deprecated = rails_target(node, name, ignore_case: true)
           return unless deprecated
 
-          replacement = deprecated_constants[deprecated]
+          replacement = deprecations.replacement_for(deprecated)
           message = format(ASSOCIATION_MSG, method: method, name: association_name,
                                             deprecated: deprecated, replacement: replacement)
           add_offense(node, message: message) do |corrector|
@@ -150,35 +150,15 @@ module RuboCop
         # may be the one Rails picks, so every candidate is checked.
         def deprecated_target(candidates, stop_at_replacement: true, ignore_case: false)
           reached = candidates.find do |candidate|
-            deprecated_key(candidate, ignore_case: ignore_case) ||
+            deprecations.deprecated(candidate, ignore_case: ignore_case) ||
               (stop_at_replacement && known_constant?(candidate, ignore_case: ignore_case))
           end
-          reached && deprecated_key(reached, ignore_case: ignore_case)
+          reached && deprecations.deprecated(reached, ignore_case: ignore_case)
         end
 
         def rails_target(node, name, ignore_case: false)
           deprecated_target(rails_candidates(node, name),
                             stop_at_replacement: model_known?(node), ignore_case: ignore_case)
-        end
-
-        # Cheap pre-check before working out candidates: some deprecated
-        # constant must end in this name.
-        def possibly_deprecated?(name, ignore_case: false)
-          keys = ignore_case ? deprecated_index.keys : deprecated_constants.keys
-          name = name.downcase if ignore_case
-          keys.any? { |key| key == name || key.end_with?("::#{name}") }
-        end
-
-        # The configured spelling of a deprecated constant. Only association
-        # names, which Rails camelizes, are matched without regard to case.
-        def deprecated_key(name, ignore_case: false)
-          return deprecated_index[name.downcase] if ignore_case
-
-          name if deprecated_constants.key?(name)
-        end
-
-        def deprecated_index
-          @deprecated_index ||= deprecated_constants.each_key.to_h { |key| [key.downcase, key] }
         end
 
         def known_constant?(name, ignore_case: false)
@@ -190,21 +170,19 @@ module RuboCop
         end
 
         def register_string(string, deprecated)
-          replacement = deprecated_constants[deprecated]
+          replacement = deprecations.replacement_for(deprecated)
           prefix = "::" if string.value.start_with?("::")
           register(string, deprecated, replacement) do |corrector|
             corrector.replace(string, "#{string.loc.begin.source}#{prefix}#{replacement}#{string.loc.end.source}")
           end
         end
 
-        def deprecated_constants
-          @deprecated_constants ||= cop_config.fetch("Constants", nil).to_h.to_h do |deprecated, replacement|
-            [deprecated.to_s.delete_prefix("::"), replacement.to_s.delete_prefix("::")]
-          end
+        def deprecations
+          @deprecations ||= DeprecationList.new(cop_config["Constants"])
         end
 
         def known_constants
-          @known_constants ||= deprecated_constants.values + defined_constants(processed_source.ast)
+          @known_constants ||= deprecations.replacements + defined_constants(processed_source.ast)
         end
 
         # The name being defined by `class X` or `module X` is not a use of X.

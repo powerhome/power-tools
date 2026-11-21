@@ -5,6 +5,7 @@ module RuboCop
     module Cobra
       require_relative "cobra/association_class"
       require_relative "cobra/constant_resolution"
+      require_relative "cobra/deprecation_list"
       require_relative "cobra/file_placement_help"
 
       require_relative "cobra/command_file_placement"
