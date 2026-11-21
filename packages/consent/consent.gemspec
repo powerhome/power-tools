@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry-byebug", "3.10.1"
   spec.add_development_dependency "rake", "~> 13"
   spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "rspec-rails", "~> 6.1.5"
+  spec.add_development_dependency "rspec-rails", "~> 8.1.0"
   spec.add_development_dependency "rubocop-powerhome", "0.5.0"
   # Rails 7.1 depends on sqlite3 ~> 1.4, while newer Rails supports sqlite3 2.x.
   spec.add_development_dependency "sqlite3", ">= 1.4", "< 3.0"
