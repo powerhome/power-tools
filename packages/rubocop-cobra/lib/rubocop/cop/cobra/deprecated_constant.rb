@@ -27,10 +27,21 @@ module RuboCop
       # (names ending in `Serializer` or `Resource`), whose DSLs share the
       # method names but take no `class_name:`.
       #
+      # Names are matched without regard to case, so an association Rails
+      # camelizes with an application acronym (`has_many :api_keys` to
+      # `APIKey`) still matches the configured constant. Custom irregular
+      # plurals are not read from the application.
+      #
       # @safety
       #   Autocorrection is unsafe. While the deprecated class still defines
       #   behavior of its own, switching a caller to the replacement can
       #   change what that caller gets back.
+      #
+      #   The cop sees one file at a time. A relative name inside a namespace
+      #   that defines its own class of the same name in another file (a bare
+      #   `Territory` inside `module Sales`, where `Sales::Territory` exists)
+      #   is flagged and would be rewritten to the replacement. Classes and
+      #   constants defined in the same file are taken into account.
       #
       # @example Constants: { Territory: Directory::Territory }
       #   # bad
@@ -71,6 +82,11 @@ module RuboCop
         def_node_matcher :constantized_string, "(send $(str $_) {:constantize :safe_constantize})"
 
         def_node_matcher :class_name_string, "(pair (sym :class_name) $(str $_))"
+
+        def on_new_investigation
+          super
+          @known_constants = nil
+        end
 
         def on_const(node)
           return if class_or_module_name?(node)
@@ -127,15 +143,16 @@ module RuboCop
         end
 
         # The deprecated constant a reference reaches, if any, given the full
-        # names Ruby or Rails tries in order. A replacement exists, so reaching
-        # one first means the reference is already fine. Where the model is not
+        # names Ruby or Rails tries in order. A replacement, or a constant this
+        # file defines, exists, so reaching one first means the reference is
+        # already fine. Where the model is not
         # known (a concern) any candidate may be the one Rails picks, so every
         # candidate is checked.
         def deprecated_target(candidates, stop_at_replacement: true)
           reached = candidates.find do |candidate|
-            deprecated_constants.key?(candidate) || (stop_at_replacement && replacements.include?(candidate))
+            deprecated_key(candidate) || (stop_at_replacement && known_constants.include?(candidate.downcase))
           end
-          reached if deprecated_constants.key?(reached)
+          reached && deprecated_key(reached)
         end
 
         def rails_target(node, name)
@@ -145,7 +162,18 @@ module RuboCop
         # Cheap pre-check before working out candidates: some deprecated
         # constant must end in this name.
         def possibly_deprecated?(name)
-          deprecated_constants.each_key.any? { |key| key == name || key.end_with?("::#{name}") }
+          name = name.downcase
+          deprecated_index.each_key.any? { |key| key == name || key.end_with?("::#{name}") }
+        end
+
+        # The configured spelling of a deprecated constant, matched without
+        # regard to case.
+        def deprecated_key(name)
+          deprecated_index[name.downcase]
+        end
+
+        def deprecated_index
+          @deprecated_index ||= deprecated_constants.each_key.to_h { |key| [key.downcase, key] }
         end
 
         def register(node, name, replacement, &block)
@@ -154,8 +182,9 @@ module RuboCop
 
         def register_string(string, deprecated)
           replacement = deprecated_constants[deprecated]
+          prefix = "::" if string.value.start_with?("::")
           register(string, deprecated, replacement) do |corrector|
-            corrector.replace(string, "#{string.loc.begin.source}#{replacement}#{string.loc.end.source}")
+            corrector.replace(string, "#{string.loc.begin.source}#{prefix}#{replacement}#{string.loc.end.source}")
           end
         end
 
@@ -165,8 +194,8 @@ module RuboCop
           end
         end
 
-        def replacements
-          @replacements ||= deprecated_constants.values
+        def known_constants
+          @known_constants ||= (deprecated_constants.values + defined_constants(processed_source.ast)).map(&:downcase)
         end
 
         # The name being defined by `class X` or `module X` is not a use of X.

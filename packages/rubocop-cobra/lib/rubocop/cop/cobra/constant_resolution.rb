@@ -30,6 +30,19 @@ module RuboCop
           node.each_ancestor(:class, :module).first&.class_type? || false
         end
 
+        # Full names of the classes, modules and constants a source defines.
+        def defined_constants(ast)
+          return [] unless ast
+
+          ast.each_node(:class, :module, :casgn).filter_map do |node|
+            if node.casgn_type?
+              [lexical_scopes(node).first, node.name].compact.join("::") unless node.namespace
+            else
+              lexical_scopes(node.identifier).first
+            end
+          end
+        end
+
         # Full names of the enclosing classes and modules, innermost first.
         def lexical_scopes(node)
           names = node.each_ancestor(:class, :module).map { |scope| scope.identifier.source }

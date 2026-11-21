@@ -125,7 +125,7 @@ RSpec.describe RuboCop::Cop::Cobra::DeprecatedConstant, :config do
 
       expect_correction(<<~RUBY)
         has_many :territories, class_name: "Directory::Territory"
-        belongs_to :home_region, class_name: 'Directory::Territory', optional: true
+        belongs_to :home_region, class_name: '::Directory::Territory', optional: true
       RUBY
     end
 
@@ -139,7 +139,7 @@ RSpec.describe RuboCop::Cop::Cobra::DeprecatedConstant, :config do
 
       expect_correction(<<~RUBY)
         "Directory::Territory".constantize
-        "Directory::Title".safe_constantize
+        "::Directory::Title".safe_constantize
       RUBY
     end
 
@@ -321,6 +321,63 @@ RSpec.describe RuboCop::Cop::Cobra::DeprecatedConstant, :config do
             def territory_ids
               Territory.pluck(:id)
             end
+          end
+        end
+      RUBY
+    end
+  end
+
+  context "with a same-named class in another namespace" do
+    it "does not register an offense when the file defines the class Ruby or Rails finds first" do
+      expect_no_offenses(<<~RUBY)
+        module Sales
+          class Territory < ApplicationRecord
+            def self.active
+              Territory.where(active: true)
+            end
+          end
+
+          class Office < ApplicationRecord
+            belongs_to :territory
+            has_many :territories, class_name: "Territory"
+          end
+        end
+      RUBY
+    end
+
+    it "registers an offense when the class is defined elsewhere, since the cop sees one file at a time" do
+      expect_offense(<<~RUBY)
+        module Sales
+          Territory.find(1)
+          ^^^^^^^^^ Use `Directory::Territory` instead of the deprecated `Territory`.
+        end
+      RUBY
+    end
+  end
+
+  context "with an acronym in the class name" do
+    let(:cop_config) { { "Constants" => { "APIKey" => "Auth::APIKey" } } }
+
+    it "matches the association Rails camelizes with the application's acronym" do
+      expect_offense(<<~RUBY)
+        class Account < ApplicationRecord
+          has_many :api_keys
+          ^^^^^^^^^^^^^^^^^^ `has_many :api_keys` resolves to the deprecated `APIKey`. Name the replacement with `class_name: "Auth::APIKey"`.
+        end
+      RUBY
+
+      expect_correction(<<~RUBY)
+        class Account < ApplicationRecord
+          has_many :api_keys, class_name: "Auth::APIKey"
+        end
+      RUBY
+    end
+
+    it "does not register an offense once Rails reaches the replacement" do
+      expect_no_offenses(<<~RUBY)
+        module Auth
+          class Account < ApplicationRecord
+            has_many :api_keys
           end
         end
       RUBY
