@@ -12,7 +12,7 @@ PATH
 PATH
   remote: .
   specs:
-    data_conduit (0.2.2)
+    data_conduit (1.0.0)
       activesupport (>= 7.1.5.2, < 8.2)
       rest-client (~> 2.1)
       securerandom (>= 0.2.2)
