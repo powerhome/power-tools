@@ -33,4 +33,4 @@ README: simple, fun, direct. Short and complete beats thorough and long.
 - Small, incremental, each green: one behaviour + its specs + docs.
 - Imperative subject <~70 chars, then a body explaining why.
 - PR title: a Conventional Commit (`fix:` patch, `feat:` minor, `feat!:` major; `chore:`, `docs:`, `test:`, ... release nothing).
-- Release: merge the `chore(main): release activerecord-mysql-rgeo <version>` PR release-please keeps open. It bumps `ActiveRecord::MysqlRgeo::VERSION`, the lockfiles and the changelog, and tags `activerecord-mysql-rgeo-v<version>`. Never bump `VERSION` by hand.
+- Release: merge the `chore(main): release activerecord-mysql-rgeo <version>` PR release-please keeps open. It bumps `ActiveRecord::MysqlRgeo::VERSION`, the lockfiles and the changelog, and tags `activerecord-mysql-rgeo/v<version>`. Never bump `VERSION` by hand.

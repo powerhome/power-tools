@@ -32,6 +32,6 @@ Releases are prepared by [release-please](https://github.com/googleapis/release-
 * Title your PR as a [Conventional Commit](https://www.conventionalcommits.org/). `fix: ...` releases a patch, `feat: ...` a minor version, and `feat!: ...` a major one. `chore`, `ci`, `docs`, `refactor`, `test` and the other types release nothing. A scope such as `fix(consent): ...` is optional, since release-please finds the package from the files the PR changes. A ticket id can go at the end: `fix(data_conduit): accept sequel 6 [ORA-2386]`.
 * Don't bump the version or edit the changelog in your PR. The title becomes the changelog entry, so write it for the package's users.
 * Once your PR is merged, release-please opens or updates a release PR for each package it changed, titled `chore(main): release <package> <version>`. It bumps the version, pins it in the package's lockfiles and those of the packages that load it by path, and adds the changelog entry.
-* Merging the release PR tags `<package>-v<version>` and creates the GitHub Release. The tag's push runs the package's workflow, which publishes it to RubyGems or npm.
+* Merging the release PR tags `<package>/v<version>` and creates the GitHub Release. The tag's push runs the package's workflow, which publishes it to RubyGems or npm.
 
 A tag in the old `v<version>-<package>` format still publishes, but release-please won't know about that release: update the package's version in `.release-please-manifest.json` in the same PR that bumps it.

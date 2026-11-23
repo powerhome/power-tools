@@ -4,9 +4,10 @@ name: release-please
 # releasable changes. Each bumps the package to its next version, pins it in
 # the package's Gemfile.lock and adds it to the package's changelog, worked out
 # from the Conventional Commit titles merged since its last release. Merging
-# one tags the release <package>-v<version> and creates its GitHub Release, and
+# one tags the release <package>/v<version> and creates its GitHub Release, and
 # the tag's push publishes the package through its own workflow. See
-# docs/CONTRIBUTING.md.
+# docs/CONTRIBUTING.md. release-please always tags Ruby gems with a slash, so
+# release-please-config.json sets tag-separator to tag the npm package alike.
 #
 # It runs as the release GitHub App, not GITHUB_TOKEN: a pull request or tag
 # GITHUB_TOKEN creates starts no workflows, so the release pull requests would
