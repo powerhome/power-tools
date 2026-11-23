@@ -57,13 +57,6 @@
     }
   ],
   "packages": {
-    "packages/activerecord-mysql-rgeo": {
-      "release-type": "ruby",
-      "package-name": "activerecord-mysql-rgeo",
-      "component": "activerecord-mysql-rgeo",
-      "version-file": "lib/active_record/mysql_rgeo/version.rb",
-      "changelog-path": "docs/CHANGELOG.md"
-    },
     "packages/aether_observatory": {
       "release-type": "ruby",
       "package-name": "aether_observatory",
