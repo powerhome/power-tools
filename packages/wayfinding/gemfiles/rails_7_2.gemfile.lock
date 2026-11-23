@@ -2,11 +2,12 @@ PATH
   remote: ../../rubocop-powerhome
   specs:
     rubocop-powerhome (0.7.0)
+      lint_roller (~> 1.1)
       rubocop (= 1.82.1)
-      rubocop-performance
-      rubocop-rails
-      rubocop-rake
-      rubocop-rspec
+      rubocop-performance (>= 1.24)
+      rubocop-rails (>= 2.28)
+      rubocop-rake (>= 0.7)
+      rubocop-rspec (>= 3.5)
 
 PATH
   remote: ..
@@ -306,7 +307,7 @@ GEM
     with_env (1.1.0)
     xml-simple (1.1.9)
       rexml
-    yard (0.9.38)
+    yard (0.9.44)
     zeitwerk (2.8.3)
 
 PLATFORMS
@@ -321,7 +322,7 @@ PLATFORMS
 
 DEPENDENCIES
   appraisal (~> 2.5.0)
-  bundler (~> 2.1)
+  bundler (~> 4.0)
   license_finder (~> 7.0)
   pry (>= 0.14)
   pry-byebug (= 3.10.1)
@@ -332,7 +333,7 @@ DEPENDENCIES
   rubocop-powerhome!
   simplecov (= 0.15.1)
   wayfinding!
-  yard (= 0.9.38)
+  yard (= 0.9.44)
 
 BUNDLED WITH
-   2.5.23
+  4.1.0

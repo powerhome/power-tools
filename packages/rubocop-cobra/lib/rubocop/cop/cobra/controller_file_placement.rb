@@ -30,21 +30,19 @@ module RuboCop
           return if processed_source.blank?
 
           path = processed_source.file_path
-          return unless applicable_component_path?(path, controllers_path)
-
-          if path.include?(controller_concerns_path)
-            return if namespaced_correctly?(path, controller_concerns_path)
-
-            add_offense(processed_source.ast,
-                        message: file_placement_msg(path, controller_concerns_path))
-          end
-          return if namespaced_correctly?(path, controllers_path)
+          matcher = matcher_for(path)
+          return unless matcher
+          return if namespaced_correctly?(path, matcher)
 
           add_offense(processed_source.ast,
-                      message: file_placement_msg(path, controllers_path))
+                      message: file_placement_msg(path, matcher))
         end
 
       private
+
+        def matcher_for(path)
+          [controller_concerns_path, controllers_path].find { |matcher| applicable_component_path?(path, matcher) }
+        end
 
         def controllers_path
           "app/controllers/"

@@ -16,14 +16,16 @@ And then execute:
 
 ## Usage
 
-Add a `require` line to your `.rubocop.yml`:
+Add the plugin to your `.rubocop.yml`:
 
 ```yml
-require:
+plugins:
   - rubocop-powerhome
 ```
 
 That's it! You can override the standard configuration after that.
+
+rubocop-powerhome is a [RuboCop plugin](https://docs.rubocop.org/rubocop/plugin_migration_guide.html). It also loads rubocop-performance, rubocop-rails, rubocop-rake and rubocop-rspec as plugins, with their own default configuration, so you don't need to list them. Listing `rubocop-powerhome` under `require:` still works but RuboCop prints a deprecation warning.
 
 It's recommended that you set `AllCops/TargetRubyVersion` in your project because some cops are Ruby version-dependent. See more [here](https://docs.rubocop.org/rubocop/configuration.html#setting-the-target-ruby-version).
 

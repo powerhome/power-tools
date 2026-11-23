@@ -46,17 +46,21 @@ module RuboCop
       #   end
       #
       class ViewComponentFilePlacement < RuboCop::Cop::Base
+        include FilePlacementHelp
+
         FILE_PLACEMENT_MSG =
           "Nest ViewComponent definitions in the parent component and resource namespace. " \
           "For example: `%<correct_path>s`"
 
         def on_new_investigation
           return if processed_source.blank?
-          return unless path_contains_matcher?
-          return if namespaced_correctly?
+
+          path = processed_source.file_path
+          return unless applicable_component_path?(path, view_components_path)
+          return if nested_in_resource?(path)
 
           add_offense(processed_source.ast,
-                      message: format(FILE_PLACEMENT_MSG, correct_path: correct_path))
+                      message: format(FILE_PLACEMENT_MSG, correct_path: resource_path(path)))
         end
 
       private
@@ -65,34 +69,17 @@ module RuboCop
           "app/components/"
         end
 
-        def path
-          @path ||= processed_source.file_path
-        end
+        def nested_in_resource?(path)
+          match = component_path_match(path, view_components_path)
+          component = match[:component]
+          return false unless match[:rest].start_with?("#{component}/")
 
-        def namespaced_correctly?
-          potential_component_name = component_name
-          component_path = File.join(
-            potential_component_name,
-            view_components_path,
-            potential_component_name
-          )
-          return false unless path.include?("#{component_path}/")
-
-          sub_path = path.split("#{component_path}/").last
+          sub_path = match[:rest].delete_prefix("#{component}/")
           sub_path.include?("/") || sub_path == "application_component.rb"
         end
 
-        def correct_path
-          file = path.split("/").last
-          "#{view_components_path}#{component_name}/<resource>/#{file}"
-        end
-
-        def component_name
-          path.split(view_components_path).first.split("/").last
-        end
-
-        def path_contains_matcher?
-          path.include?(view_components_path)
+        def resource_path(path)
+          "#{view_components_path}#{component_name(path, view_components_path)}/<resource>/#{File.basename(path)}"
         end
       end
     end

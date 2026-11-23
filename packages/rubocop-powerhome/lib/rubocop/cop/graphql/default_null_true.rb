@@ -24,7 +24,7 @@ module RuboCop
 
         def_node_matcher :field_config_with_null_true?, <<-PATTERN
           (
-            send nil? :field ... (hash $(pair (sym :null) (true)) ...)
+            send nil? :field ... (hash <$(pair (sym :null) (true)) ...>)
           )
         PATTERN
 

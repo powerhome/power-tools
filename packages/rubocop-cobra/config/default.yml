@@ -12,17 +12,24 @@ Cobra/ControllerFilePlacement:
   VersionAdded: '0.1.0'
 
 Cobra/DependencyVersion:
-  Description: 'External component dependencies should be declared with a version'
+  Description: 'Gemspec dependencies should be declared with a version'
   Enabled: true
   VersionAdded: '0.1.0'
+
+Cobra/DeprecatedConstant:
+  Description: 'Flags references to constants the application has deprecated, such as a class left behind as a shim after moving to another component.'
+  Enabled: true
+  VersionAdded: '0.6.0'
+  # The replacement only behaves the same once the deprecated class is a bare
+  # shim, so autocorrect runs only with `rubocop -A`.
+  SafeAutoCorrect: false
+  # Each deprecated constant mapped to its replacement, e.g.
+  #   Territory: Directory::Territory
+  # The cop does nothing until the application lists at least one.
+  Constants: {}
 
 Cobra/GemRequirement:
   Description: 'Component Gemfile dependencies must specify "require: nil"'
-  Enabled: true
-  VersionAdded: '0.1.0'
-
-Cobra/HelperFilePlacement:
-  Description: 'This cop disallows adding global helpers to the `app/helpers` directory.'
   Enabled: true
   VersionAdded: '0.1.0'
 

@@ -33,11 +33,14 @@ module RuboCop
       #     end
       #   end
       class RenameTable < RuboCop::Cop::Base
+        include DownDirection
+
         MSG = "Do not rename tables. It will cause down time in your application " \
               "and is unsafe for pt-online-schema-change."
 
         def on_send(node)
           return unless rename_table?(node)
+          return if in_down_direction?(node)
 
           add_offense(node)
         end

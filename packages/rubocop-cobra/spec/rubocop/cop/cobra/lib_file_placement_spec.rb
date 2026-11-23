@@ -43,6 +43,24 @@ RSpec.describe RuboCop::Cop::Cobra::LibFilePlacement do
 
       expect_no_offenses(source, file_path)
     end
+
+    it "when the component name contains lib" do
+      file_path = "components/pdf_lib/app/models/pdf_lib/foo.rb"
+
+      expect_no_offenses(source, file_path)
+    end
+
+    it "when a parent directory of the checkout is named lib" do
+      file_path = "/var/lib/ci/nitro-web/components/my_component/app/models/my_component/foo.rb"
+
+      expect_no_offenses(source, file_path)
+    end
+
+    it "when lib/ is nested below the component root" do
+      file_path = "components/my_component/app/lib/foo.rb"
+
+      expect_no_offenses(source, file_path)
+    end
   end
 
   context "registers an offense" do
@@ -66,6 +84,18 @@ RSpec.describe RuboCop::Cop::Cobra::LibFilePlacement do
       RUBY
 
       file_path = "components/my_component/lib/other_namespace/my_file.rb"
+
+      expect_offense(source, file_path)
+    end
+
+    it "when a parent directory of the checkout is named lib" do
+      source = <<~RUBY
+        class Foo
+        ^^^^^^^^^ Cobra/LibFilePlacement: Do not add top-level files into `lib/`. Namespace them like `lib/my_component/foo.rb`
+        end
+      RUBY
+
+      file_path = "/var/lib/ci/nitro-web/components/my_component/lib/foo.rb"
 
       expect_offense(source, file_path)
     end

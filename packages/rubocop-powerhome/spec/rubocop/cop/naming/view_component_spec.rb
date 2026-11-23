@@ -41,4 +41,21 @@ RSpec.describe RuboCop::Cop::Naming::ViewComponent do
       end
     RUBY
   end
+
+  it "registers an offense when inheriting from an unqualified ApplicationComponent" do
+    expect_offense(<<-RUBY)
+      module MyComponent
+        class Foo < ApplicationComponent
+              ^^^ Naming/ViewComponent: End ViewComponent classnames with 'Component'
+        end
+      end
+    RUBY
+  end
+
+  it "does not register an offense for a class whose parent only ends in ApplicationComponent" do
+    expect_no_offenses(<<~RUBY)
+      class Foo < LegacyApplicationComponent
+      end
+    RUBY
+  end
 end

@@ -1,5 +1,14 @@
 # Changelog
 
+- Add `Cobra/DeprecatedConstant`, which flags references to constants an application lists as deprecated under `Constants` (for example a class that moved into another component), including `class_name:` and `constantize` strings and associations whose class Rails infers from the name. Relative names are resolved through the enclosing namespaces as Ruby and Rails would, associations in concerns are flagged whenever the including model could reach a deprecated class, and serializer and resource classes are skipped. It does nothing until configured
+- rubocop-cobra is now a RuboCop plugin (lint_roller), replacing the `Inject` config monkey patch. Load it with `plugins: - rubocop-cobra` in `.rubocop.yml`; `require: - rubocop-cobra` still works but RuboCop prints a deprecation warning
+- **Breaking:** Remove `Cobra/HelperFilePlacement`. It told developers to namespace helpers that `Style/NoHelpers` (rubocop-powerhome) says should not exist. Configuration that still names it now fails with a message pointing to `Style/NoHelpers`; delete those entries (e.g. from `.rubocop_todo.yml`)
+- `Cobra/GemRequirement` now checks every `path ".."` block wherever it appears in the Gemfile, including gems nested in a `group` and gems with other options alongside `require: nil`. Previously it only checked a path block that was the last statement in the file
+- Fix `Cobra/Inheritance` allowing a top-level `::ApplicationRecord` (or other protected constant) with a leading `::`
+- Anchor the file placement cops on `components/<name>/<dir>/`. A `lib/` or `components/` elsewhere in the path (a parent directory, a component named `pdf_lib`, `app/lib/`) no longer triggers false offenses, and `Cobra/ViewComponentFilePlacement` ignores files outside a component
+- Run the previously skipped `Cobra/DependencyVersion` spec, and reword its message: it applies to every gemspec dependency, not only external components
+- Fix `rubocop --debug` crashing with `undefined method 'logger' for module RuboCop::Rails`
+
 ## [0.5.0] - 2026-07-28
 
 [HFH-4410 - Bump powertools for Rails 8.1.3 V2](https://github.com/powerhome/power-tools/pull/426)
