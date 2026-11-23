@@ -17,6 +17,6 @@
   "packages/rabbet": "0.0.3",
   "packages/rubocop-cobra": "0.5.0",
   "packages/rubocop-powerhome": "0.7.0",
-  "packages/two_percent": "1.3.1",
+  "packages/two_percent": "2.0.0",
   "packages/wayfinding": "0.0.1"
 }

@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.0.0](https://github.com/powerhome/power-tools/compare/two_percent/v1.3.1...two_percent/v2.0.0) (2026-11-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* fix custom cop bugs and convert rubocop-cobra and rubocop-powerhome to RuboCop plugins [HFH-5249] ([#469](https://github.com/powerhome/power-tools/issues/469))
+
+### Added
+
+* fix custom cop bugs and convert rubocop-cobra and rubocop-powerhome to RuboCop plugins [HFH-5249] ([#469](https://github.com/powerhome/power-tools/issues/469)) ([21ecda2](https://github.com/powerhome/power-tools/commit/21ecda2217b909146c7a50b47a6d20e14f0b633e))
+
+
+### Fixed
+
+* **deps:** Update dependency sqlite3 to v2.10.2 [SECURITY] ([#453](https://github.com/powerhome/power-tools/issues/453)) ([44d08d6](https://github.com/powerhome/power-tools/commit/44d08d6c243883bec09809fa29124075bf322f5a))
+* **deps:** update puma to v7.2.1 [SECURITY] ([#437](https://github.com/powerhome/power-tools/issues/437)) ([d34e6f0](https://github.com/powerhome/power-tools/commit/d34e6f0c77fc2bd5d53adc1bad36a573c2b51ee0))
+
 ## [0.6.0] - 2026-07-28
 
 [HFH-4410 - Bump powertools for Rails 8.1.3 V2](https://github.com/powerhome/power-tools/pull/426)
