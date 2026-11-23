@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Add `Cobra/EngineIsolateNamespace`, which requires every Rails engine to call `isolate_namespace` with the module it is defined in, so its routes, helpers and models stay out of the host application
 - rubocop-cobra is now a RuboCop plugin (lint_roller), replacing the `Inject` config monkey patch. Load it with `plugins: - rubocop-cobra` in `.rubocop.yml`; `require: - rubocop-cobra` still works but RuboCop prints a deprecation warning
 - **Breaking:** Remove `Cobra/HelperFilePlacement`. It told developers to namespace helpers that `Style/NoHelpers` (rubocop-powerhome) says should not exist. Configuration that still names it now fails with a message pointing to `Style/NoHelpers`; delete those entries (e.g. from `.rubocop_todo.yml`)
 - `Cobra/GemRequirement` now checks every `path ".."` block wherever it appears in the Gemfile, including gems nested in a `group` and gems with other options alongside `require: nil`. Previously it only checked a path block that was the last statement in the file

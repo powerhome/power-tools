@@ -8,6 +8,7 @@ module RuboCop
       require_relative "cobra/command_file_placement"
       require_relative "cobra/controller_file_placement"
       require_relative "cobra/dependency_version"
+      require_relative "cobra/engine_isolate_namespace"
       require_relative "cobra/gem_requirement"
       require_relative "cobra/inheritance"
       require_relative "cobra/job_file_placement"
