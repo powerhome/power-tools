@@ -12,7 +12,7 @@
   "packages/edgestitch": "0.6.0",
   "packages/eslint-config": "0.3.0",
   "packages/lumberaxe": "0.3.0",
-  "packages/nitro_config": "0.3.0",
+  "packages/nitro_config": "1.0.0",
   "packages/ostruct-sanitizer": "0.7.0",
   "packages/rabbet": "0.0.3",
   "packages/rubocop-cobra": "0.5.0",
