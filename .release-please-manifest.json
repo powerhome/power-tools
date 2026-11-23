@@ -2,7 +2,7 @@
   "packages/activerecord-mysql-rgeo": "1.0.0",
   "packages/aether_observatory": "1.2.0",
   "packages/api_chai": "0.1.0",
-  "packages/audit_tracker": "0.2.0",
+  "packages/audit_tracker": "1.0.0",
   "packages/camel_trail": "1.3.0",
   "packages/consent": "2.7.1",
   "packages/cygnet": "0.1.0",

@@ -12,7 +12,7 @@ PATH
 PATH
   remote: .
   specs:
-    audit_tracker (0.2.0)
+    audit_tracker (1.0.0)
 
 GEM
   remote: https://rubygems.org/
