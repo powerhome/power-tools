@@ -12,6 +12,14 @@
   - [Dependabot #971](https://github.com/powerhome/power-tools/security/dependabot/971)
   - [Dependabot #797](https://github.com/powerhome/power-tools/security/dependabot/797)
 
+## [0.3.1](https://github.com/powerhome/power-tools/compare/eslint-config/v0.3.0...eslint-config/v0.3.1) (2026-11-23)
+
+
+### Fixed
+
+* **deps:** Update dependency @babel/core to v7.29.6 [SECURITY] ([#451](https://github.com/powerhome/power-tools/issues/451)) ([d42f9e3](https://github.com/powerhome/power-tools/commit/d42f9e3802b603a2a232571ef9d065827a39cde0))
+* **deps:** update minimatch to v11 [SECURITY] ([#467](https://github.com/powerhome/power-tools/issues/467)) ([d3791a5](https://github.com/powerhome/power-tools/commit/d3791a56b7866a424bcabc234b66326e613b2c97))
+
 ## [0.2.2] - 2026-01-14
 
 - Bump many dependencies
