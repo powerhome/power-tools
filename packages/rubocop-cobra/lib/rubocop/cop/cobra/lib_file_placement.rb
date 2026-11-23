@@ -8,7 +8,7 @@ module RuboCop
       # The goal is to encourage developers to put new library files inside the correct
       # namespace, where they can be more modularly isolated and ownership is clear.
       #
-      # Exceptions to this rule are `spec/lib/*` and `lib/tasks/*` file patterns.
+      # `lib/tasks/*` files are exempt.
       #
       # @example
       #   # bad
@@ -42,7 +42,7 @@ module RuboCop
       private
 
         def acceptable_lib_path?(path)
-          path.include?("lib/tasks/") || path.include?("spec/lib/")
+          applicable_component_path?(path, "lib/tasks/")
         end
 
         def lib_path

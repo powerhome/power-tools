@@ -30,21 +30,19 @@ module RuboCop
           return if processed_source.blank?
 
           path = processed_source.file_path
-          return unless applicable_component_path?(path, models_path)
-
-          if path.include?(model_concerns_path)
-            return if namespaced_correctly?(path, model_concerns_path)
-
-            add_offense(processed_source.ast,
-                        message: file_placement_msg(path, model_concerns_path))
-          end
-          return if namespaced_correctly?(path, models_path)
+          matcher = matcher_for(path)
+          return unless matcher
+          return if namespaced_correctly?(path, matcher)
 
           add_offense(processed_source.ast,
-                      message: file_placement_msg(path, models_path))
+                      message: file_placement_msg(path, matcher))
         end
 
       private
+
+        def matcher_for(path)
+          [model_concerns_path, models_path].find { |matcher| applicable_component_path?(path, matcher) }
+        end
 
         def models_path
           "app/models/"

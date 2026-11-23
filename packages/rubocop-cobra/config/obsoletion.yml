@@ -1,0 +1,5 @@
+# Cops removed from rubocop-cobra. RuboCop reports configuration that still
+# references them with the alternative listed here.
+removed:
+  Cobra/HelperFilePlacement:
+    alternatives: Style/NoHelpers

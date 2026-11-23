@@ -14,5 +14,19 @@ RSpec.describe RuboCop::Cop::Migration::RenameTable, :config do
         end
       RUBY
     end
+
+    it "does not register an offense in a down method" do
+      expect_no_offenses(<<~RUBY)
+        class Example < ActiveRecord::Migration[7.0]
+          def up
+            create_table :accounts
+          end
+
+          def down
+            rename_table :accounts, :users
+          end
+        end
+      RUBY
+    end
   end
 end

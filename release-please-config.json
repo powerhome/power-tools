@@ -1,0 +1,200 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "last-release-sha": "099453fa02e1a343a0fd3ed6996ed42f0c27259e",
+  "separate-pull-requests": true,
+  "tag-separator": "/",
+  "changelog-sections": [
+    {
+      "type": "feat",
+      "section": "Added"
+    },
+    {
+      "type": "fix",
+      "section": "Fixed"
+    },
+    {
+      "type": "perf",
+      "section": "Changed"
+    },
+    {
+      "type": "revert",
+      "section": "Reverted"
+    },
+    {
+      "type": "docs",
+      "section": "Documentation",
+      "hidden": true
+    },
+    {
+      "type": "refactor",
+      "section": "Refactoring",
+      "hidden": true
+    },
+    {
+      "type": "test",
+      "section": "Tests",
+      "hidden": true
+    },
+    {
+      "type": "build",
+      "section": "Build",
+      "hidden": true
+    },
+    {
+      "type": "ci",
+      "section": "CI",
+      "hidden": true
+    },
+    {
+      "type": "style",
+      "section": "Style",
+      "hidden": true
+    },
+    {
+      "type": "chore",
+      "section": "Chores",
+      "hidden": true
+    }
+  ],
+  "packages": {
+    "packages/activerecord-mysql-rgeo": {
+      "release-type": "ruby",
+      "package-name": "activerecord-mysql-rgeo",
+      "component": "activerecord-mysql-rgeo",
+      "version-file": "lib/active_record/mysql_rgeo/version.rb",
+      "changelog-path": "docs/CHANGELOG.md"
+    },
+    "packages/aether_observatory": {
+      "release-type": "ruby",
+      "package-name": "aether_observatory",
+      "component": "aether_observatory",
+      "version-file": "lib/aether_observatory/version.rb",
+      "changelog-path": "docs/CHANGELOG.md"
+    },
+    "packages/api_chai": {
+      "release-type": "ruby",
+      "package-name": "api_chai",
+      "component": "api_chai",
+      "version-file": "lib/api_chai/version.rb",
+      "changelog-path": "docs/CHANGELOG.md"
+    },
+    "packages/audit_tracker": {
+      "release-type": "ruby",
+      "package-name": "audit_tracker",
+      "component": "audit_tracker",
+      "version-file": "lib/audit_tracker/version.rb",
+      "changelog-path": "docs/CHANGELOG.md"
+    },
+    "packages/camel_trail": {
+      "release-type": "ruby",
+      "package-name": "camel_trail",
+      "component": "camel_trail",
+      "version-file": "lib/camel_trail/version.rb",
+      "changelog-path": "docs/CHANGELOG.md"
+    },
+    "packages/consent": {
+      "release-type": "ruby",
+      "package-name": "consent",
+      "component": "consent",
+      "version-file": "lib/consent/version.rb",
+      "changelog-path": "docs/CHANGELOG.md"
+    },
+    "packages/cygnet": {
+      "release-type": "ruby",
+      "package-name": "cygnet",
+      "component": "cygnet",
+      "version-file": "lib/cygnet/version.rb",
+      "changelog-path": "docs/CHANGELOG.md"
+    },
+    "packages/data_conduit": {
+      "release-type": "ruby",
+      "package-name": "data_conduit",
+      "component": "data_conduit",
+      "version-file": "lib/data_conduit/version.rb",
+      "changelog-path": "docs/CHANGELOG"
+    },
+    "packages/data_taster": {
+      "release-type": "ruby",
+      "package-name": "data_taster",
+      "component": "data_taster",
+      "version-file": "lib/data_taster/version.rb",
+      "changelog-path": "docs/CHANGELOG.md"
+    },
+    "packages/dep_shield": {
+      "release-type": "ruby",
+      "package-name": "dep_shield",
+      "component": "dep_shield",
+      "version-file": "lib/dep_shield/version.rb",
+      "changelog-path": "CHANGELOG.md"
+    },
+    "packages/edgestitch": {
+      "release-type": "ruby",
+      "package-name": "edgestitch",
+      "component": "edgestitch",
+      "version-file": "lib/edgestitch/version.rb",
+      "changelog-path": "docs/CHANGELOG.md"
+    },
+    "packages/eslint-config": {
+      "release-type": "node",
+      "package-name": "@powerhome/eslint-config",
+      "component": "eslint-config",
+      "changelog-path": "docs/CHANGELOG.md"
+    },
+    "packages/lumberaxe": {
+      "release-type": "ruby",
+      "package-name": "lumberaxe",
+      "component": "lumberaxe",
+      "version-file": "lib/lumberaxe/version.rb",
+      "changelog-path": "docs/CHANGELOG.md"
+    },
+    "packages/nitro_config": {
+      "release-type": "ruby",
+      "package-name": "nitro_config",
+      "component": "nitro_config",
+      "version-file": "lib/nitro_config/version.rb",
+      "changelog-path": "docs/CHANGELOG.md"
+    },
+    "packages/ostruct-sanitizer": {
+      "release-type": "ruby",
+      "package-name": "ostruct-sanitizer",
+      "component": "ostruct-sanitizer",
+      "version-file": "lib/ostruct/sanitizer/version.rb",
+      "changelog-path": "docs/CHANGELOG.md"
+    },
+    "packages/rabbet": {
+      "release-type": "ruby",
+      "package-name": "rabbet",
+      "component": "rabbet",
+      "version-file": "lib/rabbet/version.rb",
+      "changelog-path": "docs/CHANGELOG.md"
+    },
+    "packages/rubocop-cobra": {
+      "release-type": "ruby",
+      "package-name": "rubocop-cobra",
+      "component": "rubocop-cobra",
+      "version-file": "lib/rubocop/cobra/version.rb",
+      "changelog-path": "CHANGELOG.md"
+    },
+    "packages/rubocop-powerhome": {
+      "release-type": "ruby",
+      "package-name": "rubocop-powerhome",
+      "component": "rubocop-powerhome",
+      "version-file": "lib/rubocop/powerhome/version.rb",
+      "changelog-path": "CHANGELOG.md"
+    },
+    "packages/two_percent": {
+      "release-type": "ruby",
+      "package-name": "two_percent",
+      "component": "two_percent",
+      "version-file": "lib/two_percent/version.rb",
+      "changelog-path": "docs/CHANGELOG.md"
+    },
+    "packages/wayfinding": {
+      "release-type": "ruby",
+      "package-name": "wayfinding",
+      "component": "wayfinding",
+      "version-file": "lib/wayfinding/version.rb",
+      "changelog-path": "docs/CHANGELOG.md"
+    }
+  }
+}

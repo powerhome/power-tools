@@ -2,11 +2,12 @@ PATH
   remote: ../../rubocop-powerhome
   specs:
     rubocop-powerhome (0.7.0)
+      lint_roller (~> 1.1)
       rubocop (= 1.82.1)
-      rubocop-performance
-      rubocop-rails
-      rubocop-rake
-      rubocop-rspec
+      rubocop-performance (>= 1.24)
+      rubocop-rails (>= 2.28)
+      rubocop-rake (>= 0.7)
+      rubocop-rspec (>= 3.5)
 
 PATH
   remote: ..
@@ -306,7 +307,7 @@ GEM
     with_env (1.1.0)
     xml-simple (1.1.9)
       rexml
-    yard (0.9.38)
+    yard (0.9.44)
     zeitwerk (2.7.5)
 
 PLATFORMS
@@ -331,7 +332,7 @@ DEPENDENCIES
   rspec-rails (~> 7.1.1)
   rubocop-powerhome!
   simplecov (= 0.15.1)
-  yard (= 0.9.38)
+  yard (= 0.9.44)
 
 BUNDLED WITH
    2.5.23

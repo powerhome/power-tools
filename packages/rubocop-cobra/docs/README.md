@@ -16,12 +16,14 @@ And then execute:
 
 ## Usage
 
-Add a `require` line to your `.rubocop.yml`:
+Add the plugin to your `.rubocop.yml`:
 
 ```yml
-require:
+plugins:
   - rubocop-cobra
 ```
+
+rubocop-cobra is a [RuboCop plugin](https://docs.rubocop.org/rubocop/plugin_migration_guide.html), so it needs RuboCop 1.72 or newer. Listing it under `require:` still works but RuboCop prints a deprecation warning.
 
 That's it! You can override the standard configuration after that.
 

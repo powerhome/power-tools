@@ -11,6 +11,6 @@ module RuboCop
     private_constant(:CONFIG_DEFAULT, :PROJECT_ROOT)
 
     require_relative "powerhome/version"
-    require_relative "powerhome/inject"
+    require_relative "powerhome/plugin"
   end
 end

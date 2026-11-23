@@ -35,6 +35,21 @@ RSpec.describe RuboCop::Cop::Cobra::Inheritance do
     RUBY
   end
 
+  it "registers an offense when inheriting from top-level ::ApplicationRecord" do
+    expect_offense(<<-RUBY)
+      class Foo < ::ApplicationRecord
+                  ^^^^^^^^^^^^^^^^^^^ Cobra/Inheritance: Do not directly inherit from a global ApplicationRecord. Instead, inherit from your component's modularized ApplicationRecord, such as MyComponent::ApplicationRecord.
+      end
+    RUBY
+  end
+
+  it "accepts top-level ::MyComponent::ApplicationRecord inheritance" do
+    expect_no_offenses(<<~RUBY)
+      class Foo < ::MyComponent::ApplicationRecord
+      end
+    RUBY
+  end
+
   it "accepts modularized ApiController inheritance" do
     expect_no_offenses(<<~RUBY)
       class FooController < MyComponent::ApiController

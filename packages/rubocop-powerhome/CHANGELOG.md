@@ -1,4 +1,12 @@
-## [Unreleased]
+# Changelog
+
+- Move the `Metrics/BlockLength` exemptions for `describe` and `context` from the deprecated `IgnoredMethods` key to `AllowedMethods`, keeping RuboCop's default `refine` exemption
+- rubocop-powerhome is now a RuboCop plugin (lint_roller), replacing the `Inject` config monkey patch. Load it with `plugins: - rubocop-powerhome`; `require:` still works with a deprecation warning
+- **Breaking:** rubocop-performance, rubocop-rails, rubocop-rake and rubocop-rspec are loaded as plugins, so their own default configuration now applies. Previously, with plugin-era versions of those gems, their cops ran without their defaults (for example `Performance/Casecmp` ran although it is disabled by default, and Rails cops ignored their `Include` paths). Requires rubocop-performance >= 1.24, rubocop-rails >= 2.28, rubocop-rake >= 0.7 and rubocop-rspec >= 3.5
+- Migration cops no longer flag rollbacks (`def down`, `dir.down` in `reversible`), and `Migration/AcknowledgeIgnoredColumn` now covers `remove_columns`, `remove_reference`, `remove_belongs_to`, `remove_timestamps` and their `change_table` forms
+- Fix `GraphQL/FieldTypeInBlock` skipping every field declared inside a block (e.g. `included do`), and fix an undefined variable in one of its error messages
+- Fix `Naming/ViewComponent` skipping classes that inherit from an unqualified `ApplicationComponent`
+- Fix `GraphQL/DefaultNullTrue` missing `null: true` when it is not the first keyword argument
 
 ## [0.7.0] - 2026-07-28
 
