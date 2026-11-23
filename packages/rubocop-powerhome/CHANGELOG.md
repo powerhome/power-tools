@@ -8,6 +8,17 @@
 - Fix `Naming/ViewComponent` skipping classes that inherit from an unqualified `ApplicationComponent`
 - Fix `GraphQL/DefaultNullTrue` missing `null: true` when it is not the first keyword argument
 
+## [1.0.0](https://github.com/powerhome/power-tools/compare/rubocop-powerhome/v0.7.0...rubocop-powerhome/v1.0.0) (2026-11-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* fix custom cop bugs and convert rubocop-cobra and rubocop-powerhome to RuboCop plugins [HFH-5249] ([#469](https://github.com/powerhome/power-tools/issues/469))
+
+### Added
+
+* fix custom cop bugs and convert rubocop-cobra and rubocop-powerhome to RuboCop plugins [HFH-5249] ([#469](https://github.com/powerhome/power-tools/issues/469)) ([21ecda2](https://github.com/powerhome/power-tools/commit/21ecda2217b909146c7a50b47a6d20e14f0b633e))
+
 ## [0.7.0] - 2026-07-28
 
 [HFH-4410 - Bump powertools for Rails 8.1.3 V2](https://github.com/powerhome/power-tools/pull/426)
