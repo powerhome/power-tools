@@ -21,7 +21,7 @@ Code should look at home in Rails' `activerecord/lib`.
 - Rails-style config: `ActiveRecord::MysqlRgeo.configure` or `config.active_record.*`-like accessors, plus `database.yml` keys where connection-related.
 - Deprecate before removing: gem-specific `ActiveSupport::Deprecation.new(next_major, "activerecord-mysql-rgeo")`, registered with `Rails.application.deprecators` when Rails is present.
 - Use `ActiveSupport.on_load`; never force-load AR components early.
-- Support AR 7.2 through edge. Branch on `ActiveRecord.gem_version` in one named constant; never on `RUBY_VERSION` or `respond_to?` guesses.
+- Support AR 7.2 through 8.1. Branch on `ActiveRecord.gem_version` in one named constant; never on `RUBY_VERSION` or `respond_to?` guesses.
 
 ## Dependencies
 

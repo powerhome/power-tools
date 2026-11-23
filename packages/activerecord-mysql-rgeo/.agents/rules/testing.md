@@ -18,7 +18,7 @@ Commit spec with the code that passes it. Bug fixes start with a spec reproducin
 
 - **Real MySQL server.** Stubbing the connection proves nothing: don't mock adapter internals, `execute`, or query results. Doubles OK for pure Ruby collaborators (e.g. WKT/WKB parsing).
 - **Both drivers.** `bundle exec rake` runs with `DB_ADAPTER=trilogy` and `DB_ADAPTER=mysql2`. Specs don't assume a driver; if behaviour truly differs, tag the spec and say why.
-- **Every supported AR version.** `bundle exec appraisal <name> rake` for each appraisal touched (`rails-7-2`, `rails-8-0`, `rails-8-1`, `rails-edge`). Version checks go in code under test, never specs.
+- **Every supported AR version.** `bundle exec appraisal <name> rake` for each appraisal touched (`rails-7-2`, `rails-8-0`, `rails-8-1`). Version checks go in code under test, never specs.
 - **Public surface:** models, migrations, `schema.rb` dumps, Arel queries, `connection.columns`. Avoid asserting on private methods.
 - **Port upstream tests first:** when porting from activerecord-mysql2rgeo-adapter, port its `test/cases/*_test.rb` to RSpec before the code.
 - **Clean DB:** specs create and drop their own tables; any order works.

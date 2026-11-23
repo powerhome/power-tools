@@ -11,7 +11,7 @@ adapter, keep your connection, get points and polygons.
 ## Requirements
 
 - Ruby 3.3+
-- Active Record 7.2, 8.0, 8.1 or edge
+- Active Record 7.2, 8.0 or 8.1
 - MySQL 8.0 or 8.4 (not MariaDB)
 - [trilogy](https://github.com/trilogy-libraries/trilogy) or
   [mysql2](https://github.com/brianmario/mysql2). Bring your own; this gem

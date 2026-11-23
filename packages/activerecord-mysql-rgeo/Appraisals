@@ -13,14 +13,3 @@ end
 appraise "rails-8-1" do
   gem "activerecord", "~> 8.1.0"
 end
-
-appraise "rails-edge" do
-  remove_gem "railties"
-
-  git "https://github.com/rails/rails.git", branch: "main" do
-    gem "activerecord"
-    gem "activemodel"
-    gem "activesupport"
-    gem "railties"
-  end
-end
