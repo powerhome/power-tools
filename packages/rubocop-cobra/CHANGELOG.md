@@ -10,6 +10,19 @@
 - Run the previously skipped `Cobra/DependencyVersion` spec, and reword its message: it applies to every gemspec dependency, not only external components
 - Fix `rubocop --debug` crashing with `undefined method 'logger' for module RuboCop::Rails`
 
+## [1.0.0](https://github.com/powerhome/power-tools/compare/rubocop-cobra/v0.5.0...rubocop-cobra/v1.0.0) (2026-11-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* fix custom cop bugs and convert rubocop-cobra and rubocop-powerhome to RuboCop plugins [HFH-5249] ([#469](https://github.com/powerhome/power-tools/issues/469))
+
+### Added
+
+* fix custom cop bugs and convert rubocop-cobra and rubocop-powerhome to RuboCop plugins [HFH-5249] ([#469](https://github.com/powerhome/power-tools/issues/469)) ([21ecda2](https://github.com/powerhome/power-tools/commit/21ecda2217b909146c7a50b47a6d20e14f0b633e))
+* **rubocop-cobra:** add Cobra/DeprecatedConstant [HFH-5252] ([#470](https://github.com/powerhome/power-tools/issues/470)) ([5255f96](https://github.com/powerhome/power-tools/commit/5255f96493a3fa000a9f5c4f058894a0e60462a2))
+* **rubocop-cobra:** add Cobra/EngineIsolateNamespace [HFH-5254] ([#478](https://github.com/powerhome/power-tools/issues/478)) ([cd62717](https://github.com/powerhome/power-tools/commit/cd62717c848d149d4d25f2dac35ceed07af2102a))
+
 ## [0.5.0] - 2026-07-28
 
 [HFH-4410 - Bump powertools for Rails 8.1.3 V2](https://github.com/powerhome/power-tools/pull/426)
