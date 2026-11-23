@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/powerhome/power-tools/compare/activerecord-mysql-rgeo/v1.0.0...activerecord-mysql-rgeo/v2.0.0) (2026-11-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* fix custom cop bugs and convert rubocop-cobra and rubocop-powerhome to RuboCop plugins [HFH-5249] ([#469](https://github.com/powerhome/power-tools/issues/469))
+
+### Added
+
+* fix custom cop bugs and convert rubocop-cobra and rubocop-powerhome to RuboCop plugins [HFH-5249] ([#469](https://github.com/powerhome/power-tools/issues/469)) ([21ecda2](https://github.com/powerhome/power-tools/commit/21ecda2217b909146c7a50b47a6d20e14f0b633e))
+
 ## [1.0.0] - 2026-11-18
 
 - Initial project setup: Active Record 7.2 through edge, trilogy and mysql2

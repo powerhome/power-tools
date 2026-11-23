@@ -12,7 +12,7 @@ PATH
 PATH
   remote: .
   specs:
-    activerecord-mysql-rgeo (1.0.0)
+    activerecord-mysql-rgeo (2.0.0)
       activerecord (>= 7.2)
       rgeo-activerecord (>= 8.0)
 
