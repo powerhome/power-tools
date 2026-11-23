@@ -12,7 +12,7 @@ PATH
 PATH
   remote: .
   specs:
-    consent (2.7.1)
+    consent (3.0.0)
       cancancan (= 3.2.1)
 
 GEM

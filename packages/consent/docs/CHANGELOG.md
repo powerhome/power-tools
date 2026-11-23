@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.0.0](https://github.com/powerhome/power-tools/compare/consent/v2.7.1...consent/v3.0.0) (2026-11-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* fix custom cop bugs and convert rubocop-cobra and rubocop-powerhome to RuboCop plugins [HFH-5249] ([#469](https://github.com/powerhome/power-tools/issues/469))
+
+### Added
+
+* fix custom cop bugs and convert rubocop-cobra and rubocop-powerhome to RuboCop plugins [HFH-5249] ([#469](https://github.com/powerhome/power-tools/issues/469)) ([21ecda2](https://github.com/powerhome/power-tools/commit/21ecda2217b909146c7a50b47a6d20e14f0b633e))
+
+
+### Fixed
+
+* **deps:** Update dependency bundler to v4 ([#385](https://github.com/powerhome/power-tools/issues/385)) ([22747e5](https://github.com/powerhome/power-tools/commit/22747e50fe6ed8fe9021e71415044e71b51a588e))
+* **deps:** Update dependency sqlite3 to v2.10.2 [SECURITY] ([#453](https://github.com/powerhome/power-tools/issues/453)) ([44d08d6](https://github.com/powerhome/power-tools/commit/44d08d6c243883bec09809fa29124075bf322f5a))
+
 ## [Unreleased]
 
 - Add support for Rails 8+ [#426](https://github.com/powerhome/power-tools/pull/426)
