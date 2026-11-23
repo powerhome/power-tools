@@ -28,6 +28,11 @@ Cobra/DeprecatedConstant:
   # The cop does nothing until the application lists at least one.
   Constants: {}
 
+Cobra/EngineIsolateNamespace:
+  Description: 'Rails engines must call `isolate_namespace` with their own namespace'
+  Enabled: true
+  VersionAdded: '0.6.0'
+
 Cobra/GemRequirement:
   Description: 'Component Gemfile dependencies must specify "require: nil"'
   Enabled: true
