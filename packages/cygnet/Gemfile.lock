@@ -12,7 +12,7 @@ PATH
 PATH
   remote: .
   specs:
-    cygnet (0.1.0)
+    cygnet (1.0.0)
 
 GEM
   remote: https://rubygems.org/
