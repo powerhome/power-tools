@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.6.0] - 2026-11-23
+
 - Add `Cobra/DeprecatedConstant`, which flags references to constants an application lists as deprecated under `Constants` (for example a class that moved into another component), including `class_name:` and `constantize` strings and associations whose class Rails infers from the name. Relative names are resolved through the enclosing namespaces as Ruby and Rails would, associations in concerns are flagged whenever the including model could reach a deprecated class, and serializer and resource classes are skipped. It does nothing until configured
 - Add `Cobra/EngineIsolateNamespace`, which requires every Rails engine to call `isolate_namespace` with the module it is defined in, so its routes, helpers and models stay out of the host application
 - rubocop-cobra is now a RuboCop plugin (lint_roller), replacing the `Inject` config monkey patch. Load it with `plugins: - rubocop-cobra` in `.rubocop.yml`; `require: - rubocop-cobra` still works but RuboCop prints a deprecation warning

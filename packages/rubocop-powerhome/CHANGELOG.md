@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.8.0] - 2026-11-23
+
 - Move the `Metrics/BlockLength` exemptions for `describe` and `context` from the deprecated `IgnoredMethods` key to `AllowedMethods`, keeping RuboCop's default `refine` exemption
 - rubocop-powerhome is now a RuboCop plugin (lint_roller), replacing the `Inject` config monkey patch. Load it with `plugins: - rubocop-powerhome`; `require:` still works with a deprecation warning
 - **Breaking:** rubocop-performance, rubocop-rails, rubocop-rake and rubocop-rspec are loaded as plugins, so their own default configuration now applies. Previously, with plugin-era versions of those gems, their cops ran without their defaults (for example `Performance/Casecmp` ran although it is disabled by default, and Rails cops ignored their `Include` paths). Requires rubocop-performance >= 1.24, rubocop-rails >= 2.28, rubocop-rake >= 0.7 and rubocop-rspec >= 3.5
