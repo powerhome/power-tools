@@ -1,0 +1,88 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Usage: .github/scripts/pin-path-gem-versions [BRANCH]
+#
+# release-please bumps a gem's version file and its package's Gemfile.lock,
+# but Bundler lockfiles elsewhere pin the same gem too: the Appraisal
+# lockfiles in gemfiles/ load the package from "..", and sibling packages
+# load rubocop-powerhome and nitro_config from "../<package>". CI installs
+# in deployment mode, so any of them left on the old version fails the build.
+#
+# This rewrites every PATH spec in the packages' lockfiles that points at a
+# package of this repository to the version in .release-please-manifest.json,
+# along with that package's line in the CHECKSUMS section Bundler 2.6 and later
+# write. Given BRANCH, it commits the changed lockfiles to it through the
+# GitHub API, so the commit is signed. That needs GH_TOKEN and
+# GITHUB_REPOSITORY.
+
+require "json"
+require "open3"
+require "pathname"
+
+root = Pathname.new(__dir__).join("../..").expand_path
+Dir.chdir(root)
+
+versions = JSON.parse(File.read(".release-please-manifest.json"))
+gems = JSON.parse(File.read("release-please-config.json"))["packages"]
+           .select { |_path, package| package["release-type"] == "ruby" }
+           .to_h { |path, package| [root.join(path).to_s, [package["package-name"], versions.fetch(path)]] }
+
+lockfiles = Dir["packages/**/{Gemfile,*.gemfile}.lock"].reject { |file| file.include?("/vendor/") }
+
+def pin(line, indent, name, version)
+  line.sub(/\A(#{indent}#{Regexp.escape(name)} \()[^)]*\)\n\z/) { "#{Regexp.last_match(1)}#{version})\n" }
+end
+
+changed = lockfiles.select do |lockfile|
+  section = remote = nil
+  pinned = {}
+  before = File.read(lockfile)
+  after = before.lines.map do |line|
+    if line.match?(/\A\S/)
+      section = line.strip
+      remote = nil
+    end
+    remote = root.join(File.dirname(lockfile), Regexp.last_match(1)).to_s if line =~ /\A  remote: (.+)\n\z/
+
+    if section == "PATH" && gems.key?(remote)
+      name, version = gems[remote]
+      pinned[name] = version
+      pin(line, "    ", name, version)
+    elsif section == "CHECKSUMS"
+      # Bundler lists path gems in CHECKSUMS without a checksum, after the
+      # PATH sections, so the gems pinned above are known by now.
+      pinned.reduce(line) { |pinned_line, (name, version)| pin(pinned_line, "  ", name, version) }
+    else
+      line
+    end
+  end.join
+  next false if after == before
+
+  File.write(lockfile, after)
+  true
+end
+
+if changed.empty?
+  puts "Every lockfile already pins the packages' versions"
+  exit
+end
+
+puts("Pinned the packages' versions in:", changed.map { |file| "  #{file}" })
+branch = ARGV[0] or exit
+
+head, = Open3.capture2("git", "rev-parse", "HEAD")
+input = {
+  branch: { repositoryNameWithOwner: ENV.fetch("GITHUB_REPOSITORY"), branchName: branch },
+  expectedHeadOid: head.strip,
+  message: { headline: "chore: pin the released versions in the lockfiles" },
+  fileChanges: { additions: changed.map { |file| { path: file, contents: [File.read(file)].pack("m0") } } },
+}
+query = <<~GRAPHQL
+  mutation($input: CreateCommitOnBranchInput!) {
+    createCommitOnBranch(input: $input) { commit { oid } }
+  }
+GRAPHQL
+_, status = Open3.capture2("gh", "api", "graphql", "--input", "-",
+                           stdin_data: JSON.generate(query: query, variables: { input: input }))
+exit status.exitstatus unless status.success?

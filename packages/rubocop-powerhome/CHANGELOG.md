@@ -1,4 +1,4 @@
-## [Unreleased]
+# Changelog
 
 - Move the `Metrics/BlockLength` exemptions for `describe` and `context` from the deprecated `IgnoredMethods` key to `AllowedMethods`, keeping RuboCop's default `refine` exemption
 - rubocop-powerhome is now a RuboCop plugin (lint_roller), replacing the `Inject` config monkey patch. Load it with `plugins: - rubocop-powerhome`; `require:` still works with a deprecation warning

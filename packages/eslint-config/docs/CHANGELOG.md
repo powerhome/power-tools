@@ -1,3 +1,5 @@
+# Changelog
+
 ## Unreleased
 
 - Add Yarn resolutions for various eslint dependencies to address CVEs

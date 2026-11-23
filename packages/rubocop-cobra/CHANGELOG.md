@@ -1,4 +1,4 @@
-## [Unreleased]
+# Changelog
 
 - Add `Cobra/DeprecatedConstant`, which flags references to constants an application lists as deprecated under `Constants` (for example a class that moved into another component), including `class_name:` and `constantize` strings and associations whose class Rails infers from the name. Relative names are resolved through the enclosing namespaces as Ruby and Rails would, associations in concerns are flagged whenever the including model could reach a deprecated class, and serializer and resource classes are skipped. It does nothing until configured
 - Add `Cobra/EngineIsolateNamespace`, which requires every Rails engine to call `isolate_namespace` with the module it is defined in, so its routes, helpers and models stay out of the host application
