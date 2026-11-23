@@ -43,13 +43,6 @@
     warning handling. Passes on later versions.
 
 - tests:
-    - SpatialTypeTest#test_POINT_and_MULTIPOINT_columns_are_not_misreported_as_integers
-  activerecord: ">= 8.2.0.alpha"
-  reason: >-
-    Changed on purpose: checks that plain Rails gives spatial columns no type,
-    while this gem gives them the :geometry type.
-
-- tests:
     - "TrilogyAdapterTest#test_#native_database_types_answers_known_types"
   adapters: [trilogy]
   reason: >-

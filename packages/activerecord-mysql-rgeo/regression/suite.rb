@@ -10,10 +10,9 @@ module Regression
   # loaded, proving the gem leaves non-spatial behaviour untouched.
   #
   # The published activerecord gem does not ship its tests, so they are checked
-  # out from the Rails repository at the tag matching the bundled activerecord,
-  # or at the locked revision when activerecord comes from git. The checkout
-  # always lives outside the gem directories: Rails' backtrace cleaner hides gem
-  # paths, and some tests assert on their own file locations.
+  # out from the Rails repository at the tag matching the bundled activerecord.
+  # The checkout always lives outside the gem directories: Rails' backtrace
+  # cleaner hides gem paths, and some tests assert on their own file locations.
   class Suite
     include FileUtils
 
@@ -73,14 +72,8 @@ module Regression
       sh(*git, "checkout", "--quiet", "FETCH_HEAD")
     end
 
-    # The locked git revision for edge, the release tag otherwise.
     def rails_ref
-      source = activerecord_spec.source
-      source.respond_to?(:revision) ? source.revision : "v#{activerecord_spec.version}"
-    end
-
-    def activerecord_spec
-      Gem.loaded_specs.fetch("activerecord")
+      "v#{Gem.loaded_specs.fetch('activerecord').version}"
     end
   end
 end
