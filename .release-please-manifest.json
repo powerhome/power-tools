@@ -9,7 +9,7 @@
   "packages/data_conduit": "0.2.2",
   "packages/data_taster": "0.5.1",
   "packages/dep_shield": "0.4.0",
-  "packages/edgestitch": "0.6.0",
+  "packages/edgestitch": "1.0.0",
   "packages/eslint-config": "0.3.0",
   "packages/lumberaxe": "0.3.0",
   "packages/nitro_config": "0.3.0",

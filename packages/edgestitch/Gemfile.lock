@@ -12,7 +12,7 @@ PATH
 PATH
   remote: .
   specs:
-    edgestitch (0.6.0)
+    edgestitch (1.0.0)
 
 GEM
   remote: https://rubygems.org/
