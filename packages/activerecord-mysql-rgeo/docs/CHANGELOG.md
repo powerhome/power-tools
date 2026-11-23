@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/powerhome/power-tools/compare/activerecord-mysql-rgeo/v1.0.0...activerecord-mysql-rgeo/v1.1.0) (2026-11-23)
+
+
+### Added
+
+* **data-taster:** support Trilogy clients ([#462](https://github.com/powerhome/power-tools/issues/462)) ([ec12f5b](https://github.com/powerhome/power-tools/commit/ec12f5ba80a2237a352d7174b11c96bb4feb8d9b))
+
 ## [1.0.0] - 2026-11-18
 
 - Initial project setup: Active Record 7.2 through edge, trilogy and mysql2
