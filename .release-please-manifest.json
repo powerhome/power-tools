@@ -7,7 +7,7 @@
   "packages/consent": "2.7.1",
   "packages/cygnet": "0.1.0",
   "packages/data_conduit": "0.2.2",
-  "packages/data_taster": "0.5.1",
+  "packages/data_taster": "1.0.0",
   "packages/dep_shield": "0.4.0",
   "packages/edgestitch": "0.6.0",
   "packages/eslint-config": "0.3.0",
