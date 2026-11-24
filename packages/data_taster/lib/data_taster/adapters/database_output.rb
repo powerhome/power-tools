@@ -47,6 +47,16 @@ module DataTaster
       write_statement(line)
     end
 
+    # When the source and target share a MySQL server, MySQL copies each table itself and DataTaster never holds its
+    # rows. Otherwise every row is read into memory and written back as INSERTs, and a large table can use more memory
+    # than the process has.
+    def copies_on_server?
+      return @copies_on_server if defined?(@copies_on_server)
+
+      target_server = server_uuid(target_client)
+      @copies_on_server = target_server.present? && target_server == server_uuid(DataTaster.config.source.source_client)
+    end
+
   private
 
     def safe_execute(sql)
@@ -64,8 +74,29 @@ module DataTaster
       source.table_names
     end
 
+    def server_uuid(client)
+      client.query("SELECT @@server_uuid AS server_uuid").first&.fetch("server_uuid", nil)
+    rescue
+      nil
+    end
+
     def export(collection, table_name, payload)
       write_statement("TRUNCATE TABLE #{qualified_table_name(table_name)}")
+      if copies_on_server?
+        copy_on_server(collection, table_name, payload)
+      else
+        export_through_client(collection, table_name, payload)
+      end
+    end
+
+    # The SELECT runs on the target connection, so a table its WHERE clause names without a database is read from the
+    # target: the rows already copied there, not the whole source table.
+    def copy_on_server(collection, table_name, payload)
+      write_statement("INSERT INTO #{qualified_table_name(table_name)} #{collection.export_select_sql}")
+      Sanitizer.new(table_name, payload[:sanitize]).clean!
+    end
+
+    def export_through_client(collection, table_name, payload)
       insert_table_name = "#{ExportContext.quote_ident(target_database)}.#{ExportContext.quote_ident(table_name)}"
       Sanitizer.new(table_name, payload[:sanitize]).export_sanitized_rows(
         collection,

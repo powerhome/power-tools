@@ -42,6 +42,15 @@ RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integr
     it_behaves_like "a complete data dump workflow"
   end
 
+  context "when the source is on another server" do
+    before do
+      configure_data_taster(list: [yaml_path])
+      allow(DataTaster.config.output).to receive(:copies_on_server?).and_return(false)
+    end
+
+    it_behaves_like "a complete data dump workflow"
+  end
+
   context "with Trilogy clients" do
     before do
       configure_data_taster(
