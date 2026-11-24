@@ -51,10 +51,13 @@ module DataTaster
     # rows. Otherwise every row is read into memory and written back as INSERTs, and a large table can use more memory
     # than the process has.
     def copies_on_server?
-      return @copies_on_server if defined?(@copies_on_server)
+      source_client = DataTaster.config.source.source_client
+      # Checked once per source, since a later DataTaster.setup can pair this output with another source
+      return @copies_on_server if @checked_source.equal?(source_client)
 
       target_server = server_uuid(target_client)
-      @copies_on_server = target_server.present? && target_server == server_uuid(DataTaster.config.source.source_client)
+      @checked_source = source_client
+      @copies_on_server = target_server.present? && target_server == server_uuid(source_client)
     end
 
   private
@@ -90,10 +93,16 @@ module DataTaster
     end
 
     # The SELECT runs on the target connection, so a table its WHERE clause names without a database is read from the
-    # target: the rows already copied there, not the whole source table.
+    # target: the rows already copied there, not the whole source table. The rows are copied as they are and sanitized
+    # afterwards, so a failed sanitization empties the table rather than leave production values in it.
     def copy_on_server(collection, table_name, payload)
       write_statement("INSERT INTO #{qualified_table_name(table_name)} #{collection.export_select_sql}")
-      Sanitizer.new(table_name, payload[:sanitize]).clean!
+      begin
+        Sanitizer.new(table_name, payload[:sanitize]).clean!
+      rescue
+        write_statement("TRUNCATE TABLE #{qualified_table_name(table_name)}")
+        raise
+      end
     end
 
     def export_through_client(collection, table_name, payload)

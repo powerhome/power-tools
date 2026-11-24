@@ -127,6 +127,16 @@ RSpec.describe DataTaster::DatabaseOutput do
           expect(sanitizer).to have_received(:clean!)
           expect(DataTaster.config.source).not_to have_received(:query)
         end
+
+        it "empties the table again when sanitizing the copy fails, so no unsanitized rows are left" do
+          sanitizer = instance_double(DataTaster::Sanitizer)
+          allow(sanitizer).to receive(:clean!).and_raise(Mysql2::Error, "boom")
+          allow(DataTaster::Sanitizer).to receive(:new).and_return(sanitizer)
+          allow(output).to receive(:safe_execute)
+
+          expect { output.import_table(collection, "users") }.to raise_error(Mysql2::Error, "boom")
+          expect(output).to have_received(:safe_execute).with("TRUNCATE TABLE #{dump_db_name}.users").twice
+        end
       end
     end
   end
@@ -147,6 +157,14 @@ RSpec.describe DataTaster::DatabaseOutput do
 
     it "is false when the servers differ" do
       allow(DataTaster.config.source.source_client).to receive(:query).and_return([{ "server_uuid" => "other" }])
+
+      expect(output.copies_on_server?).to eq(false)
+    end
+
+    it "checks again when the output is set up with another source" do
+      expect(output.copies_on_server?).to eq(true)
+
+      configure_data_taster(source_client: double("source client", query: [{ "server_uuid" => "other" }]))
 
       expect(output.copies_on_server?).to eq(false)
     end
