@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.6.0](https://github.com/powerhome/power-tools/compare/data_taster/v0.5.1...data_taster/v0.6.0) (2026-11-23)
+
+
+### Added
+
+* **data-taster:** support Trilogy clients ([#462](https://github.com/powerhome/power-tools/issues/462)) ([ec12f5b](https://github.com/powerhome/power-tools/commit/ec12f5ba80a2237a352d7174b11c96bb4feb8d9b))
+
+## [0.5.2] - 2026-11-05
+
+- Accept `Trilogy` connections as `MysqlSource` and `DatabaseOutput` clients
+
 ## [0.5.0] - 2026-07-28
 
 [HFH-4410 - Bump powertools for Rails 8.1.3 V2](https://github.com/powerhome/power-tools/pull/426)

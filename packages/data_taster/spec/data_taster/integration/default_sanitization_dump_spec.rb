@@ -7,12 +7,9 @@ RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integr
 
   let(:yaml_path) { File.join(__dir__, "..", "..", "fixtures", "full_users_dump_tables.yml") }
 
-  before do
-    configure_data_taster(list: [yaml_path])
-    setup_source_data
-  end
+  before { setup_source_data }
 
-  describe "complete data dump workflow" do
+  shared_examples "a complete data dump workflow" do
     it "creates users and verifies they are properly sanitized" do
       DataTaster.sample!
 
@@ -37,5 +34,23 @@ RSpec.describe "DataTaster Default Sanitization Dump Integration", type: :integr
       expect(result["date_of_birth"]).to eq(expected_date)
       expect(result["dob"]).to eq(expected_date)
     end
+  end
+
+  context "with Mysql2 clients" do
+    before { configure_data_taster(list: [yaml_path]) }
+
+    it_behaves_like "a complete data dump workflow"
+  end
+
+  context "with Trilogy clients" do
+    before do
+      configure_data_taster(
+        list: [yaml_path],
+        source_client: trilogy_source_db_client,
+        target_client: trilogy_dump_db_client
+      )
+    end
+
+    it_behaves_like "a complete data dump workflow"
   end
 end

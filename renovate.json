@@ -23,6 +23,11 @@
       "automerge": true
     },
     {
+      "description": "Gems don't ship their lockfiles, so bundler updates release nothing",
+      "matchManagers": ["bundler"],
+      "semanticCommitType": "chore"
+    },
+    {
       "matchPackageNames": ["rubocop"],
       "allowedVersions": "< 1.45.0"
     }
