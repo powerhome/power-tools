@@ -67,7 +67,7 @@ module RuboCop
           base = config.base_dir_for_path_parameters
           gemspecs = Dir[File.join(base, "*.gemspec")].map { |path| File.read(path) }
           siblings = Dir[File.join(base, "..", "*", "*.gemspec")]
-          Digest::SHA1.hexdigest((gemspecs + siblings).join("\n"))
+          Digest::SHA256.hexdigest((gemspecs + siblings).join("\n"))
         end
 
       private
