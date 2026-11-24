@@ -4,6 +4,7 @@ module RuboCop
   module Cop
     module Cobra
       require_relative "cobra/association_class"
+      require_relative "cobra/component_gemfile"
       require_relative "cobra/constant_resolution"
       require_relative "cobra/deprecation_list"
       require_relative "cobra/file_placement_help"
