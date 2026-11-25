@@ -13,7 +13,7 @@ module RuboCop
       #   spec.add_dependency "some_lib", "1.0.1"
       #
       class DependencyVersion < RuboCop::Cop::Base
-        extend NodePattern::Macros
+        include GemspecDependencies
 
         MSG = "Gemspec dependencies should be declared with a version"
 
@@ -31,10 +31,6 @@ module RuboCop
         end
 
       private
-
-        def_node_search :dependency_declarations, <<~PATTERN
-          (send (lvar _) {:add_dependency :add_runtime_dependency :add_development_dependency} (str _) ...)
-        PATTERN
 
         def declares_version?(node)
           node.first_argument != node.last_argument

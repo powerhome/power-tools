@@ -72,7 +72,36 @@ RSpec.describe RuboCop::Cop::Cobra::GemRequirement do
       path "components" do
         gem "nitro_component"
       end
+
+      path "../../vendor" do
+        gem "vendored_gem"
+      end
+
+      path File.expand_path("..", __FILE__) do
+        gem "other_gem"
+      end
     RUBY
+  end
+
+  context "registers an offense in every form of the sibling path block" do
+    {
+      'path "../"' => 'path "../" do',
+      "path with other options" => 'path "..", glob: "*/*.gemspec" do',
+      "path in parentheses" => 'path("..") do',
+      "File.expand_path from __dir__" => 'path File.expand_path("..", __dir__) do',
+      "File.expand_path with a trailing slash" => 'path File.expand_path("../", __dir__) do',
+      "::File.expand_path" => 'path ::File.expand_path("..", __dir__) do',
+    }.each do |description, opening|
+      it "when written as #{description}" do
+        expect_offense(<<~RUBY)
+          #{opening}
+            gem "nitro_component", require: nil
+            gem "other_component"
+            ^^^^^^^^^^^^^^^^^^^^^ Cobra/GemRequirement: Component Gemfile dependencies must specify 'require: nil'.
+          end
+        RUBY
+      end
+    end
   end
 
   context "registers an offense for component gem dependencies that are required" do

@@ -7,6 +7,10 @@ module RuboCop
       # specify `require: nil` (or `require: false`), so a component never
       # auto-requires its sibling components.
       #
+      # The block may name the parent directory as `".."`, `"../"` or
+      # `File.expand_path("..", __dir__)`, with or without other options such
+      # as `glob:`.
+      #
       # @example
       #   # bad
       #   path ".." do
@@ -19,6 +23,8 @@ module RuboCop
       #   end
       #
       class GemRequirement < RuboCop::Cop::Base
+        include ComponentGemfile
+
         MSG = "Component Gemfile dependencies must specify " \
               "'require: nil'."
 
@@ -29,12 +35,6 @@ module RuboCop
             add_offense(gem_node) unless require_disabled?(gem_node)
           end
         end
-
-        def_node_matcher :component_path_block?, <<~PATTERN
-          (block (send nil? :path (str "..")) (args) _)
-        PATTERN
-
-        def_node_search :gem_declarations, "(send nil? :gem (str _) ...)"
 
         def_node_matcher :require_disabled?, <<~PATTERN
           (send nil? :gem (str _) ... (hash <(pair (sym :require) ({nil false})) ...>))
