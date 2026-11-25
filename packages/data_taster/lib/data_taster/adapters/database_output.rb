@@ -47,6 +47,19 @@ module DataTaster
       write_statement(line)
     end
 
+    # When the source and target share a MySQL server, MySQL copies each table itself and DataTaster never holds its
+    # rows. Otherwise every row is read into memory and written back as INSERTs, and a large table can use more memory
+    # than the process has.
+    def copies_on_server?
+      source_client = DataTaster.config.source.source_client
+      # Checked once per source, since a later DataTaster.setup can pair this output with another source
+      return @copies_on_server if @checked_source.equal?(source_client)
+
+      target_server = server_uuid(target_client)
+      @checked_source = source_client
+      @copies_on_server = target_server.present? && target_server == server_uuid(source_client)
+    end
+
   private
 
     def safe_execute(sql)
@@ -64,8 +77,35 @@ module DataTaster
       source.table_names
     end
 
+    def server_uuid(client)
+      client.query("SELECT @@server_uuid AS server_uuid").first&.fetch("server_uuid", nil)
+    rescue
+      nil
+    end
+
     def export(collection, table_name, payload)
       write_statement("TRUNCATE TABLE #{qualified_table_name(table_name)}")
+      if copies_on_server?
+        copy_on_server(collection, table_name, payload)
+      else
+        export_through_client(collection, table_name, payload)
+      end
+    end
+
+    # The SELECT runs on the target connection, so a table its WHERE clause names without a database is read from the
+    # target: the rows already copied there, not the whole source table. The rows are copied as they are and sanitized
+    # afterwards, so a failed sanitization empties the table rather than leave production values in it.
+    def copy_on_server(collection, table_name, payload)
+      write_statement("INSERT INTO #{qualified_table_name(table_name)} #{collection.export_select_sql}")
+      begin
+        Sanitizer.new(table_name, payload[:sanitize]).clean!
+      rescue
+        write_statement("TRUNCATE TABLE #{qualified_table_name(table_name)}")
+        raise
+      end
+    end
+
+    def export_through_client(collection, table_name, payload)
       insert_table_name = "#{ExportContext.quote_ident(target_database)}.#{ExportContext.quote_ident(table_name)}"
       Sanitizer.new(table_name, payload[:sanitize]).export_sanitized_rows(
         collection,

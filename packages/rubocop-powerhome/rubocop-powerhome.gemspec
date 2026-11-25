@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
   # guide at: https://bundler.io/guides/creating_gem.html
 
   spec.add_dependency "lint_roller", "~> 1.1"
-  spec.add_dependency "rubocop", "1.82.1"
+  spec.add_dependency "rubocop", ">= 1.82.1", "< 2"
   # The first releases of each extension that ship as RuboCop plugins.
   spec.add_dependency "rubocop-performance", ">= 1.24"
   spec.add_dependency "rubocop-rails", ">= 2.35.5"

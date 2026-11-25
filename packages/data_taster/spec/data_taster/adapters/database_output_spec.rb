@@ -95,16 +95,84 @@ RSpec.describe DataTaster::DatabaseOutput do
         allow(DataTaster.config.source).to receive(:query).and_return(query_result)
       end
 
-      it "truncates and inserts sanitized rows" do
-        allow(output).to receive(:safe_execute).and_call_original
-        expect(output).to receive(:safe_execute).with("TRUNCATE TABLE #{dump_db_name}.users").ordered
-        expect(output).to receive(:safe_execute) do |sql|
-          expect(sql).to include("INSERT INTO `#{dump_db_name}`.`users` (`id`, `email`) VALUES")
-          expect(sql).to include("'x@example.com'")
-        end.ordered
+      context "when the source is on another server" do
+        before { allow(output).to receive(:copies_on_server?).and_return(false) }
 
-        output.import_table(collection, "users")
+        it "truncates and inserts sanitized rows" do
+          allow(output).to receive(:safe_execute).and_call_original
+          expect(output).to receive(:safe_execute).with("TRUNCATE TABLE #{dump_db_name}.users").ordered
+          expect(output).to receive(:safe_execute) do |sql|
+            expect(sql).to include("INSERT INTO `#{dump_db_name}`.`users` (`id`, `email`) VALUES")
+            expect(sql).to include("'x@example.com'")
+          end.ordered
+
+          output.import_table(collection, "users")
+        end
       end
+
+      context "when the source is on the same server" do
+        before { allow(output).to receive(:copies_on_server?).and_return(true) }
+
+        it "copies the rows on the server, without reading them, then sanitizes the copy" do
+          sanitizer = instance_double(DataTaster::Sanitizer, clean!: nil)
+          allow(DataTaster::Sanitizer).to receive(:new).with("users", { "email" => "x@example.com" })
+                                                       .and_return(sanitizer)
+          allow(output).to receive(:safe_execute)
+
+          output.import_table(collection, "users")
+
+          expect(output).to have_received(:safe_execute).with("TRUNCATE TABLE #{dump_db_name}.users").ordered
+          expect(output).to have_received(:safe_execute)
+            .with("INSERT INTO #{dump_db_name}.users SELECT * FROM source.users WHERE 1 = 1").ordered
+          expect(sanitizer).to have_received(:clean!)
+          expect(DataTaster.config.source).not_to have_received(:query)
+        end
+
+        it "empties the table again when sanitizing the copy fails, so no unsanitized rows are left" do
+          sanitizer = instance_double(DataTaster::Sanitizer)
+          allow(sanitizer).to receive(:clean!).and_raise(Mysql2::Error, "boom")
+          allow(DataTaster::Sanitizer).to receive(:new).and_return(sanitizer)
+          allow(output).to receive(:safe_execute)
+
+          expect { output.import_table(collection, "users") }.to raise_error(Mysql2::Error, "boom")
+          expect(output).to have_received(:safe_execute).with("TRUNCATE TABLE #{dump_db_name}.users").twice
+        end
+      end
+    end
+  end
+
+  describe "#copies_on_server?" do
+    before { configure_data_taster }
+
+    it "is true when the source and target are on the same server" do
+      expect(output.copies_on_server?).to eq(true)
+    end
+
+    it "is true with Trilogy clients on the same server" do
+      configure_data_taster(source_client: trilogy_source_db_client)
+      trilogy_output = described_class.new(target_client: trilogy_dump_db_client)
+
+      expect(trilogy_output.copies_on_server?).to eq(true)
+    end
+
+    it "is false when the servers differ" do
+      allow(DataTaster.config.source.source_client).to receive(:query).and_return([{ "server_uuid" => "other" }])
+
+      expect(output.copies_on_server?).to eq(false)
+    end
+
+    it "checks again when the output is set up with another source" do
+      expect(output.copies_on_server?).to eq(true)
+
+      configure_data_taster(source_client: double("source client", query: [{ "server_uuid" => "other" }]))
+
+      expect(output.copies_on_server?).to eq(false)
+    end
+
+    it "is false when the server can't say which it is" do
+      allow(target_client).to receive(:query).and_raise(Mysql2::Error, "Unknown system variable 'server_uuid'")
+
+      expect(output.copies_on_server?).to eq(false)
     end
   end
 

@@ -65,6 +65,8 @@ DataTaster.sample!
 
 This selects data from the source and writes it, sanitized, to the output.
 
+When a `DatabaseOutput` target is on the same MySQL server as the source, each table is copied on the server with `INSERT … SELECT` and then sanitized with `UPDATE`s, so DataTaster never holds a table's rows. The `SELECT` runs on the target connection, so a table a `select:` clause names without a database is read from the target, where the tables already copied are. Tables are copied in the order `SHOW TABLES` lists them, which is alphabetical, so such a table holds the sampled rows only if its name sorts before the table being copied. Name the source database (`<%= source_db %>.table`) to read the whole source table instead. Otherwise, the rows are read into memory and written back as sanitized `INSERT`s.
+
 
  #### Deprecating Tables
 
