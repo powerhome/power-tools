@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "activesupport", ">= 7.1"
   spec.add_dependency "lint_roller", "~> 1.1"
-  spec.add_dependency "rubocop", "1.82.1"
+  spec.add_dependency "rubocop", ">= 1.82.1", "< 2"
   spec.add_dependency "rubocop-powerhome"
   spec.metadata["rubygems_mfa_required"] = "true"
   spec.metadata["default_lint_roller_plugin"] = "RuboCop::Cobra::Plugin"

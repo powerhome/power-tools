@@ -85,6 +85,12 @@ RSpec.describe DataTaster::Detergent do
       expect(result).to include("AND email <> ''")
     end
 
+    it "escapes quotes and backslashes in string values" do
+      detergent = described_class.new("users", "name", "O'Brien \\ Co")
+
+      expect(detergent.deliver).to include("SET name = 'O''Brien \\\\ Co'")
+    end
+
     it "generates SQL for date values" do
       detergent = described_class.new("users", "created_at", "2023-01-01")
       result = detergent.deliver

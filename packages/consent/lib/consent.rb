@@ -25,7 +25,8 @@ module Consent
   # Default: "consent_"
   cattr_accessor(:table_name_prefix) { "consent_" }
 
-  ViewNotFound = Class.new(StandardError)
+  class ViewNotFound < StandardError
+  end
 
   # Default views available to every permission
   #
