@@ -33,6 +33,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "activerecord", ">= 7.1.5.2", "< 8.2"
   spec.add_development_dependency "appraisal", "~> 2.5.0"
   spec.add_development_dependency "combustion", "~> 1.3"
-  spec.add_development_dependency "shoulda-matchers", "~> 5.1.0"
+  spec.add_development_dependency "shoulda-matchers", "~> 8.0.0"
   spec.add_development_dependency "sqlite3", "~> 2.9"
 end
