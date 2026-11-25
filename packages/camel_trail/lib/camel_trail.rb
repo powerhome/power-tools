@@ -32,7 +32,7 @@ module_function
   # @param encrypted [Boolean] whether to encrypt or not the note
   # @return [CamelTrail::EntryPresenter]
 
-  # rubocop:disable Metrics/ParameterLists
+  # rubocop:disable-next Metrics/ParameterLists
   def record!(object, activity, changes, user_id, note = nil, encrypted: false)
     klass = encrypted ? CamelTrail::EncryptedHistory : CamelTrail::History
 
@@ -44,7 +44,6 @@ module_function
     )
     EntryPresenter.new(history)
   end
-  # rubocop:enable Metrics/ParameterLists
 
   # A collection of the history entries associated with the object
   #

@@ -7,7 +7,7 @@ module Wayfinding
   class Destination
     attr_reader :name, :kind, :attributes
 
-    # rubocop:disable Metrics/ParameterLists
+    # rubocop:disable-next Metrics/ParameterLists
     def initialize(name:, engine: nil, kind: nil, helper: nil, resolver: nil, **attributes)
       @name = name.to_sym
       @engine = engine
@@ -17,7 +17,6 @@ module Wayfinding
       @attributes = attributes.freeze
       freeze
     end
-    # rubocop:enable Metrics/ParameterLists
 
     def action = self[:action]
 

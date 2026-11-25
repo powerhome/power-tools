@@ -10,7 +10,7 @@ RSpec.describe Edgestitch::Mysql::Dump do
 
       sanitized = Edgestitch::Mysql::Dump.sanitize_migration_timestamps(insert)
 
-      # rubocop:disable Rails/SquishedSQLHeredocs
+      # rubocop:disable-next Rails/SquishedSQLHeredocs
       expect(sanitized).to eql <<~SQL.strip
         INSERT INTO schema_migrations VALUES
         ('20240102123421')
@@ -20,7 +20,6 @@ RSpec.describe Edgestitch::Mysql::Dump do
         ,('20240102523421')
         ;
       SQL
-      # rubocop:enable Rails/SquishedSQLHeredocs
     end
   end
 end
