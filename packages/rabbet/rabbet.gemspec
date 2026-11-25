@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency "cygnet", "0.0.1"
-  s.add_dependency "rails", ">= 7.0"
+  s.add_dependency "rails", ">= 7.1"
   s.add_dependency "sassc-rails", "2.1.2"
 
   s.add_development_dependency "bundler", "~> 4.0"
