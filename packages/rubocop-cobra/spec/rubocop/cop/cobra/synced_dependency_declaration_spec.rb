@@ -18,12 +18,12 @@ RSpec.describe RuboCop::Cop::Cobra::SyncedDependencyDeclaration do
     end
   end
 
-  def write_gemspec(name, deps: [], dev_deps: [], component: name)
+  def write_gemspec(name, deps: [], dev_deps: [], component: name, file: name)
     dir = File.join(components, component)
     FileUtils.mkdir_p(dir)
     lines = deps.map { |dep| %(  s.add_dependency "#{dep}", "0.0.1") } +
             dev_deps.map { |dep| %(  s.add_development_dependency "#{dep}", "0.0.1") }
-    File.write(File.join(dir, "#{name}.gemspec"), <<~RUBY)
+    File.write(File.join(dir, "#{file}.gemspec"), <<~RUBY)
       Gem::Specification.new do |s|
         s.name = "#{name}"
       #{lines.join("\n")}
@@ -284,6 +284,68 @@ RSpec.describe RuboCop::Cop::Cobra::SyncedDependencyDeclaration do
           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Cobra/SyncedDependencyDeclaration: `directory` is in the `path ".."` block but not declared in `my_component_extras.gemspec`. Declare it there, or remove it if this component doesn't use it directly.
         end
       RUBY
+    end
+
+    it "against the gemspec whose name gemspec names, whatever its file is called" do
+      write_component_gemspec(deps: %w[directory])
+      write_gemspec("my_component_extras", deps: %w[nitro_jobs], component: "my_component", file: "extras")
+
+      expect_offense(<<~RUBY, gemfile)
+        gemspec name: "my_component_extras"
+
+        path ".." do
+        ^^^^^^^^^ Cobra/SyncedDependencyDeclaration: The `path ".."` block is missing components declared in `extras.gemspec`: `nitro_jobs`.
+          gem "directory", require: nil
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Cobra/SyncedDependencyDeclaration: `directory` is in the `path ".."` block but not declared in `extras.gemspec`. Declare it there, or remove it if this component doesn't use it directly.
+        end
+      RUBY
+    end
+
+    it "for missing gems only, when the gemspec declares a dependency whose name it can't read" do
+      FileUtils.mkdir_p(File.dirname(gemfile))
+      File.write(File.join(File.dirname(gemfile), "my_component.gemspec"), <<~RUBY)
+        Gem::Specification.new do |s|
+          s.name = "my_component"
+          s.add_dependency "directory", "0.0.1"
+          %w[nitro_jobs nitro_react].each { |dep| s.add_dependency dep, "0.0.1" }
+        end
+      RUBY
+
+      expect_offense(<<~RUBY, gemfile)
+        gemspec
+
+        path ".." do
+        ^^^^^^^^^ Cobra/SyncedDependencyDeclaration: The `path ".."` block is missing components declared in `my_component.gemspec`: `directory`.
+          gem "nitro_jobs", require: nil
+          gem "nitro_react", require: nil
+        end
+      RUBY
+    end
+
+    it "without correcting a block written on one line" do
+      write_component_gemspec(deps: %w[directory nitro_react])
+
+      expect_offense(<<~RUBY, gemfile)
+        gemspec
+
+        path("..") { gem "nitro_react", require: nil }
+        ^^^^^^^^^^ Cobra/SyncedDependencyDeclaration: The `path ".."` block is missing components declared in `my_component.gemspec`: `directory`.
+      RUBY
+
+      expect_no_corrections
+    end
+
+    it "without correcting an empty block written on one line" do
+      write_component_gemspec(deps: %w[directory])
+
+      expect_offense(<<~RUBY, gemfile)
+        gemspec
+
+        path("..") {}
+        ^^^^^^^^^^ Cobra/SyncedDependencyDeclaration: The `path ".."` block is missing components declared in `my_component.gemspec`: `directory`.
+      RUBY
+
+      expect_no_corrections
     end
 
     it "against the gemspec in the directory gemspec points at" do

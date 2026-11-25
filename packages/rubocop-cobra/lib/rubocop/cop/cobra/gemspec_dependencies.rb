@@ -13,13 +13,29 @@ module RuboCop
         (send (lvar _) {:add_dependency :add_runtime_dependency :add_development_dependency} (str _) ...)
       PATTERN
 
-      # The names of every dependency declared in the gemspec at `path`.
-      def gemspec_dependency_names(path)
+      # @!method dependency_calls(node)
+      def_node_search :dependency_calls, <<~PATTERN
+        (send _ {:add_dependency :add_runtime_dependency :add_development_dependency} ...)
+      PATTERN
+
+      # The names of the dependencies declared in the gemspec at `path`, and
+      # whether that list is complete. It isn't when the gemspec doesn't parse,
+      # or declares a dependency whose name isn't a string literal (built in a
+      # loop or splatted from a list, say).
+      def gemspec_dependencies(path)
+        ast = gemspec_ast(path)
+        return [[], false] if ast.nil?
+
+        readable = dependency_declarations(ast).to_a
+        [readable.map { |node| node.first_argument.value }, readable.size == dependency_calls(ast).count]
+      end
+
+    private
+
+      def gemspec_ast(path)
         source = ProcessedSource.from_file(path, processed_source.ruby_version,
                                            parser_engine: processed_source.parser_engine)
-        return [] unless source.valid_syntax? && source.ast
-
-        dependency_declarations(source.ast).map { |node| node.first_argument.value }
+        source.ast if source.valid_syntax?
       end
     end
   end

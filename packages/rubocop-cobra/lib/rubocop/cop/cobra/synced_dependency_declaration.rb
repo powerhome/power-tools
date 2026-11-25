@@ -12,7 +12,9 @@ module RuboCop
       # A gemspec dependency counts as a sibling component when
       # `../<name>/<name>.gemspec` exists next to the component. Gemfiles with
       # no `path ".."` block are skipped, as are Gemfiles that don't call
-      # `gemspec` or whose gemspec can't be found.
+      # `gemspec` or whose gemspec can't be found. When the gemspec declares a
+      # dependency whose name isn't a string literal, the cop can't tell which
+      # gems it declares, so it only reports missing ones.
       #
       # The cop reads the gemspec the Gemfile loads, so RuboCop's cache key
       # includes that gemspec and the list of sibling gemspecs. RuboCop computes
@@ -26,7 +28,7 @@ module RuboCop
       #   unsafe: run `bundle install` afterwards. A gem in the block that the
       #   gemspec doesn't declare is not corrected, because only a person knows
       #   whether it is a runtime dependency, a development dependency, or
-      #   unused.
+      #   unused. A `path ".."` block written on one line is not corrected.
       #
       # @example
       #   # my_component.gemspec
@@ -78,11 +80,13 @@ module RuboCop
       private
 
         def check(blocks, gemspec)
-          declared = gemspec_dependency_names(gemspec.path)
+          declared, complete = gemspec_dependencies(gemspec.path)
           listed = blocks.flat_map { |block| gem_declarations(block).to_a }
 
           missing = missing_gems(declared, listed, gemspec)
           register_missing(blocks.first, missing, gemspec) if missing.any?
+          return unless complete
+
           listed.each { |node| register_undeclared(node, gemspec) unless declared.include?(gem_name(node)) }
         end
 
@@ -111,7 +115,7 @@ module RuboCop
 
         def find_gemspec(source)
           call = source.ast&.each_node(:send)&.find { |node| gemspec_call?(node) }
-          ComponentGemspec.for(source.file_path, call) if call
+          ComponentGemspec.for(source, call) if call
         end
 
         def gem_name(node)
