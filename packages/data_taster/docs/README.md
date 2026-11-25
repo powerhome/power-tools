@@ -1,73 +1,66 @@
 # 🍭 Data Taster
 
-Database exporting tool.
+DataTaster copies a small, sanitized sample of a MySQL database into another database or a SQL file, for development
+and demo environments.
 
-## Usage
+You say which rows of each table to keep in `data_taster_export_tables.yml` files. DataTaster copies those rows,
+replaces sensitive values (emails, addresses, SSNs, birth dates, notes, and so on) with fake ones, and leaves every
+other table empty.
 
-### `data_taster_export_tables.yml`
+## Requirements
 
-With DataTaster, you can configure certain tables and rows to be pulled from the source_db. Look for (or create) a `data_taster_export_tables.yml` file anywhere in your repo (for example, this could live under `config/` or `db/`).
+- Ruby 3.0 or later (CI runs 3.3) and Rails 7.1.3.2 to 8.2. DataTaster uses Active Record and Active Support, and
+  reads the default list of export files from `Rails.root`.
+- MySQL. Each connection is a `Mysql2::Client` or a `Trilogy` client. Neither gem is a dependency of DataTaster, so
+  add the one you use to your Gemfile.
+- An Active Record connection that can see the source tables. Default sanitization reads each table's columns from
+  `ActiveRecord::Base.connection` (see [Sanitization](sanitization.md)).
+- For a database output, a target database that already has the schema. DataTaster empties and fills tables, but
+  never creates them.
 
-By default, any table that has nothing specified in the files will not have any data selected from the source client.
+## Quick start
 
-Each key should represent the table name that you are defining rules for. If you don't have any custom rows to sanitize, the value should be a clause that will be wrapped in a MySQL WHERE clause. DataTaster will automatically look for any files with that name and include them in the export.
+Describe the rows to keep, in a `data_taster_export_tables.yml` anywhere in your app (for example `config/` or `db/`):
 
-```ruby
-# Example, simple usage
-
-sales_summaries: quarter_start_date >= '<%= Date.current.last_year.beginning_of_quarter %>'
-```
-
-If you have columns that you need to sanitize, you'll need to specify the column names and values along with the selections. Note that many things get sanitized by default.
-
-```ruby
-# Example, with sanitization specified
-
+```yaml
+---
+users: "<%= recent_table_updates %>"
+projects: "<%= full_table_dump %>"
 sales_summaries:
   select: "quarter_start_date >= '<%= Date.current.last_year.beginning_of_quarter %>'"
   sanitize:
     comp_total: 9999.99
 ```
 
-### Default Sanitization
-
-To help protect data, DataTaster scans columns that it's importing against of blocklist of terms that it identifies as high risk (you can see the full list of default sanitizations at `lib/data_taster/sanitizer.rb`.). If the term is a match against its list and there is no custom sanitization defined, it will attempt to sanitize the column. If you do not need to sanitize that column, you can always skip it:
-
-```ruby
-users:
-  select: "activated_at IS NOT NULL"
-  sanitize:
-    retain_email: "<%= skip_sanitization %>"
-```
-
-### `DataTaster.sample!`
-
-DataTaster loads the yml files through erb methods provided by its [Flavors](https://github.com/powerhome/power-tools/blob/main/packages/data_taster/lib/data_taster/flavors.rb) class.
-
-Before sampling, configure a source to read from and an output to write to with `DataTaster.setup`. Clients can be either `Mysql2::Client` or `Trilogy` connections:
+Point DataTaster at a source and an output, then sample:
 
 ```ruby
 DataTaster.setup(
   source: DataTaster::MysqlSource.new(source_client: Trilogy.new(source_config.dup)),
   output: DataTaster::DatabaseOutput.new(target_client: Trilogy.new(target_config.dup)),
+  months: 3,
 )
-```
 
-`setup` also accepts `months:` (how far back `recent_table_updates` looks) and `list:` (the yml files to load, defaulting to every `data_taster_export_tables.yml` under `Rails.root`).
-
-To write a SQL file instead of loading a database, use `DataTaster::FileOutput.new(path: "dump.sql", target_database: "my_db")` as the output.
-
-Once configured, sampling is easy:
-
-```ruby
 DataTaster.sample!
 ```
 
-This selects data from the source and writes it, sanitized, to the output.
+`DataTaster.setup` takes:
 
-When a `DatabaseOutput` target is on the same MySQL server as the source, each table is copied on the server with `INSERT … SELECT` and then sanitized with `UPDATE`s, so DataTaster never holds a table's rows. The `SELECT` runs on the target connection, so a table a `select:` clause names without a database is read from the target, where the tables already copied are. Tables are copied in the order `SHOW TABLES` lists them, which is alphabetical, so such a table holds the sampled rows only if its name sorts before the table being copied. Name the source database (`<%= source_db %>.table`) to read the whole source table instead. Otherwise, the rows are read into memory and written back as sanitized `INSERT`s.
+| Option | Description |
+| --- | --- |
+| `source:` | A `DataTaster::MysqlSource` wrapping the client to read from. |
+| `output:` | A `DataTaster::DatabaseOutput` or `DataTaster::FileOutput`. See [Outputs](outputs.md). |
+| `months:` | How far back `date`, `recent_table_updates` and `recent_ids` look. One week when not set. |
+| `list:` | The export files to load. Defaults to every `data_taster_export_tables.yml` under `Rails.root`. |
 
+`DataTaster.sample!` writes every table to the output. It logs each table and each statement to `DataTaster.logger`,
+which is a `Logger` on `$stdout` unless you set `DataTaster.logger = ...`. `DataTaster.reset!` forgets the setup and
+the loaded export files.
 
- #### Deprecating Tables
+## Documentation
 
- DataTaster queries directly on the source_client to retrieve the list of tables to work on, which can cause issues when tables are removed -- migrations that have run in one environment may not have yet run in another. In order to maintain smoother transitions, use the `deprecated_table` method found in the DataTaster#Flavors file to mark the table as one that should include neither the schema nor the data.
+- [Configuration](configuration.md): the export files, select clauses, and the ERB helpers.
+- [Sanitization](sanitization.md): the default rules, custom values, and skipping a column.
+- [Outputs](outputs.md): copying into a database or writing a SQL file.
+- [How it works](how-it-works.md): what happens to each table during a sample.
+- [Known limitations](limitations.md): behavior to know about, and to fix in a successor.
