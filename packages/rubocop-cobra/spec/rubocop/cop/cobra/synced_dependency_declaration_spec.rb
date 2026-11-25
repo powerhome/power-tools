@@ -311,27 +311,51 @@ RSpec.describe RuboCop::Cop::Cobra::SyncedDependencyDeclaration do
   end
 
   describe "#external_dependency_checksum" do
-    let(:config) { instance_double(RuboCop::Config, base_dir_for_path_parameters: File.join(components, "my_component")) }
-    let(:cop) { described_class.new(config) }
+    let(:component_dir) { File.join(components, "my_component") }
+    let(:config) { RuboCop::Config.new({}, File.join(component_dir, ".rubocop.yml")) }
 
-    before { allow(config).to receive(:for_cop).and_return({}) }
+    def checksum
+      described_class.new(config).external_dependency_checksum
+    end
 
-    it "changes when the component's gemspec changes" do
+    def write_gemfile(source)
+      File.write(File.join(component_dir, "Gemfile"), source)
+    end
+
+    it "changes when the gemspec the Gemfile loads changes" do
       write_component_gemspec(deps: %w[directory])
-      before = cop.external_dependency_checksum
+      write_gemfile("gemspec\n")
+      before = checksum
 
       write_component_gemspec(deps: %w[directory nitro_jobs])
 
-      expect(described_class.new(config).external_dependency_checksum).not_to eq(before)
+      expect(checksum).not_to eq(before)
+    end
+
+    it "changes when a gemspec loaded with gemspec path: changes" do
+      write_gemspec("my_component", deps: %w[directory], component: "my_component/engine")
+      write_gemfile(%(gemspec path: "engine"\n))
+      before = checksum
+
+      write_gemspec("my_component", deps: %w[directory nitro_jobs], component: "my_component/engine")
+
+      expect(checksum).not_to eq(before)
     end
 
     it "changes when a sibling component is added" do
       write_component_gemspec(deps: %w[directory])
-      before = cop.external_dependency_checksum
+      write_gemfile("gemspec\n")
+      before = checksum
 
       write_gemspec("new_component")
 
-      expect(described_class.new(config).external_dependency_checksum).not_to eq(before)
+      expect(checksum).not_to eq(before)
+    end
+
+    it "still returns a checksum when there is no Gemfile" do
+      write_component_gemspec(deps: %w[directory])
+
+      expect(checksum).to match(/\A\h{64}\z/)
     end
   end
 end

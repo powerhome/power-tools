@@ -14,8 +14,11 @@ module RuboCop
       # no `path ".."` block are skipped, as are Gemfiles that don't call
       # `gemspec` or whose gemspec can't be found.
       #
-      # The cop reads the gemspec beside the Gemfile, so RuboCop's cache only
-      # notices a gemspec change when the component has its own `.rubocop.yml`.
+      # The cop reads the gemspec the Gemfile loads, so RuboCop's cache key
+      # includes that gemspec and the list of sibling gemspecs. RuboCop computes
+      # the key once per config, not per file, from the Gemfile beside the
+      # `.rubocop.yml`, so a gemspec change is only noticed when each component
+      # has its own `.rubocop.yml` next to its Gemfile.
       #
       # @safety
       #   Autocorrect inserts the missing `gem "<name>", require: nil` line in
@@ -57,17 +60,19 @@ module RuboCop
           blocks = processed_source.ast.each_node(:block).select { |node| component_path_block?(node) }
           return if blocks.empty?
 
-          gemspec = find_gemspec
+          gemspec = find_gemspec(processed_source)
           return if gemspec.nil?
 
           check(blocks, gemspec)
         end
 
+        # Resolves the gemspec the same way the cop does, so one loaded with
+        # `gemspec path:` or `name:` is hashed too.
         def external_dependency_checksum
           base = config.base_dir_for_path_parameters
-          gemspecs = Dir[File.join(base, "*.gemspec")].map { |path| File.read(path) }
+          gemspec = gemfile_gemspec(File.join(base, "Gemfile"))
           siblings = Dir[File.join(base, "..", "*", "*.gemspec")]
-          Digest::SHA256.hexdigest((gemspecs + siblings).join("\n"))
+          Digest::SHA256.hexdigest([gemspec && File.read(gemspec.path), *siblings].join("\n"))
         end
 
       private
@@ -97,9 +102,16 @@ module RuboCop
           add_offense(node, message: format(UNDECLARED_MSG, gem: gem_name(node), gemspec: gemspec.file_name))
         end
 
-        def find_gemspec
-          call = processed_source.ast.each_node(:send).find { |node| gemspec_call?(node) }
-          ComponentGemspec.for(processed_source.file_path, call) if call
+        def gemfile_gemspec(gemfile)
+          return unless File.file?(gemfile)
+
+          find_gemspec(ProcessedSource.from_file(gemfile, config.target_ruby_version,
+                                                 parser_engine: config.parser_engine))
+        end
+
+        def find_gemspec(source)
+          call = source.ast&.each_node(:send)&.find { |node| gemspec_call?(node) }
+          ComponentGemspec.for(source.file_path, call) if call
         end
 
         def gem_name(node)
