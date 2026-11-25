@@ -288,8 +288,8 @@ GEM
     ruby-progressbar (1.13.0)
     rubyzip (2.4.1)
     securerandom (0.4.1)
-    shoulda-matchers (5.1.0)
-      activesupport (>= 5.2.0)
+    shoulda-matchers (8.0.1)
+      activesupport (>= 7.2)
     sqlite3 (2.9.4-aarch64-linux-gnu)
     sqlite3 (2.9.4-aarch64-linux-musl)
     sqlite3 (2.9.4-arm-linux-gnu)
@@ -342,7 +342,7 @@ DEPENDENCIES
   rspec-rails (~> 8.0.1)
   rubocop (>= 1.32)
   rubocop-powerhome!
-  shoulda-matchers (~> 5.1.0)
+  shoulda-matchers (>= 6.0, < 9)
   sqlite3 (~> 2.9)
 
 BUNDLED WITH
