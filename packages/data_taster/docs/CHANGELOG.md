@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/powerhome/power-tools/compare/data_taster/v0.6.0...data_taster/v0.6.1) (2026-11-25)
+
+
+### Fixed
+
+* **data-taster:** copy tables on the server when source and target share one ([#514](https://github.com/powerhome/power-tools/issues/514)) ([a55ff6d](https://github.com/powerhome/power-tools/commit/a55ff6de5d5b328c503053b18d452b940024a522))
+
 ## [0.6.0](https://github.com/powerhome/power-tools/compare/data_taster/v0.5.1...data_taster/v0.6.0) (2026-11-23)
 
 
