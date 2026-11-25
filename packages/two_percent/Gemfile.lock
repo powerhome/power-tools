@@ -319,7 +319,7 @@ DEPENDENCIES
   puma
   rspec-rails (>= 7.0)
   rubocop-powerhome!
-  shoulda-matchers (~> 8.0)
+  shoulda-matchers (>= 6.0, < 9)
   sqlite3 (~> 2.4)
   two_percent!
 
