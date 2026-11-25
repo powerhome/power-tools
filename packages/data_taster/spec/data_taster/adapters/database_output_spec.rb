@@ -184,7 +184,7 @@ RSpec.describe DataTaster::DatabaseOutput do
       )
       expect(source).to receive(:table_names).and_return(["users"])
       allow(DataTaster::Collection).to receive(:new).and_return(
-        instance_double(DataTaster::Collection, assemble: {})
+        instance_double(DataTaster::Collection, assemble: {}, unqualified_names: [])
       )
       expect(output).to receive(:safe_execute).and_call_original
 

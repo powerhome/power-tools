@@ -16,6 +16,7 @@ module DataTaster
   autoload :SanitizerExporter, "data_taster/sanitizer_exporter"
   autoload :Sanitizer, "data_taster/sanitizer"
   autoload :SqlLiteral, "data_taster/sql_literal"
+  autoload :TableOrder, "data_taster/table_order"
 
   SKIP_CODE = "skip_processing"
 

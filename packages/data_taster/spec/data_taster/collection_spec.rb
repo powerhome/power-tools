@@ -33,4 +33,31 @@ RSpec.describe DataTaster::Collection do
       expect(sql).to eq("SELECT * FROM #{source_db_name}.projects WHERE 1 = 1")
     end
   end
+
+  describe "#unqualified_names" do
+    before { stub_config }
+
+    def unqualified_names(ingredients)
+      allow(DataTaster).to receive(:confection).and_return({ "phones" => ingredients })
+      DataTaster::Collection.new("phones").unqualified_names
+    end
+
+    it "returns the names in the select: clause that no database comes before" do
+      names = unqualified_names("phone_number_id IN (SELECT id FROM phone_numbers) AND owner_id IN " \
+                                "(SELECT id FROM source.users) OR `kind` IN (SELECT kind FROM `source`.`kinds`)")
+
+      expect(names).to include("phone_number_id", "phone_numbers", "source", "kind")
+      expect(names).not_to include("users", "kinds")
+    end
+
+    it "reads the select: key of a table that also has sanitization" do
+      names = unqualified_names({ "select" => "id IN (SELECT phone_id FROM calls)", "sanitize" => { "notes" => "x" } })
+
+      expect(names).to include("calls")
+    end
+
+    it "is empty for a deprecated table" do
+      expect(unqualified_names(DataTaster::SKIP_CODE)).to be_empty
+    end
+  end
 end
