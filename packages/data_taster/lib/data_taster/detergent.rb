@@ -83,7 +83,7 @@ module DataTaster
     end
 
     def sql_for_uncast_value
-      <<-SQL.squish
+      <<~SQL.squish
         UPDATE #{qualified_table_name}
         SET #{column_name} = #{value}
         WHERE #{column_name} IS NOT NULL
@@ -92,7 +92,7 @@ module DataTaster
     end
 
     def sql_for_date_value
-      <<-SQL.squish
+      <<~SQL.squish
         UPDATE #{qualified_table_name}
         SET #{column_name} = '#{value}'
         WHERE #{column_name} IS NOT NULL
@@ -100,7 +100,7 @@ module DataTaster
     end
 
     def sql_for_nil_value
-      <<-SQL.squish
+      <<~SQL.squish
         UPDATE #{qualified_table_name}
         SET #{column_name} = NULL
         WHERE #{column_name} IS NOT NULL
@@ -108,7 +108,7 @@ module DataTaster
     end
 
     def sql_for_cast_value
-      <<-SQL.squish
+      <<~SQL.squish
         UPDATE #{qualified_table_name}
         SET #{column_name} = #{string_literal(value)}
         WHERE #{column_name} IS NOT NULL
