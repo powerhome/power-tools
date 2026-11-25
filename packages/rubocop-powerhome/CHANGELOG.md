@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/powerhome/power-tools/compare/rubocop-powerhome/v0.8.0...rubocop-powerhome/v0.9.0) (2026-11-25)
+
+
+### Added
+
+* **rubocop-powerhome:** enable Rails/Env and Rails/EnvironmentVariableAccess ([#519](https://github.com/powerhome/power-tools/issues/519)) ([dff2c50](https://github.com/powerhome/power-tools/commit/dff2c501b7e4ed768f4b6d1cf4578ea8b72da2e2))
+
 ## [0.8.0] - 2026-11-23
 
 - Move the `Metrics/BlockLength` exemptions for `describe` and `context` from the deprecated `IgnoredMethods` key to `AllowedMethods`, keeping RuboCop's default `refine` exemption

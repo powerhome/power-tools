@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.7.0](https://github.com/powerhome/power-tools/compare/rubocop-cobra/v0.6.0...rubocop-cobra/v0.7.0) (2026-11-25)
+
+
+### Added
+
+* **rubocop-cobra:** add Cobra/SyncedDependencyDeclaration [HFH-5266] ([#513](https://github.com/powerhome/power-tools/issues/513)) ([22062d2](https://github.com/powerhome/power-tools/commit/22062d23b5590c716ded2bba2ecfd0e2e290b2df))
+
+
+### Fixed
+
+* **rubocop-cobra:** check every form of the path ".." block in Cobra/GemRequirement  ([#512](https://github.com/powerhome/power-tools/issues/512)) ([8d14f36](https://github.com/powerhome/power-tools/commit/8d14f36b32b9c7e29f53c9580bc72087b58f84fe))
+
 ## [0.6.0] - 2026-11-23
 
 - Add `Cobra/DeprecatedConstant`, which flags references to constants an application lists as deprecated under `Constants` (for example a class that moved into another component), including `class_name:` and `constantize` strings and associations whose class Rails infers from the name. Relative names are resolved through the enclosing namespaces as Ruby and Rails would, associations in concerns are flagged whenever the including model could reach a deprecated class, and serializer and resource classes are skipped. It does nothing until configured
