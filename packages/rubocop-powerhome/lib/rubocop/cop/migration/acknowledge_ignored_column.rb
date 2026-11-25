@@ -2,7 +2,7 @@
 
 module RuboCop
   module Cop
-    # rubocop:disable Lint/RedundantCopDisableDirective
+    # rubocop:disable-next Lint/RedundantCopDisableDirective
     module Migration
       # Do not remove columns until they are first ignored in production.
       # Covers remove_column(s), remove_reference/remove_belongs_to and
@@ -81,6 +81,5 @@ module RuboCop
         PATTERN
       end
     end
-    # rubocop:enable Lint/RedundantCopDisableDirective
   end
 end

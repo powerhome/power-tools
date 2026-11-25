@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "appraisal", "2.5.0"
   spec.add_development_dependency "license_finder", "7.2.1"
   spec.add_development_dependency "rspec", "3.13.2"
-  spec.add_development_dependency "rubocop", "1.82.1"
+  spec.add_development_dependency "rubocop", ">= 1.82.1", "< 2"
   spec.add_development_dependency "rubocop-powerhome"
   spec.add_development_dependency "webmock", "3.26.2"
 

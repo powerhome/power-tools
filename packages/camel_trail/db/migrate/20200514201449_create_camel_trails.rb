@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/MethodLength
+# rubocop:disable-next Metrics/MethodLength
 class CreateCamelTrails < ActiveRecord::Migration[6.0]
   def change
     create_table :"#{CamelTrail.table_name_prefix}histories" do |t|
@@ -17,4 +17,3 @@ class CreateCamelTrails < ActiveRecord::Migration[6.0]
     add_index :"#{CamelTrail.table_name_prefix}histories", %i[source_type source_id]
   end
 end
-# rubocop:enable Metrics/MethodLength

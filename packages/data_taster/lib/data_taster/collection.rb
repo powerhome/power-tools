@@ -26,7 +26,7 @@ module DataTaster
     end
 
     def export_select_sql
-      <<-SQL.squish
+      <<~SQL.squish
         SELECT * FROM #{source_db}.#{table_name}
         WHERE #{where_clause}
       SQL
