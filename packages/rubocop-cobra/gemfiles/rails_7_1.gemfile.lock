@@ -1,7 +1,7 @@
 PATH
   remote: ../../rubocop-powerhome
   specs:
-    rubocop-powerhome (0.8.0)
+    rubocop-powerhome (0.9.0)
       lint_roller (~> 1.1)
       rubocop (>= 1.82.1, < 2)
       rubocop-performance (>= 1.24)
@@ -12,7 +12,7 @@ PATH
 PATH
   remote: ..
   specs:
-    rubocop-cobra (0.6.0)
+    rubocop-cobra (0.7.0)
       activesupport (>= 7.1)
       lint_roller (~> 1.1)
       rubocop (>= 1.82.1, < 2)
