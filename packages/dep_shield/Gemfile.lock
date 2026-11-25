@@ -11,7 +11,7 @@ PATH
       lint_roller (~> 1.1)
       rubocop (= 1.82.1)
       rubocop-performance (>= 1.24)
-      rubocop-rails (>= 2.28)
+      rubocop-rails (>= 2.35.5)
       rubocop-rake (>= 0.7)
       rubocop-rspec (>= 3.5)
 
@@ -265,7 +265,7 @@ GEM
       lint_roller (~> 1.1)
       rubocop (>= 1.75.0, < 2.0)
       rubocop-ast (>= 1.47.1, < 2.0)
-    rubocop-rails (2.34.3)
+    rubocop-rails (2.36.0)
       activesupport (>= 4.2.0)
       lint_roller (~> 1.1)
       rack (>= 1.1)
@@ -280,7 +280,7 @@ GEM
     ruby-progressbar (1.13.0)
     rubyzip (2.4.1)
     securerandom (0.4.1)
-    sentry-ruby (6.7.0)
+    sentry-ruby (7.3.0)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
       logger

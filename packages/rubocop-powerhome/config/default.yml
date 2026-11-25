@@ -62,6 +62,25 @@ Rails:
 Rails/FilePath:
   EnforcedStyle: arguments
 
+# Application code branches on named configuration (for example NitroConfig),
+# never on which environment it is running in. Only the config layer (config/,
+# including environments and initializers) reads the environment, so these
+# two cops only look at app/ and lib/.
+# https://github.com/powerhome/power-tools/issues/265
+Rails/Env:
+  Enabled: true
+  Include:
+    - '**/app/**/*.rb'
+    - '**/lib/**/*.rb'
+    - '**/lib/**/*.rake'
+
+Rails/EnvironmentVariableAccess:
+  Enabled: true
+  # Rake tasks read ENV for their command-line arguments, so they stay allowed.
+  Include:
+    - '**/app/**/*.rb'
+    - '**/lib/**/*.rb'
+
 Rails/HasManyOrHasOneDependent:
   Enabled: false
 
