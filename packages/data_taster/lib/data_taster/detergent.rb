@@ -110,10 +110,16 @@ module DataTaster
     def sql_for_cast_value
       <<~SQL.squish
         UPDATE #{qualified_table_name}
-        SET #{column_name} = '#{value}'
+        SET #{column_name} = #{string_literal(value)}
         WHERE #{column_name} IS NOT NULL
         AND #{column_name} <> ''
       SQL
+    end
+
+    # A quote or backslash in a configured value would otherwise end the literal early and break the UPDATE
+    def string_literal(string)
+      escaped = string.to_s.gsub("\\") { "\\\\" }.gsub("'", "''")
+      "'#{escaped}'"
     end
 
     def qualified_table_name
