@@ -322,7 +322,6 @@ DEPENDENCIES
   rails (= 8.0.5)
   rake (>= 13.0)
   rspec (>= 3.0)
-  rubocop (>= 1.32)
   rubocop-powerhome!
 
 BUNDLED WITH

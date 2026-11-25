@@ -238,7 +238,6 @@ DEPENDENCIES
   nitro_config!
   rake (>= 13.0)
   rspec (>= 3.0)
-  rubocop (>= 1.32)
   rubocop-powerhome!
 
 BUNDLED WITH

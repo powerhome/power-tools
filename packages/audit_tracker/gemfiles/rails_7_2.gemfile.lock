@@ -341,7 +341,6 @@ DEPENDENCIES
   rake (>= 13.0)
   rspec (>= 3.0)
   rspec-rails (~> 8.0.1)
-  rubocop (>= 1.32)
   rubocop-powerhome!
   shoulda-matchers (>= 6.0, < 9)
   sqlite3 (~> 2.9)

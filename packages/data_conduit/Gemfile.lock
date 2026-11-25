@@ -183,7 +183,6 @@ DEPENDENCIES
   rake (~> 13.0)
   rest-client (~> 2.1)
   rspec (= 3.13.2)
-  rubocop (>= 1.82.1, = 1.93.0, < 2)
   rubocop-powerhome!
   webmock (= 3.26.2)
 
