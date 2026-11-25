@@ -68,6 +68,16 @@ Cobra/PresenterFilePlacement:
   Enabled: true
   VersionAdded: '0.1.0'
 
+Cobra/SyncedDependencyDeclaration:
+  Description: 'A component Gemfile''s `path ".."` block lists exactly the sibling components its gemspec declares'
+  Enabled: true
+  VersionAdded: '0.7.0'
+  # Inserting a missing gem changes Gemfile.lock, so autocorrect runs only
+  # with `rubocop -A`; run `bundle install` afterwards.
+  SafeAutoCorrect: false
+  Include:
+    - '**/Gemfile'
+
 Cobra/ViewComponentFilePlacement:
   Description: 'This cop disallows adding global view_components to the `app/components` directory.'
   Enabled: true
