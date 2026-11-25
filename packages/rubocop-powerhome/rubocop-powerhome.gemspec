@@ -39,7 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rubocop", "1.82.1"
   # The first releases of each extension that ship as RuboCop plugins.
   spec.add_dependency "rubocop-performance", ">= 1.24"
-  spec.add_dependency "rubocop-rails", ">= 2.28"
+  spec.add_dependency "rubocop-rails", ">= 2.35.5"
   spec.add_dependency "rubocop-rake", ">= 0.7"
   spec.add_dependency "rubocop-rspec", ">= 3.5"
   spec.metadata["rubygems_mfa_required"] = "true"
