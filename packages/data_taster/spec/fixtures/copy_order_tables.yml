@@ -1,0 +1,5 @@
+# orders sorts before users and names it without a database, so it must be copied after it
+
+---
+orders: "user_id IN (SELECT id FROM users)"
+users: "id = 1"

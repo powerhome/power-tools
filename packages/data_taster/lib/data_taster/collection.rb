@@ -32,6 +32,14 @@ module DataTaster
       SQL
     end
 
+    # Words in the select: clause that no database name and dot come before, so any that names a table resolves
+    # against the connection the SELECT runs on
+    def unqualified_names
+      return [] if skippable?
+
+      where_clause.to_s.scan(/(?<![.\w`])`?(\w+)/).flatten.uniq
+    end
+
   private
 
     attr_reader :table_name, :ingredients

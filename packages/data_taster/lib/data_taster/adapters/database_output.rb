@@ -74,7 +74,7 @@ module DataTaster
     end
 
     def table_names(source)
-      source.table_names
+      TableOrder.new(source.table_names).to_a
     end
 
     def server_uuid(client)

@@ -24,6 +24,11 @@ ActiveRecord::Schema.define do
     t.timestamps
   end
 
+  # sorts before users, and its select: clause reads users
+  create_table "test_dump.orders", force: true do |t|
+    t.integer :user_id
+  end
+
   create_table "test_dump.schema_migrations", force: true do |t|
     t.string :version, null: false
   end
