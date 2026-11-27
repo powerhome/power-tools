@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.0](https://github.com/powerhome/power-tools/compare/rabbet/v0.0.3...rabbet/v1.0.0) (2026-11-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* **rabbet:** require Rails 7.1 or later ([#524](https://github.com/powerhome/power-tools/issues/524))
+
+### Fixed
+
+* **rabbet:** require Rails 7.1 or later ([#524](https://github.com/powerhome/power-tools/issues/524)) ([4433610](https://github.com/powerhome/power-tools/commit/4433610e660bf92c32945c842b2934b5b92bba9c))
+
 ## [Unreleased]
 
 - Drop support for Ruby < 3.3 and Rails < 7.1 [#396](https://github.com/powerhome/power-tools/pull/396)
