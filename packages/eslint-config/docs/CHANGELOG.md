@@ -12,6 +12,13 @@
   - [Dependabot #971](https://github.com/powerhome/power-tools/security/dependabot/971)
   - [Dependabot #797](https://github.com/powerhome/power-tools/security/dependabot/797)
 
+## [0.3.1](https://github.com/powerhome/power-tools/compare/eslint-config/v0.3.0...eslint-config/v0.3.1) (2026-11-27)
+
+
+### Fixed
+
+* **deps:** pin dependencies ([#464](https://github.com/powerhome/power-tools/issues/464)) ([c3495b9](https://github.com/powerhome/power-tools/commit/c3495b9f74728691bcaed5930c7b0cd7640ffd31))
+
 ## [0.2.2] - 2026-01-14
 
 - Bump many dependencies
